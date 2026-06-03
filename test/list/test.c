@@ -51,7 +51,8 @@ int main()
     
     int* val;
     int cnt = 0;
-    while (val = hm_iter_list_next(&iter)) {
+    while (hm_iter_list_has_next(&iter)) {
+        val = hm_iter_list_next(&iter);
         if (*val == flag[cnt++]) {
             printf("index : %d , val : %d\n", cnt - 1, *val);
             suc++;
