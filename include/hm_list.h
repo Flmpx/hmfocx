@@ -2,7 +2,7 @@
 #define HM_LIST_H
 #include <stdio.h>
 #include "../base.h"
-
+#include <stdbool.h>
 
 
 
@@ -60,6 +60,7 @@ void* hm_list_get(hm_list* list, size_t index);
  */
 
 void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
+bool hm_iter_list_has_next(hm_iter_list* iter);
 void* hm_iter_list_next(hm_iter_list* iter);
 
 

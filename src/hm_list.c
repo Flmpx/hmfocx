@@ -1,7 +1,7 @@
 #include "../include/hm_list.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 
 
@@ -43,6 +43,7 @@ void hm_list_free(hm_list* list) {
 
 /**
  * Insert value in the head of list
+ * this function will return hm_error when malloc failed
  * 
  */
 hm_info hm_list_insert_head(hm_list* list, void* val) {
@@ -66,6 +67,12 @@ hm_info hm_list_insert_head(hm_list* list, void* val) {
     return hm_success;
 }
 
+
+
+/**
+ * Insert value in the tail of list
+ * this function will return hm_error when malloc failed
+ */
 hm_info hm_list_insert_tail(hm_list* list, void* val) {
     hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
     if (new_node == NULL) {
@@ -87,6 +94,15 @@ hm_info hm_list_insert_tail(hm_list* list, void* val) {
     return hm_success;
 }
 
+
+/**
+ * Insert value at the index that you given in this list
+ * the range of index must be >= `0`, and <= `the size of list`
+ * 
+ * this function will return hm_warning when `index` is invalid
+ * 
+ * Also, this function will return hm_error when malloc failed
+ */
 hm_info hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
     if (index > list->size) {
@@ -123,6 +139,10 @@ hm_info hm_list_insert_index(hm_list* list, void* val, size_t index) {
 }
 
 
+/**
+ * Del hm_listnode with value at head in list
+ * this function will return hm_none when list is empty
+ */
 hm_info hm_list_del_head(hm_list* list) {
     if (list->size == 0) {
         return hm_none;
@@ -148,6 +168,10 @@ hm_info hm_list_del_head(hm_list* list) {
     return hm_success;
 }
 
+/**
+ * Del hm_listnode with value at end in list
+ * this function will return hm_none when list is empty
+ */
 hm_info hm_list_del_tail(hm_list* list) {
     if (list->size == 0) {
         return hm_none;
@@ -172,6 +196,14 @@ hm_info hm_list_del_tail(hm_list* list) {
     return hm_success;
 }
 
+
+/**
+ * Del hm_listnode with value at the index that you given in this list
+ * the range of index must be >= `0`, and < `the size of list`
+ * 
+ * this function will return hm_none when `index` is invalid
+ * 
+ */
 hm_info hm_list_del_index(hm_list* list, size_t index) {
     if (index >= list->size) {
         return hm_none;
@@ -194,6 +226,10 @@ hm_info hm_list_del_index(hm_list* list, size_t index) {
 
 }
 
+/**
+ * Get pointer of value by index that you given in a list
+ * this function will return nullptr when index is invalid
+ */
 void* hm_list_get(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
 
@@ -206,10 +242,29 @@ void* hm_list_get(hm_list* list, size_t index) {
     return cur->val;
 }
 
+
+/**
+ * Initialize iterator of list
+ * 
+ */
 void hm_iter_list_init(hm_iter_list* iter, hm_list* list) {
     iter->next = list->head;
 }
 
+
+
+/**
+ * Check if the iterator of list has next value
+ * Return true if iterator has next
+ */
+bool hm_iter_list_has_next(hm_iter_list* iter) {
+    return iter->next == NULL;
+}
+
+/**
+ * Get next value of list
+ * Please use function of `hm_iter_list_has_next` to check if list has next value
+ */
 void* hm_iter_list_next(hm_iter_list* iter) {
     hm_listnode* cur = iter->next;
 
