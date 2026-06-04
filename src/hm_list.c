@@ -258,7 +258,7 @@ void hm_iter_list_init(hm_iter_list* iter, hm_list* list) {
  * Return true if iterator has next
  */
 bool hm_iter_list_has_next(hm_iter_list* iter) {
-    return iter->next == NULL;
+    return iter->next != NULL;
 }
 
 /**
