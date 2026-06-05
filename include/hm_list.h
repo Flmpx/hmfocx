@@ -5,13 +5,20 @@
 #include <stdbool.h>
 
 
-
+/**
+ * the node of list
+ */
 typedef struct hm_listnode {
     struct hm_listnode* prev;
     struct hm_listnode* next;
     void* val;
 } hm_listnode;
 
+
+
+/**
+ * list
+ */
 typedef struct hm_list {
     hm_listnode* head;
     hm_listnode* tail;
@@ -20,14 +27,25 @@ typedef struct hm_list {
 } hm_list;
 
 
+/**
+ * the iterator of list
+ */
+
 typedef struct hm_iter_list {
     hm_listnode* next;
 } hm_iter_list;
 
 
+/**
+ * some simple functions
+ */
+
 #define hm_list_size(l) ((l)->size)
 
 
+/**
+ * initialize and free function
+ */
 
 void hm_list_init(hm_list* list, hm_free free);
 void hm_list_free(hm_list* list);
