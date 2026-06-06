@@ -40,7 +40,9 @@ typedef struct hm_map {
     hm_free free_val;
 } hm_map;
 
-
+/**
+ * the iterator of map
+ */
 typedef struct hm_iter_map {
     hm_entry* buckets;
     hm_entry_status* buckets_status;
@@ -48,6 +50,10 @@ typedef struct hm_iter_map {
     size_t index;
 } hm_iter_map;
 
+
+/**
+ * some functin of map , like `insert`, `get` , `del` and `free`
+ */
 
 extern void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 extern hm_info hm_map_insert(hm_map* map, void* key, void* val);
@@ -57,6 +63,10 @@ extern hm_info hm_map_shrink(hm_map* map);
 extern void hm_map_clear(hm_map* map);
 extern void hm_map_free(hm_map* map);
 
+
+/**
+ * some funtion of iterator of map , like `next` and `has next`
+ */
 
 extern void hm_iter_map_init(hm_iter_map* iter, hm_map* map);
 extern bool hm_iter_map_has_next(hm_iter_map* iter);

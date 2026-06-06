@@ -6,7 +6,9 @@
  */
 static size_t const invalid_index = SIZE_MAX;
 
-
+/**
+ * Determine whether a number is a prime number
+ */
 static bool is_prime(size_t n) {
     if (n < 2) return false;
     if (n == 2 || n == 3) return true;
@@ -19,6 +21,10 @@ static bool is_prime(size_t n) {
     return true;
 }
 
+/**
+ * Get a prime number is greater than a number that you given 
+ * SIZE_MAX is a invalid number 
+ */
 static size_t max_prime(size_t n) {
     size_t i;
     for (i = n; i < SIZE_MAX; i++) {
@@ -29,7 +35,14 @@ static size_t max_prime(size_t n) {
     return i;
 }
 
-
+/**
+ * Initialize hm_map
+ * This function not only need the function of free key and value,
+ * but also hash and compare key function for this function
+ * like list, there some functions(`free_key` and `free_val`) that you don't to pass in
+ * 
+ * But `hash_key` and `cmp_key` cannot be NULL
+ */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val) {
     *map = (hm_map){.buckets = NULL,
                     .buckets_status = NULL,
@@ -41,7 +54,14 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
                     .size = 0};
 }
 
-
+/**
+ * the function is used by `hm_map_insert`function
+ * 
+ * Must ensuring there have some location can be inserted beforing using this function
+ * 
+ * Note: is the key has existed in this map, the old key still existed in this map,
+ * 
+ */
 static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
     size_t l = map->len;
 
@@ -86,6 +106,12 @@ static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
 
 }
 
+
+/**
+ * the function is only used by hm_map_fresh
+ * 
+ * Because the buckers is empty when fresh map, so this function considers fewer cases
+ */
 static hm_info hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
     size_t l = map->len;
     size_t index = map->hash(key) % l;
@@ -100,6 +126,11 @@ static hm_info hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
     return hm_success;
 }
 
+/**
+ * Fresh map by the `new_len`
+ * 
+ * this function will return `hm_warning` when the size of map is greater than the `new_len` 
+ */
 static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
     size_t old_l = map->len, old_s = map->size;
     if (old_s > new_len) {
@@ -147,6 +178,12 @@ static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
 }
 
 
+/**
+ * Insert key and val in a map
+ * Insert failed when this function return `hm_error`,
+ * and will return `hm_succcess` when insert successful
+ * 
+ */
 hm_info hm_map_insert(hm_map* map, void* key, void* val) {
     size_t l = map->len, s = map->size;
 
@@ -173,7 +210,10 @@ hm_info hm_map_insert(hm_map* map, void* key, void* val) {
 
 }
 
-
+/**
+ * Get the index of key in map
+ * if this key is not existed in map, this function will return invalid_index(SIZE_MAX)
+ */
 static size_t hm_map_get_index(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
@@ -196,7 +236,10 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
     }
     return invalid_index;
 }
-
+/**
+ * Get the pointer of entry in map
+ * if this key is not existed in map, this function will return NULL
+ */
 hm_entry* hm_map_get(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
@@ -210,7 +253,10 @@ hm_entry* hm_map_get(hm_map* map, void* key) {
         return &(map->buckets[index]);
     }
 }
-
+/**
+ * Del the entry by key in map
+ * if the key is not existed in map, this funtion will return hm_none
+ */
 hm_info hm_map_del(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
@@ -231,7 +277,10 @@ hm_info hm_map_del(hm_map* map, void* key) {
         return hm_success;
     }
 }
-
+/**
+ * shrink the len of map if possible
+ * the function will return hm_none if the map can't shrink the len
+ */
 hm_info hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
     if (l < 34 || 4 * s > l) {
@@ -243,7 +292,9 @@ hm_info hm_map_shrink(hm_map* map) {
     return hm_map_fresh(map, new_len);
 }
 
-
+/**
+ * free the key and val in map but keep the buckets and buckets_status exist
+ */
 void hm_map_clear(hm_map* map) {
     size_t l = map->len;
     for (size_t i = 0; i < l; i++) {
@@ -256,7 +307,9 @@ void hm_map_clear(hm_map* map) {
     map->size = 0;
 
 }
-
+/**
+ * free the all content of this map
+ */
 void hm_map_free(hm_map* map) {
     hm_map_clear(map);
     free(map->buckets);
@@ -265,14 +318,19 @@ void hm_map_free(hm_map* map) {
 }
 
 
-
+/**
+ * Initialize the iterator of map
+ */
 void hm_iter_map_init(hm_iter_map* iter, hm_map* map) {
     iter->buckets = map->buckets;
     iter->buckets_status = map->buckets_status;
     iter->index = 0;
     iter->len = map->len;
 }
-
+/**
+ * Check if the iterator of map has next entry
+ * Return true if the iterator has next
+ */
 bool hm_iter_map_has_next(hm_iter_map* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
@@ -289,7 +347,10 @@ bool hm_iter_map_has_next(hm_iter_map* iter) {
     return false;
 
 }
-
+/**
+ * Get next pointer of entry of map by iterator
+ * Please use function of `hm_iter_map_has_next` to check if map has next entry
+ */
 hm_entry* hm_iter_map_next(hm_iter_map* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
