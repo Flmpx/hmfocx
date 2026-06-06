@@ -4,7 +4,7 @@
 /**
  * hm_get_index will use the number to return the flag of not found
  */
-static size_t invalid_index = SIZE_MAX;
+static size_t const invalid_index = SIZE_MAX;
 
 
 static bool is_prime(size_t n) {
