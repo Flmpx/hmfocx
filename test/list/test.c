@@ -13,6 +13,7 @@ void print_list_size(hm_list* list) {
 
 int main()
 {
+    srand(time(NULL));
     int suc = 0, fail = 0;
     hm_list list;
 
@@ -53,7 +54,7 @@ int main()
         
         flag[i] = *val;
         
-        if (hm_list_insert_tail(&list, val) != hm_success) {
+        if (hm_list_insert_tail(&list, val) != hm_list_ret_suc) {
             break;
         }
         insert_num++;
@@ -214,7 +215,7 @@ int main()
     print_list_size(&list);
 
     for (int i = 0; i < NUM / 2; i++) {
-        if (hm_list_del_head(&list) == hm_success) {
+        if (hm_list_del_head(&list) == hm_list_ret_suc) {
             suc++;
         } else {
             fail++;

@@ -60,9 +60,10 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * Must ensuring there have some location can be inserted beforing using this function
  * 
  * Note: is the key has existed in this map, the old key still existed in this map,
- * 
+ * and this function will return hm_map_ret_existed
+ * so, if the key that you given is allocted, you should free it(only suggestion)
  */
-static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
+static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
     size_t l = map->len;
 
     size_t index = map->hash(key) % l;
@@ -86,7 +87,7 @@ static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
             }
             /*keep the same and old key */
             map->buckets[index].val = val;
-            return hm_success;
+            return hm_map_ret_existed;
         }
 
         index = (index + 1) % l;
@@ -100,7 +101,7 @@ static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
 
     map->size++;
 
-    return hm_success;
+    return hm_map_ret_suc;
 
     
 
@@ -112,7 +113,7 @@ static hm_info hm_map_addfunc(hm_map* map, void* key, void* val) {
  * 
  * Because the buckers is empty when fresh map, so this function considers fewer cases
  */
-static hm_info hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
+static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
     size_t l = map->len;
     size_t index = map->hash(key) % l;
     while (map->buckets_status[index] != hm_none_in_map) {
@@ -123,18 +124,18 @@ static hm_info hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
     map->buckets_status[index] = hm_exist_in_map;
     map->size++;
 
-    return hm_success;
+    return hm_map_ret_suc;
 }
 
 /**
  * Fresh map by the `new_len`
  * 
- * this function will return `hm_warning` when the size of map is greater than the `new_len` 
+ * this function will return `hm_map_ret_warn` when the size of map is greater than the `new_len` 
  */
-static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
+static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     size_t old_l = map->len, old_s = map->size;
     if (old_s > new_len) {
-        return hm_warning;
+        return hm_map_ret_warn;
     }
 
     hm_map new_map;
@@ -144,12 +145,12 @@ static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
 
     new_map.buckets = (hm_entry*)malloc(new_len * sizeof(hm_entry));
     if (new_map.buckets == NULL) {
-        return hm_error;
+        return hm_map_ret_error;
     }
     new_map.buckets_status = (hm_entry_status*)malloc(new_len * sizeof(hm_entry_status));
     if (new_map.buckets_status == NULL) {
         free(new_map.buckets);
-        return hm_error;
+        return hm_map_ret_error;
     }
     for (size_t i = 0; i < new_len; i++) {
         new_map.buckets_status[i] = hm_none_in_map;
@@ -172,7 +173,7 @@ static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
 
     *map = new_map;
 
-    return hm_success;
+    return hm_map_ret_suc;
     
 
 }
@@ -180,11 +181,13 @@ static hm_info hm_map_fresh(hm_map* map, size_t new_len) {
 
 /**
  * Insert key and val in a map
- * Insert failed when this function return `hm_error`,
+ * Insert failed when this function return `hm_map_ret_error`,
  * and will return `hm_succcess` when insert successful
- * 
+ * @note is the key has existed in this map, the old key will still existed in this map,
+ * and this function will return `hm_map_ret_existed`,
+ * so, if the key that you given is allocted, you should free it(only suggestion)
  */
-hm_info hm_map_insert(hm_map* map, void* key, void* val) {
+hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     size_t l = map->len, s = map->size;
 
     bool flag_fresh = false;
@@ -194,15 +197,15 @@ hm_info hm_map_insert(hm_map* map, void* key, void* val) {
         new_len = 17;
     } else if (4 * s > 3 * l) {
         if ( 2 * l < l) {
-            return hm_error;
+            return hm_map_ret_error;
         }
         flag_fresh = true;
         new_len = max_prime(2 * l);
     }
 
     if (flag_fresh) {
-        if (hm_map_fresh(map, new_len) != hm_success) {
-            return hm_error;
+        if (hm_map_fresh(map, new_len) != hm_map_ret_suc) {
+            return hm_map_ret_error;
         }
     }
     return hm_map_addfunc(map, key, val);
@@ -257,15 +260,15 @@ hm_entry* hm_map_get(hm_map* map, void* key) {
  * Del the entry by key in map
  * if the key is not existed in map, this funtion will return hm_none
  */
-hm_info hm_map_del(hm_map* map, void* key) {
+hm_map_ret hm_map_del(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
-        return hm_none;
+        return hm_map_ret_none;
     }
     size_t index = hm_map_get_index(map, key);
 
     if (index == invalid_index) {
-        return hm_none;
+        return hm_map_ret_none;
     } else {
         if (map->free_key) map->free_key(map->buckets[index].key);
         if (map->free_val) map->free_val(map->buckets[index].val);
@@ -274,17 +277,17 @@ hm_info hm_map_del(hm_map* map, void* key) {
 
         map->size--;
 
-        return hm_success;
+        return hm_map_ret_suc;
     }
 }
 /**
  * shrink the len of map if possible
- * the function will return hm_none if the map can't shrink the len
+ * the function will return hm_map_ret_none if the map can't shrink the len
  */
-hm_info hm_map_shrink(hm_map* map) {
+hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
     if (l < 34 || 4 * s > l) {
-        return hm_none;
+        return hm_map_ret_none;
     }
 
     size_t new_len = max_prime(l / 2);

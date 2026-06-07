@@ -3,6 +3,17 @@
 #include <stdbool.h>
 #include "../base.h"
 
+/**
+ * the return signal of function in map
+ */
+typedef enum hm_map_ret {
+    hm_map_ret_error = 0x4,     // malloc filed
+    hm_map_ret_warn,            // the pass parameter is incorrect
+    hm_map_ret_none,            // operation invalid, like del entry by key , but key is not existed in map
+    hm_map_ret_existed,         // insert entry in map, but key is existed , you should free the key if the key that you given is alloced
+    hm_map_ret_suc              // operation successful
+} hm_map_ret;
+
 
 /**
  * the status of entry in map 
@@ -56,10 +67,10 @@ typedef struct hm_iter_map {
  */
 
 extern void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
-extern hm_info hm_map_insert(hm_map* map, void* key, void* val);
+extern hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 extern hm_entry* hm_map_get(hm_map* map, void* key);
-extern hm_info hm_map_del(hm_map* map, void* key);
-extern hm_info hm_map_shrink(hm_map* map);
+extern hm_map_ret hm_map_del(hm_map* map, void* key);
+extern hm_map_ret hm_map_shrink(hm_map* map);
 extern void hm_map_clear(hm_map* map);
 extern void hm_map_free(hm_map* map);
 

@@ -4,6 +4,15 @@
 #include "../base.h"
 #include <stdbool.h>
 
+/**
+ * the return signal of function in list
+ */
+typedef enum hm_list_ret {
+    hm_list_ret_error = 0x0,    // malloc failed
+    hm_list_ret_warn,           // the passed parameter is incorret
+    hm_list_ret_none,           // operation invalid, like del start node when list is empty
+    hm_list_ret_suc             // operation successful
+} hm_list_ret;
 
 /**
  * the node of list
@@ -54,18 +63,18 @@ void hm_list_free(hm_list* list);
  * add functions
  */
 
-hm_info hm_list_insert_head(hm_list* list, void* val);
-hm_info hm_list_insert_tail(hm_list* list, void* val);
-hm_info hm_list_insert_index(hm_list* list, void* val, size_t index);
+hm_list_ret hm_list_insert_head(hm_list* list, void* val);
+hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
+hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 
 
 
 /**
  * delete functions
  */
-hm_info hm_list_del_head(hm_list* list);
-hm_info hm_list_del_tail(hm_list* list);
-hm_info hm_list_del_index(hm_list* list, size_t index);
+hm_list_ret hm_list_del_head(hm_list* list);
+hm_list_ret hm_list_del_tail(hm_list* list);
+hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 
 /**
  * get functions

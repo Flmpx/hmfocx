@@ -43,14 +43,14 @@ void hm_list_free(hm_list* list) {
 
 /**
  * Insert value in the head of list
- * this function will return hm_error when malloc failed
+ * this function will return `hm_list_ret_error` when malloc failed
  * 
  */
-hm_info hm_list_insert_head(hm_list* list, void* val) {
+hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
 
     hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
     if (new_node == NULL) {
-        return hm_error;
+        return hm_list_ret_error;
     }
     new_node->next = list->head;
     new_node->prev = NULL;
@@ -64,19 +64,19 @@ hm_info hm_list_insert_head(hm_list* list, void* val) {
     }
 
     list->size++;
-    return hm_success;
+    return hm_list_ret_suc;
 }
 
 
 
 /**
  * Insert value in the tail of list
- * this function will return hm_error when malloc failed
+ * this function will return `hm_list_ret_error` when malloc failed
  */
-hm_info hm_list_insert_tail(hm_list* list, void* val) {
+hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
     hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
     if (new_node == NULL) {
-        return hm_error;
+        return hm_list_ret_error;
     }
 
     new_node->next = NULL;
@@ -91,7 +91,7 @@ hm_info hm_list_insert_tail(hm_list* list, void* val) {
     }
 
     list->size++;
-    return hm_success;
+    return hm_list_ret_suc;
 }
 
 
@@ -99,14 +99,14 @@ hm_info hm_list_insert_tail(hm_list* list, void* val) {
  * Insert value at the index that you given in this list
  * the range of index must be >= `0`, and <= `the size of list`
  * 
- * this function will return hm_warning when `index` is invalid
+ * this function will return `hm_list_ret_warn` when `index` is invalid
  * 
- * Also, this function will return hm_error when malloc failed
+ * Also, this function will return `hm_list_ret_error` when malloc failed
  */
-hm_info hm_list_insert_index(hm_list* list, void* val, size_t index) {
+hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
     if (index > list->size) {
-        return hm_warning;
+        return hm_list_ret_warn;
     }
 
     if (index == 0) return hm_list_insert_head(list, val);
@@ -114,7 +114,7 @@ hm_info hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
     hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
     if (new_node == NULL) {
-        return hm_error;
+        return hm_list_ret_error;
     }
     new_node->val = val;
 
@@ -135,17 +135,17 @@ hm_info hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
     list->size++;
 
-    return hm_success;
+    return hm_list_ret_suc;
 }
 
 
 /**
  * Del hm_listnode with value at head in list
- * this function will return hm_none when list is empty
+ * this function will return `hm_list_ret_none` when list is empty
  */
-hm_info hm_list_del_head(hm_list* list) {
+hm_list_ret hm_list_del_head(hm_list* list) {
     if (list->size == 0) {
-        return hm_none;
+        return hm_list_ret_none;
     }
 
     hm_listnode* del_node = list->head;
@@ -165,16 +165,16 @@ hm_info hm_list_del_head(hm_list* list) {
 
     list->size--;
 
-    return hm_success;
+    return hm_list_ret_suc;
 }
 
 /**
  * Del hm_listnode with value at end in list
- * this function will return hm_none when list is empty
+ * this function will return `hm_list_ret_none` when list is empty
  */
-hm_info hm_list_del_tail(hm_list* list) {
+hm_list_ret hm_list_del_tail(hm_list* list) {
     if (list->size == 0) {
-        return hm_none;
+        return hm_list_ret_none;
     }
 
     hm_listnode* del_node = list->tail;
@@ -193,7 +193,7 @@ hm_info hm_list_del_tail(hm_list* list) {
 
     list->size--;
     
-    return hm_success;
+    return hm_list_ret_suc;
 }
 
 
@@ -201,12 +201,12 @@ hm_info hm_list_del_tail(hm_list* list) {
  * Del hm_listnode with value at the index that you given in this list
  * the range of index must be >= `0`, and < `the size of list`
  * 
- * this function will return hm_none when `index` is invalid
+ * this function will return `hm_list_ret_none` when `index` is invalid
  * 
  */
-hm_info hm_list_del_index(hm_list* list, size_t index) {
+hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
     if (index >= list->size) {
-        return hm_none;
+        return hm_list_ret_none;
     }
 
     if (index == 0) return hm_list_del_head(list);
@@ -222,7 +222,7 @@ hm_info hm_list_del_index(hm_list* list, size_t index) {
 
     list->size--;
 
-    return hm_success;
+    return hm_list_ret_suc;
 
 }
 
