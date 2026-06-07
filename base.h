@@ -11,13 +11,6 @@ typedef enum hm_cmp_res {
 
 
 
-/// @brief return information of functions
-typedef enum hm_info {
-    hm_error = 2,
-    hm_warning,
-    hm_none,
-    hm_success
-} hm_info;
 
 
 
