@@ -250,7 +250,7 @@ void test_map_insert_stress(hm_map* map) {
     hm_map_init(map, hash_str_1, cmp_str_up, free, free);
 
     
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < 11; i++) {
         clock_t start = clock();
         int loop_cnt = 0;
         int same_cnt = 0;
