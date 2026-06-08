@@ -183,7 +183,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
  * Insert key and val in a map
  * Insert failed when this function return `hm_map_ret_error`,
  * and will return `hm_succcess` when insert successful
- * @note is the key has existed in this map, the old key will still existed in this map,
+ * @note if the key has existed in this map, the old key will still existed in this map,
  * and this function will return `hm_map_ret_existed`,
  * so, if the key that you given is allocted, you should free it(only suggestion)
  */
