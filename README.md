@@ -1,5 +1,7 @@
-### focx-hm
-- In Linux
+- **focx-hm**  
+  
+  
+- construction in `Linux`
 1. git clone
 ```shell
 git clone https://github.com/Flmpx/hm-focx.git
@@ -12,5 +14,5 @@ cmake ..
 ```shell
 make
 ```
-4. successful
+4. successful  
 you can find `./bin/libhmfocx.a`, this is a static library of this project
