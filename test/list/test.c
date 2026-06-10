@@ -1,269 +1,218 @@
 #include "../../include/hm_list.h"
+#include "../hm_test.h"
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define NUM 50
-void get_num(int* a) {
-    *a = rand();   
+
+void test_list_init() {
+    printf("\n");
+    hm_list list_1;
+    int fail_cnt = 0;
+    print_run("LIST:initialize");
+    hm_list_init(&list_1, free);
+    
+    check_res(list_1.free == free, "Pass `free` but list.free isn't `free`", &fail_cnt);
+    check_res(list_1.head == NULL, "list.head isn't `NULL`", &fail_cnt);
+    check_res(list_1.tail == NULL, "list.tail isn't `NULL`", &fail_cnt);
+    check_res(list_1.size == 0, "list.size isn't 0", &fail_cnt);
+    
+    
+    hm_list list_2;
+    hm_list_init(&list_2, NULL);
+    
+    
+    check_res(list_2.free == NULL, "Pass `NULL` but list.free isn't `NULL`", &fail_cnt);
+    check_res(list_2.head == NULL, "list.head isn't `NULL`", &fail_cnt);
+    check_res(list_2.tail == NULL, "list.tail isn't `NULL`", &fail_cnt);
+    check_res(list_2.size == 0, "list.size isn't 0", &fail_cnt);
+    print_end("LIST:initialize", fail_cnt);
+    printf("\n");
 }
 
-void print_list_size(hm_list* list) {
-    printf("the size of list is %zu\n", hm_list_size(list));
+
+
+
+void test_list_insert_head() {
+    printf("\n");
+    hm_list list;
+    hm_list_init(&list, free);
+    int fail_cnt = 0;
+    int num = 100;
+    int flag[num];
+    int fail;
+    int cnt;
+    hm_listnode* curr;
+    
+    // insert head
+    print_run("INSERT HEAD | TYPE: [INT]");
+    fail = 0;
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 100;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        if (hm_list_insert_head(&list, v) != hm_list_ret_suc) {
+            fail++;
+        }
+    }
+    
+    check_res(fail == 0, "process of insert head is error", &fail_cnt);
+    check_res(list.size == num, "list.size is wrong", &fail_cnt);
+    
+    // verify 
+    
+    fail = 0;
+    cnt = num;
+    curr = list.head;
+    
+    while (curr) {
+        if (*(int*)(curr->val) != flag[--cnt]) {
+            fail++;
+        }
+        curr = curr->next;
+    }
+    check_res(cnt == 0, "real size of list is wrong", &fail_cnt);
+    check_res(fail == 0, "data in list is wrong", &fail_cnt);
+    
+    hm_list_free(&list);
+    print_end("INSERT HEAD | TYPE: [INT]", fail_cnt);
+    printf("\n");
+}
+
+
+
+void test_list_insert_tail() {
+    printf("\n");
+    hm_list list;
+    hm_list_init(&list, free);
+    int fail_cnt = 0;
+    int num = 100;
+    int flag[num];
+    int fail;
+    int cnt;
+    hm_listnode* curr;
+    
+    // insert tail
+    print_run("INSERT TAIL | TYPE: [INT]");
+    fail = 0;
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        if (hm_list_insert_tail(&list, v) != hm_list_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "process of insert tail is error", &fail_cnt);
+    check_res(list.size == num, "list.size is wrong", &fail_cnt);
+    
+    // verify
+    fail = 0;
+    curr = list.head;
+    cnt = 0;
+    while (curr) {
+        if (*(int*)(curr->val) != flag[cnt++]) {
+            fail++;
+        }
+        curr = curr->next;
+    }
+    check_res(cnt == num, "real size of list is wrong", &fail_cnt);
+    check_res(fail == 0, "data in list is wrong", &fail_cnt);
+    
+    hm_list_free(&list);
+    print_end("INSERT TAIL | TYPE: [INT]", fail_cnt);
+    
+    
+    
+    
+    
+    printf("\n");
+    
+    
+}
+
+
+
+void test_list_insert_index() {
+    hm_list list;
+    hm_list_init(&list, free);
+    hm_listnode* curr;
+    // insert index
+    
+    print_run("INSERT INDEX | TYPE: [INT]");
+    int fail_cnt = 0;
+    int fail_diff = 0;
+    int fail_invalid_index = 0;
+    
+    size_t index[] = {1, 3, 1, 5, 3, 0, 1, 2, 3, 4, 29439, 88, 0, 8, 4, 9, 7};
+    
+    int size = sizeof(index) / sizeof(size_t);
+    
+    for (int i = 0; i < size; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        
+        // this can guarantee the value of every insert is definitely different
+        *v = i;
+        
+        hm_list_ret ret = hm_list_insert_index(&list, v, index[i]);
+        
+        if (index[i] <= hm_list_size(&list)) {
+            size_t loop_cnt = index[i];
+            curr = list.head;
+            int j;
+            for (j = 0; j < loop_cnt && curr; j++) {
+                curr = curr->next;
+            }
+            if (!curr || *(int*)(curr->val) != i) {
+                fail_diff++;
+            }
+        } else {
+            if (ret != hm_list_ret_warn) {
+                fail_invalid_index++;
+            }
+        }
+        
+    }
+    check_res(fail_diff == 0, "data in list is wrong", &fail_cnt);
+    check_res(fail_invalid_index == 0, "pass invalid index but the return of this function isn't `hm_list_ret_warn`", &fail_cnt);
+    
+    hm_list_free(&list);
+    print_end("INSERT INDEX | TYPE: [INT]", fail_cnt);
+    printf("\n");
+}
+
+void test_iter_list() {
+
+}
+
+void test_list_get() {
+
+}
+
+void test_list_change() {
+
+}
+
+void test_list_del_head() {
+
+}
+
+void test_list_del_tail() {
+
+}
+
+void test_list_del_index() {
+
 }
 
 int main()
 {
+    
+    test_list_init();
+    
+    test_list_insert_head();
+    test_list_insert_tail();
+    test_list_insert_index();
+    
     srand(time(NULL));
-    int suc = 0, fail = 0;
-    hm_list list;
-
-/**
- * test for initialize list
- */
-    printf("initialize list : start\n");
-    print_list_size(&list);
-
-    hm_list_init(&list, free);
-    
-    print_list_size(&list);
-    printf("initialize list : end\n\n\n\n");
-
-
-
-
-
-    // use array named flag to test the correctness of vals in list
-    int flag[NUM] = {0};
-    int insert_num = 0;
-
-
-
-/**
- * test of insert
- */
-
-    printf("insert value in list : start\n");
-    print_list_size(&list);
-
-    for (int i = 0; i < NUM; i++) {
-        int* val = (int*)malloc(sizeof(int));
-        if (val == NULL) {
-            break;
-        }
-        get_num(val);
-        
-        flag[i] = *val;
-        
-        if (hm_list_insert_tail(&list, val) != hm_list_ret_suc) {
-            break;
-        }
-        insert_num++;
-    }
-    printf("number of insert is %d\n", insert_num);
-    
-    print_list_size(&list);
-    printf("insert value in list : end\n\n\n\n");
-    
-
-
-
-
-/**
- * test for iterator of list
- */
-
-    printf("test fo iterator of list : start\n");
-    print_list_size(&list);
-
-    suc = fail = 0;
-    hm_iter_list iter;
-    hm_iter_list_init(&iter, &list);
-    
-    int* val;
-    int cnt = 0;
-    while (hm_iter_list_has_next(&iter)) {
-        val = hm_iter_list_next(&iter);
-        if (*val == flag[cnt++]) {
-            printf("index : %d , val : %d\n", cnt - 1, *val);
-            suc++;
-        } else {
-            fail++;
-        }
-    }
-    
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-    
-    print_list_size(&list);
-    printf("test fo iterator of list : end\n\n\n\n");
-
-
-    
-/**
- * verify the function of insert and test for get function
- */
-
-    printf("verify the correctness of the process of insert : start\n");
-    print_list_size(&list);
-
-    suc = 0; fail = 0;
-    for (int i = 0; i < insert_num; i++) {
-        int* val = hm_list_get(&list, i);
-        if (val == NULL || *val != flag[i]) {
-            fail++;
-        } else {
-            printf("index : %d , val : %d\n", i, *val);
-            suc++;
-        }
-    }
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-    
-    print_list_size(&list);
-    printf("verify the correctness of the process of insert : end\n\n\n\n");
-    
-
-
-    
-    
-
-    
-    
-    
-
-
-/**
- * test for change value
- */
-
-    suc = fail = 0;
-    printf("test for fucntion of change value(use get function to change) : start\n");
-    print_list_size(&list);
-
-    for (int i = 0; i < NUM; i += 2) {
-        int* val = hm_list_get(&list, i);
-        
-        //prevent int type overflow
-        int diff = rand() % 9080;
-        
-        printf("index: %d, diff: %d\n", i, diff);
-        flag[i] += diff;
-        *val += diff;
-
-        if (*val == flag[i]) {
-            suc++;
-        } else {
-            fail++;
-        }
-
-    }
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-
-    print_list_size(&list);
-    printf("test for fucntion of change value(use get function to change) : end\n\n\n");
-
-
-
-/**
- * verify the correctness of values in list after change some values
- */
-
-
-    printf("verify the correctness after change some values : start\n");
-    print_list_size(&list);
-
-
-    suc = fail = 0;
-    
-    hm_iter_list_init(&iter, &list);
-    
-    cnt = 0;
-    while (hm_iter_list_has_next(&iter)) {
-        int* val = hm_iter_list_next(&iter);
-        printf("index: %d, val: %d\n", cnt, *val);
-        if (*val == flag[cnt]) {
-            suc++;
-        } else {
-            fail++;
-        }
-        cnt++;
-    }
-    
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-
-    print_list_size(&list);
-    printf("verify the correctness after change some values : end\n\n\n\n");
-    
-    
-
-
-
-
-
-
-
-
-    
-    
-/**
- * test for del
- */
-    suc = fail = 0;
-    printf("test for del val in list : start\n");
-    print_list_size(&list);
-
-    for (int i = 0; i < NUM / 2; i++) {
-        if (hm_list_del_head(&list) == hm_list_ret_suc) {
-            suc++;
-        } else {
-            fail++;
-        }
-        
-    }
-    
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-    
-    hm_iter_list_init(&iter, &list);
-    
-    print_list_size(&list);
-    printf("test for del val in list : end\n\n\n\n");
-    
-    
-
-/**
- * verify the correctness of values in list after del some values
- */
-
-    printf("verify the correctness after del some values: start\n");
-    print_list_size(&list);
-
-
-    suc = fail = 0;
-    cnt = 0;
-    
-    while (val = hm_iter_list_next(&iter)) {
-        if (*val == flag[cnt + NUM / 2]) {
-            printf("index : %d , val : %d\n", cnt + NUM / 2, *val);
-            suc++;
-        } else {
-            fail++;
-        }
-        cnt++;
-    }
-    
-    printf("success : %d\n", suc);
-    printf("failure : %d\n", fail);
-    
-    print_list_size(&list);
-    printf("verify the correctness after del some values: end\n\n\n\n");
-    
-
-
-
-    hm_list_free(&list);
-
     return 0;
 }

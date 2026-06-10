@@ -6,4 +6,6 @@ set(list ../../src/hm_list.c)
 
 set(test test.c)
 
-add_executable(test ${list} ${test})
+set(func ../hm_test.c)
+
+add_executable(test ${list} ${test} ${func})
