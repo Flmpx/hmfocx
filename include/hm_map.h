@@ -1,7 +1,7 @@
 #ifndef HM_MAP_H
 #define HM_MAP_H
 #include <stdbool.h>
-#include "../base.h"
+#include "hm_base.h"
 
 /**
  * the return signal of function in map

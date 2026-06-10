@@ -4,7 +4,12 @@
 /**
  * hm_get_index will use the number to return the flag of not found
  */
-static size_t const invalid_index = SIZE_MAX;
+static const size_t invalid_index = SIZE_MAX;
+
+/**
+ * hm_same represents that two pieces of are the same
+ */
+static const int hm_same = 0;
 
 /**
  * Determine whether a number is a prime number
