@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 void test_list_init() {
-    printf("\n");
+    
     hm_list list_1;
     int fail_cnt = 0;
     print_run("LIST:initialize");
@@ -26,14 +26,14 @@ void test_list_init() {
     check_res(list_2.tail == NULL, "list.tail isn't `NULL`", &fail_cnt);
     check_res(list_2.size == 0, "list.size isn't 0", &fail_cnt);
     print_end("LIST:initialize", fail_cnt);
-    printf("\n");
+    
 }
 
 
 
 
 void test_list_insert_head() {
-    printf("\n");
+    
     hm_list list;
     hm_list_init(&list, free);
     int fail_cnt = 0;
@@ -75,13 +75,13 @@ void test_list_insert_head() {
     
     hm_list_free(&list);
     print_end("INSERT HEAD | TYPE: [INT]", fail_cnt);
-    printf("\n");
+    
 }
 
 
 
 void test_list_insert_tail() {
-    printf("\n");
+    
     hm_list list;
     hm_list_init(&list, free);
     int fail_cnt = 0;
@@ -125,7 +125,7 @@ void test_list_insert_tail() {
     
     
     
-    printf("\n");
+    
     
     
 }
@@ -177,7 +177,7 @@ void test_list_insert_index() {
     
     hm_list_free(&list);
     print_end("INSERT INDEX | TYPE: [INT]", fail_cnt);
-    printf("\n");
+    
 }
 
 void test_iter_list() {
@@ -207,11 +207,11 @@ void test_list_del_index() {
 int main()
 {
     
-    test_list_init();
+    test_list_init();   printf("\n");
     
-    test_list_insert_head();
-    test_list_insert_tail();
-    test_list_insert_index();
+    test_list_insert_head();    printf("\n");
+    test_list_insert_tail();    printf("\n");
+    test_list_insert_index();   printf("\n");
     
     srand(time(NULL));
     return 0;
