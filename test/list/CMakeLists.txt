@@ -8,4 +8,8 @@ set(test test.c)
 
 set(func ../hm_test.c)
 
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
+set(CMAKE_BUILD_TYPE Debug)
+
 add_executable(test ${list} ${test} ${func})
