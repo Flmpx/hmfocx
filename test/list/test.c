@@ -251,6 +251,49 @@ void test_iter_list() {
 }
 
 void test_list_get() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int fail_cnt = 0;
+    int fail_nullptr = 0;
+    int fail_diff = 0;
+    int num = 100;
+    int flag[num];
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 100;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    print_run("GET | TYPE: [INT]");
+    // get and verify[valid]
+    for (int i = 0; i < num; i++) {
+        int* v = hm_list_get(&list, i);
+        if (v == NULL) {
+            fail_nullptr++;
+        } else {
+            if (*v != flag[i]) {
+                fail_diff++;
+            }
+        }
+    }
+    check_res(fail_diff == 0, "data got by `get` is wrong", &fail_cnt);
+    check_res(fail_nullptr == 0, "data is existed but `get` return nullptr", &fail_cnt);
+
+    // get and verify[invalid]
+    int fail_exist = 0;
+    for (int i = num; i < num * 2; i++) {
+        int* v = hm_list_get(&list, i);
+        if (v) {
+            fail_exist++;
+        }
+    }
+    check_res(fail_exist == 0, "data isn't existed but `get` return not nullptr", &fail_cnt);
+    
+    hm_list_free(&list);
+    print_end("GET | TYPE: [INT]", fail_cnt);
 
 }
 
@@ -280,6 +323,8 @@ int main()
     test_list_insert_index();   printf("\n");
     
     test_iter_list();           printf("\n");
+
+    test_list_get();            printf("\n");
     srand(time(NULL));
     return 0;
 }
