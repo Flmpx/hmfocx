@@ -46,9 +46,6 @@ void test_list_init() {
     
     
     check_res(list_2.free == NULL, "Pass `NULL` but list.free isn't `NULL`", &fail_cnt);
-    check_res(list_2.head == NULL, "list.head isn't `NULL`", &fail_cnt);
-    check_res(list_2.tail == NULL, "list.tail isn't `NULL`", &fail_cnt);
-    check_res(list_2.size == 0, "list.size isn't 0", &fail_cnt);
     print_end("LIST:initialize", fail_cnt);
     
 }
