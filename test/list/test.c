@@ -4,6 +4,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void test_list_intergrity(hm_list* list, int* fail_cnt) {
+    int cnt;
+
+    // -->
+    cnt = 0;
+    hm_listnode* cur = list->head;
+    while (cur) {
+        cur = cur->next;
+        cnt++;
+    }
+    check_res(cnt == list->size, "TEST OF INTERGRITY: the next of listnode is wrong", fail_cnt);
+    
+    // <--
+    cnt = 0;
+    cur = list->tail;
+    while (cur) {
+        cur = cur->prev;
+        cnt++;
+    }
+    
+    check_res(cnt == list->size, "TEST OF INTERGRITY: the prev of listnode is wrong", fail_cnt);
+
+}
+
 void test_list_init() {
     
     hm_list list_1;
@@ -58,6 +82,9 @@ void test_list_insert_head() {
     check_res(fail == 0, "process of insert head is error", &fail_cnt);
     check_res(list.size == num, "list.size is wrong", &fail_cnt);
     
+    // test the intergrity of list
+    test_list_intergrity(&list, &fail_cnt);
+
     // verify 
     
     fail = 0;
@@ -104,6 +131,9 @@ void test_list_insert_tail() {
     }
     check_res(fail == 0, "process of insert tail is error", &fail_cnt);
     check_res(list.size == num, "list.size is wrong", &fail_cnt);
+    
+    // test the intergrity of list
+    test_list_intergrity(&list, &fail_cnt);
     
     // verify
     fail = 0;
@@ -174,6 +204,9 @@ void test_list_insert_index() {
     }
     check_res(fail_diff == 0, "data in list is wrong", &fail_cnt);
     check_res(fail_invalid_index == 0, "pass invalid index but the return of this function isn't `hm_list_ret_warn`", &fail_cnt);
+
+    // test the intergrity of list
+    test_list_intergrity(&list, &fail_cnt);
     
     hm_list_free(&list);
     print_end("INSERT INDEX | TYPE: [INT]", fail_cnt);
