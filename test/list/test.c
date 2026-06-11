@@ -298,7 +298,43 @@ void test_list_get() {
 }
 
 void test_list_change() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int fail_cnt = 0;
+    int fail_diff = 0;
+    int num = 100;
+    int flag[num];
 
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 100;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    print_run("CHANGE | TYPE: [INT]");
+    // change [use `hm_list_get`]
+    int diff = 33;
+    for (int i = 0; i < num; i++) {
+        flag[i] += diff;
+        int* v = hm_list_get(&list, i);
+        *v += diff;
+    }
+
+    // verify
+    for (int i = 0; i < num; i++) {
+        int* v = hm_list_get(&list, i);
+        if (*v != flag[i]) {
+            fail_diff++;
+        }
+    }
+    
+    check_res(fail_diff == 0, "the data that has changed is wrong", &fail_cnt);
+    hm_list_free(&list);
+
+    print_end("CHANGE | TYPE: [INT]", fail_cnt);
+    
 }
 
 void test_list_del_head() {
@@ -325,6 +361,8 @@ int main()
     test_iter_list();           printf("\n");
 
     test_list_get();            printf("\n");
+
+    test_list_change();         printf("\n");
     srand(time(NULL));
     return 0;
 }
