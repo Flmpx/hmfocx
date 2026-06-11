@@ -214,7 +214,40 @@ void test_list_insert_index() {
 }
 
 void test_iter_list() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
 
+
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    // iterator
+    print_run("ITERATOR | TYPE: [INT]");
+    int cnt = 0;
+    hm_iter_list iter;
+    hm_iter_list_init(&iter, &list);
+    int fail_diff = 0;
+    while (hm_iter_list_has_next(&iter)) {
+        int* v = hm_iter_list_next(&iter);
+        if (*v != flag[cnt]) {
+            fail_diff++;
+        }
+        cnt++;
+    }
+    check_res(cnt == list.size, "the number of val got by list's iterator is wrong", &fail_cnt);
+    check_res(fail_diff == 0, "the val got by iterator is wrong", &fail_cnt);
+
+    hm_list_free(&list);
+    print_end("ITERATOR | TYPE: [INT]", fail_cnt);
 }
 
 void test_list_get() {
@@ -240,12 +273,13 @@ void test_list_del_index() {
 int main()
 {
     
-    test_list_init();   printf("\n");
+    test_list_init();           printf("\n");
     
     test_list_insert_head();    printf("\n");
     test_list_insert_tail();    printf("\n");
     test_list_insert_index();   printf("\n");
     
+    test_iter_list();           printf("\n");
     srand(time(NULL));
     return 0;
 }
