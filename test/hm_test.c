@@ -18,7 +18,7 @@ void print_run(const char* info) {
 
 void print_end(const char* info, int fail_cnt) {
     if (fail_cnt) {
-        printf(COLOR_RED "[       FAIL]:%s: %d failed" COLOR_RESET "\n", info, fail_cnt);
+        printf(COLOR_RED "[       FAIL]:%s: " COLOR_YELLOW "%d failed" COLOR_RESET "\n", info, fail_cnt);
     } else {
         printf(COLOR_GREEN "[OK         ]:%s" COLOR_RESET "\n", info);
     }
