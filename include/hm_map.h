@@ -65,6 +65,7 @@ typedef struct hm_iter_map {
 /**
  * some simple functions
  */
+
 #define hm_map_size(l) ((l)->size)
 #define hm_map_len(l) ((l)->len)
 

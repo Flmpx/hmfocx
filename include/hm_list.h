@@ -72,6 +72,7 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 /**
  * delete functions
  */
+
 hm_list_ret hm_list_del_head(hm_list* list);
 hm_list_ret hm_list_del_tail(hm_list* list);
 hm_list_ret hm_list_del_index(hm_list* list, size_t index);
