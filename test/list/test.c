@@ -502,6 +502,7 @@ int main()
     test_list_change();         printf("\n");
 
     test_list_del_head();       printf("\n");
+    test_list_del_tail();       printf("\n");
     srand(time(NULL));
     return 0;
 }
