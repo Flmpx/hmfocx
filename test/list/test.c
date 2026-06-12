@@ -335,6 +335,79 @@ void test_list_change() {
 }
 
 void test_list_del_head() {
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, free);
+    int num = 100;
+    int flag[num];
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 100;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    print_run("DEL HEAD TEST | TYPE: [INT]");
+
+    // del some vals
+    int fail_del = 0;
+    for (int i = 0; i < num / 2; i++) {
+        if (hm_list_del_head(&list) != hm_list_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    check_res(list.size == (num - num /2), "list.size is wrong after del half of vals in list", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+
+    // verify
+    hm_iter_list iter;
+    hm_iter_list_init(&iter, &list);
+    int fail_diff = 0;
+    int cur = num / 2;
+    while (hm_iter_list_has_next(&iter)) {
+        int* v = hm_iter_list_next(&iter);
+        if (*v != flag[cur]) {
+            fail_diff++;
+        }
+        cur++;
+    }
+    check_res(fail_diff == 0, "data in list is wrong after del half of vals in list", &fail_cnt);
+
+    // del all vals
+    fail_del = 0;
+    for (int i = num / 2; i < num; i++) {
+        if (hm_list_del_head(&list) != hm_list_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    
+    check_res(list.size == 0, "list.size isn't 0 after del all vals", &fail_cnt);
+    check_res(list.head == NULL, "list.head isn't 0 after del all vals", &fail_cnt);
+    check_res(list.tail == NULL, "list.tail isn't 0 after del all vals", &fail_cnt);
+
+    // del empty list
+    int fail_del_empty = 0;
+    int test_cnt_del_empty = 10;
+    for (int i = 0; i < test_cnt_del_empty; i++) {
+        if (hm_list_del_head(&list) != hm_list_ret_none) {
+            fail_del_empty++;
+        }
+    }
+
+    check_res(fail_del_empty == 0, "it should return `hm_list_ret_none` when del empty list", &fail_cnt);
+    
+    hm_list_free(&list);
+
+
+    print_end("DEL HEAD TEST | TYPE: [INT]", fail_cnt);
+    
+
+    
 
 }
 
@@ -360,6 +433,8 @@ int main()
     test_list_get();            printf("\n");
 
     test_list_change();         printf("\n");
+
+    test_list_del_head();       printf("\n");
     srand(time(NULL));
     return 0;
 }
