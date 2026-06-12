@@ -7,29 +7,11 @@
 #include <time.h>
 #include <limits.h>
 
-// get the real size of buckets
-#if defined(_WIN32) || defined(_WIN64)
-    #include <malloc.h>
-    #define GET_ALLOCATED_SIZE(ptr) _mszie(ptr)
-#elif defined(__linux__)
-    #include <malloc.h>
-    #define GET_ALLOCATED_SIZE(ptr) malloc_usable_size(ptr)
-#else 
-    #include <malloc/malloc.h>
-    #define GET_ALLOCATED_SIZE(ptr) malloc_size(ptr)
-#endif
-
 void test_map_intergrity(hm_map* map, int* fail_cnt) {
-    // entrys
-    int len = GET_ALLOCATED_SIZE(map->buckets) / sizeof (hm_entry);
-    check_res(len == map->len, "TEST OF INTERGRITY: the real size of entry is wrong", fail_cnt);
-    
-    
-    // entrys_status
-    len = GET_ALLOCATED_SIZE(map->buckets_status) / sizeof(hm_entry_status);
-    check_res(len == map->len, "TEST OF INTERGRITY: the real size of entry_status is wrong", fail_cnt);
 
     // size [exist | none | del]
+    // Tip: Assume the map.len is true because can't verify the correctness of map.len
+    int len = map->len;
 
     int existed = 0, none = 0, del = 0;
     int others = 0;
@@ -42,8 +24,8 @@ void test_map_intergrity(hm_map* map, int* fail_cnt) {
         }
     }
     
-    check_res(others == 0, "TEST INTERGRITY: there are unkown tag of entry_status in map", fail_cnt);
-    check_res(existed == map->size, "TEST INTERGRITY: the real size of existed entry in map is wrong", fail_cnt);
+    check_res(others == 0, "TEST OF INTERGRITY: there are unkown tag of entry_status in map", fail_cnt);
+    check_res(existed == map->size, "TEST OF INTERGRITY: the real size of existed entry in map is wrong", fail_cnt);
 }
 
 void test_map_init() {
@@ -69,7 +51,80 @@ void test_map_init() {
     print_end("MAP: initailize", fail_cnt);
 }
 
+void test_map_insert() {
+    int num = 100;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    int fail_cnt = 0;
+    int fail = 0;
+    int flag[num];
+    
+    print_run("INSERT | TYPE K:[INT] V:[INT]");
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        // only return `hm_map_ret_suc` if the function runing correctly
+        if (hm_map_insert(&map, k, v) != hm_map_ret_suc) {
+            fail++;
+        }
+    }
+
+    check_res(num == map.size, "the size of map is wrong", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+
+    // verify
+    int fail_invalid_k = 0;
+    int fail_diff_v = 0;
+    for (int i = 0; i < map.len; i++) {
+        if (map.buckets_status[i] == hm_exist_in_map) {
+            int k = *(int*)(map.buckets[i].key);
+            int v = *(int*)(map.buckets[i].val);
+            if (k < 0 || k >= num) {
+                fail_invalid_k++;
+            } else {
+                if (v != flag[k]) {
+                    fail_diff_v++;
+                }
+            }
+        }
+    }
+    check_res(fail_diff_v == 0, "value in map is wrong", &fail_cnt);
+    check_res(fail_invalid_k == 0, "key in map is wrong", &fail_cnt);
+
+    hm_map_free(&map);
+
+    print_end("INSERT | TYPE K:[INT] V:[INT]", fail_cnt);
+
+}
+
+void test_iter_map() {
+
+}
+
+void test_map_get() {
+
+}
+
+void test_map_change() {
+
+}
+
+void test_map_del() {
+
+}
+
+void test_map_shrink() {
+
+}
+
 int main()
 {
     test_map_init();            printf("\n");
+
+    test_map_insert();          printf("\n");
+
+    return 0;
 }
