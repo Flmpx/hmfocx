@@ -135,7 +135,7 @@ void test_iter_map() {
         }
     }
 
-    check_res(fail_invalid_k != 0, "the k got by iter_map is invalid ", &fail_cnt);
+    check_res(fail_invalid_k == 0, "the k got by iter_map is invalid ", &fail_cnt);
     check_res(fail_diff_v == 0, "the v of k is wrong got by iter_map", &fail_cnt);
 
     hm_map_free(&map);
