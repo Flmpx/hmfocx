@@ -483,6 +483,62 @@ void test_list_del_tail() {
 }
 
 void test_list_del_index() {
+    int num = 100;
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, free);
+
+    // insert
+    for (int i = 0; i < 100; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        hm_list_insert_tail(&list, v);
+    }
+
+
+    print_run("DEL INDEX TEST | TYPE: [INT]");
+
+    // del
+    
+    
+    size_t index[] = {2, 3, 10000, 2, 3, 1};
+
+
+    int fail_del_empty = 0;     // del invalid index of val
+    int fail_del_exist = 0;     // fail in del existed val
+    int n = sizeof(index) / sizeof(size_t);
+    for (int i = 0; i < n; i++) {
+        int prev_size = hm_list_size(&list);
+        int* del_v = hm_list_get(&list, index[i]);
+
+        hm_list_ret ret = hm_list_del_index(&list, index[i]);
+
+        if (index[i] >= prev_size) {
+            if (ret != hm_list_ret_none) {
+                fail_del_empty++;
+            }
+        } else {
+            hm_iter_list iter;
+            hm_iter_list_init(&iter, &list);
+            while (hm_iter_list_has_next(&iter)) {
+                int* v = hm_iter_list_next(&iter);
+                if (*v == *del_v) {
+                    fail_del_exist++;
+                    break;
+                }
+            }
+        }
+
+    }
+
+    test_list_intergrity(&list, &fail_cnt);
+    check_res(fail_del_empty == 0, "the return tag of del function isn't `hm_list_ret_none` when del invalid index", &fail_cnt);
+    check_res(fail_del_exist == 0, "the val still existed in list when del this val", &fail_cnt);
+
+    hm_list_free(&list);
+
+    print_end("DEL INDEX TEST | TYPE: [INT]", fail_cnt);
+
 
 }
 
@@ -503,6 +559,7 @@ int main()
 
     test_list_del_head();       printf("\n");
     test_list_del_tail();       printf("\n");
+    test_list_del_index();      printf("\n");
     srand(time(NULL));
     return 0;
 }
