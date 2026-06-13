@@ -101,6 +101,47 @@ void test_map_insert() {
 }
 
 void test_iter_map() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+    print_run("ITERATOR | TYPE K:[INT] V:[INT]");
+    int fail_invalid_k = 0;
+    int fail_diff_v = 0;
+
+    hm_iter_map iter;
+    hm_iter_map_init(&iter, &map);
+    while (hm_iter_map_has_next(&iter)) {
+        hm_entry* e = hm_iter_map_next(&iter);
+        int* k = e->key;
+        int* v = e->val;
+        if (*k >= num || *k < 0) {
+            fail_invalid_k++;
+        } else {
+            if (*v != flag[*k]) {
+                fail_diff_v++;
+            }
+        }
+    }
+
+    check_res(fail_invalid_k != 0, "the k got by iter_map is invalid ", &fail_cnt);
+    check_res(fail_diff_v == 0, "the v of k is wrong got by iter_map", &fail_cnt);
+
+    hm_map_free(&map);
+
+    print_end("ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
+
 
 }
 
@@ -125,6 +166,8 @@ int main()
     test_map_init();            printf("\n");
 
     test_map_insert();          printf("\n");
+
+    test_iter_map();            printf("\n");
 
     return 0;
 }
