@@ -213,6 +213,54 @@ void test_map_get() {
 }
 
 void test_map_change() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+
+    print_run("CHANGE | TYPE K:[INT] V:[INT]");
+
+    // change
+    int diff = 99;
+    for (int i = 0; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        flag[i] += diff;
+        *(int*)(e->val) += diff;
+    }
+
+    // verify 
+    int fail_diff = 0;
+    int fail_no_exist = 0;
+    for (int i = 0; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            int* v = e->val;
+            if (*v != flag[i]) {
+                fail_diff++;
+            }
+        } else {
+            fail_no_exist++;
+        }
+    }
+
+    check_res(fail_diff == 0, "the val is wrong after change all vals", &fail_cnt);
+    check_res(fail_no_exist == 0, "the entry is not found after change", &fail_cnt);
+
+    hm_map_free(&map);
+
+    print_end("CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
+
 
 }
 
@@ -233,5 +281,7 @@ int main()
     test_iter_map();            printf("\n");
 
     test_map_get();             printf("\n");
+
+    test_map_change();          printf("\n");
     return 0;
 }
