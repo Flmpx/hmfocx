@@ -356,6 +356,61 @@ void test_map_del() {
 }
 
 void test_map_shrink() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+    // del some vals
+
+    for (int i = 0; i < num; i += 2) {
+        hm_map_del(&map, &i);
+    }
+
+    print_run("SHRINK | TYPE K:[INT] V:[INT]");
+    // shrink and verify
+
+    int cnt = 10;
+    int fail_shrink = 0;
+    int fail_no_shrink = 0;
+    int start_s = map.size;
+    for (int i = 0; i < cnt; i++) {
+        size_t l = map.len, s = map.size;
+        hm_map_ret ret = hm_map_shrink(&map);
+        if (l < 34 || 4 * s > l) {
+            if (ret != hm_map_ret_none) {
+                fail_shrink++;
+            }
+        } else {
+            if (ret != hm_map_ret_suc) {
+                fail_no_shrink++;
+            }
+        }
+    }
+
+    check_res(map.size == start_s, "the size fo entrys in map is wrong after shrink map", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+    check_res(fail_shrink == 0, "it shouldn't to shrink map but it do", &fail_cnt);
+    check_res(fail_no_shrink == 0, "it should to shrink map but it not do", &fail_cnt);
+    
+
+    // shrink empty map
+    hm_map_free(&map);
+    check_res(hm_map_shrink(&map) == hm_map_ret_none, "it shouldn't to shrink empty map but it do", &fail_cnt);
+
+
+    print_end("SHRINK | TYPE K:[INT] V:[INT]", fail_cnt);
+
 
 }
 
@@ -372,5 +427,7 @@ int main()
     test_map_change();          printf("\n");
 
     test_map_del();             printf("\n");
+
+    test_map_shrink();          printf("\n");
     return 0;
 }
