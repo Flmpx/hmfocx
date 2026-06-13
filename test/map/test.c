@@ -146,6 +146,69 @@ void test_iter_map() {
 }
 
 void test_map_get() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+
+    print_run("GET | TYPE K:[INT] V:[INT]");
+    // verify valid k
+
+    int fail_no_existed = 0;
+    int fail_diff_v = 0;
+    int fail_invalid_k = 0;
+    for (int i = 0; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            int* k = e->key;
+            int* v = e->val;
+            
+            if (*k != i) {
+                fail_invalid_k++;
+            } else {
+                if (*v != flag[i]) {
+                    fail_diff_v++;
+                }
+            }
+        } else {
+            fail_no_existed++;
+        }
+
+    }
+
+    check_res(fail_no_existed == 0, "the function of `hm_map_get` return NULL when get entry of valid key", &fail_cnt);
+    check_res(fail_invalid_k == 0, "the key of entry got by `hm_map_get` is different from key that needs to be request", &fail_cnt);
+    check_res(fail_diff_v == 0, "val got by `hm_map_get` is wrong", &fail_cnt);
+
+    // verify invalid key
+
+    int fail_exist = 0;
+    for (int i = num; i < 2 * num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            fail_exist++;
+        }
+    }
+
+    check_res(fail_exist == 0, "the entry return by `hm_map_get` is NULL when key is invalid, but is not", &fail_cnt);
+
+    hm_map_free(&map);
+
+    print_end("GET | TYPE K:[INT] V:[INT]", fail_cnt);
+
+    
+
 
 }
 
@@ -169,5 +232,6 @@ int main()
 
     test_iter_map();            printf("\n");
 
+    test_map_get();             printf("\n");
     return 0;
 }
