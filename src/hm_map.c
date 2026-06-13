@@ -187,7 +187,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
 /**
  * Insert key and val in a map
  * Insert failed when this function return `hm_map_ret_error`,
- * and will return `hm_succcess` when insert successful
+ * and will return `hm_map_ret_suc` when insert successful
  * @note if the key has existed in this map, the old key will still existed in this map,
  * and this function will return `hm_map_ret_existed`,
  * so, if the key that you given is allocted, you should free it(only suggestion)
@@ -263,7 +263,7 @@ hm_entry* hm_map_get(hm_map* map, void* key) {
 }
 /**
  * Del the entry by key in map
- * if the key is not existed in map, this funtion will return hm_none
+ * if the key is not existed in map, this funtion will return `hm_map_ret_none`
  */
 hm_map_ret hm_map_del(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
@@ -287,7 +287,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
 }
 /**
  * shrink the len of map if possible
- * the function will return hm_map_ret_none if the map can't shrink the len
+ * the function will return `hm_map_ret_none` if the map can't shrink the len
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
