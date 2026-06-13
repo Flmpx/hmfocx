@@ -542,6 +542,37 @@ void test_list_del_index() {
 
 }
 
+void test_list_free() {
+    int num = 100;
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, free);
+
+    // insert
+    for (int i = 0; i < 100; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        hm_list_insert_tail(&list, v);
+    }
+
+
+    print_run("FREE TEST | TYPE: [INT]");
+
+
+
+    hm_list_free(&list);
+    check_res(list.size == 0, "list.size isn't 0 after free all list", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+    
+    // double free
+    hm_list_free(&list);
+    check_res(list.size == 0, "list.size isn't 0 after double free all list", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    print_end("FREE TEST | TYPE: [INT]", fail_cnt);
+
+
+}
 int main()
 {
     
@@ -560,6 +591,8 @@ int main()
     test_list_del_head();       printf("\n");
     test_list_del_tail();       printf("\n");
     test_list_del_index();      printf("\n");
+
+    test_list_free();           printf("\n");
     srand(time(NULL));
     return 0;
 }
