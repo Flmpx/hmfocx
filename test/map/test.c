@@ -265,6 +265,93 @@ void test_map_change() {
 }
 
 void test_map_del() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+
+    print_run("DEL | TYPE K:[INT] V:[INT]");
+
+    // del half of map
+
+    int fail_del = 0;
+    for (int i = 0; i < num / 2; i++) {
+        if (hm_map_del(&map, &i) != hm_map_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "the function should return `hm_map_ret_suc`, but it is not", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+
+    // verify
+
+    int fail_no_exist = 0;
+
+    for (int i = 0; i < num / 2; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            fail_no_exist++;
+        }
+    }
+    check_res(fail_no_exist == 0, "the del entry is still existed in map after del", &fail_cnt);
+
+
+    // verify existed entry
+    int fail_exist = 0;
+    int fail_diff_v = 0;
+    for (int i = num / 2; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+
+        if (e) {
+            int* v = e->val;
+            if (*v != flag[i]) {
+                fail_diff_v++;
+            }
+        } else {
+            fail_exist++;
+        }
+
+    }
+
+    check_res(fail_diff_v == 0, "the existed entry's val is wrong after del half of map", &fail_cnt);
+    check_res(fail_exist == 0, "the existed entry become NULL in map after del half of map", &fail_cnt);
+    
+    // del all 
+    for (int i = num / 2; i < num; i++) {
+        hm_map_del(&map, &i);
+    }
+
+    check_res(map.size == 0, "map.size isn't 0 after del all entrys", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+
+    // del empty map
+
+    int k[] = {2, 3, 2, 100};
+    int cnt = sizeof(k) / sizeof(int);
+
+    int fail_del_invalid_k = 0;
+    for (int i = 0; i < cnt; i++) {
+        if (hm_map_del(&map, &i) != hm_map_ret_none) {
+            fail_del_invalid_k++;
+        }
+    }
+    check_res(fail_del_invalid_k == 0, "the tag of return isn't `hm_map_ret_none` when del some invlaid key in empty map", &fail_cnt);
+
+    hm_map_free(&map);
+    print_end("DEL | TYPE K:[INT] V:[INT]", fail_cnt);
+
+
 
 }
 
@@ -283,5 +370,7 @@ int main()
     test_map_get();             printf("\n");
 
     test_map_change();          printf("\n");
+
+    test_map_del();             printf("\n");
     return 0;
 }
