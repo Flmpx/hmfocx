@@ -414,6 +414,58 @@ void test_map_shrink() {
 
 }
 
+void test_map_insert_random_stress() {
+    // type : int
+    int fail_cnt = 0;
+    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    print_run("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]");
+    srand(time(NULL));
+    for (int i = 0; i < cnt; i++) {
+        int* k = (int*)malloc(nums[i] * sizeof(int));
+        check_res(k, "the keys in stress test is failed in alloct", &fail_cnt);
+        if (k == NULL) {
+            break;
+        }
+        int* v = (int*)malloc(nums[i] * sizeof(int));
+        check_res(v, "the keys in stress test is failed in alloct", &fail_cnt);
+        if (v == NULL) {
+            free(k);
+            break;
+        }
+        for (size_t j = 0; j < nums[i]; j++) {
+            k[j] = rand();
+            v[j] = rand();
+        }
+
+        size_t same = 0, suc = 0, fail = 0;
+
+        hm_map map;
+        hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
+        clock_t start = clock();
+        for (size_t j = 0; j < nums[i]; j++) {
+            hm_map_ret ret = hm_map_insert(&map, &k[j], &v[j]);
+            
+            switch (ret) {
+                case hm_map_ret_suc: suc++; break;
+                case hm_map_ret_error: fail++; break;
+                case hm_map_ret_existed: same++; break;
+            }
+
+        }
+        clock_t end = clock();
+        check_res(suc == map.size, "the successful counter is different from map.size", &fail_cnt);
+        check_res(suc + fail + same == nums[i], "the all tag of reurn from map_insert is different from the size of this insert stressful test", &fail_cnt);
+        test_map_intergrity(&map, &fail_cnt);
+        print_run_time("INSERT", (double)(end - start) / CLOCKS_PER_SEC, nums[i]);
+
+        free(k);
+        free(v);
+        hm_map_free(&map);
+    }
+    print_end("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]", fail_cnt);
+}
+
 int main()
 {
     test_map_init();            printf("\n");
@@ -429,5 +481,8 @@ int main()
     test_map_del();             printf("\n");
 
     test_map_shrink();          printf("\n");
+
+
+    test_map_insert_random_stress();                printf("\n");
     return 0;
 }
