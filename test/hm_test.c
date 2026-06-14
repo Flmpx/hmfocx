@@ -23,3 +23,9 @@ void print_end(const char* info, int fail_cnt) {
         printf(COLOR_GREEN "[OK         ]:%s" COLOR_RESET "\n", info);
     }
 }
+
+void print_run_time(const char* info, double time, size_t size) {
+    printf(COLOR_YELLOW "(SIZE: %16zu ) | (%s COST TIME):" COLOR_RESET "[%lfs]" COLOR_YELLOW " | (OPERATION PER SEC):" COLOR_RESET "[%zu]\n", size, info, time, (size_t)(size / time));
+}
+
+
