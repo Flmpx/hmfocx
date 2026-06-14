@@ -217,9 +217,15 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
         cur = cur->next;
     }
 
+    if (list->free) {
+        list->free(cur->val);
+    }
+
     cur->prev->next = cur->next;
     cur->next->prev = cur->prev;
 
+    free(cur);
+    
     list->size--;
 
     return hm_list_ret_suc;
