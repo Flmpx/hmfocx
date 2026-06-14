@@ -197,6 +197,8 @@ void test_list_insert_index() {
         } else {
             if (ret != hm_list_ret_warn) {
                 fail_invalid_index++;
+            } else {
+                free(v);
             }
         }
         
