@@ -466,6 +466,40 @@ void test_map_insert_random_stress() {
     print_end("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
+void test_map_insert_same() {
+
+    print_run("INSRET SAME ENTRY | TYPE K:[INT] V:[INT]");
+    int cnt = 1000;
+    // the key is different from every element of keys
+    int fail_cnt = 0;
+    int keys[] = {100, 200};
+    int vals[] = {200, 300};
+    int num = sizeof(keys) / sizeof(int);
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    for (int i = 0; i < num; i++) {
+
+        for (int j = 0; j < cnt; j++) {
+            int* k = (int*)malloc(sizeof(int));
+            int* v = (int*)malloc(sizeof(int));
+            *k = keys[i];
+            *v = vals[i];
+            hm_map_ret ret = hm_map_insert(&map, k, v);
+            if (ret == hm_map_ret_existed) {
+                free(k);
+            }
+        }
+    }
+
+
+    check_res(map.size == num, "insert many some key in map, but map.size is wrong", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+    hm_map_free(&map);
+    print_end("INSRET SAME ENTRY | TYPE K:[INT] V:[INT]", fail_cnt);
+
+
+}
+
 int main()
 {
     test_map_init();            printf("\n");
@@ -482,6 +516,7 @@ int main()
 
     test_map_shrink();          printf("\n");
 
+    test_map_insert_same();                         printf("\n");
 
     test_map_insert_random_stress();                printf("\n");
     return 0;
