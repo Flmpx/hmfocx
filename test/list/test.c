@@ -180,9 +180,11 @@ void test_list_insert_index() {
         // this can guarantee the value of every insert is definitely different
         *v = i;
         
+        size_t prev_s = hm_list_size(&list);
+
         hm_list_ret ret = hm_list_insert_index(&list, v, index[i]);
         
-        if (index[i] <= hm_list_size(&list)) {
+        if (index[i] <= prev_s) {
             size_t loop_cnt = index[i];
             curr = list.head;
             int j;
