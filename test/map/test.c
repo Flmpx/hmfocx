@@ -457,7 +457,7 @@ void test_map_insert_random_stress() {
         check_res(suc == map.size, "the successful counter is different from map.size", &fail_cnt);
         check_res(suc + fail + same == nums[i], "the all tag of reurn from map_insert is different from the size of this insert stressful test", &fail_cnt);
         test_map_intergrity(&map, &fail_cnt);
-        print_run_time("INSERT", (double)(end - start) / CLOCKS_PER_SEC, nums[i]);
+        print_run_time("INSERT", start, end, nums[i]);
 
         free(k);
         free(v);

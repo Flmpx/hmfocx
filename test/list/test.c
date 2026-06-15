@@ -597,7 +597,7 @@ void test_list_insert_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", (double)(end - start) / CLOCKS_PER_SEC, nums[i]);
+        print_run_time("INSERT", start, end, nums[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }

@@ -25,8 +25,8 @@ void print_end(const char* info, int fail_cnt) {
     }
 }
 
-void print_run_time(const char* info, double time, size_t size) {
-    printf(COLOR_YELLOW "(SIZE: %16zu ) | (%s COST TIME):" COLOR_RESET "[%lfs]" COLOR_YELLOW " | (OPERATION PER SEC):" COLOR_RESET "[%zu]\n", size, info, time, (size_t)(size / time));
+void print_run_time(const char* info, clock_t start, clock_t end, size_t size) {
+    printf(COLOR_YELLOW "(SIZE: %16zu ) | (%s COST TIME):" COLOR_RESET "[%lfs]" COLOR_YELLOW " | (OPERATION PER SEC):" COLOR_RESET "[%zu]\n", size, info, (double)(end - start) / CLOCKS_PER_SEC, (size_t)(size * CLOCKS_PER_SEC/ (end - start)));
 }
 
 
