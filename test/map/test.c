@@ -500,6 +500,71 @@ void test_map_insert_same() {
 
 }
 
+void test_map_get_stress() {
+
+    int fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int num = 10000000;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    print_run("GET STRESS | TYPE K:[INT] V:[INT]");
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        check_res(k, "the key in stress test is failed in alloct, stop this test", &fail_cnt);
+        if (k == NULL) {
+            break;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        if (v == NULL) {
+            check_res(k, "the val in stress test is failed in alloct, stop this test", &fail_cnt);
+            free(k);
+            break;
+        }
+        *k = i;
+        *v = rand();
+        hm_map_insert(&map, k, v);
+    }
+    if (fail_cnt != 0) {
+        hm_map_free(&map);
+        print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
+        return;
+    }
+    
+    // find existent
+    
+    clock_t start = clock();
+    int fail_existed = 0;
+    for (int i = 0; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e == NULL) {
+            fail_existed++;
+        }
+    }
+    clock_t end = clock();
+    check_res(fail_existed == 0, "the get function get NULL when key is existent in map", &fail_cnt);
+    print_run_time("GET EXISTENT ENTRY", start, end, num);
+    
+    // find non-existent
+    
+    int fail_no_existed = 0;
+    start = clock();
+    for (int i = num; i < 2 * num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            fail_no_existed++;
+        }
+    }
+    end = clock();
+    
+    check_res(fail_no_existed == 0, "the get function get entry when key is non-existent in map", &fail_cnt);
+    print_run_time("GET NON-EXISTENT ENTRY", start, end, num);
+    
+    print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
+}
+
 int main()
 {
     test_map_init();            printf("\n");
@@ -519,5 +584,7 @@ int main()
     test_map_insert_same();                         printf("\n");
 
     test_map_insert_random_stress();                printf("\n");
+
+    test_map_get_stress();                          printf("\n");
     return 0;
 }
