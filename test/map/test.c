@@ -414,6 +414,45 @@ void test_map_shrink() {
 
 }
 
+void test_map_clear() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+    print_run("CLEAR | TYPE K:[INT] V:[INT]");
+    // clear
+
+    hm_map_clear(&map);
+
+    // verfiy
+
+    int fail_exist = 0;
+    for (int i = 0; i < num; i++) {
+        hm_entry* e = hm_map_get(&map, &i);
+        if (e) {
+            fail_exist++;
+        }
+    }
+    test_map_intergrity(&map, &fail_cnt);
+    check_res(fail_exist == 0, "some entry still existed in map after clear this map", &fail_cnt);
+
+    hm_map_free(&map);
+    print_end("CLEAR | TYPE K:[INT] V:[INT]", fail_cnt);
+    
+}
+
+
 void test_map_insert_random_stress() {
     // type : int
     int fail_cnt = 0;
@@ -581,6 +620,8 @@ int main()
     test_map_del();             printf("\n");
 
     test_map_shrink();          printf("\n");
+
+    test_map_clear();           printf("\n");
 
     test_map_insert_same();                         printf("\n");
 
