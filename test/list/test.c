@@ -716,9 +716,31 @@ void test_list_insert_index_stress() {
         hm_list_free(&list);
     }
 
-    print_end("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]", fail_cnt);
+    print_end("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]\n", fail_cnt);
     
 
+
+    // insert half of list.size
+    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000, 100000};
+    cnt = sizeof(nums_mid) / sizeof(size_t);
+
+    print_run("INSERT INDEX(MID) STRESS TEST | TYPE: [INT]");
+    fail_cnt = 0;
+    for (int i = 0; i < cnt; i++) {
+        size_t suc = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_mid[i]; j++) {
+            if (hm_list_insert_index(&list, &v, list.size / 2) == hm_list_ret_suc) {
+                suc++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("INSERT", start, end, nums_mid[i]);
+        check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
+        hm_list_free(&list);
+    }
+
+    print_end("INSERT INDEX(MID) STRESS TEST | TYPE: [INT]\n", fail_cnt);
 
 }
 
