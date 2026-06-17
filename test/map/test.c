@@ -452,6 +452,42 @@ void test_map_clear() {
     
 }
 
+void test_map_free() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+    print_run("FREE | TYPE K:[INT] V:[INT]");
+
+    hm_map_free(&map);
+
+    check_res(map.size == 0, "map.size isn't 0 after free map", &fail_cnt);
+    check_res(map.len == 0, "map.len isn't 0 after free map", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+    
+    // double free
+    hm_map_free(&map);
+    check_res(map.size == 0, "map.size isn't 0 after double free map", &fail_cnt);
+    check_res(map.len == 0, "map.len isn't 0 after double free map", &fail_cnt);
+    test_map_intergrity(&map, &fail_cnt);
+    
+
+    print_end("FREE | TYPE K:[INT] V:[INT]", fail_cnt);
+
+
+
+}
 
 void test_map_insert_random_stress() {
     // type : int
@@ -622,6 +658,8 @@ int main()
     test_map_shrink();          printf("\n");
 
     test_map_clear();           printf("\n");
+
+    test_map_free();            printf("\n");
 
     test_map_insert_same();                         printf("\n");
 
