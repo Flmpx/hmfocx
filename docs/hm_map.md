@@ -98,4 +98,4 @@ void hm_map_free(hm_map* map);
 
 ## Tips
 
-- **You cann't change the structure of this map(like del, insert, clear and free) when you are iterating a list.**
+- **You cann't change the structure of this map(like del, insert, clear and free) when you are iterating a map.**
