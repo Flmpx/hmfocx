@@ -562,6 +562,7 @@ void test_map_get_stress() {
     check_res(fail_no_existed == 0, "the get function get entry when key is non-existent in map", &fail_cnt);
     print_run_time("GET NON-EXISTENT ENTRY", start, end, num);
     
+    hm_map_free(&map);
     print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
