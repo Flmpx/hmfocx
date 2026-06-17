@@ -635,6 +635,93 @@ void test_list_insert_head_stress() {
 }
 
 
+void test_list_insert_index_stress() {
+    int v = 666666;
+    hm_list list;
+    hm_list_init(&list, NULL);
+
+    // insert head
+    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums_head) / sizeof(size_t);
+
+    print_run("INSERT INDEX(HEAD) STRESS TEST | TYPE: [INT]");
+    int fail_cnt = 0;
+    for (int i = 0; i < cnt; i++) {
+        size_t suc = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            if (hm_list_insert_index(&list, &v, 0) == hm_list_ret_suc) {
+                suc++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("INSERT", start, end, nums_head[i]);
+        check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
+        hm_list_free(&list);
+    }
+
+    print_end("INSERT INDEX(HEAD) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+
+
+    // insert tail
+    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    cnt = sizeof(nums_tail) / sizeof(size_t);
+
+    print_run("INSERT INDEX(TAIL) STRESS TEST | TYPE: [INT]");
+    fail_cnt = 0;
+    for (int i = 0; i < cnt; i++) {
+        size_t suc = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_tail[i]; j++) {
+            if (hm_list_insert_index(&list, &v, list.size) == hm_list_ret_suc) {
+                suc++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("INSERT", start, end, nums_tail[i]);
+        check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
+        hm_list_free(&list);
+    }
+
+    print_end("INSERT INDEX(TAIL) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+    
+
+
+
+    // insert ++list.size - 1++
+
+    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000};
+    cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
+
+    print_run("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]");
+    fail_cnt = 0;
+    // insert index of `list.size - 1` becasue the the insert_index function hasn't perf this situation
+
+    for (int i = 0; i < cnt; i++) {
+        size_t suc = 0;
+        clock_t start = clock();
+
+        // Ensure the list.size - 1 > 0
+        hm_list_insert_tail(&list, &v);
+        suc++;
+
+        for (size_t j = 0; j < nums_tail_sub_1[i]; j++) {
+            if (hm_list_insert_index(&list, &v, list.size - 1) == hm_list_ret_suc) {
+                suc++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("INSERT", start, end, nums_tail_sub_1[i]);
+        check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
+        hm_list_free(&list);
+    }
+
+    print_end("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]", fail_cnt);
+    
+
+
+}
+
 
 
 int main()
@@ -661,6 +748,8 @@ int main()
     test_list_insert_tail_stress();  printf("\n");
 
     test_list_insert_head_stress();  printf("\n");
+
+    test_list_insert_index_stress();                printf("\n");
     
     srand(time(NULL));
     return 0;
