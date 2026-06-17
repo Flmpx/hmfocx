@@ -118,13 +118,28 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     }
     new_node->val = val;
 
+    hm_listnode* cur;
+    size_t cnt = 0;
 
-    hm_listnode* cur = list->head;
+    // perf the find logic of target index
+    if (index > list->size / 2) {
+        cur = list->tail;
+        cnt = list->size - index - 1;
 
+        while (cnt-- && cur) {
+            cur = cur->prev;
+        }
+        
+    } else {
+        cur = list->head;
+        cnt = index;
 
-    while (index-- && cur) {
-        cur = cur->next;
+        while (cnt-- && cur) {
+            cur = cur->next;
+        }
+
     }
+
 
     new_node->next = cur;
     new_node->prev = cur->prev;

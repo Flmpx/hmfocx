@@ -690,12 +690,12 @@ void test_list_insert_index_stress() {
 
     // insert ++list.size - 1++
 
-    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000};
+    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
 
     print_run("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]");
     fail_cnt = 0;
-    // insert index of `list.size - 1` becasue the the insert_index function hasn't perf this situation
+    // this can test the perf of `hm_list_insert_index`
 
     for (int i = 0; i < cnt; i++) {
         size_t suc = 0;
