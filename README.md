@@ -16,3 +16,9 @@ make
 ```
 4. successful  
 you can find `./bin/libhmfocx.a`, this is a static library of this project
+
+- some detail information of container's functions
+
+1. [hm_list](docs/hm_list.md)
+
+2. [hm_map](docs/hm_map.md)
