@@ -607,6 +607,36 @@ void test_list_insert_tail_stress() {
 
 
 }
+
+void test_list_insert_head_stress() {
+    int v = 666666;
+    hm_list list;
+    hm_list_init(&list, NULL);
+    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+
+    print_run("INSERT HEAD STRESS TEST | TYPE: [INT]");
+    int fail_cnt = 0;
+    for (int i = 0; i < cnt; i++) {
+        size_t suc = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < nums[i]; j++) {
+            if (hm_list_insert_head(&list, &v) == hm_list_ret_suc) {
+                suc++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("INSERT", start, end, nums[i]);
+        check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
+        hm_list_free(&list);
+    }
+
+    print_end("INSERT HEAD STRESS TEST | TYPE: [INT]", fail_cnt);
+}
+
+
+
+
 int main()
 {
     
@@ -629,6 +659,8 @@ int main()
     test_list_free();           printf("\n");
 
     test_list_insert_tail_stress();  printf("\n");
+
+    test_list_insert_head_stress();  printf("\n");
     
     srand(time(NULL));
     return 0;
