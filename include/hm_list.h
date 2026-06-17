@@ -56,16 +56,16 @@ typedef struct hm_iter_list {
  * initialize and free function
  */
 
-void hm_list_init(hm_list* list, hm_free free);
-void hm_list_free(hm_list* list);
+extern void hm_list_init(hm_list* list, hm_free free);
+extern void hm_list_free(hm_list* list);
 
 /**
  * add functions
  */
 
-hm_list_ret hm_list_insert_head(hm_list* list, void* val);
-hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
-hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
+extern hm_list_ret hm_list_insert_head(hm_list* list, void* val);
+extern hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
+extern hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 
 
 
@@ -73,23 +73,23 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
  * delete functions
  */
 
-hm_list_ret hm_list_del_head(hm_list* list);
-hm_list_ret hm_list_del_tail(hm_list* list);
-hm_list_ret hm_list_del_index(hm_list* list, size_t index);
+extern hm_list_ret hm_list_del_head(hm_list* list);
+extern hm_list_ret hm_list_del_tail(hm_list* list);
+extern hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 
 /**
  * get functions
  */
 
-void* hm_list_get(hm_list* list, size_t index);
+extern void* hm_list_get(hm_list* list, size_t index);
 
 /**
  * iterator functions
  */
 
-void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
-bool hm_iter_list_has_next(hm_iter_list* iter);
-void* hm_iter_list_next(hm_iter_list* iter);
+extern void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
+extern bool hm_iter_list_has_next(hm_iter_list* iter);
+extern void* hm_iter_list_next(hm_iter_list* iter);
 
 
 #endif
