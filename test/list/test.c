@@ -579,14 +579,14 @@ void test_list_free() {
 }
 
 
-void test_list_insert_stress() {
+void test_list_insert_tail_stress() {
     int v = 666666;
     hm_list list;
     hm_list_init(&list, NULL);
     size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
 
-    print_run("INSERT RANDOM STRESS TEST | TYPE: [INT]");
+    print_run("INSERT TAIL STRESS TEST | TYPE: [INT]");
     int fail_cnt = 0;
     for (int i = 0; i < cnt; i++) {
         size_t suc = 0;
@@ -602,7 +602,7 @@ void test_list_insert_stress() {
         hm_list_free(&list);
     }
 
-    print_end("INSERT RANDOM STRESS TEST | TYPE: [INT]", fail_cnt);
+    print_end("INSERT TAIL STRESS TEST | TYPE: [INT]", fail_cnt);
 
 
 
@@ -628,7 +628,7 @@ int main()
 
     test_list_free();           printf("\n");
 
-    test_list_insert_stress();  printf("\n");
+    test_list_insert_tail_stress();  printf("\n");
     
     srand(time(NULL));
     return 0;
