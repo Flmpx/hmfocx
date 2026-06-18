@@ -845,6 +845,40 @@ void test_list_get_stress() {
     print_end("GET MID STRESS TEST | TYPE: [INT]", fail_cnt);
 }
 
+void test_list_del_head_stress() {
+    int fail_cnt = 0;
+    int v = 666666;
+    hm_list list;
+    hm_list_init(&list, NULL);
+    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+
+    print_run("DEL HEAD STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // del
+
+        int fail_del = 0;
+        
+        clock_t start = clock();
+        for (size_t j = 0; j < nums[i]; j++) {
+            if (hm_list_del_head(&list) != hm_list_ret_suc) {
+                fail_del++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del head test", &fail_cnt);
+        print_run_time("DEL", start, end, nums[i], nums[i]);
+        hm_list_free(&list);
+
+    }
+    print_end("DEL HEAD STRESS TEST | TYPE: [INT]", fail_cnt);
+}
+
 
 int main()
 {
@@ -874,6 +908,8 @@ int main()
     test_list_insert_index_stress();                printf("\n");
 
     test_list_get_stress();                         printf("\n");
+
+    test_list_del_head_stress();                    printf("\n");
     
     srand(time(NULL));
     return 0;
