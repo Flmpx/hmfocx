@@ -1113,43 +1113,62 @@ void test_list_free_stress() {
 
 }
 
-int main()
-{
+
+void function_test() {
+    test_list_init();                               printf("\n");
     
-    test_list_init();           printf("\n");
+    test_list_insert_head();                        printf("\n");
+    test_list_insert_tail();                        printf("\n");
+    test_list_insert_index();                       printf("\n");
     
-    test_list_insert_head();    printf("\n");
-    test_list_insert_tail();    printf("\n");
-    test_list_insert_index();   printf("\n");
+    test_iter_list();                               printf("\n");
     
-    test_iter_list();           printf("\n");
+    test_list_get();                                printf("\n");
+    
+    test_list_change();                             printf("\n");
+    
+    test_list_del_head();                           printf("\n");
+    test_list_del_tail();                           printf("\n");
+    test_list_del_index();                          printf("\n");
+    
+    test_list_free();                               printf("\n");
 
-    test_list_get();            printf("\n");
+}
 
-    test_list_change();         printf("\n");
+void boundary_test() {
 
-    test_list_del_head();       printf("\n");
-    test_list_del_tail();       printf("\n");
-    test_list_del_index();      printf("\n");
+}
 
-    test_list_free();           printf("\n");
+void stress_test() {
 
-    test_list_insert_tail_stress();  printf("\n");
-
-    test_list_insert_head_stress();  printf("\n");
+    test_list_insert_tail_stress();                 printf("\n");
+    
+    test_list_insert_head_stress();                 printf("\n");
 
     test_list_insert_index_stress();                printf("\n");
-
-    test_list_get_stress();                         printf("\n");
-
-    test_list_del_head_stress();                    printf("\n");
-
-    test_list_del_tail_stress();                    printf("\n");
-
-    test_list_del_index_stress();                   printf("\n");
-
-    test_list_free_stress();                           printf("\n");
     
-    srand(time(NULL));
+    test_list_get_stress();                         printf("\n");
+    
+    test_list_del_head_stress();                    printf("\n");
+    
+    test_list_del_tail_stress();                    printf("\n");
+    
+    test_list_del_index_stress();                   printf("\n");
+    
+    test_list_free_stress();                        printf("\n");
+
+}
+
+
+
+int main()
+{
+    function_test();
+    
+    boundary_test();
+
+    stress_test();
+
+    
     return 0;
 }
