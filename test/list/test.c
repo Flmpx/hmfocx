@@ -1046,6 +1046,73 @@ void test_list_del_index_stress() {
     
 }
 
+
+void test_list_free_stress() {
+    int fail_cnt = 0;
+    hm_list list;
+    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    
+    
+    // del node (value is located in stack memory of system) test
+    hm_list_init(&list, NULL);
+    int stack_v = 888;
+    print_run("FREE(ONLY NODE) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        
+        // insert
+
+        for (size_t j = 0; j < nums[i]; j++) {
+            hm_list_insert_tail(&list, &stack_v);
+        }
+
+        // free
+        clock_t start = clock();
+
+        hm_list_free(&list);
+
+        clock_t end = clock();
+
+        check_res(list.size == 0, "the list.size isn't 0 after insert many vals and free it", &fail_cnt);
+        test_list_intergrity(&list, &fail_cnt);
+
+        print_run_time("FREE", start, end, nums[i], nums[i]);
+
+    }
+    print_end("FREE(ONLY NODE) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+    
+    // del node and val(val is allocted) test
+    hm_list_init(&list, free);
+    fail_cnt = 0;
+    print_run("FREE(NODE & VAL) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        
+        // insert
+
+        for (size_t j = 0; j < nums[i]; j++) {
+            int* heap_v = (int*)malloc(sizeof(int));
+            hm_list_insert_tail(&list, heap_v);
+        }
+
+        // free
+        clock_t start = clock();
+
+        hm_list_free(&list);
+
+        clock_t end = clock();
+
+        check_res(list.size == 0, "the list.size isn't 0 after insert many vals and free it", &fail_cnt);
+        test_list_intergrity(&list, &fail_cnt);
+
+        print_run_time("FREE", start, end, nums[i], nums[i]);
+
+    }
+    print_end("FREE(NODE & VAL) STRESS TEST | TYPE: [INT]", fail_cnt);
+
+
+
+}
+
 int main()
 {
     
@@ -1080,6 +1147,8 @@ int main()
     test_list_del_tail_stress();                    printf("\n");
 
     test_list_del_index_stress();                   printf("\n");
+
+    test_list_free_stress();                           printf("\n");
     
     srand(time(NULL));
     return 0;
