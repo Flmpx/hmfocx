@@ -32,7 +32,7 @@ void print_run_time(const char* info, clock_t start, clock_t end, size_t scale, 
 
     printf(COLOR_YELLOW "| (OPERATION PER SEC):" COLOR_RESET);
     if (end <= start) {
-        printf("[OPERATION CNT TOO SMALL]");
+        printf("[OPERATION CNT TOO SMALL]\n\n");
     } else {
         printf("[%zu]\n\n", (size_t)(oper_cnt * CLOCKS_PER_SEC/ (end - start)));
     }
