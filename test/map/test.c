@@ -532,7 +532,7 @@ void test_map_insert_random_stress() {
         check_res(suc == map.size, "the successful counter is different from map.size", &fail_cnt);
         check_res(suc + fail + same == nums[i], "the all tag of reurn from map_insert is different from the size of this insert stressful test", &fail_cnt);
         test_map_intergrity(&map, &fail_cnt);
-        print_run_time("INSERT", start, end, nums[i]);
+        print_run_time("INSERT", start, end, nums[i], nums[i]);
 
         free(k);
         free(v);
@@ -620,7 +620,7 @@ void test_map_get_stress() {
     }
     clock_t end = clock();
     check_res(fail_existed == 0, "the get function get NULL when key is existent in map", &fail_cnt);
-    print_run_time("GET EXISTENT ENTRY", start, end, num);
+    print_run_time("GET EXISTENT ENTRY", start, end, num, num);
     
     // find non-existent
     
@@ -635,7 +635,7 @@ void test_map_get_stress() {
     end = clock();
     
     check_res(fail_no_existed == 0, "the get function get entry when key is non-existent in map", &fail_cnt);
-    print_run_time("GET NON-EXISTENT ENTRY", start, end, num);
+    print_run_time("GET NON-EXISTENT ENTRY", start, end, num, num);
     
     hm_map_free(&map);
     print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);

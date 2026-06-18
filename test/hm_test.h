@@ -5,5 +5,5 @@
 extern void check_res(bool res, const char* info, int* fail_cnt);
 extern void print_run(const char* info);
 extern void print_end(const char* info, int fail_cnt);
-extern void print_run_time(const char* info, clock_t start, clock_t end, size_t size);
+extern void print_run_time(const char* info, clock_t start, clock_t end, size_t size, size_t cnt);
 #endif

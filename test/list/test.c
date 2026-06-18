@@ -597,7 +597,7 @@ void test_list_insert_tail_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums[i]);
+        print_run_time("INSERT", start, end, nums[i], nums[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
@@ -626,7 +626,7 @@ void test_list_insert_head_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums[i]);
+        print_run_time("INSERT", start, end, nums[i], nums[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
@@ -655,7 +655,7 @@ void test_list_insert_index_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums_head[i]);
+        print_run_time("INSERT", start, end, nums_head[i], nums_head[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
@@ -678,7 +678,7 @@ void test_list_insert_index_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums_tail[i]);
+        print_run_time("INSERT", start, end, nums_tail[i], nums_tail[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
@@ -711,7 +711,7 @@ void test_list_insert_index_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums_tail_sub_1[i]);
+        print_run_time("INSERT", start, end, nums_tail_sub_1[i], nums_tail_sub_1[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
@@ -735,7 +735,7 @@ void test_list_insert_index_stress() {
             }
         }
         clock_t end = clock();
-        print_run_time("INSERT", start, end, nums_mid[i]);
+        print_run_time("INSERT", start, end, nums_mid[i], nums_mid[i]);
         check_res(suc == list.size, "the list.size is wrong when insert many vals", &fail_cnt);
         hm_list_free(&list);
     }
