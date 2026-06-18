@@ -254,10 +254,26 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
 void* hm_list_get(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
 
-    hm_listnode* cur = list->head;
-    
-    while (index-- && cur) {
-        cur = cur->next;
+
+    hm_listnode* cur = NULL;
+    size_t cnt = 0;
+
+    if (index >= list->size / 2) {
+        cur = list->tail;
+        cnt = list->size - index - 1;
+
+        while (cnt-- && cur) {
+            cur = cur->prev;
+        }
+
+    } else {
+        cur = list->head;
+        cnt = index;
+
+        while (cnt-- && cur) {
+            cur = cur->next;
+        }
+
     }
 
     return cur->val;
