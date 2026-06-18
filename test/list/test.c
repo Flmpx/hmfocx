@@ -913,6 +913,138 @@ void test_list_del_tail_stress() {
     print_end("DEL TAIL STRESS TEST | TYPE: [INT]", fail_cnt);
 }
 
+void test_list_del_index_stress() {
+    int fail_cnt = 0;
+    int v = 666666;
+    hm_list list;
+    hm_list_init(&list, NULL);
+
+
+    // del head
+    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums_head) / sizeof(size_t);
+
+    print_run("DEL INDEX(HEAD) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // del
+
+        int fail_del = 0;
+        
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            if (hm_list_del_index(&list, 0) != hm_list_ret_suc) {
+                fail_del++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(head) test", &fail_cnt);
+        print_run_time("DEL", start, end, nums_head[i], nums_head[i]);
+        hm_list_free(&list);
+
+    }
+    print_end("DEL INDEX(HEAD) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+
+
+    // del tail
+
+    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    cnt = sizeof(nums_tail) / sizeof(size_t);
+
+    print_run("DEL INDEX(TAIL) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // del
+
+        int fail_del = 0;
+        
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            if (hm_list_del_index(&list, list.size - 1) != hm_list_ret_suc) {
+                fail_del++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(tail) test", &fail_cnt);
+        print_run_time("DEL", start, end, nums_head[i], nums_head[i]);
+        hm_list_free(&list);
+
+    }
+    print_end("DEL INDEX(TAIL) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+    
+    
+    // del ++list.size - 2 == The one before the last one in list++
+    
+    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
+    // this can test the perf of `hm_list_del_index`
+
+    print_run("DEL INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_tail_sub_1[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+    
+        // del
+    
+        int fail_del = 0;
+        
+        clock_t start = clock();
+        
+        // the loop count must be limited at `nums_tail_sub_1[i] - 1` because the `index` that pass in when `list.size == 1`
+        for (size_t j = 0; j < nums_tail_sub_1[i] - 1; j++) {
+            if (hm_list_del_index(&list, list.size - 2) != hm_list_ret_suc) {
+                fail_del++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(tail - 1) test", &fail_cnt);
+        print_run_time("DEL", start, end, nums_tail_sub_1[i], nums_tail_sub_1[i] - 1);
+        hm_list_free(&list);
+    
+    }
+    print_end("DEL INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]\n", fail_cnt);
+
+    // del index at the middle of list
+
+    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000, 100000};
+    cnt = sizeof(nums_mid) / sizeof(size_t);
+
+    print_run("DEL INDEX(MID) STRESS TEST | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_mid[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // del
+
+        int fail_del = 0;
+        
+        clock_t start = clock();
+        for (size_t j = 0; j < nums_mid[i]; j++) {
+            if (hm_list_del_index(&list, list.size / 2) != hm_list_ret_suc) {
+                fail_del++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(middle) test", &fail_cnt);
+        print_run_time("DEL", start, end, nums_mid[i], nums_mid[i]);
+        hm_list_free(&list);
+
+    }
+    print_end("DEL INDEX(MID) STRESS TEST | TYPE: [INT]", fail_cnt);
+    
+}
 
 int main()
 {
@@ -946,6 +1078,8 @@ int main()
     test_list_del_head_stress();                    printf("\n");
 
     test_list_del_tail_stress();                    printf("\n");
+
+    test_list_del_index_stress();                   printf("\n");
     
     srand(time(NULL));
     return 0;
