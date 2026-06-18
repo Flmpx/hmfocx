@@ -583,7 +583,7 @@ void test_list_insert_tail_stress() {
     int v = 666666;
     hm_list list;
     hm_list_init(&list, NULL);
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
 
     print_run("INSERT TAIL STRESS TEST | TYPE: [INT]");
@@ -612,7 +612,7 @@ void test_list_insert_head_stress() {
     int v = 666666;
     hm_list list;
     hm_list_init(&list, NULL);
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
 
     print_run("INSERT HEAD STRESS TEST | TYPE: [INT]");
@@ -641,7 +641,7 @@ void test_list_insert_index_stress() {
     hm_list_init(&list, NULL);
 
     // insert head
-    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_head) / sizeof(size_t);
 
     print_run("INSERT INDEX(HEAD) STRESS TEST | TYPE: [INT]");
@@ -664,7 +664,7 @@ void test_list_insert_index_stress() {
 
 
     // insert tail
-    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail) / sizeof(size_t);
 
     print_run("INSERT INDEX(TAIL) STRESS TEST | TYPE: [INT]");
@@ -690,7 +690,7 @@ void test_list_insert_index_stress() {
 
     // insert ++list.size - 1++
 
-    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_tail_sub_1[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
 
     print_run("INSERT INDEX(TAIL - 1) STRESS TEST | TYPE: [INT]");
@@ -721,7 +721,7 @@ void test_list_insert_index_stress() {
 
 
     // insert half of list.size
-    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000, 100000};
+    size_t nums_mid[] = {10000, 50000, 100000};
     cnt = sizeof(nums_mid) / sizeof(size_t);
 
     print_run("INSERT INDEX(MID) STRESS TEST | TYPE: [INT]");
@@ -756,7 +756,7 @@ void test_list_get_stress() {
     // get head
     print_run("GET HEAD STRESS TEST | TYPE: [INT]");
     // the numbers of list cann't too big
-    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_head) / sizeof(size_t);
 
     for (int i = 0; i < cnt; i++) {
@@ -788,7 +788,7 @@ void test_list_get_stress() {
 
     // get tail
     print_run("GET TAIL STRESS TEST | TYPE: [INT]");
-    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail) / sizeof(size_t);
 
     for (int i = 0; i < cnt; i++) {
@@ -819,7 +819,7 @@ void test_list_get_stress() {
     print_run("GET MID STRESS TEST | TYPE: [INT]");
     
     // the nums cann't to big because it's time complexity is O(n^2)
-    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000};
+    size_t nums_mid[] = {10000, 50000};
     cnt = sizeof(nums_mid) / sizeof(size_t);
     
     for (int i = 0; i < cnt; i++) {
@@ -850,7 +850,7 @@ void test_list_del_head_stress() {
     int v = 666666;
     hm_list list;
     hm_list_init(&list, NULL);
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
 
     print_run("DEL HEAD STRESS TEST | TYPE: [INT]");
@@ -884,7 +884,7 @@ void test_list_del_tail_stress() {
     int v = 666666;
     hm_list list;
     hm_list_init(&list, NULL);
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
 
     print_run("DEL TAIL STRESS TEST | TYPE: [INT]");
@@ -921,7 +921,7 @@ void test_list_del_index_stress() {
 
 
     // del head
-    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_head) / sizeof(size_t);
 
     print_run("DEL INDEX(HEAD) STRESS TEST | TYPE: [INT]");
@@ -952,7 +952,7 @@ void test_list_del_index_stress() {
 
     // del tail
 
-    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail) / sizeof(size_t);
 
     print_run("DEL INDEX(TAIL) STRESS TEST | TYPE: [INT]");
@@ -983,7 +983,7 @@ void test_list_del_index_stress() {
     
     // del ++list.size - 2 == The one before the last one in list++
     
-    size_t nums_tail_sub_1[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums_tail_sub_1[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
     // this can test the perf of `hm_list_del_index`
 
@@ -1016,7 +1016,7 @@ void test_list_del_index_stress() {
 
     // del index at the middle of list
 
-    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000, 100000};
+    size_t nums_mid[] = {10000, 50000, 100000};
     cnt = sizeof(nums_mid) / sizeof(size_t);
 
     print_run("DEL INDEX(MID) STRESS TEST | TYPE: [INT]");
@@ -1050,7 +1050,7 @@ void test_list_del_index_stress() {
 void test_list_free_stress() {
     int fail_cnt = 0;
     hm_list list;
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     
     

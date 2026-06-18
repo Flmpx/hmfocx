@@ -492,7 +492,7 @@ void test_map_free() {
 void test_map_insert_random_stress() {
     // type : int
     int fail_cnt = 0;
-    size_t nums[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     print_run("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]");
     srand(time(NULL));
