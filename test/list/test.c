@@ -745,6 +745,106 @@ void test_list_insert_index_stress() {
 }
 
 
+void test_list_get_stress() {   
+    int v = 666666;
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, NULL);
+
+
+
+    // get head
+    print_run("GET HEAD STRESS TEST | TYPE: [INT]");
+    // the numbers of list cann't too big
+    size_t nums_head[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums_head) / sizeof(size_t);
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+
+        // get
+        size_t oper_cnt = 10000000;
+        int fail_get = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get(&list, 0) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_get == 0, "the value that got by get function is NULL when get head stress test", &fail_cnt);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_head[i], oper_cnt);
+    }
+    print_end("GET HEAD STRESS TEST | TYPE: [INT]\n", fail_cnt);
+    
+    fail_cnt = 0;
+
+
+
+    // get tail
+    print_run("GET TAIL STRESS TEST | TYPE: [INT]");
+    size_t nums_tail[] = {500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    cnt = sizeof(nums_tail) / sizeof(size_t);
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_tail[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // get
+        size_t oper_cnt = 10000000;
+        int fail_get = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get(&list, list.size - 1) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_get == 0, "the value that got by get function is NULL when get tail stress test", &fail_cnt);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_tail[i], oper_cnt);
+    }
+    print_end("GET TAIL STRESS TEST | TYPE: [INT]\n", fail_cnt);
+    
+    
+    
+    // get mid
+    print_run("GET MID STRESS TEST | TYPE: [INT]");
+    
+    // the nums cann't to big because it's time complexity is O(n^2)
+    size_t nums_mid[] = {500, 1000, 5000, 10000, 50000};
+    cnt = sizeof(nums_mid) / sizeof(size_t);
+    
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_mid[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+        
+        // get
+        int fail_get = 0;
+        clock_t start = clock();
+        size_t oper_cnt = 10000;
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get(&list, list.size / 2) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_get == 0, "the value that got by get function is NULL when get mid stress test", &fail_cnt);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_mid[i], oper_cnt);
+    }
+    print_end("GET MID STRESS TEST | TYPE: [INT]", fail_cnt);
+}
+
 
 int main()
 {
@@ -772,6 +872,8 @@ int main()
     test_list_insert_head_stress();  printf("\n");
 
     test_list_insert_index_stress();                printf("\n");
+
+    test_list_get_stress();                         printf("\n");
     
     srand(time(NULL));
     return 0;
