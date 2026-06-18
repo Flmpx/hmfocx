@@ -1,5 +1,11 @@
 #ifndef HM_BASE_H
 #define HM_BASE_H
+
+#define HM_FOCX_VERSION_MAJOR 0
+#define HM_FOCX_VERSION_MINOR 2
+#define HM_FOCX_VERSION_PATCH 7
+#define HM_FOCX_VERSION "0.2.7"
+
 #include <stdio.h>
 
 
