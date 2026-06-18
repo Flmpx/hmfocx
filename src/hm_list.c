@@ -118,7 +118,7 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     }
     new_node->val = val;
 
-    hm_listnode* cur;
+    hm_listnode* cur = NULL;
     size_t cnt = 0;
 
     // perf the find logic of target index
