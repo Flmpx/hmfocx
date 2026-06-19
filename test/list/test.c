@@ -1113,6 +1113,80 @@ void test_list_free_stress() {
 
 }
 
+void test_empty_list_oper() {
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, free);
+
+
+    print_run("BOUNDARY TEST | OPER EMPTY LIST | TYPE: [INT]");
+
+    // get
+
+    check_res(hm_list_get(&list, 0) == NULL, "get on empty list should return NULL", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+    
+    check_res(hm_list_get(&list, 100) == NULL, "get with large index on empty list should return NULL", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    // del
+    check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on empty list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    check_res(hm_list_del_tail(&list) == hm_list_ret_none, "del_tail on empty list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    check_res(hm_list_del_index(&list, 0) == hm_list_ret_none, "del_index on empty list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    // iter
+    hm_iter_list iter;
+    hm_iter_list_init(&iter, &list);
+    int loop_cnt = 0;
+    while (hm_iter_list_has_next(&iter)) {
+        hm_iter_list_next(&iter);       // the return value don't have any function for thsi test
+        loop_cnt++;
+    }
+    check_res(loop_cnt == 0, "iterator over empty list should yield zero elements", &fail_cnt);
+    
+    int* v = (int*)malloc(sizeof(int));
+    hm_list_insert_tail(&list, v);
+    
+    hm_list_free(&list);
+    
+    // still operate on freed list
+
+    // get
+
+    check_res(hm_list_get(&list, 0) == NULL, "get on freed list should return NULL", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+    
+    check_res(hm_list_get(&list, 100) == NULL, "get with large index on freed list should return NULL", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    // del
+    check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on freed list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    check_res(hm_list_del_tail(&list) == hm_list_ret_none, "del_tail on freed list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    check_res(hm_list_del_index(&list, 0) == hm_list_ret_none, "del_index on freed list should return none", &fail_cnt);
+    test_list_intergrity(&list, &fail_cnt);
+
+    // iter
+    hm_iter_list_init(&iter, &list);
+    loop_cnt = 0;
+    while (hm_iter_list_has_next(&iter)) {
+        hm_iter_list_next(&iter);       // the return value don't have any function for thsi test
+        loop_cnt++;
+    }
+    check_res(loop_cnt == 0, "iterator over freed list should yield zero elements", &fail_cnt);
+
+    print_end("BOUNDARY TEST | OPER EMPTY LIST | TYPE: [INT]", fail_cnt);
+
+}
+
 
 void function_test() {
     test_list_init();                               printf("\n");
@@ -1136,6 +1210,7 @@ void function_test() {
 }
 
 void boundary_test() {
+    test_empty_list_oper();                         printf("\n");
 
 }
 
