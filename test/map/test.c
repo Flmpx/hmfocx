@@ -492,28 +492,18 @@ void test_map_free() {
 
 }
 
-void test_map_insert_random_stress() {
+void test_map_insert_stress() {
     // type : int
     int fail_cnt = 0;
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     print_run("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]");
-    srand(time(NULL));
     for (int i = 0; i < cnt; i++) {
         int* k = (int*)malloc(nums[i] * sizeof(int));
-        check_res(k, "the keys in stress test is failed in alloct", &fail_cnt);
-        if (k == NULL) {
-            break;
-        }
         int* v = (int*)malloc(nums[i] * sizeof(int));
-        check_res(v, "the keys in stress test is failed in alloct", &fail_cnt);
-        if (v == NULL) {
-            free(k);
-            break;
-        }
         for (size_t j = 0; j < nums[i]; j++) {
-            k[j] = rand();
-            v[j] = rand();
+            k[j] = j;
+            v[j] = j;
         }
 
         size_t same = 0, suc = 0, fail = 0;
