@@ -636,23 +636,23 @@ void test_map_get_stress() {
 }
 
 void function_test() {
-    test_map_init();            printf("\n");
+    test_map_init();                                printf("\n");
     
-    test_map_insert();          printf("\n");
+    test_map_insert();                              printf("\n");
     
-    test_iter_map();            printf("\n");
+    test_iter_map();                                printf("\n");
     
-    test_map_get();             printf("\n");
+    test_map_get();                                 printf("\n");
     
-    test_map_change();          printf("\n");
+    test_map_change();                              printf("\n");
     
-    test_map_del();             printf("\n");
+    test_map_del();                                 printf("\n");
     
-    test_map_shrink();          printf("\n");
+    test_map_shrink();                              printf("\n");
     
-    test_map_clear();           printf("\n");
+    test_map_clear();                               printf("\n");
     
-    test_map_free();            printf("\n");
+    test_map_free();                                printf("\n");
 
 }
 
@@ -663,7 +663,7 @@ void boundary_test() {
 }
 
 void stress_test() {
-    test_map_insert_random_stress();                printf("\n");
+    test_map_insert_stress();                       printf("\n");
     
     test_map_get_stress();                          printf("\n");
 
