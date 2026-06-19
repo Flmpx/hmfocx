@@ -42,12 +42,14 @@ void test_map_init() {
     check_res(map_1.free_val == free, "pass `free` for map.free_val but map.free_val isn't `free`", &fail_cnt);   
     check_res(map_1.len == 0, "map.len isn't 0", &fail_cnt);
     check_res(map_1.size == 0, "map.size isn't 0", &fail_cnt);
+    test_map_integrity(&map_1, &fail_cnt);
     
     hm_map map_2;
     hm_map_init(&map_2, hash_int_1, cmp_int_up, NULL, NULL);
     
     check_res(map_2.free_key == NULL, "pass `NULL` but map.free_key isn't `NULL`", &fail_cnt);
     check_res(map_2.free_val == NULL, "pass `NULL` but map.free_val isn't `NULL`", &fail_cnt);
+    test_map_integrity(&map_2, &fail_cnt);
     print_end("MAP: initailize", fail_cnt);
 }
 
@@ -137,6 +139,7 @@ void test_iter_map() {
 
     check_res(fail_invalid_k == 0, "the k got by iter_map is invalid ", &fail_cnt);
     check_res(fail_diff_v == 0, "the v of k is wrong got by iter_map", &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
 
     hm_map_free(&map);
 
@@ -190,7 +193,7 @@ void test_map_get() {
     check_res(fail_no_existed == 0, "the function of `hm_map_get` return NULL when get entry of valid key", &fail_cnt);
     check_res(fail_invalid_k == 0, "the key of entry got by `hm_map_get` is different from key that needs to be request", &fail_cnt);
     check_res(fail_diff_v == 0, "val got by `hm_map_get` is wrong", &fail_cnt);
-
+    test_map_integrity(&map, &fail_cnt);
     // verify invalid key
 
     int fail_exist = 0;
@@ -256,7 +259,7 @@ void test_map_change() {
 
     check_res(fail_diff == 0, "the val is wrong after change all vals", &fail_cnt);
     check_res(fail_no_exist == 0, "the entry is not found after change", &fail_cnt);
-
+    test_map_integrity(&map, &fail_cnt);
     hm_map_free(&map);
 
     print_end("CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
@@ -407,7 +410,7 @@ void test_map_shrink() {
     // shrink empty map
     hm_map_free(&map);
     check_res(hm_map_shrink(&map) == hm_map_ret_none, "it shouldn't to shrink empty map but it do", &fail_cnt);
-
+    test_map_integrity(&map, &fail_cnt);
 
     print_end("SHRINK | TYPE K:[INT] V:[INT]", fail_cnt);
 
@@ -619,6 +622,7 @@ void test_map_get_stress() {
         }
     }
     clock_t end = clock();
+    test_map_integrity(&map, &fail_cnt);
     check_res(fail_existed == 0, "the get function get NULL when key is existent in map", &fail_cnt);
     print_run_time("GET EXISTENT ENTRY", start, end, num, num);
     
@@ -633,7 +637,7 @@ void test_map_get_stress() {
         }
     }
     end = clock();
-    
+    test_map_integrity(&map, &fail_cnt);
     check_res(fail_no_existed == 0, "the get function get entry when key is non-existent in map", &fail_cnt);
     print_run_time("GET NON-EXISTENT ENTRY", start, end, num, num);
     
