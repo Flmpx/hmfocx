@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void test_list_intergrity(hm_list* list, int* fail_cnt) {
+void test_list_integrity(hm_list* list, int* fail_cnt) {
     int cnt;
 
     // -->
@@ -79,8 +79,8 @@ void test_list_insert_head() {
     check_res(fail == 0, "process of insert head is error", &fail_cnt);
     check_res(list.size == num, "list.size is wrong", &fail_cnt);
     
-    // test the intergrity of list
-    test_list_intergrity(&list, &fail_cnt);
+    // test the integrity of list
+    test_list_integrity(&list, &fail_cnt);
 
     // verify 
     
@@ -129,8 +129,8 @@ void test_list_insert_tail() {
     check_res(fail == 0, "process of insert tail is error", &fail_cnt);
     check_res(list.size == num, "list.size is wrong", &fail_cnt);
     
-    // test the intergrity of list
-    test_list_intergrity(&list, &fail_cnt);
+    // test the integrity of list
+    test_list_integrity(&list, &fail_cnt);
     
     // verify
     fail = 0;
@@ -206,8 +206,8 @@ void test_list_insert_index() {
     check_res(fail_diff == 0, "data in list is wrong", &fail_cnt);
     check_res(fail_invalid_index == 0, "pass invalid index but the return of this function isn't `hm_list_ret_warn`", &fail_cnt);
 
-    // test the intergrity of list
-    test_list_intergrity(&list, &fail_cnt);
+    // test the integrity of list
+    test_list_integrity(&list, &fail_cnt);
     
     hm_list_free(&list);
     print_end("INSERT INDEX | TYPE: [INT]", fail_cnt);
@@ -362,9 +362,9 @@ void test_list_del_head() {
             fail_del++;
         }
     }
-    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    check_res(fail_del == 0, "it should return suc but return others", &fail_cnt);
     check_res(list.size == (num - num /2), "list.size is wrong after del half of vals in list", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
 
     // verify
@@ -388,7 +388,7 @@ void test_list_del_head() {
             fail_del++;
         }
     }
-    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    check_res(fail_del == 0, "it should return suc but return others", &fail_cnt);
     
     check_res(list.size == 0, "list.size isn't 0 after del all vals", &fail_cnt);
     check_res(list.head == NULL, "list.head isn't 0 after del all vals", &fail_cnt);
@@ -435,9 +435,9 @@ void test_list_del_tail() {
             fail_del++;
         }
     }
-    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    check_res(fail_del == 0, "it should return suc but return others", &fail_cnt);
     check_res(list.size == (num - num /2), "list.size is wrong after del half of vals in list", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
     
     
     // verify
@@ -461,7 +461,7 @@ void test_list_del_tail() {
             fail_del++;
         }
     }
-    check_res(fail_del == 0, "it should return success but return others", &fail_cnt);
+    check_res(fail_del == 0, "it should return suc but return others", &fail_cnt);
     
     check_res(list.size == 0, "list.size isn't 0 after del all vals", &fail_cnt);
     check_res(list.head == NULL, "list.head isn't 0 after del all vals", &fail_cnt);
@@ -535,7 +535,7 @@ void test_list_del_index() {
 
     }
 
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
     check_res(fail_del_empty == 0, "the return tag of del function isn't `hm_list_ret_none` when del invalid index", &fail_cnt);
     check_res(fail_del_exist == 0, "the val still existed in list when del this val", &fail_cnt);
 
@@ -566,12 +566,12 @@ void test_list_free() {
 
     hm_list_free(&list);
     check_res(list.size == 0, "list.size isn't 0 after free all list", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
     
     // double free
     hm_list_free(&list);
     check_res(list.size == 0, "list.size isn't 0 after double free all list", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     print_end("FREE TEST | TYPE: [INT]", fail_cnt);
 
@@ -1074,7 +1074,7 @@ void test_list_free_stress() {
         clock_t end = clock();
 
         check_res(list.size == 0, "the list.size isn't 0 after insert many vals and free it", &fail_cnt);
-        test_list_intergrity(&list, &fail_cnt);
+        test_list_integrity(&list, &fail_cnt);
 
         print_run_time("FREE", start, end, nums[i], nums[i]);
 
@@ -1102,7 +1102,7 @@ void test_list_free_stress() {
         clock_t end = clock();
 
         check_res(list.size == 0, "the list.size isn't 0 after insert many vals and free it", &fail_cnt);
-        test_list_intergrity(&list, &fail_cnt);
+        test_list_integrity(&list, &fail_cnt);
 
         print_run_time("FREE", start, end, nums[i], nums[i]);
 
@@ -1124,27 +1124,27 @@ void test_empty_list_oper() {
     // get
 
     check_res(hm_list_get(&list, 0) == NULL, "get on empty list should return NULL", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
     
     check_res(hm_list_get(&list, 100) == NULL, "get with large index on empty list should return NULL", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     // del
     check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on empty list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     check_res(hm_list_del_tail(&list) == hm_list_ret_none, "del_tail on empty list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     check_res(hm_list_del_index(&list, 0) == hm_list_ret_none, "del_index on empty list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     // iter
     hm_iter_list iter;
     hm_iter_list_init(&iter, &list);
     int loop_cnt = 0;
     while (hm_iter_list_has_next(&iter)) {
-        hm_iter_list_next(&iter);       // the return value don't have any function for thsi test
+        hm_iter_list_next(&iter);       // the return value don't have any function for this test
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over empty list should yield zero elements", &fail_cnt);
@@ -1159,26 +1159,26 @@ void test_empty_list_oper() {
     // get
 
     check_res(hm_list_get(&list, 0) == NULL, "get on freed list should return NULL", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
     
     check_res(hm_list_get(&list, 100) == NULL, "get with large index on freed list should return NULL", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     // del
     check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on freed list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     check_res(hm_list_del_tail(&list) == hm_list_ret_none, "del_tail on freed list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     check_res(hm_list_del_index(&list, 0) == hm_list_ret_none, "del_index on freed list should return none", &fail_cnt);
-    test_list_intergrity(&list, &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
 
     // iter
     hm_iter_list_init(&iter, &list);
     loop_cnt = 0;
     while (hm_iter_list_has_next(&iter)) {
-        hm_iter_list_next(&iter);       // the return value don't have any function for thsi test
+        hm_iter_list_next(&iter);       // the return value don't have any function for this test
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over freed list should yield zero elements", &fail_cnt);

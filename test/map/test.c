@@ -7,7 +7,7 @@
 #include <time.h>
 #include <limits.h>
 
-void test_map_intergrity(hm_map* map, int* fail_cnt) {
+void test_map_integrity(hm_map* map, int* fail_cnt) {
 
     // size [exist | none | del]
     // Tip: Assume the map.len is true because can't verify the correctness of map.len
@@ -73,7 +73,7 @@ void test_map_insert() {
     }
 
     check_res(num == map.size, "the size of map is wrong", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
 
     // verify
     int fail_invalid_k = 0;
@@ -292,7 +292,7 @@ void test_map_del() {
         }
     }
     check_res(fail_del == 0, "the function should return `hm_map_ret_suc`, but it is not", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
 
     // verify
 
@@ -333,7 +333,7 @@ void test_map_del() {
     }
 
     check_res(map.size == 0, "map.size isn't 0 after del all entrys", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
 
     // del empty map
 
@@ -399,7 +399,7 @@ void test_map_shrink() {
     }
 
     check_res(map.size == start_s, "the size fo entrys in map is wrong after shrink map", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
     check_res(fail_shrink == 0, "it shouldn't to shrink map but it do", &fail_cnt);
     check_res(fail_no_shrink == 0, "it should to shrink map but it not do", &fail_cnt);
     
@@ -444,7 +444,7 @@ void test_map_clear() {
             fail_exist++;
         }
     }
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
     check_res(fail_exist == 0, "some entry still existed in map after clear this map", &fail_cnt);
 
     hm_map_free(&map);
@@ -474,13 +474,13 @@ void test_map_free() {
 
     check_res(map.size == 0, "map.size isn't 0 after free map", &fail_cnt);
     check_res(map.len == 0, "map.len isn't 0 after free map", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
     
     // double free
     hm_map_free(&map);
     check_res(map.size == 0, "map.size isn't 0 after double free map", &fail_cnt);
     check_res(map.len == 0, "map.len isn't 0 after double free map", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
     
 
     print_end("FREE | TYPE K:[INT] V:[INT]", fail_cnt);
@@ -531,7 +531,7 @@ void test_map_insert_random_stress() {
         clock_t end = clock();
         check_res(suc == map.size, "the successful counter is different from map.size", &fail_cnt);
         check_res(suc + fail + same == nums[i], "the all tag of reurn from map_insert is different from the size of this insert stressful test", &fail_cnt);
-        test_map_intergrity(&map, &fail_cnt);
+        test_map_integrity(&map, &fail_cnt);
         print_run_time("INSERT", start, end, nums[i], nums[i]);
 
         free(k);
@@ -568,7 +568,7 @@ void test_map_insert_same() {
 
 
     check_res(map.size == num, "insert many some key in map, but map.size is wrong", &fail_cnt);
-    test_map_intergrity(&map, &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
     hm_map_free(&map);
     print_end("INSRET SAME ENTRY | TYPE K:[INT] V:[INT]", fail_cnt);
 
