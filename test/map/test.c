@@ -626,6 +626,64 @@ void test_map_get_stress() {
     print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
+void test_map_del_stress() {
+    int fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums) / sizeof(int);
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    print_run("DEL STRESS | TYPE K:[INT] V:[INT]");
+
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (int j = 0; j < nums[i]; j++) {
+            int* k = (int*)malloc(sizeof(int));
+            int* v = (int*)malloc(sizeof(int));
+            *k = j;
+            *v = j;
+            hm_map_insert(&map, k, v);
+        }
+        
+        // del non-existent
+
+
+        int fail_del_noexist = 0;
+        clock_t start = clock();
+        for (int j = nums[i]; j < 2 * nums[i]; j++) {
+            hm_map_ret ret = hm_map_del(&map, &j);
+            if (ret != hm_map_ret_none) {
+                fail_del_noexist++;
+            }
+        }
+        clock_t end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        check_res(fail_del_noexist == 0, "del non-existent entry should return none", &fail_cnt);
+        print_run_time("DEL NON-EXISTENT ENTRY", start, end, nums[i], nums[i]);
+        
+        // del existent
+        
+        int fail_del_exist = 0;
+        start = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            hm_map_ret ret = hm_map_del(&map, &j);
+            if (ret != hm_map_ret_suc) {
+                fail_del_exist++;
+            }
+        }
+        end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        check_res(fail_del_exist == 0, "del existent entry should return suc", &fail_cnt);
+        print_run_time("DEL EXISTENT ENTRY", start, end, nums[i], nums[i]);
+        
+        hm_map_free(&map);
+
+    }
+    print_end("DEL STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
+}
+
 void function_test() {
     test_map_init();                                printf("\n");
     
@@ -657,6 +715,8 @@ void stress_test() {
     test_map_insert_stress();                       printf("\n");
     
     test_map_get_stress();                          printf("\n");
+
+    test_map_del_stress();                          printf("\n");
 
 }
 
