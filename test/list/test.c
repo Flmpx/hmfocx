@@ -14,7 +14,7 @@ void test_list_integrity(hm_list* list, int* fail_cnt) {
         cur = cur->next;
         cnt++;
     }
-    check_res(cnt == list->size, "TEST OF INTERGRITY: the next of listnode is wrong", fail_cnt);
+    check_res(cnt == list->size, "TEST OF INTEGRITY: the next of listnode is wrong", fail_cnt);
     
     // <--
     cnt = 0;
@@ -24,7 +24,7 @@ void test_list_integrity(hm_list* list, int* fail_cnt) {
         cnt++;
     }
     
-    check_res(cnt == list->size, "TEST OF INTERGRITY: the prev of listnode is wrong", fail_cnt);
+    check_res(cnt == list->size, "TEST OF INTEGRITY: the prev of listnode is wrong", fail_cnt);
 
 }
 

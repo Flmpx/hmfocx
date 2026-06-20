@@ -24,8 +24,8 @@ void test_map_integrity(hm_map* map, int* fail_cnt) {
         }
     }
     
-    check_res(others == 0, "TEST OF INTERGRITY: there are unkown tag of entry_status in map", fail_cnt);
-    check_res(existed == map->size, "TEST OF INTERGRITY: the real size of existed entry in map is wrong", fail_cnt);
+    check_res(others == 0, "TEST OF INTEGRITY: there are unkown tag of entry_status in map", fail_cnt);
+    check_res(existed == map->size, "TEST OF INTEGRITY: the real size of existed entry in map is wrong", fail_cnt);
 }
 
 void test_map_init() {
