@@ -684,6 +684,160 @@ void test_map_del_stress() {
     print_end("DEL STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
+void test_map_clear_stress() {
+    int fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums_free) / sizeof(int);
+    hm_map map;
+
+    // clear the map including entry that have power to free the key and value
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    
+    print_run("CLEAR STRESS(hm_free: free) | TYPE K:[INT] V:[INT]");
+    
+    
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (int j = 0; j < nums_free[i]; j++) {
+            int* k = (int*)malloc(sizeof(int));
+            int* v = (int*)malloc(sizeof(int));
+            *k = j;
+            *v = j;
+            hm_map_insert(&map, k, v);
+        }
+        
+        // clear
+        clock_t start = clock();
+        
+        hm_map_clear(&map);
+        
+        clock_t end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        print_run_time("CLEAR", start, end, nums_free[i], nums_free[i]);
+        
+        hm_map_free(&map);
+        
+    }
+    print_end("CLEAR STRESS(hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    
+    
+    fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    cnt = sizeof(nums_null) / sizeof(int);
+    // clear the map including entry that don't have power to free the key and value
+    hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
+
+    print_run("CLEAR STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]");
+
+
+    for (int i = 0; i < cnt; i++) {
+
+        // insert
+        int* keys = (int*)malloc(nums_null[i] * sizeof(int));
+        int* vals = (int*)malloc(nums_null[i] * sizeof(int));
+        
+        for (int j = 0; j < nums_null[i]; j++) {
+            keys[j] = j;
+            vals[j] = j;
+            hm_map_insert(&map, &keys[j], &vals[j]);
+        }
+        
+        // clear
+        clock_t start = clock();
+
+        hm_map_clear(&map);
+
+        clock_t end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        print_run_time("CLEAR", start, end, nums_null[i], nums_null[i]);
+
+        free(keys);
+        free(vals);
+        hm_map_free(&map);
+
+    }
+    print_end("CLEAR STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+}
+
+
+void test_map_free_stress() {
+    int fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums_free) / sizeof(int);
+    hm_map map;
+    
+    // free the map including entry that have power to free the key and value
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    
+    print_run("FREE STRESS(hm_free: free) | TYPE K:[INT] V:[INT]");
+    
+    
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (int j = 0; j < nums_free[i]; j++) {
+            int* k = (int*)malloc(sizeof(int));
+            int* v = (int*)malloc(sizeof(int));
+            *k = j;
+            *v = j;
+            hm_map_insert(&map, k, v);
+        }
+        
+        // free
+        clock_t start = clock();
+        
+        hm_map_free(&map);
+        
+        clock_t end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        print_run_time("FREE", start, end, nums_free[i], nums_free[i]);
+        
+        
+    }
+    print_end("FREE STRESS(hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    
+    
+    fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    cnt = sizeof(nums_null) / sizeof(int);
+    // free the map including entry that don't have power to free the key and value
+    hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
+    
+    print_run("FREE STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]");
+    
+    
+    for (int i = 0; i < cnt; i++) {
+    
+        // insert
+        int* keys = (int*)malloc(nums_null[i] * sizeof(int));
+        int* vals = (int*)malloc(nums_null[i] * sizeof(int));
+        
+        for (int j = 0; j < nums_null[i]; j++) {
+            keys[j] = j;
+            vals[j] = j;
+            hm_map_insert(&map, &keys[j], &vals[j]);
+        }
+        
+        // free
+        clock_t start = clock();
+    
+        hm_map_free(&map);        
+    
+        clock_t end = clock();
+        test_map_integrity(&map, &fail_cnt);
+        print_run_time("FREE", start, end, nums_null[i], nums_null[i]);
+    
+        free(keys);
+        free(vals);
+    }
+    print_end("FREE STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+
+}
+
+
 void function_test() {
     test_map_init();                                printf("\n");
     
@@ -717,6 +871,10 @@ void stress_test() {
     test_map_get_stress();                          printf("\n");
 
     test_map_del_stress();                          printf("\n");
+
+    test_map_clear_stress();                        printf("\n");
+
+    test_map_free_stress();                         printf("\n");
 
 }
 
