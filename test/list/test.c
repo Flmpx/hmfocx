@@ -1200,6 +1200,58 @@ void test_empty_list_oper() {
 
 }
 
+void test_single_listnode_oper() {
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, NULL);
+    int v = 666;
+
+    print_run("BOUNDARY TEST | OPER SINGLE LISTNODE'S LIST | TYPE: [INT]");
+
+
+    hm_list_insert_tail(&list, &v);
+    // del head
+    check_res(hm_list_del_head(&list) == hm_list_ret_suc, "del_head on single listnode's list should return suc", &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
+    
+    hm_list_insert_tail(&list, &v);
+    // del tail
+    check_res(hm_list_del_head(&list) == hm_list_ret_suc, "del_tail on single listnode's list should return suc", &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
+    
+    hm_list_insert_tail(&list, &v);
+    // del index
+    check_res(hm_list_del_index(&list, 0) == hm_list_ret_suc, "del_index on single listnode's list should return suc", &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
+
+
+
+    hm_list_insert_tail(&list, &v);
+    // insert new node at tail of now node
+    int v_new = 10;
+    hm_list_insert_tail(&list, &v_new);
+    test_list_integrity(&list, &fail_cnt);
+
+    int* res = hm_list_get(&list, 1);
+    check_res(*res == v_new, "the new node's val isn't the new val when insert node in the tail of single listnode's list", &fail_cnt);
+    
+    hm_list_free(&list);
+    
+    hm_list_insert_tail(&list, &v);
+    // insert new node at tail of now node
+    v_new = 100;
+    hm_list_insert_head(&list, &v_new);
+    test_list_integrity(&list, &fail_cnt);
+
+    res = hm_list_get(&list, 0);
+    check_res(*res == v_new, "the new node's val isn't the new val when insert node in the head of single listnode's list", &fail_cnt);
+
+    hm_list_free(&list);
+    test_list_integrity(&list, &fail_cnt);
+
+    print_end("BOUNDARY TEST | OPER SINGLE LISTNODE'S LIST | TYPE: [INT]", fail_cnt);
+
+}
 
 void function_test() {
     test_list_init();                               printf("\n");
@@ -1224,6 +1276,8 @@ void function_test() {
 
 void boundary_test() {
     test_empty_list_oper();                         printf("\n");
+
+    test_single_listnode_oper();                    printf("\n");
 
 }
 
