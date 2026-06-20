@@ -31,7 +31,7 @@ void test_map_integrity(hm_map* map, int* fail_cnt) {
 void test_map_init() {
     hm_map map_1;
     int fail_cnt = 0;
-    print_run("MAP: initailize");
+    print_run("MAP | FUNC | INIT");
     hm_map_init(&map_1, hash_int_1, cmp_int_up, free, free);
 
     check_res(map_1.buckets == NULL, "the buckets isn't NULL", &fail_cnt);
@@ -50,7 +50,7 @@ void test_map_init() {
     check_res(map_2.free_key == NULL, "pass `NULL` but map.free_key isn't `NULL`", &fail_cnt);
     check_res(map_2.free_val == NULL, "pass `NULL` but map.free_val isn't `NULL`", &fail_cnt);
     test_map_integrity(&map_2, &fail_cnt);
-    print_end("MAP: initailize", fail_cnt);
+    print_end("MAP | FUNC | INIT", fail_cnt);
 }
 
 void test_map_insert() {
@@ -61,7 +61,7 @@ void test_map_insert() {
     int fail = 0;
     int flag[num];
     
-    print_run("INSERT | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | INSERT | TYPE K:[INT] V:[INT]");
     // insert
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
@@ -98,7 +98,7 @@ void test_map_insert() {
 
     hm_map_free(&map);
 
-    print_end("INSERT | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | INSERT | TYPE K:[INT] V:[INT]", fail_cnt);
 
 }
 
@@ -118,7 +118,7 @@ void test_iter_map() {
         hm_map_insert(&map, k, v);
     }
 
-    print_run("ITERATOR | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | ITERATOR | TYPE K:[INT] V:[INT]");
     int fail_invalid_k = 0;
     int fail_diff_v = 0;
 
@@ -143,7 +143,7 @@ void test_iter_map() {
 
     hm_map_free(&map);
 
-    print_end("ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 }
@@ -165,7 +165,7 @@ void test_map_get() {
     }
 
 
-    print_run("GET | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | GET | TYPE K:[INT] V:[INT]");
     // verify valid k
 
     int fail_no_existed = 0;
@@ -208,7 +208,7 @@ void test_map_get() {
 
     hm_map_free(&map);
 
-    print_end("GET | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | GET | TYPE K:[INT] V:[INT]", fail_cnt);
 
     
 
@@ -232,7 +232,7 @@ void test_map_change() {
     }
 
 
-    print_run("CHANGE | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT]");
 
     // change
     int diff = 99;
@@ -262,7 +262,7 @@ void test_map_change() {
     test_map_integrity(&map, &fail_cnt);
     hm_map_free(&map);
 
-    print_end("CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 }
@@ -284,7 +284,7 @@ void test_map_del() {
     }
 
 
-    print_run("DEL | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | DEL | TYPE K:[INT] V:[INT]");
 
     // del half of map
 
@@ -352,7 +352,7 @@ void test_map_del() {
     check_res(fail_del_invalid_k == 0, "the tag of return isn't `hm_map_ret_none` when del some invlaid key in empty map", &fail_cnt);
 
     hm_map_free(&map);
-    print_end("DEL | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | DEL | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 
@@ -380,7 +380,7 @@ void test_map_shrink() {
         hm_map_del(&map, &i);
     }
 
-    print_run("SHRINK | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | SHRINK | TYPE K:[INT] V:[INT]");
     // shrink and verify
 
     int cnt = 10;
@@ -412,7 +412,7 @@ void test_map_shrink() {
     check_res(hm_map_shrink(&map) == hm_map_ret_none, "it shouldn't to shrink empty map but it do", &fail_cnt);
     test_map_integrity(&map, &fail_cnt);
 
-    print_end("SHRINK | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | SHRINK | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 }
@@ -433,7 +433,7 @@ void test_map_clear() {
         hm_map_insert(&map, k, v);
     }
 
-    print_run("CLEAR | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | CLEAR | TYPE K:[INT] V:[INT]");
     // clear
 
     hm_map_clear(&map);
@@ -451,7 +451,7 @@ void test_map_clear() {
     check_res(fail_exist == 0, "some entry still existed in map after clear this map", &fail_cnt);
 
     hm_map_free(&map);
-    print_end("CLEAR | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | CLEAR | TYPE K:[INT] V:[INT]", fail_cnt);
     
 }
 
@@ -471,7 +471,7 @@ void test_map_free() {
         hm_map_insert(&map, k, v);
     }
 
-    print_run("FREE | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | FREE | TYPE K:[INT] V:[INT]");
 
     hm_map_free(&map);
 
@@ -486,7 +486,7 @@ void test_map_free() {
     test_map_integrity(&map, &fail_cnt);
     
 
-    print_end("FREE | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | FREE | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 
@@ -497,7 +497,7 @@ void test_map_insert_stress() {
     int fail_cnt = 0;
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(size_t);
-    print_run("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | INSERT RANDOM | TYPE K:[INT] V:[INT]");
     for (int i = 0; i < cnt; i++) {
         int* k = (int*)malloc(nums[i] * sizeof(int));
         int* v = (int*)malloc(nums[i] * sizeof(int));
@@ -531,12 +531,12 @@ void test_map_insert_stress() {
         free(v);
         hm_map_free(&map);
     }
-    print_end("INSERT RANDOM STRESS TEST | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | STRESS | INSERT RANDOM | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
 void test_map_insert_same() {
 
-    print_run("INSRET SAME ENTRY | TYPE K:[INT] V:[INT]");
+    print_run("MAP | BOUNDARY | INSRET SAME ENTRY | TYPE K:[INT] V:[INT]");
     int cnt = 1000;
     // the key is different from every element of keys
     int fail_cnt = 0;
@@ -563,7 +563,7 @@ void test_map_insert_same() {
     check_res(map.size == num, "insert many some key in map, but map.size is wrong", &fail_cnt);
     test_map_integrity(&map, &fail_cnt);
     hm_map_free(&map);
-    print_end("INSRET SAME ENTRY | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | BOUNDARY | INSRET SAME ENTRY | TYPE K:[INT] V:[INT]", fail_cnt);
 
 
 }
@@ -577,7 +577,7 @@ void test_map_get_stress() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    print_run("GET STRESS | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | GET | TYPE K:[INT] V:[INT]");
 
 
     for (int i = 0; i < cnt; i++) {
@@ -623,7 +623,7 @@ void test_map_get_stress() {
         hm_map_free(&map);
 
     }
-    print_end("GET STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | STRESS | GET | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
 void test_map_del_stress() {
@@ -634,7 +634,7 @@ void test_map_del_stress() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    print_run("DEL STRESS | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | DEL | TYPE K:[INT] V:[INT]");
 
 
     for (int i = 0; i < cnt; i++) {
@@ -681,7 +681,7 @@ void test_map_del_stress() {
         hm_map_free(&map);
 
     }
-    print_end("DEL STRESS | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | STRESS | DEL | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
 void test_map_clear_stress() {
@@ -694,7 +694,7 @@ void test_map_clear_stress() {
     // clear the map including entry that have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     
-    print_run("CLEAR STRESS(hm_free: free) | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | CLEAR (hm_free: free) | TYPE K:[INT] V:[INT]");
     
     
     for (int i = 0; i < cnt; i++) {
@@ -719,7 +719,7 @@ void test_map_clear_stress() {
         hm_map_free(&map);
         
     }
-    print_end("CLEAR STRESS(hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    print_end("MAP | STRESS | CLEAR (hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
     
     
     fail_cnt = 0;
@@ -729,7 +729,7 @@ void test_map_clear_stress() {
     // clear the map including entry that don't have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
 
-    print_run("CLEAR STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | CLEAR (hm_free: NULL) | TYPE K:[INT] V:[INT]");
 
 
     for (int i = 0; i < cnt; i++) {
@@ -758,7 +758,7 @@ void test_map_clear_stress() {
         hm_map_free(&map);
 
     }
-    print_end("CLEAR STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    print_end("MAP | STRESS | CLEAR (hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
 }
 
 
@@ -772,7 +772,7 @@ void test_map_free_stress() {
     // free the map including entry that have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     
-    print_run("FREE STRESS(hm_free: free) | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | FREE (hm_free: free) | TYPE K:[INT] V:[INT]");
     
     
     for (int i = 0; i < cnt; i++) {
@@ -796,7 +796,7 @@ void test_map_free_stress() {
         
         
     }
-    print_end("FREE STRESS(hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    print_end("MAP | STRESS | FREE (hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
     
     
     fail_cnt = 0;
@@ -806,7 +806,7 @@ void test_map_free_stress() {
     // free the map including entry that don't have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     
-    print_run("FREE STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]");
+    print_run("MAP | STRESS | FREE (hm_free: NULL) | TYPE K:[INT] V:[INT]");
     
     
     for (int i = 0; i < cnt; i++) {
@@ -833,7 +833,7 @@ void test_map_free_stress() {
         free(keys);
         free(vals);
     }
-    print_end("FREE STRESS(hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    print_end("MAP | STRESS | FREE (hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
 
 }
 
