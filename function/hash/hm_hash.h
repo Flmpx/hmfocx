@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #ifndef HM_HASH_H
 #define HM_HASH_H
 #include "../../include/hm_base.h"

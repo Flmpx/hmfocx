@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #ifndef HM_CMP_H
 #define HM_CMP_H
 #include "../../include/hm_base.h"

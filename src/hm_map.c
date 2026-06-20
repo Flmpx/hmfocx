@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #include "../include/hm_map.h"
 #include <stdlib.h>
 #include <stdint.h>

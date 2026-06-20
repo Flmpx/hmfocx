@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #include <stdbool.h>
 #include <stdio.h>
 #include "hm_test.h"

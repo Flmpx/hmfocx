@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #ifndef HM_MAP_H
 #define HM_MAP_H
 #include <stdbool.h>

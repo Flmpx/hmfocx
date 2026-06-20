@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
 #include "../include/hm_list.h"
 #include <stdio.h>
 #include <stdlib.h>
