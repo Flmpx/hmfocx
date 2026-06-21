@@ -842,6 +842,52 @@ void test_map_free_stress() {
 }
 
 
+void test_map_iter_stress() {
+    int fail_cnt = 0;
+    // the value of num cann't greater than 10^9
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums) / sizeof(int);
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    
+    print_run("MAP | STRESS | ITERATOR | TYPE K:[INT] V:[INT]");
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (int j = 0; j < nums[i]; j++) {
+            int* k = (int*)malloc(sizeof(int));
+            int* v = (int*)malloc(sizeof(int));
+            *k = j;
+            *v = j * 2;
+            hm_map_insert(&map, k, v);
+        }
+
+        // itering map
+
+        hm_iter_map iter;
+        hm_iter_map_init(&iter, &map);
+
+        int fail_iter = 0;
+        clock_t start = clock();
+
+        while (hm_iter_map_has_next(&iter)) {
+            hm_entry* e = hm_iter_map_next(&iter);
+            int k = *(int*)(e->key);
+            int v = *(int*)(e->val);
+            if (v != 2 * k) {
+                fail_iter++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_iter == 0, "the value shoule be twice key", &fail_cnt);
+        test_map_integrity(&map, &fail_cnt);
+        print_run_time("ITER", start, end, nums[i], nums[i]);
+        hm_map_free(&map);
+
+    }
+    print_end("MAP | STRESS | ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
+}
+
 void function_test() {
     test_map_init();                                printf("\n");
     
@@ -879,6 +925,8 @@ void stress_test() {
     test_map_clear_stress();                        printf("\n");
 
     test_map_free_stress();                         printf("\n");
+
+    test_map_iter_stress();                         printf("\n");
 
 }
 
