@@ -17,6 +17,19 @@ make
 4. successful  
 you can find `./bin/libhmfocx.a`, this is a static library of this project
 
+
+- construction in `Windows` (MinGW)
+- the steps are the same as above, just the command is different
+```shell
+git clone https://github.com/Flmpx/hm-focx.git
+
+cmake .. -G "MinGW Makefiles"
+
+mingw32-make
+```
+
+
+
 - some detail information of container's functions
 
 1. [hm_list](docs/hm_list.md)
