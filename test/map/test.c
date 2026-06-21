@@ -888,6 +888,78 @@ void test_map_iter_stress() {
     print_end("MAP | STRESS | ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
 }
 
+void test_empty_map_oper() {
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    print_run("MAP | BOUNDARY | OPER EMPTY MAP | TYPE K:[INT] V:[INT]");
+
+    int k = 0;
+    // get
+    check_res(hm_map_get(&map, &k) == NULL, "get on empty map should return `NULL`", &fail_cnt);
+
+    // del
+    k = 10;
+    check_res(hm_map_del(&map, &k) == hm_map_ret_none, "del on empty map should return `NULL`", &fail_cnt);
+
+    // iter
+
+    hm_iter_map iter;
+    hm_iter_map_init(&iter, &map);
+    int loop_cnt = 0;
+    while (hm_iter_map_has_next(&iter)) {
+        hm_iter_map_next(&iter);
+        loop_cnt++;
+    }
+    check_res(loop_cnt == 0, "iterator over empty map should yield zero entrys", &fail_cnt);
+
+
+    print_end("MAP | BOUNDARY | OPER EMPTY MAP | TYPE K:[INT] V:[INT]", fail_cnt);
+
+
+}
+
+void test_single_entry_oper() {
+    int fail_cnt = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
+    int k = 1, v = 10;
+    print_run("MAP | BOUNDARY | OPER SINGLE ENTRY'S LIST | TYPE K:[INT] V:[INT]");
+
+    // insert single entry and get
+
+    hm_map_insert(&map, &k, &v);
+    hm_entry* e = hm_map_get(&map, &k);
+    check_res(*(int*)(e->key) == k, "the key is wrong when run `map_get` on single entry's map", &fail_cnt);
+    check_res(*(int*)(e->val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt);
+    hm_map_free(&map);
+
+    // insert single entry and delete it 
+
+    hm_map_insert(&map, &k, &v);
+    check_res(hm_map_del(&map, &k) == hm_map_ret_suc, "del on single entry's map should return suc", &fail_cnt);
+    check_res(map.size == 0, "map.size should be `zero` after del on single entry's map", &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
+    hm_map_free(&map);
+
+    // insert two indetical keys
+
+    hm_map_insert(&map, &k, &v);
+    int new_v = 10;
+    hm_map_insert(&map, &k, &new_v);
+    e = hm_map_get(&map, &k);
+    check_res(*(int*)(e->key) == k, "the key is wrong when insert two indetical keys", &fail_cnt);
+    check_res(*(int*)(e->val) == new_v, "the key is wrong when insert two indetical keys", &fail_cnt);
+
+    check_res(map.size == 1, "the map.size should be 1 when insert two indetical keys", &fail_cnt);
+    test_map_integrity(&map, &fail_cnt);
+    hm_map_free(&map);
+
+
+    print_end("MAP | BOUNDARY | OPER SINGLE ENTRY'S LIST | TYPE K:[INT] V:[INT]", fail_cnt);
+}
+
 void function_test() {
     test_map_init();                                printf("\n");
     
@@ -912,6 +984,10 @@ void function_test() {
 
 void boundary_test() {
     test_map_insert_same();                         printf("\n");
+
+    test_empty_map_oper();                          printf("\n");
+
+    test_single_entry_oper();                       printf("\n");
 
 }
 
