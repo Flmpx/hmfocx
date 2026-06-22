@@ -1290,6 +1290,62 @@ void test_single_listnode_oper() {
 
 }
 
+void test_list_sort_stress() {
+    srand(666);
+    int fail_cnt = 0;
+    hm_list list;
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    hm_list_init(&list, free);
+    int cnt = sizeof(nums) / sizeof(size_t);
+
+    print_run("LIST | STRESS | SORT | TYPE: [INT]");
+    for (int i = 0; i < cnt; i++) {
+        // random generate and insert
+
+        int* vals = (int*)malloc(nums[i] * sizeof(int));
+
+        for (size_t j = 0; j < nums[i]; j++) {
+            vals[j] = rand();
+            int* v = (int*)malloc(sizeof(int));
+            *v = vals[j];
+            hm_list_insert_tail(&list, v);
+        }
+
+        // sort
+
+        qsort(vals, nums[i], sizeof(int), cmp_int_up);
+
+        clock_t start = clock();
+        hm_list_sort(&list, cmp_int_up);
+        clock_t end = clock();
+
+
+        // verify
+        test_list_integrity(&list, &fail_cnt);
+
+        int fail_sort = 0;
+        size_t n = 0;
+        hm_iter_list iter;
+        hm_iter_list_init(&iter, &list);
+
+        while (hm_iter_list_has_next(&iter)) {
+            int* v = hm_iter_list_next(&iter);
+            if (*v != vals[n]) {
+                fail_sort++;
+            }
+            n++;
+        }
+        check_res(fail_sort == 0, "the value is wrong after sort list with many vals", &fail_cnt);
+        
+        print_run_time("SORT", start, end, nums[i], nums[i]);
+
+        free(vals);
+        hm_list_free(&list);
+    }
+
+    print_end("LIST | STRESS | SORT | TYPE: [INT]", fail_cnt);
+}
+
 void function_test() {
     test_list_init();                               printf("\n");
     
@@ -1337,6 +1393,8 @@ void stress_test() {
     test_list_del_index_stress();                   printf("\n");
     
     test_list_free_stress();                        printf("\n");
+    
+    test_list_sort_stress();                        printf("\n");
 
 }
 
