@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-22
+
+### Added
+- Add `hm_list_sort` function that can sort a list to this library
 
 ## [0.2.7] - 2026-06-19
 
