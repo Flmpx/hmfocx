@@ -1233,6 +1233,12 @@ void test_empty_list_oper() {
     }
     check_res(loop_cnt == 0, "iterator over freed list should yield zero elements", &fail_cnt);
 
+    // sort
+
+    hm_list_sort(&list, cmp_int_up);
+    test_list_integrity(&list, &fail_cnt);
+
+
     print_end("LIST | BOUNDARY | OPER EMPTY LIST | TYPE: [INT]", fail_cnt);
 
 }
@@ -1285,6 +1291,16 @@ void test_single_listnode_oper() {
 
     hm_list_free(&list);
     test_list_integrity(&list, &fail_cnt);
+
+    // sort
+
+    hm_list_insert_tail(&list, &v);
+    hm_list_sort(&list, cmp_int_up);
+    test_list_integrity(&list, &fail_cnt);
+    res = hm_list_get(&list, 0);
+    check_res(*res == v, "the val is wrong after sort a single listnode's list", &fail_cnt);
+    hm_list_free(&list);
+
 
     print_end("LIST | BOUNDARY | OPER SINGLE LISTNODE'S LIST | TYPE: [INT]", fail_cnt);
 
