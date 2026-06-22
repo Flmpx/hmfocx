@@ -1275,7 +1275,7 @@ void test_single_listnode_oper() {
     hm_list_free(&list);
     
     hm_list_insert_tail(&list, &v);
-    // insert new node at tail of now node
+    // insert new node at head of now node
     v_new = 100;
     hm_list_insert_head(&list, &v_new);
     test_list_integrity(&list, &fail_cnt);
