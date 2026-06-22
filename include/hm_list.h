@@ -96,4 +96,10 @@ extern bool hm_iter_list_has_next(hm_iter_list* iter);
 extern void* hm_iter_list_next(hm_iter_list* iter);
 
 
+/**
+ * sort functions
+ */
+
+extern void hm_list_sort(hm_list* list, hm_cmp cmp);
+
 #endif

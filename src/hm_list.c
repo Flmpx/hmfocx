@@ -337,3 +337,98 @@ void* hm_iter_list_next(hm_iter_list* iter) {
 }
 
 
+/**
+ * Take the first `n` listnode from the head and form a separate sub-list
+ * It will return the head listnode of the remaining part
+ */
+static hm_listnode* split(hm_listnode* head, size_t n) {
+    if (!head) return NULL;
+    hm_listnode* cur = head;
+    for (size_t i = 1; i < n && cur->next; i++) {
+        cur = cur->next;
+    }
+    hm_listnode* right = cur->next;
+
+    if (right) {
+        right->prev = NULL;
+    }
+
+    cur->next = NULL;
+    head->prev = NULL;
+
+    return right;
+}
+
+
+/**
+ * Merge two lists and attach them to the tail 
+ * Return the last listnode of the merged list
+ */
+static hm_listnode* merge(hm_listnode* left, hm_listnode* right, hm_listnode* tail, hm_cmp cmp) {
+    hm_listnode* l = left;
+    hm_listnode* r = right;
+
+    while (l && r) {
+        if (cmp(l->val, r->val) <= 0) {
+            tail->next = l;
+            l->prev = tail;
+            l = l->next;
+        } else {
+            tail->next = r;
+            r->prev = tail;
+            r = r->next;
+        }
+        tail = tail->next;
+    }
+
+    if (l) {
+        tail->next = l;
+        l->prev = tail;
+        while (tail->next) tail = tail->next;
+    } else if (r) {
+        tail->next = r;
+        r->prev = tail;
+        while (tail->next) tail = tail->next;
+    }
+    return tail;
+}
+
+
+/**
+ * Sort list
+ * Pass a comparation function to this function
+ */
+void hm_list_sort(hm_list* list, hm_cmp cmp) {
+    
+    hm_listnode* head = list->head;
+
+    if (!head || !head->next) return;
+
+    size_t s = list->size;
+
+    hm_listnode dummy;
+    dummy.next = head;
+    dummy.prev = NULL;
+
+    head->prev = &dummy;
+
+    hm_listnode* tail;
+    hm_listnode* cur;
+    for (size_t step = 1; step < s; step <<= 1) {
+        tail = &dummy;
+        cur = dummy.next;
+
+        while (cur) {
+            hm_listnode* left = cur;
+            hm_listnode* right = split(left, step);
+            cur = split(right, step);
+
+            tail = merge(left, right, tail, cmp);
+        }
+    }
+
+    dummy.next->prev = NULL;
+
+    list->head = dummy.next;
+    list->tail = tail;
+}
