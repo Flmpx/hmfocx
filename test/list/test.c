@@ -3,6 +3,7 @@
  * Licensed under MIT (see LICENSE).
  */
 #include "../../include/hm_list.h"
+#include "../../function/cmp/hm_cmp.h"
 #include "../hm_test.h"
 #include <time.h>
 #include <stdio.h>
@@ -586,6 +587,38 @@ void test_list_free() {
     print_end("LIST | FUNC | FREE | TYPE: [INT]", fail_cnt);
 
 
+}
+
+void test_list_sort() {
+    int fail_cnt = 0;
+    hm_list list;
+    hm_list_init(&list, free);
+
+    print_run("LIST | FUNC | SORT | TYPE: [INT]");
+    int flag[] = {2, 1, 3, 4, 5, 3, 2, 4};
+    int cnt = sizeof(flag) / sizeof(int);
+
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    qsort(flag, cnt, sizeof(int), cmp_int_up);
+
+    hm_list_sort(&list, cmp_int_up);
+    test_list_integrity(&list, &fail_cnt);
+
+    int fail_sort = 0;
+    for (int i = 0; i < cnt; i++) {
+        int* v = hm_list_get(&list, i);
+        if (*v != flag[i]) {
+            fail_sort++;
+        }
+    }
+    check_res(fail_sort == 0, "the value is wrong after sort list", &fail_cnt);
+    hm_list_free(&list);
+    print_end("LIST | FUNC | SORT | TYPE: [INT]", fail_cnt);
 }
 
 
@@ -1275,6 +1308,8 @@ void function_test() {
     test_list_del_index();                          printf("\n");
     
     test_list_free();                               printf("\n");
+
+    test_list_sort();                               printf("\n");
 
 }
 
