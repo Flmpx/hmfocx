@@ -104,6 +104,15 @@ void* hm_iter_list_next(hm_iter_list* iter);
 void hm_list_free(hm_list* list);
 ```
 
+- **Sort**
+```c
+/**
+ * Sort list
+ * Pass a comparation function to this function
+ */
+void hm_list_sort(hm_list* list, hm_cmp cmp);
+```
+
 - **Small Functions**
 ```c
 #define hm_list_size(l) ((l)->size)
@@ -113,4 +122,4 @@ void hm_list_free(hm_list* list);
 
 ## Tips
 
-- **You cann't change the structure of this list(like del, insert and free) when you are iterating a list.**
+- **You cann't change the structure of this list(like del, insert, free and sort) when you are iterating a list.**
