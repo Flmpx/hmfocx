@@ -7,7 +7,7 @@
 /**
  * hash type of `int`
  */
-size_t hash_int_1(void* ptr) {
+size_t hash_int_1(const void* ptr) {
     unsigned int key = (unsigned int)(*(int*)ptr);
     key = ((key >> 16) ^ key) * 0x45d9f3b;
     key = ((key >> 16) ^ key) * 0x45d9f3b;
@@ -21,7 +21,7 @@ static const size_t base = 131;
 /**
  * hash type of `string`
  */
-size_t hash_str_1(void* ptr) {
+size_t hash_str_1(const void* ptr) {
     char* key = (char*)ptr;
     size_t hash_res = 0;
     for (size_t i = 0; key[i]; i++) {

@@ -6,9 +6,9 @@
 #define HM_CMP_H
 #include "../../include/hm_base.h"
 
-extern int cmp_int_up(void* ptr1, void* ptr2);
-extern int cmp_int_down(void* ptr1, void* ptr2);
+extern int cmp_int_up(const void* ptr1, const void* ptr2);
+extern int cmp_int_down(const void* ptr1, const void* ptr2);
 
-extern int cmp_str_up(void* ptr1, void* ptr2);
-extern int cmp_str_down(void* ptr1, void* ptr2);
+extern int cmp_str_up(const void* ptr1, const void* ptr2);
+extern int cmp_str_down(const void* ptr1, const void* ptr2);
 #endif
