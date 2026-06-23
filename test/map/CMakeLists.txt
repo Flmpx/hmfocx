@@ -18,4 +18,4 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
 
 add_executable(test_hm_map ${test} ${map} ${cmp} ${hash} ${func})
 
-add_test(NAME test_hm_map COMMAND test_hm_map)
+add_test(NAME test_hm_map COMMAND $<TARGET_FILE:test_hm_map>)

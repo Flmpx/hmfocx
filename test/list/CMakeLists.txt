@@ -16,4 +16,4 @@ set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(test_hm_list ${list} ${test} ${func} ${cmp})
 
-add_test(NAME test_hm_list COMMAND test_hm_list)
+add_test(NAME test_hm_list COMMAND $<TARGET_FILE:test_hm_list>)
