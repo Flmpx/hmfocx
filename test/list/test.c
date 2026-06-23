@@ -9,6 +9,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef HM_TEST_COUNTER
+    all_failure_num += fail_cnt;
+#endif
+
+// This variable can record the all number of failure
+int all_failure_num = 0;
+
+
 void test_list_integrity(hm_list* list, int* fail_cnt) {
     int cnt;
 
@@ -53,6 +61,7 @@ void test_list_init() {
     check_res(list_2.free == NULL, "Pass `NULL` but list.free isn't `NULL`", &fail_cnt);
     test_list_integrity(&list_2, &fail_cnt);
     print_end("LIST | FUNC | INIT", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -105,6 +114,7 @@ void test_list_insert_head() {
     
     hm_list_free(&list);
     print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -153,6 +163,7 @@ void test_list_insert_tail() {
     
     hm_list_free(&list);
     print_end("LIST | FUNC | INSERT TAIL | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
     
     
@@ -217,6 +228,7 @@ void test_list_insert_index() {
     
     hm_list_free(&list);
     print_end("LIST | FUNC | INSERT INDEX | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -255,6 +267,7 @@ void test_iter_list() {
     test_list_integrity(&list, &fail_cnt);
     hm_list_free(&list);
     print_end("LIST | FUNC | ITERATOR | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_list_get() {
@@ -302,6 +315,7 @@ void test_list_get() {
 
     hm_list_free(&list);
     print_end("LIST | FUNC | GET | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -343,6 +357,7 @@ void test_list_change() {
     hm_list_free(&list);
 
     print_end("LIST | FUNC | CHANGE | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -418,6 +433,7 @@ void test_list_del_head() {
 
 
     print_end("LIST | FUNC | DEL HEAD | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_list_del_tail() {
@@ -493,6 +509,7 @@ void test_list_del_tail() {
     
     
     print_end("LIST | FUNC | DEL TAIL | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 
 }
@@ -553,6 +570,7 @@ void test_list_del_index() {
     hm_list_free(&list);
 
     print_end("LIST | FUNC | DEL INDEX | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -585,6 +603,7 @@ void test_list_free() {
     test_list_integrity(&list, &fail_cnt);
 
     print_end("LIST | FUNC | FREE | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -619,6 +638,7 @@ void test_list_sort() {
     check_res(fail_sort == 0, "the value is wrong after sort list", &fail_cnt);
     hm_list_free(&list);
     print_end("LIST | FUNC | SORT | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 
@@ -647,6 +667,7 @@ void test_list_insert_tail_stress() {
     }
 
     print_end("LIST | STRESS | INSERT TAIL | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 
@@ -677,6 +698,7 @@ void test_list_insert_head_stress() {
     }
 
     print_end("LIST | STRESS | INSERT HEAD | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 
@@ -707,6 +729,7 @@ void test_list_insert_index_stress() {
     }
 
     print_end("LIST | STRESS | INSERT INDEX(HEAD) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
     // insert tail
@@ -730,6 +753,7 @@ void test_list_insert_index_stress() {
     }
 
     print_end("LIST | STRESS | INSERT INDEX(TAIL) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
 
 
@@ -763,6 +787,7 @@ void test_list_insert_index_stress() {
     }
 
     print_end("LIST | STRESS | INSERT INDEX(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
 
 
@@ -787,6 +812,7 @@ void test_list_insert_index_stress() {
     }
 
     print_end("LIST | STRESS | INSERT INDEX(MID) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -828,6 +854,7 @@ void test_list_get_stress() {
         print_run_time("GET", start, end, nums_head[i], oper_cnt);
     }
     print_end("LIST | STRESS | GET HEAD | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     fail_cnt = 0;
 
@@ -859,6 +886,7 @@ void test_list_get_stress() {
         print_run_time("GET", start, end, nums_tail[i], oper_cnt);
     }
     print_end("LIST | STRESS | GET TAIL | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     
     
@@ -890,6 +918,7 @@ void test_list_get_stress() {
         print_run_time("GET", start, end, nums_mid[i], oper_cnt);
     }
     print_end("LIST | STRESS | GET MID | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_list_del_head_stress() {
@@ -925,6 +954,7 @@ void test_list_del_head_stress() {
 
     }
     print_end("LIST | STRESS | DEL HEAD | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_list_del_tail_stress() {
@@ -960,6 +990,7 @@ void test_list_del_tail_stress() {
 
     }
     print_end("LIST | STRESS | DEL TAIL | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_list_del_index_stress() {
@@ -998,6 +1029,7 @@ void test_list_del_index_stress() {
 
     }
     print_end("LIST | STRESS | DEL INDEX(HEAD) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
     // del tail
@@ -1029,6 +1061,7 @@ void test_list_del_index_stress() {
 
     }
     print_end("LIST | STRESS | DEL INDEX(TAIL) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     
     // del ++list.size - 2 == The one before the last one in list++
@@ -1063,6 +1096,7 @@ void test_list_del_index_stress() {
     
     }
     print_end("LIST | STRESS | DEL INDEX(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 
     // del index at the middle of list
 
@@ -1093,6 +1127,7 @@ void test_list_del_index_stress() {
 
     }
     print_end("LIST | STRESS | DEL INDEX(MID) | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -1130,6 +1165,7 @@ void test_list_free_stress() {
 
     }
     print_end("LIST | STRESS | FREE(ONLY NODE) | TYPE: [INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     // del node and val(val is allocted) test
     hm_list_init(&list, free);
@@ -1158,6 +1194,7 @@ void test_list_free_stress() {
 
     }
     print_end("LIST | STRESS | FREE(NODE & VAL) | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 
@@ -1204,6 +1241,7 @@ void test_empty_list_oper() {
     test_list_integrity(&list, &fail_cnt);
 
     print_end("LIST | BOUNDARY | OPER EMPTY LIST | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -1267,6 +1305,7 @@ void test_single_listnode_oper() {
 
 
     print_end("LIST | BOUNDARY | OPER SINGLE LISTNODE'S LIST | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -1321,6 +1360,7 @@ void test_freed_list_oper() {
 
 
     print_end("LIST | BOUNDARY | OPER FREED LIST | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
     
 }
@@ -1379,6 +1419,7 @@ void test_list_sort_stress() {
     }
 
     print_end("LIST | STRESS | SORT | TYPE: [INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void function_test() {
@@ -1446,5 +1487,5 @@ int main()
     stress_test();
 
     
-    return 0;
+    return all_failure_num;
 }

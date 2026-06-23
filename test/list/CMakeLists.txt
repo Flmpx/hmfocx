@@ -10,8 +10,14 @@ set(func ../hm_test.c)
 
 set(cmp ../../function/cmp/hm_cmp.c)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+if (BUILD_TESTS) 
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
+else()    
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+endif()
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test ${list} ${test} ${func} ${cmp})
+add_executable(test_hm_list ${list} ${test} ${func} ${cmp})
+
+add_test(NAME test_hm_list COMMAND test_hm_list)

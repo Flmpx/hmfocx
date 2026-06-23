@@ -11,6 +11,13 @@
 #include <time.h>
 #include <limits.h>
 
+#ifdef HM_TEST_COUNTER
+    all_failure_num += fail_cnt;
+#endif
+
+// This variable can record the all number of failure
+int all_failure_num = 0;
+
 void test_map_integrity(hm_map* map, int* fail_cnt) {
 
     // size [exist | none | del]
@@ -55,6 +62,7 @@ void test_map_init() {
     check_res(map_2.free_val == NULL, "pass `NULL` but map.free_val isn't `NULL`", &fail_cnt);
     test_map_integrity(&map_2, &fail_cnt);
     print_end("MAP | FUNC | INIT", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_map_insert() {
@@ -103,6 +111,7 @@ void test_map_insert() {
     hm_map_free(&map);
 
     print_end("MAP | FUNC | INSERT | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -148,6 +157,7 @@ void test_iter_map() {
     hm_map_free(&map);
 
     print_end("MAP | FUNC | ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -213,6 +223,7 @@ void test_map_get() {
     hm_map_free(&map);
 
     print_end("MAP | FUNC | GET | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
     
 
@@ -267,6 +278,7 @@ void test_map_change() {
     hm_map_free(&map);
 
     print_end("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -357,6 +369,7 @@ void test_map_del() {
 
     hm_map_free(&map);
     print_end("MAP | FUNC | DEL | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 
@@ -417,6 +430,7 @@ void test_map_shrink() {
     test_map_integrity(&map, &fail_cnt);
 
     print_end("MAP | FUNC | SHRINK | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -456,6 +470,7 @@ void test_map_clear() {
 
     hm_map_free(&map);
     print_end("MAP | FUNC | CLEAR | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
     
 }
 
@@ -491,6 +506,7 @@ void test_map_free() {
     
 
     print_end("MAP | FUNC | FREE | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 
@@ -536,6 +552,7 @@ void test_map_insert_stress() {
         hm_map_free(&map);
     }
     print_end("MAP | STRESS | INSERT RANDOM | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_map_insert_same() {
@@ -568,6 +585,7 @@ void test_map_insert_same() {
     test_map_integrity(&map, &fail_cnt);
     hm_map_free(&map);
     print_end("MAP | BOUNDARY | INSRET SAME ENTRY | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -628,6 +646,7 @@ void test_map_get_stress() {
 
     }
     print_end("MAP | STRESS | GET | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_map_del_stress() {
@@ -686,6 +705,7 @@ void test_map_del_stress() {
 
     }
     print_end("MAP | STRESS | DEL | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_map_clear_stress() {
@@ -724,6 +744,7 @@ void test_map_clear_stress() {
         
     }
     print_end("MAP | STRESS | CLEAR (hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     
     fail_cnt = 0;
@@ -763,6 +784,7 @@ void test_map_clear_stress() {
 
     }
     print_end("MAP | STRESS | CLEAR (hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 
@@ -801,6 +823,7 @@ void test_map_free_stress() {
         
     }
     print_end("MAP | STRESS | FREE (hm_free: free) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
     
     
     fail_cnt = 0;
@@ -838,6 +861,7 @@ void test_map_free_stress() {
         free(vals);
     }
     print_end("MAP | STRESS | FREE (hm_free: NULL) | TYPE K:[INT] V:[INT]\n", fail_cnt);
+    #define HM_TEST_COUNTER
 
 }
 
@@ -886,6 +910,7 @@ void test_map_iter_stress() {
 
     }
     print_end("MAP | STRESS | ITERATOR | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void test_empty_map_oper() {
@@ -916,6 +941,7 @@ void test_empty_map_oper() {
 
 
     print_end("MAP | BOUNDARY | OPER EMPTY MAP | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 
 
 }
@@ -958,6 +984,7 @@ void test_single_entry_oper() {
 
 
     print_end("MAP | BOUNDARY | OPER SINGLE ENTRY'S LIST | TYPE K:[INT] V:[INT]", fail_cnt);
+    #define HM_TEST_COUNTER
 }
 
 void function_test() {
@@ -1018,5 +1045,5 @@ int main()
     stress_test();
 
 
-    return 0;
+    return all_failure_num;
 }
