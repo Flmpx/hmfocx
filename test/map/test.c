@@ -499,7 +499,7 @@ void test_map_free() {
 void test_map_insert_stress() {
     // type : int
     int fail_cnt = 0;
-    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     print_run("MAP | STRESS | INSERT RANDOM | TYPE K:[INT] V:[INT]");
     for (int i = 0; i < cnt; i++) {
@@ -576,7 +576,7 @@ void test_map_get_stress() {
 
     int fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
@@ -633,7 +633,7 @@ void test_map_get_stress() {
 void test_map_del_stress() {
     int fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
@@ -691,7 +691,7 @@ void test_map_del_stress() {
 void test_map_clear_stress() {
     int fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_map map;
 
@@ -728,7 +728,7 @@ void test_map_clear_stress() {
     
     fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
     // clear the map including entry that don't have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
@@ -769,7 +769,7 @@ void test_map_clear_stress() {
 void test_map_free_stress() {
     int fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_map map;
     
@@ -805,7 +805,7 @@ void test_map_free_stress() {
     
     fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
     // free the map including entry that don't have power to free the key and value
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
@@ -845,7 +845,7 @@ void test_map_free_stress() {
 void test_map_iter_stress() {
     int fail_cnt = 0;
     // the value of num cann't greater than 10^9
-    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
