@@ -10,11 +10,7 @@ set(func ../hm_test.c)
 
 set(cmp ../../function/cmp/hm_cmp.c)
 
-if (BUILD_TESTS) 
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
-else()    
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-endif()
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_BUILD_TYPE Debug)
 
