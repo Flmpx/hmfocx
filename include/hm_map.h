@@ -8,19 +8,19 @@
 #include "hm_base.h"
 
 /**
- * the return signal of function in map
+ * The return signal of function in map
  */
 typedef enum hm_map_ret {
-    hm_map_ret_error = 0x4,     // malloc filed
-    hm_map_ret_warn,            // the pass parameter is incorrect
-    hm_map_ret_none,            // operation invalid, like del entry by key , but key is not existed in map
-    hm_map_ret_existed,         // insert entry in map, but key is existed , you should free the key if the key that you given is alloced
-    hm_map_ret_suc              // operation successful
+    hm_map_ret_error = 0x4,     // Malloc failed
+    hm_map_ret_warn,            // The pass parameter is incorrect
+    hm_map_ret_none,            // Operation invalid, like del entry by key , but key is not existed in map
+    hm_map_ret_existed,         // Insert entry in map, but key is existed , you should free the key if the key that you given is alloced
+    hm_map_ret_suc              // Operation successful
 } hm_map_ret;
 
 
 /**
- * the status of entry in map 
+ * The status of entry in map 
  */
 typedef enum hm_entry_status {
     hm_exist_in_map,
@@ -30,7 +30,7 @@ typedef enum hm_entry_status {
 
 
 /**
- * entry of map
+ * Entry of map
  */
 typedef struct hm_entry {
     void* key;
@@ -40,7 +40,7 @@ typedef struct hm_entry {
 
 
 /**
- * the map of using open addressing 
+ * The map of using open addressing 
  */
 typedef struct hm_map {
     hm_entry* buckets;
@@ -56,7 +56,7 @@ typedef struct hm_map {
 } hm_map;
 
 /**
- * the iterator of map
+ * The iterator of map
  */
 typedef struct hm_iter_map {
     hm_entry* buckets;
@@ -67,14 +67,14 @@ typedef struct hm_iter_map {
 
 
 /**
- * some simple functions
+ * Some simple functions
  */
 
 #define hm_map_size(l) ((l)->size)
 #define hm_map_len(l) ((l)->len)
 
 /**
- * some functin of map , like `insert`, `get` , `del` and `free`
+ * Some functin of map , like `insert`, `get` , `del` and `free`
  */
 
 extern void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
@@ -87,7 +87,7 @@ extern void hm_map_free(hm_map* map);
 
 
 /**
- * some funtion of iterator of map , like `next` and `has next`
+ * Some funtion of iterator of map , like `next` and `has next`
  */
 
 extern void hm_iter_map_init(hm_iter_map* iter, hm_map* map);

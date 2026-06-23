@@ -9,17 +9,17 @@
 #include <stdbool.h>
 
 /**
- * the return signal of function in list
+ * The return signal of function in list
  */
 typedef enum hm_list_ret {
-    hm_list_ret_error = 0x0,    // malloc failed
-    hm_list_ret_warn,           // the passed parameter is incorret
-    hm_list_ret_none,           // operation invalid, like del start node when list is empty
-    hm_list_ret_suc             // operation successful
+    hm_list_ret_error = 0x0,    // Malloc failed
+    hm_list_ret_warn,           // The passed parameter is incorret
+    hm_list_ret_none,           // Operation invalid, like del start node when list is empty
+    hm_list_ret_suc             // Operation successful
 } hm_list_ret;
 
 /**
- * the node of list
+ * The node of list
  */
 typedef struct hm_listnode {
     struct hm_listnode* prev;
@@ -30,7 +30,7 @@ typedef struct hm_listnode {
 
 
 /**
- * list
+ * List with head and tail pointer
  */
 typedef struct hm_list {
     hm_listnode* head;
@@ -41,7 +41,7 @@ typedef struct hm_list {
 
 
 /**
- * the iterator of list
+ * The iterator of list
  */
 
 typedef struct hm_iter_list {
@@ -50,21 +50,21 @@ typedef struct hm_iter_list {
 
 
 /**
- * some simple functions
+ * Some simple functions
  */
 
 #define hm_list_size(l) ((l)->size)
 
 
 /**
- * initialize and free function
+ * Initialize and free function
  */
 
 extern void hm_list_init(hm_list* list, hm_free free);
 extern void hm_list_free(hm_list* list);
 
 /**
- * add functions
+ * Add functions
  */
 
 extern hm_list_ret hm_list_insert_head(hm_list* list, void* val);
@@ -74,7 +74,7 @@ extern hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 
 
 /**
- * delete functions
+ * Delete functions
  */
 
 extern hm_list_ret hm_list_del_head(hm_list* list);
@@ -82,13 +82,13 @@ extern hm_list_ret hm_list_del_tail(hm_list* list);
 extern hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 
 /**
- * get functions
+ * Get functions
  */
 
 extern void* hm_list_get(hm_list* list, size_t index);
 
 /**
- * iterator functions
+ * Iterator functions
  */
 
 extern void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
@@ -97,7 +97,7 @@ extern void* hm_iter_list_next(hm_iter_list* iter);
 
 
 /**
- * sort functions
+ * Sort functions
  */
 
 extern void hm_list_sort(hm_list* list, hm_cmp cmp);
