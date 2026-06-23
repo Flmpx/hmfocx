@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-06-23
+
+### Fixed
+- Handle `SIZE_MAX` return from `max_prime()` during the `hm_map` resize to avoid using non-prime capacity
+
+
+
 ## [0.4.0] - 2026-06-22
 
 ### Changed

@@ -41,7 +41,7 @@ static size_t max_prime(size_t n) {
             return i;
         }
     }
-    return i;
+    return SIZE_MAX;
 }
 
 /**
@@ -210,6 +210,10 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
         }
         flag_fresh = true;
         new_len = max_prime(2 * l);
+        // Check the return number of `max_prime`
+        if (new_len == SIZE_MAX) {
+            return hm_map_ret_error;
+        }
     }
 
     if (flag_fresh) {
