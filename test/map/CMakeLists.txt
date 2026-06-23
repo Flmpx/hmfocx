@@ -14,7 +14,7 @@ set(func ../hm_test.c)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(test_hm_map ${test} ${map} ${cmp} ${hash} ${func})
 
