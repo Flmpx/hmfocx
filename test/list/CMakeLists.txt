@@ -14,4 +14,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test ${list} ${test} ${func} ${cmp})
+add_executable(test_hm_list ${list} ${test} ${func} ${cmp})
+
+add_test(NAME test_hm_list COMMAND test_hm_list)
