@@ -12,7 +12,7 @@ add_library(hmfocx STATIC ${SRC_LIST})
 
 option(BUILD_TESTS "Build test programs" OFF)
 
-message(STATUS "BUILD_TEST = ${BUILD_TESTS}")
+message(STATUS "BUILD_TESTS = ${BUILD_TESTS}")
 
 if (BUILD_TESTS)
     enable_testing()
