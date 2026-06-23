@@ -10,10 +10,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(hmfocx STATIC ${SRC_LIST})
 
-option(BUILD_TESTS "Build test programs" OFF)
+# option(BUILD_TESTS "Build test programs" OFF)
 
-if (BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(test/list)
-    add_subdirectory(test/map)
-endif()
+# if (BUILD_TESTS)
+enable_testing()
+add_subdirectory(test/list)
+add_subdirectory(test/map)
+# endif()
