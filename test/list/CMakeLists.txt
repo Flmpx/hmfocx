@@ -10,7 +10,7 @@ set(func ../hm_test.c)
 
 set(cmp ../../function/cmp/hm_cmp.c)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
 
 set(CMAKE_BUILD_TYPE Debug)
 
