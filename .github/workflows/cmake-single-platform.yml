@@ -4,9 +4,9 @@ name: Test for all containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "fix-ci" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "fix-ci" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -33,6 +33,9 @@ jobs:
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Copy test executables to build directory
+      run: cp ${{github.workspace}}/bin/test_hm_list ${{github.workspace}}/bin/test_hm_map ${{github.workspace}}/build/
 
     - name: Test
       working-directory: ${{github.workspace}}/build
