@@ -43,7 +43,35 @@ void hm_list_free(hm_list* list) {
     hm_list_init(list, list->free);
 }
 
+/**
+ * Get the Node by the `index` that passed in
+ * @warning - You have to make sure the `index` is valid because the function don't check this variable
+ */
+static hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
 
+    hm_listnode* cur = NULL;
+    size_t cnt = 0;
+
+    // perf the find logic of target index
+    if (index > list->size / 2) {
+        cur = list->tail;
+        cnt = list->size - index - 1;
+        
+        while (cnt-- && cur) {
+            cur = cur->prev;
+        }
+        
+    } else {
+        cur = list->head;
+        cnt = index;
+
+        while (cnt-- && cur) {
+            cur = cur->next;
+        }
+
+    }
+    return cur;
+}
 
 
 /**
@@ -123,27 +151,8 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     }
     new_node->val = val;
 
-    hm_listnode* cur = NULL;
-    size_t cnt = 0;
-
-    // perf the find logic of target index
-    if (index > list->size / 2) {
-        cur = list->tail;
-        cnt = list->size - index - 1;
-
-        while (cnt-- && cur) {
-            cur = cur->prev;
-        }
-        
-    } else {
-        cur = list->head;
-        cnt = index;
-
-        while (cnt-- && cur) {
-            cur = cur->next;
-        }
-
-    }
+    // the index is valid when run there
+    hm_listnode* cur = hm_list_get_node(list, index);
 
 
     new_node->next = cur;
@@ -232,26 +241,8 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
     if (index == 0) return hm_list_del_head(list);
     if (index == list->size - 1) return hm_list_del_tail(list);
 
-    hm_listnode* cur = NULL;
-    size_t cnt = 0;
-    // perf the find logic of target index
-    if (index >= list->size / 2) {
-        cur = list->tail;
-        cnt = list->size - index - 1;
-
-        while (cnt-- && cur) {
-            cur = cur->prev;
-        }
-
-    } else {
-        cur = list->head;
-        cnt = index;
-        
-        while (cnt-- && cur) {
-            cur = cur->next;
-        }
-
-    }
+    // the index is valid when run there
+    hm_listnode* cur = hm_list_get_node(list, index);
 
     if (list->free) {
         list->free(cur->val);
@@ -275,27 +266,7 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
 void* hm_list_get(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
 
-
-    hm_listnode* cur = NULL;
-    size_t cnt = 0;
-
-    if (index >= list->size / 2) {
-        cur = list->tail;
-        cnt = list->size - index - 1;
-
-        while (cnt-- && cur) {
-            cur = cur->prev;
-        }
-
-    } else {
-        cur = list->head;
-        cnt = index;
-
-        while (cnt-- && cur) {
-            cur = cur->next;
-        }
-
-    }
+    hm_listnode* cur = hm_list_get_node(list, index);
 
     return cur->val;
 }

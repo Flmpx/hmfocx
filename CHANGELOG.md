@@ -6,6 +6,11 @@
 
 ## [Unreleased]
 
+## [0.4.2] -2026-06-23
+
+### Changed
+- **refactor:** extracted the `node-finding` logic from `hm_list_get`, `hm_list_del_index` and `hm_list_insert_index` into a standalone function `hm_list_get_node`, eliminating duplicate code.
+
 ## [0.4.1] - 2026-06-23
 
 ### Fixed
