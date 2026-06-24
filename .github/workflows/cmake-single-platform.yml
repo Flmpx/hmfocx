@@ -54,7 +54,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/bin --target test_hm_list --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/bin --target test_hm_map --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/bin
