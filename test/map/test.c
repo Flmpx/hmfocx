@@ -1045,5 +1045,5 @@ int main()
     // stress_test();
 
 
-    return all_failure_num + 1;
+    return all_failure_num;
 }
