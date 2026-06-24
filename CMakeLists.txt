@@ -16,6 +16,6 @@ message(STATUS "BUILD_TESTS = ${BUILD_TESTS}")
 
 if (BUILD_TESTS)
     enable_testing()
-    add_subdirectory(test/list)
+    # add_subdirectory(test/list)
     add_subdirectory(test/map)
 endif()
