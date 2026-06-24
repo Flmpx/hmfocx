@@ -22,5 +22,5 @@ endif()
 
 if (BUILD_TEST_MAP)
     enable_testing()
-    add_subdirectory(test/list)
+    add_subdirectory(test/map)
 endif()
