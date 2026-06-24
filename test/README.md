@@ -1,6 +1,61 @@
 # Test Code Format
 
-## Main Test
+## **File `CMakeLists.txt` Content**
+
+- Location: `test/{container}/`
+```cmake
+cmake_minimum_required(VERSION 3.28.3)  
+
+project(test_hm_list)       # project name format: `test_hm_{container}`
+
+set(list ../../src/hm_list.c)       # The C file that need to test
+
+set(test test.c)                # test file -- name: must be `test.c`
+
+set(func ../hm_test.c)          # some basic funciton for every test part, like print test information
+
+set(cmp ../../function/cmp/hm_cmp.c)        # some file is needed for this container's test
+
+
+# In GitHub Action, the path of output `build`. In local, it is `bin`
+# And you should add commane `-DBUILD_TESTS=ON` in file `.github/workflows/cmake-single-platform.yml` to ensure this test can be run rightly
+if (BUILD_TESTS) 
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
+else()    
+    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+endif()
+
+
+# The following code is normal build process
+
+set(CMAKE_BUILD_TYPE Debug)
+
+add_executable(test_hm_list ${list} ${test} ${func} ${cmp})
+
+add_test(NAME test_hm_list COMMAND test_hm_list) # register test, name format: `test_hm_{container}`
+
+```
+- And you should write a line for `CMakeLists.txt` of root directory, see following code
+```cmake
+if (BUILD_TESTS)
+    enable_testing()
+    # This is new test
+    add_subdirectory(test/list) 
+
+    # other test
+    add_subdirectory(test/map)
+endif()
+```
+
+
+
+## File `test.c` Content
+
+- Location: `test/{container}/`
+
+### Main Test(`test.c`)
+
+
 **This is a example** with `hm_list` test
 ```c
 int main()
