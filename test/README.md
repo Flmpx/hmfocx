@@ -77,9 +77,9 @@ endif()
 int all_failure_num = 0;
 
 // use macro to replace the code 
-#ifdef HM_TEST_COUNTER
+#define HM_TEST_COUNTER \
     all_failure_num += fail_cnt;
-#endif
+
 
 // every test function ...
 
@@ -136,7 +136,7 @@ void test_list_insert_head() {
     // **END**
     print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);
     // recode the all failure number
-    #define HM_TEST_COUNTER
+    HM_TEST_COUNTER
     
 }
 ```
