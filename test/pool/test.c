@@ -18,6 +18,26 @@
 int all_failure_num = 0;
 
 
+void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt) {
+    size_t pages = 0;
+    size_t free_block_num = 0;
+    // get pages
+
+    hm_pool_page_node* page_node = pool->head_page;
+    while (page_node) {
+        page_node = page_node->next;
+        pages++;
+    }
+    hm_pool_block_node* block_node = pool->head_block;
+    while (block_node) {
+        block_node = block_node->next;
+        free_block_num++;
+    }
+    check_res((free_block_num + used_block_num) / pool->blocks_per_page == pages, "TEST OF INTEGRITY: used + freed != pages * blocks_per_page ", fail_cnt);
+
+
+} 
+
 
 void test_pool_init() {
 
@@ -26,7 +46,7 @@ void test_pool_init() {
     int fail_cnt = 0;
     int blocks_per_page = 1024;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-
+    test_pool_integrity(&pool, 0, &fail_cnt);
     check_res(pool.block_size == sizeof(void*), "the block size should is sizeof(void*)", &fail_cnt);
     check_res(pool.blocks_per_page == blocks_per_page, "the number of blocks per page should is 1024", &fail_cnt);
     check_res(pool.head_block == NULL, "head_block should be `NULL` after init", &fail_cnt);
@@ -48,6 +68,7 @@ void test_pool_allocate() {
     print_run("POOL | FUNC | ALLOCATE | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
 
     int* val = hm_pool_block_allocate(&pool);
+    test_pool_integrity(&pool, 1, &fail_cnt);
 
     check_res(val != NULL, "the allocated block shouldn't be NULL when allocate one block", &fail_cnt);
     // because this test exclude free test and `hm_pool_free` should destroy all the memory, so, cancel the free the block
@@ -66,6 +87,7 @@ void test_pool_allocate() {
         pointers[i] = v;
         need_check_num++;
     }
+    test_pool_integrity(&pool, need_check_num + 1, &fail_cnt);
 
     // verify the pointer
     int fail_dup = 0;
