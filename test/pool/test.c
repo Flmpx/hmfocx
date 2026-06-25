@@ -216,7 +216,7 @@ void test_pool_get_bytes() {
     
     int allocate_blocks = 10000;
     print_run("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
-    size_t expected_bytes_per_page = sizeof(hm_pool_page_node) + pool.blocks_per_page + pool.block_size;
+    size_t expected_bytes_per_page = sizeof(hm_pool_page_node) + pool.blocks_per_page * pool.block_size;
     
     // start 
 
