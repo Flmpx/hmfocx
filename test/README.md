@@ -10,29 +10,25 @@ cmake_minimum_required(VERSION 3.28.3)
 
 project(test_hm_list)       # project name format: `test_hm_{container}`
 
-set(list ../../src/hm_list.c)       # The C file that need to test
+set(hm_list ../../src/hm_list.c)       # The C file that need to test
 
-set(test test.c)                # test file -- name: must be `test.c`
+set(hm_test test.c)                # test file -- name: must be `test.c`
 
-set(func ../hm_test.c)          # some basic funciton for every test part, like print test information
+set(hm_func ../hm_test.c)          # some basic funciton for every test part, like print test information
 
-set(cmp ../../function/cmp/hm_cmp.c)        # some file is needed for this container's test
+set(hm_cmp ../../function/cmp/hm_cmp.c)        # some file is needed for this container's test
 
 
-# In GitHub Action, the path of output `build`. In local, it is `bin`
+# The output path of executable in remote and loacal test is the same -- `bin/`
 # And you should add commane `-DBUILD_TESTS=ON` in file `.github/workflows/cmake-single-platform.yml` to ensure this test can be run rightly
-if (BUILD_TESTS) 
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
-else()    
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-endif()
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 
 # The following code is normal build process
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_hm_list ${list} ${test} ${func} ${cmp})
+add_executable(test_hm_list ${hm_list} ${hm_test} ${hm_func} ${hm_cmp})
 
 add_test(NAME test_hm_list COMMAND test_hm_list) # register test, name format: `test_hm_{container}`
 
