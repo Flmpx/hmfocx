@@ -175,6 +175,66 @@ void test_pool_allocate() {
 }
 
 
+void test_pool_get_pages() {
+    hm_pool pool;
+    int blocks_per_page = 2048;
+    hm_pool_init(&pool, sizeof(int), blocks_per_page);
+    int fail_cnt = 0;
+    
+    int allocate_blocks = 10000;
+    int expected_pages = (allocate_blocks + blocks_per_page - 1) / blocks_per_page;
+    print_run("POOL | FUNC | GET PAGES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+    
+    // allocate
+    for (int i = 0; i < allocate_blocks; i++) {
+        hm_pool_block_allocate(&pool);  // the work of free assgin to `hm_pool_free`
+    }
+
+    int real_pages = 0;
+    hm_pool_page_node* node = pool.head_page;
+    while (node) {
+        node = node->next;
+        real_pages++;
+    }
+    int get_pages = hm_pool_get_pages(&pool);
+    test_pool_integrity(&pool, allocate_blocks, &fail_cnt);
+
+    check_res(get_pages == real_pages, "the number of page got by get_pages function should be the same the real pages", &fail_cnt);
+    
+    hm_pool_free(&pool);
+    print_end("POOL | FUNC | GET PAGES | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
+void test_pool_get_bytes() {
+    hm_pool pool;
+    int blocks_per_page = 2048;
+    hm_pool_init(&pool, sizeof(int), blocks_per_page);
+    int fail_cnt = 0;
+    
+    int allocate_blocks = 10000;
+    print_run("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+    size_t expected_bytes_per_page = sizeof(hm_pool_page_node) + pool.blocks_per_page + pool.block_size;
+    
+    // start 
+
+    check_res(expected_bytes_per_page == hm_pool_get_bytes_per_page(&pool), "the bytes of every page got by `get_bytes_func` is wrong after init pool", &fail_cnt);
+    
+    // after allocate
+    for (int i = 0; i < allocate_blocks; i++) {
+        hm_pool_block_allocate(&pool);  // the work of free assgin to `hm_pool_free`
+    }
+    
+    check_res(expected_bytes_per_page == hm_pool_get_bytes_per_page(&pool), "the bytes of every page got by `get_bytes_func` is wrong after allocate some memory from pool", &fail_cnt);
+
+
+    hm_pool_free(&pool);
+    print_end("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+    HM_TEST_COUNTER
+
+}
 
 
 void function_test() {
