@@ -70,8 +70,8 @@ typedef struct hm_iter_map {
  * Some simple functions
  */
 
-#define hm_map_size(l) ((l)->size)
-#define hm_map_len(l) ((l)->len)
+#define hm_map_size(m) ((m)->size)
+#define hm_map_len(m) ((m)->len)
 
 /**
  * Some functin of map , like `insert`, `get` , `del` and `free`
