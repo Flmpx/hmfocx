@@ -91,8 +91,9 @@ void hm_pool_block_free(hm_pool* pool, void* block) {
 void hm_pool_free(hm_pool* pool) {
     hm_pool_page_node* node = pool->head_page;
     while (node) {
-        free(node);
+        hm_pool_page_node* cur = node;
         node = node->next;
+        free(cur);
     }
     hm_pool_init(pool, pool->block_size, pool->blocks_per_page);
 }
