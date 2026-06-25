@@ -341,6 +341,14 @@ void function_test() {
     test_pool_init();                                               printf("\n");
 
     test_pool_allocate();                                           printf("\n");
+
+    test_pool_get_pages();                                          printf("\n");
+
+    test_pool_get_bytes();                                          printf("\n");
+
+    test_pool_block_free();                                         printf("\n");
+
+    test_pool_free();                                               printf("\n");
 }
 
 
