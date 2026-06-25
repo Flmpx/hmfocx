@@ -33,7 +33,7 @@ void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt) {
         block_node = block_node->next;
         free_block_num++;
     }
-    check_res((free_block_num + used_block_num) / pool->blocks_per_page == pages, "TEST OF INTEGRITY: used + freed != pages * blocks_per_page ", fail_cnt);
+    check_res((free_block_num + used_block_num) == pages * pool->blocks_per_page , "TEST OF INTEGRITY: used + freed != pages * blocks_per_page ", fail_cnt);
 
 
 } 
