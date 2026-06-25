@@ -76,23 +76,18 @@ void test_pool_allocate() {
     int nums = blocks_per_page;
     int* pointers[nums];
     int flag[nums];
-    int need_check_num = 0;
     // allocate more than an page's blocks, **Tip: val still existed**
     for (int i = 0; i < nums; i++) {
         int* v = hm_pool_block_allocate(&pool);
-        if (v == NULL) {
-            break;
-        }
         *v = flag[i] = i * 10;
         pointers[i] = v;
-        need_check_num++;
     }
-    test_pool_integrity(&pool, need_check_num + 1, &fail_cnt);
+    test_pool_integrity(&pool, nums + 1, &fail_cnt);
 
     // verify the pointer
     int fail_dup = 0;
-    for (int i = 0; i < need_check_num; i++) {
-        for (int j = i + 1; j < need_check_num; j++) {
+    for (int i = 0; i < nums; i++) {
+        for (int j = i + 1; j < nums; j++) {
             if (pointers[i] == pointers[j]) {
                 fail_dup++;
             }
@@ -103,7 +98,7 @@ void test_pool_allocate() {
     // verify the pointer got by `hm_pool_block_allocate`
     int fail_NULL = 0;
     int fail_diff = 0;
-    for (int i = 0; i < need_check_num; i++) {
+    for (int i = 0; i < nums; i++) {
         if (pointers[i] == NULL) {
             fail_NULL++;
         } else if (*(pointers[i]) != flag[i]) {
@@ -122,7 +117,7 @@ void test_pool_allocate() {
         node = node->next;
         pages++;
     }
-    check_res(pages == (need_check_num == nums ? 2 : 1), "the number of pages should be 2 when get over the number of blocks per page", &fail_cnt);
+    check_res(pages == 2, "the number of pages should be 2 when get over the number of blocks per page", &fail_cnt);
 
 
     hm_pool_free(&pool);
