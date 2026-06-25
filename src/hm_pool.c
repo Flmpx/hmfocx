@@ -104,7 +104,7 @@ void hm_pool_free(hm_pool* pool) {
  */
 size_t hm_pool_get_pages(hm_pool* pool) {
     size_t cnt = 0;
-    hm_pool_page_node* cur;
+    hm_pool_page_node* cur = pool->head_page;
     while (cur) {
         cur = cur->next;
         cnt++;
