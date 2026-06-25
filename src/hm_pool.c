@@ -21,7 +21,8 @@ static size_t align_up(size_t n, size_t align) {
  * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` 
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
-    pool->head_page = pool->head_block = NULL;
+    pool->head_page = NULL;
+    pool->head_block = NULL;
 
     pool->blocks_per_page = blocks_per_page;
     
@@ -54,7 +55,7 @@ void* hm_pool_block_allocate(hm_pool* pool) {
     pool->head_page = new_page;
 
     for (size_t i = 0; i < pool->blocks_per_page * pool->block_size; i += pool->block_size) {
-        hm_pool_block_node* node = (char*)(new_page + 1) + i;
+        hm_pool_block_node* node = (hm_pool_block_node*)((char*)(new_page + 1) + i);
         node->next = pool->head_block;
         pool->head_block = node;
     }
