@@ -237,6 +237,106 @@ void test_pool_get_bytes() {
 }
 
 
+void test_pool_block_free() {
+    hm_pool pool;
+    int blocks_per_page = 2048;
+    hm_pool_init(&pool, sizeof(int), blocks_per_page);
+    int fail_cnt = 0;
+
+    print_run("POOL | FUNC | FREE BLOCK | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+    
+    // the val should be same as the new_val because the pool is use the method of `head_insert list` 
+    int* val = hm_pool_block_allocate(&pool);
+    hm_pool_block_free(&pool, val);
+    
+    // 0 used
+    test_pool_integrity(&pool, 0, &fail_cnt);
+    int* new_val = hm_pool_block_allocate(&pool);
+    check_res(val == new_val, "val should be same as the new_val after a allocate and a free", &fail_cnt);
+
+    hm_pool_block_free(&pool, new_val);
+
+    int nums = 100;
+    int* pointers[nums];
+
+    for (int i = 0; i < nums; i++) {
+        pointers[i] = hm_pool_block_allocate(&pool);
+    }
+
+    // free half
+    for (int i = 0; i < nums / 2; i++) {
+        hm_pool_block_free(&pool, pointers[i]);
+    }
+    test_pool_integrity(&pool, nums - nums / 2, &fail_cnt);
+
+    // verify
+
+    int fail_freed = 0;
+    for (int i = 0; i < nums / 2; i++) {
+        if (judge_memory_location(&pool, pointers[i]) != freed_block_in_pool) {
+            fail_freed++;
+        }
+    }
+    check_res(fail_freed == 0, "the freed block isn't in freed list of memory pool", &fail_cnt);
+    
+    int fail_used = 0;
+    
+    for (int i = nums / 2; i < nums; i++) {
+        if (judge_memory_location(&pool, pointers[i]) != used_block_in_pool) {
+            fail_used++;
+        }
+    }
+
+    check_res(fail_used == 0, "the used block isn't in used area of memory pool", &fail_cnt);
+
+    
+    // free all
+    for (int i = nums / 2; i < nums; i++) {
+        hm_pool_block_free(&pool, pointers[i]);
+    }
+    test_pool_integrity(&pool, 0, &fail_cnt);
+
+    // verify
+
+    fail_freed = 0;
+    for (int i = 0; i < nums; i++) {
+        if (judge_memory_location(&pool, pointers[i]) != freed_block_in_pool) {
+            fail_freed++;
+        }
+    }
+    check_res(fail_freed == 0, "the freed block isn't in freed list of memory pool", &fail_cnt);
+
+    hm_pool_free(&pool);
+    
+    print_end("POOL | FUNC | FREE BLOCK | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_pool_free() {
+    hm_pool pool;
+    int blocks_per_page = 2048;
+    hm_pool_init(&pool, sizeof(int), blocks_per_page);
+    int fail_cnt = 0;
+    
+    print_run("POOL | FUNC | FREE CONTAILER | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+    
+    int nums = 1000;
+    for (int i = 0; i < nums; i++) {
+        hm_pool_block_allocate(&pool); // the work of free assgin to `hm_pool_free`
+    }
+
+
+    //  **Use valgrind or other tool that can check `leak-memory` to check if there existed memory leak**
+    hm_pool_free(&pool);
+    
+    print_end("POOL | FUNC | FREE CONTAILER | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
+
 void function_test() {
     test_pool_init();                                               printf("\n");
 
