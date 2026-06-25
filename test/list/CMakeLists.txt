@@ -10,11 +10,10 @@ set(hm_func ../hm_test.c)
 
 set(hm_cmp ../../function/cmp/hm_cmp.c)
 
-if (BUILD_TESTS) 
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
-else()    
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-endif()
+
+# remote is the same as the local
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
 
 set(CMAKE_BUILD_TYPE Debug)
 

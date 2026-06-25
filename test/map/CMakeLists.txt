@@ -14,11 +14,8 @@ set(hm_func ../hm_test.c)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-if (BUILD_TESTS) 
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
-else()    
-    set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-endif()
+# remote is the same as the local
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(test_hm_map ${hm_test} ${hm_map} ${hm_cmp} ${hm_hash} ${hm_func})
 
