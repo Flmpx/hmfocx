@@ -39,6 +39,48 @@ void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt) {
 } 
 
 
+enum location_block {
+    other_block_in_pool,
+    freed_block_in_pool,
+    used_block_in_pool,
+};
+
+/**
+ * Judge the location of block that pass in
+ * @return 
+ */
+int judge_memory_location(hm_pool* pool, void* block) {
+
+    // Is freed block ?
+
+    hm_pool_block_node* b_node = pool->head_block;
+    while (b_node) {
+        if (b_node == block) {
+            return freed_block_in_pool;
+        }
+        b_node = b_node->next;
+    }
+
+
+    // Is used block ?
+
+    hm_pool_page_node* p_node = pool->head_page;
+
+    while (p_node) {
+        void* min = p_node + 1;
+        void* max = (char*)(p_node + 1) + pool->blocks_per_page * pool->block_size;
+        if (block <= max && block >= min) {
+            return used_block_in_pool;
+        }
+        p_node = p_node->next;
+    }
+
+    // Oh ! others
+    return other_block_in_pool;
+
+}
+
+
 void test_pool_init() {
 
     print_run("POOL | FUNC | INIT | BLOCK SIZE: sizeof(int) BLOCKS: 1024");
@@ -69,6 +111,7 @@ void test_pool_allocate() {
 
     int* val = hm_pool_block_allocate(&pool);
     test_pool_integrity(&pool, 1, &fail_cnt);
+    check_res(judge_memory_location(&pool, val) == used_block_in_pool, "the val should be the used block in memory pool", &fail_cnt);
 
     check_res(val != NULL, "the allocated block shouldn't be NULL when allocate one block", &fail_cnt);
     // because this test exclude free test and `hm_pool_free` should destroy all the memory, so, cancel the free the block
@@ -84,30 +127,35 @@ void test_pool_allocate() {
     }
     test_pool_integrity(&pool, nums + 1, &fail_cnt);
 
-    // verify the pointer
-    int fail_dup = 0;
+    // verify the number of same pointer
+    int fail_same = 0;
     for (int i = 0; i < nums; i++) {
         for (int j = i + 1; j < nums; j++) {
             if (pointers[i] == pointers[j]) {
-                fail_dup++;
+                fail_same++;
             }
         }
     }
-    check_res(fail_dup == 0, "the pointer should be different", &fail_cnt);
+    check_res(fail_same == 0, "the pointer should be different", &fail_cnt);
 
     // verify the pointer got by `hm_pool_block_allocate`
     int fail_NULL = 0;
     int fail_diff = 0;
+    int fail_wrong_location = 0;
     for (int i = 0; i < nums; i++) {
         if (pointers[i] == NULL) {
             fail_NULL++;
         } else if (*(pointers[i]) != flag[i]) {
             fail_diff++;
         }
+        if (judge_memory_location(&pool, pointers[i]) != used_block_in_pool) {
+            fail_wrong_location++;
+        }
     }
     check_res(fail_NULL == 0, "the pointer shoudn't have NULL", &fail_cnt);
     check_res(fail_diff == 0, "stored value should match the  value in `flag` array", &fail_cnt);
 
+    check_res(fail_wrong_location == 0, "the val should be the used block in memory pool", &fail_cnt);
 
     // verify the pages 
 
