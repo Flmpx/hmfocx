@@ -1,6 +1,8 @@
 # Test Code Format
+## Introduce 
+- This `README.md` will record how to write test for every container
 
-## **File `CMakeLists.txt` Content**
+## **`CMakeLists.txt` Content**
 
 - Location: `test/{container}/`
 ```cmake
@@ -49,72 +51,111 @@ endif()
 
 
 
-## File `test.c` Content
+## `test.c` Content
 
 - Location: `test/{container}/`
 
-### Main Test(`test.c`)
+- **This is a example** with `hm_list` test
+
+### File Structure
+
+- Test include `functional`, `stressful` and `boundary` test. 
 
 
-**This is a example** with `hm_list` test
-```c
-int main()
-{
-    function_test();
-
-    boundary_test();
-
-    stress_test();
-
-    return all_failure_num;
-}
-```
-1. **Function Test**
-- The format of every test funciton's name is `test_{container}_{main content of test}`
+| Part    |  Name Format                             |
+| ------- | ---------------------------------- |
+| `functional test` | `test_{container}_{main content of test}` |
+| `boundary test` | `test_{main content of test}`  |
+| `stressful test` | `test_{container}_{main content of test}_stress` | 
 
 ```c
+#include "../../include/hm_list.h"
+#include "../../function/cmp/hm_cmp.h"
+#include "../hm_test.h"
+
+// This variable can record the all number of failure and it can be used as a return value to check if this test is passed
+int all_failure_num = 0;
+
+// use macro to replace the code 
+#ifdef HM_TEST_COUNTER
+    all_failure_num += fail_cnt;
+#endif
+
+// every test function ...
+
 void function_test() {
     test_list_init();                               printf("\n");
     // You should add function of `printf("\n");` after every test done
-    
-    test_list_insert_head();                        printf("\n");
-    test_list_insert_tail();                        printf("\n");
-    test_list_insert_index();                       printf("\n");
-    
-    test_iter_list();                               printf("\n");
-    
     // and more ...
-
 }
-```
 
-2. **Boundary Test**
-
-- The format of every test funciton's name is `test_{main content of test}`
-
-```c
 void boundary_test() {
     test_empty_list_oper();                         printf("\n");
-
-    test_freed_list_oper();                         printf("\n");
-
-    test_single_listnode_oper();                    printf("\n");
-
-}
-```
-
-3. **Stress Test**
-- The format of every test funciton's name is `test_{container}_{main content of test}_stress`
-```c
-void stress_test() {
-
-    test_list_insert_tail_stress();                 printf("\n");
-    
-    test_list_insert_head_stress();                 printf("\n");
-
-    test_list_insert_index_stress();                printf("\n");
-    
     // and more ...
+}
 
+void stress_test() {
+    test_list_insert_tail_stress();                 printf("\n");
+    // and more ...
+}
+
+int main()
+{
+    // Make a rough classification of every test
+    function_test();
+    boundary_test();
+    stress_test();
+    return all_failure_num;
+}
+
+
+```
+
+### Every Test Function(`test.c`)
+
+- The format of `HEAD INFO` -- `{Container} | {TYPE OF TEST} | {TEST CONTENT} | {OTHER INFO}
+`
+
+- The following code is a example
+```c
+void test_list_insert_head() {
+    
+    int fail_cnt = 0;   // record the number of failure of this part
+    
+    // **START**
+    print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");
+    
+    int fail = 0;
+    
+    // some test ...
+    
+    // **CHECK**
+    check_res(fail == 0, "some deail information of faillure", &fail_cnt);
+    
+    
+    // **END**
+    print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);
+    // recode the all failure number
+    #define HM_TEST_COUNTER
+    
 }
 ```
+- You should use `print_run_time` to print infomation in `stress test`
+```c
+
+print_run_time("INSERT", start, end, nums[i], nums[i]);
+
+```
+
+
+- Some brief information of important function, some parameter see [test/hm_test.h](hm_test.h) and [test/hm_test.c](hm_test.c)
+
+
+| Function | Brief Introduce|
+| --------- | ------- |
+| `print_run` | Print information of this test part at start|  
+| `check_res`| Check if result is true <br> It will `print information` and `change the value of fail_cnt` if `res == false` | 
+| `print_end` | Print information of this test  according to the number of `fail_cnt` at end | 
+| `print_run_time` | print `cost time` and `speed` according the parameter that pass in |
+
+## Tips
