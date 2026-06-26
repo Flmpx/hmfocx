@@ -1,16 +1,21 @@
-# The detail infomation of `hm_list`
-## Introduce
-- You can pass the pointer of any value to this list
-- It contains some basic functon of list
+# The detailed information about `hm_list`
+
+<p align = "center">
+    English | <a href = "./Chinese/hm_list.zh-CN.md">简体中文</a>
+</p>
+
+## Introduction
+- You can pass a pointer to any value into this list
+- It provides basic list operations
 
 ## Functions
 - **Initialize**
 ```c
 /**
  * Initialize a list
- * @note - This list can be freed with `hm_list_free()`
- * @note - If you want this list don't have the power of free this value,
- * let the `hm_free` function pointer to be `NULL`
+ * @note - Use `hm_list_free()` to free the list
+ * @note - If you do `NOT` want the list to free its values,
+ * set the `hm_free` function pointer to `NULL`
  */
 void hm_list_init(hm_list* list, hm_free free);
 ```
@@ -18,25 +23,24 @@ void hm_list_init(hm_list* list, hm_free free);
 - **Insert**
 ```c
 /**
- * Insert value in the head of list
- * @note - This function will return `hm_list_ret_error` when insert failed
- * 
+ * Insert a value at the head of the list
+ * @note - This function will return `hm_list_ret_error` when insertion fails
  */
 hm_list_ret hm_list_insert_head(hm_list* list, void* val);
 
 /**
- * Insert value in the tail of list
- * @note - This function will return `hm_list_ret_error` when insert failed
+ * Insert a value at the tail of the list
+ * @note - This function will return `hm_list_ret_error` when insertion fails
  */
 hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
 
 /**
- * Insert value at the index that you given in this list
- * @note - The range of index must be >= `0`, and <= `the size of list`
+ * Insert a value at the given `index`
+ * @note - `Index` must be >= `0`, and <= `the size of list`
  * 
- * @note - This function will return `hm_list_ret_warn` when `index` is invalid
+ * @note - This function will return `hm_list_ret_warn` when the `index` is out of bounds
  * 
- * @note - Also, this function will return `hm_list_ret_error` when insert failed
+ * @note - Also, this function will return `hm_list_ret_error` when insertion fails
  */
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 ```
@@ -44,8 +48,9 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 - **Get**
 ```c
 /**
- * Get pointer of value by index that you given in a list
- * @note - This function will return nullptr when index is invalid
+ * Get a pointer to the value at the given `index`
+ * @note - `Index` must be >= `0`, and < `the size of list`
+ * @note - This function will return nullptr when the `index ` is out of bounds
  */
 void* hm_list_get(hm_list* list, size_t index);
 ```
@@ -53,22 +58,22 @@ void* hm_list_get(hm_list* list, size_t index);
 - **Del**
 ```c
 /**
- * Del hm_listnode with value at head in list
+ * Delete the Node at the head of the list
  * @note - This function will return `hm_list_ret_none` when list is empty
  */
 hm_list_ret hm_list_del_head(hm_list* list);
 
 /**
- * Del hm_listnode with value at end in list
+ * Delete the Node at the tail of the list
  * @note - This function will return `hm_list_ret_none` when list is empty
  */
 hm_list_ret hm_list_del_tail(hm_list* list);
 
 /**
- * Del hm_listnode with value at the index that you given in this list
- * @note - The range of index must be >= `0`, and < `the size of list`
+ * Delete the Node at the specified `index`
+ * @note - `Index` must be >= `0`, and < `the size of list`
  * 
- * @note - This function will return `hm_list_ret_none` when `index` is invalid
+ * @note - This function will return `hm_list_ret_none` when the `index` is out of bounds
  * 
  */
 hm_list_ret hm_list_del_index(hm_list* list, size_t index);
@@ -83,14 +88,14 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
 
 /**
- * Check if the iterator of list has next value
+ * Check if the iterator has a next element
  * @note - Return true if iterator has next
  */
 bool hm_iter_list_has_next(hm_iter_list* iter);
 
 /**
  * Get next value of list
- * @note - Please use function of `hm_iter_list_has_next` to check if list has next value
+ * @note - Use `hm_iter_list_has_next()` to check before calling `hm_iter_list_next()`
  */
 void* hm_iter_list_next(hm_iter_list* iter);
 ```
@@ -100,8 +105,8 @@ void* hm_iter_list_next(hm_iter_list* iter);
 ```c
 /**
  * Free a list
- * @note - If this list don't have the power of free value,
- * this function can't free the val in hm_listnode
+ * @note - If the list was initialized without freeing capacity, 
+ * this function can't free the values stored in the Nodes
  */
 void hm_list_free(hm_list* list);
 ```
@@ -110,7 +115,7 @@ void hm_list_free(hm_list* list);
 ```c
 /**
  * Sort list
- * @note - Pass a comparation function to this function
+ * @note - Pass a comparison function to this function
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```
@@ -124,4 +129,4 @@ void hm_list_sort(hm_list* list, hm_cmp cmp);
 
 ## Tips
 
-- **You cann't change the structure of this list(like del, insert, free and sort) when you are iterating a list.**
+- **Do not modify the list (del, insert, free, or sort) while iterating over it**
