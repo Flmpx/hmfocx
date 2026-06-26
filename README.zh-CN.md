@@ -36,6 +36,6 @@ mingw32-make
 
 - 关于这个库容器的一些函数的介绍
 
-1. [hm_list](docs/hm_list.md)
+1. [hm_list](docs/Chinese/hm_list.zh-CN.md)
 
-2. [hm_map](docs/hm_map.md)
+2. [hm_map](docs/Chinese/hm_map.zh-CN.md)
