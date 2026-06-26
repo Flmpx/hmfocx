@@ -5,6 +5,7 @@
 
 #include "../include/hm_pool.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
  * Align the memory to the variable `align`
@@ -56,8 +57,19 @@ void* hm_pool_block_allocate(hm_pool* pool) {
         return node;
     }
 
+    // product check
+    if (pool->blocks_per_page > SIZE_MAX / pool->block_size) {
+        return NULL;
+    }
+    size_t product = pool->block_size * pool->blocks_per_page;
 
-    hm_pool_page_node* new_page = (hm_pool_page_node*)malloc(sizeof(hm_pool_page_node) + pool->block_size * pool->blocks_per_page);
+    // add check
+    if (product > SIZE_MAX - sizeof(hm_pool_page_node)) {
+        return NULL;
+    }
+    size_t total = product + sizeof(hm_pool_page_node);
+
+    hm_pool_page_node* new_page = (hm_pool_page_node*)malloc(total);
 
     if (new_page == NULL) {
         return NULL;
