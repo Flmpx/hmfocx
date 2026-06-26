@@ -15,8 +15,7 @@
 ```c
 /**
  * 初始化内存池
- * @note - 由于内存对齐，当 `block_size` 为零时，`hm_pool_block_allocate` 仍可能返回有效指针
- * @note - 如果 `blocks_per_page` 为零，`hm_pool_block_allocate` 将返回 `NULL`
+ * @note - 如果 `blocks_per_page` 或者 `block_size` 为零，`hm_pool_block_allocate` 将返回 `NULL`
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
@@ -26,6 +25,7 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 /**
  * 获取一个块的指针
  * @note - 分配失败时返回 `NULL`
+ * @note - 如果 `blocks_per_page` 或者 `block_size` 为零，`hm_pool_block_allocate` 将返回 `NULL`
  */
 void* hm_pool_block_allocate(hm_pool* pool);
 ```

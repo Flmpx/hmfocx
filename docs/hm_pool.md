@@ -13,8 +13,7 @@
 ```c
 /**
  * Initialize the memory pool 
- * @note - `hm_pool_block_allocate` will return a valid pointer when the `block_size` is `zero` due to memory alignment
- * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` 
+ * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
@@ -24,6 +23,7 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 /**
  * Get pointer of to block
  * @note - It will return `NULL` when allocation fails
+ * @note - It will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
  */
 void* hm_pool_block_allocate(hm_pool* pool);
 ```

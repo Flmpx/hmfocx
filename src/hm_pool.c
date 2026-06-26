@@ -17,15 +17,21 @@ static size_t align_up(size_t n, size_t align) {
 
 /**
  * Initialize the memory pool 
- * @note - `hm_pool_block_allocate` will return a valid pointer when the `block_size` is `zero` due to memory alignment
- * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` 
+ * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
     pool->head_page = NULL;
     pool->head_block = NULL;
 
     pool->blocks_per_page = blocks_per_page;
-    
+
+    // let pool.block_size == 0 when pass-in block_size == 0
+    // This action can let allocator handle this sitution easily
+    if (block_size == 0) {
+        pool->block_size = 0;
+        return;
+    }
+
     block_size = block_size > sizeof(hm_pool_block_node) ? block_size : sizeof(hm_pool_block_node);
     pool->block_size = align_up(block_size, sizeof(void*));
 
@@ -35,9 +41,15 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
 /**
  * Get pointer of to block
  * @note - It will return `NULL` when allocation fails
+ * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
  */
 void* hm_pool_block_allocate(hm_pool* pool) {
 
+    // refactor: allocator reurn NULL when `block_size`
+    if (pool->block_size == 0 || pool->blocks_per_page == 0) {
+        return NULL;
+
+    }
     if (pool->head_block) {
         hm_pool_block_node* node = pool->head_block;
         pool->head_block = pool->head_block->next;
