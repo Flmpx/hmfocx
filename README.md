@@ -1,24 +1,28 @@
 - **focx-hm**  
-- A library of some basic container
-  
-- Construction in `Linux`
-1. git clone
+- A library of some basic container  
+
+<p align = "center">
+    English | <a href = "./README.zh-CN.md">简体中文</a>
+</p>
+
+- Building in `Linux`
+1. Git clone
 ```shell
 git clone https://github.com/Flmpx/hm-focx.git
 ```
-2. Build by cmake(enter the `build` folder firstly)
+2. Build with cmake(enter the `build` folder firstly)
 ```shell
 cmake ..
 ```
-3. Generate static library(operation also in `build` folder)
+3. Generate the static library(this operation is also done in the `build` folder)
 ```shell
 make
 ```
-4. Successful  
-you can find `./bin/libhmfocx.a`, this is a static library of this project
+4. Everything has been done  
+you can find a file named `libhmfocx.a` in the `bin` folder, this is a static library about this project
 
 
-- Construction in `Windows` (MinGW)
+- Building in `Windows` (MinGW)
 - The steps are the same as above, just the command is different
 ```shell
 git clone https://github.com/Flmpx/hm-focx.git
@@ -30,7 +34,7 @@ mingw32-make
 
 
 
-- Some detail information of container's functions
+- Some detailed information about container functions
 
 1. [hm_list](docs/hm_list.md)
 
