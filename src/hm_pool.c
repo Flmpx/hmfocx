@@ -46,7 +46,7 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
  */
 void* hm_pool_block_allocate(hm_pool* pool) {
 
-    // refactor: allocator reurn NULL when `block_size`
+    // refactor: allocator reurn NULL when `block_size` or `blocks_per_page` == 0
     if (pool->block_size == 0 || pool->blocks_per_page == 0) {
         return NULL;
 
