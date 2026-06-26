@@ -9,6 +9,7 @@
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+#include <stdint.h>
 
 #define HM_TEST_COUNTER \
     all_failure_num += fail_cnt;
@@ -335,7 +336,71 @@ void test_pool_free() {
     
 }
 
+void test_minmax_pageblock_oper() {
+    hm_pool pool;
+    int fail_cnt = 0;
+    print_run("POOL | BOUNDARY | MIN_MAX__PAGE_BLOCK");
+    size_t blocks_per_page;
+    size_t block_size;
 
+    // blocks_per_page = 0; block_size = sizeof(int)
+    blocks_per_page = 0;
+    block_size = sizeof(int);
+
+    hm_pool_init(&pool, block_size, blocks_per_page);
+
+    void* v = hm_pool_block_allocate(&pool);
+    check_res(v == NULL, "the v should be NULL when `block_per_page == 0`", &fail_cnt);
+    test_pool_integrity(&pool, 0, &fail_cnt);
+    hm_pool_free(&pool);
+
+    // block_size = 0; blocks_per_page = 1024;
+    block_size = 0;
+    blocks_per_page = 1024;
+    hm_pool_init(&pool, block_size, blocks_per_page);
+    v = hm_pool_block_allocate(&pool);
+
+    check_res(v == NULL, "the v shouldn be NULL when `block_size == 0`", &fail_cnt);
+    hm_pool_free(&pool);
+
+
+    // block_size = SIZE_MAX / 2, blocks_per_page = 1;
+    blocks_per_page = 1;
+    block_size = SIZE_MAX / 2;
+    hm_pool_init(&pool, block_size, blocks_per_page);
+
+    v = hm_pool_block_allocate(&pool);
+    check_res(v == NULL, "the v should be NULL when `block_size` is too big", &fail_cnt);
+    hm_pool_free(&pool);
+    
+    // block_size = sizeof(int), blocks_per_page = SIZE_MAX / 2;
+
+    blocks_per_page = SIZE_MAX / 2;
+    block_size = sizeof(int);
+    hm_pool_init(&pool, block_size, blocks_per_page);
+
+    v = hm_pool_block_allocate(&pool);
+    check_res(v == NULL, "the v should be NULL when `blocks_per_page` is too big", &fail_cnt);
+    hm_pool_free(&pool);
+
+
+    print_end("POOL | BOUNDARY | MIN_MAX__PAGE_BLOCK", fail_cnt);
+
+}
+
+
+void test_free_NULL() {
+    // free a nullptr
+    hm_pool pool;
+    int fail_cnt = 0;
+    print_run("POOL | BOUNDARY | FREE NULLPTR | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+    hm_pool_init(&pool, sizeof(int), 2048);
+
+    void* v = NULL;
+    hm_pool_block_free(&pool, v);
+
+    print_end("POOL | BOUNDARY | FREE NULLPTR | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+}
 
 void function_test() {
     test_pool_init();                                               printf("\n");
@@ -354,6 +419,9 @@ void function_test() {
 
 
 void boundary_test() {
+    test_minmax_pageblock_oper();                                   printf("\n");
+
+    test_free_NULL();                                               printf("\n");
 
 }
 
