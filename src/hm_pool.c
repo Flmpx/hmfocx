@@ -91,6 +91,7 @@ void* hm_pool_block_allocate(hm_pool* pool) {
  * @note - The pointer of block must match the memory pool
  */
 void hm_pool_block_free(hm_pool* pool, void* block) {
+    if (block == NULL) return;
     hm_pool_block_node* node = (hm_pool_block_node*)block;
     node->next = pool->head_block;
     pool->head_block = node;
