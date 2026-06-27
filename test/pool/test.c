@@ -402,6 +402,49 @@ void test_free_NULL() {
     print_end("POOL | BOUNDARY | FREE NULLPTR | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
 }
 
+
+void test_pool_allocate_stress() {
+    hm_pool pool;
+    int fail_cnt = 0;
+    int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
+    int cnt = sizeof(nums) / sizeof(int);
+    print_run("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*");
+    hm_pool_init(&pool, sizeof(int), 2048);
+
+    for (int i = 0; i < cnt; i++) {
+
+        int** pointers = (int**)malloc(nums[i] * sizeof(int*));
+
+        clock_t start_a = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            pointers[j] = hm_pool_block_allocate(&pool);
+            *pointers[j] = 10 + i;
+        }
+        clock_t end_a = clock();
+        test_pool_integrity(&pool, nums[i], &fail_cnt);
+
+        hm_pool_free(&pool);
+
+        clock_t start_b = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            pointers[j] = (int*)malloc(sizeof(int));
+            *pointers[j] = 10 + i;
+        }
+        clock_t end_b = clock();
+
+        // free
+        for (int j = 0; j < nums[i]; j++) {
+            free(pointers[j]);
+        }
+        free(pointers);
+        print_speed_vs("Pool", start_a, end_a, "Malloc", start_b, end_b, nums[i], nums[i]);
+    }
+
+    print_end("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*", fail_cnt);
+
+
+}
+
 void function_test() {
     test_pool_init();                                               printf("\n");
 
@@ -426,7 +469,8 @@ void boundary_test() {
 }
 
 void stress_test() {
-
+    test_pool_allocate_stress();                                    printf("\n");
+    
 }
 
 
