@@ -157,5 +157,6 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `check_res`| Check if the result is true <br> It will `print information` and `change the value of fail_cnt` if `res == false` | 
 | `print_end` | Print information of this test  according to the number of `fail_cnt` at end | 
 | `print_run_time` | prints `cost time` and `speed` according to the passed-in parameters |
+| `print_speed_vs` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |
 
 ## Tips
