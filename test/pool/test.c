@@ -418,7 +418,7 @@ void test_pool_allocate_stress() {
         clock_t start_a = clock();
         for (int j = 0; j < nums[i]; j++) {
             pointers[j] = hm_pool_block_allocate(&pool);
-            *pointers[j] = 10 + i;
+            *pointers[j] = 10 + j;
         }
         clock_t end_a = clock();
         test_pool_integrity(&pool, nums[i], &fail_cnt);
@@ -428,7 +428,7 @@ void test_pool_allocate_stress() {
         clock_t start_b = clock();
         for (int j = 0; j < nums[i]; j++) {
             pointers[j] = (int*)malloc(sizeof(int));
-            *pointers[j] = 10 + i;
+            *pointers[j] = 10 + j;
         }
         clock_t end_b = clock();
 
