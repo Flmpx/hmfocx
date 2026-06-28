@@ -153,5 +153,6 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `check_res` | 检查结果是否正确；若失败则`打印信息`并增加 `fail_cnt` |
 | `print_end` | 根据 `fail_cnt` 在结束时打印测试结果 |
 | `print_run_time` | 根据传入参数打印`耗时`和`速度` |
+| `print_speed_vs` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |
 
 ## 提示

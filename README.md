@@ -39,3 +39,5 @@ mingw32-make
 1. [hm_list](docs/hm_list.md)
 
 2. [hm_map](docs/hm_map.md)
+
+3. [hm_pool](docs/hm_pool.md)
