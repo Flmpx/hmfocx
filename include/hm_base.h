@@ -6,9 +6,9 @@
 #define HM_BASE_H
 
 #define HM_FOCX_VERSION_MAJOR 0
-#define HM_FOCX_VERSION_MINOR 4
-#define HM_FOCX_VERSION_PATCH 2
-#define HM_FOCX_VERSION "0.4.2"
+#define HM_FOCX_VERSION_MINOR 5
+#define HM_FOCX_VERSION_PATCH 0
+#define HM_FOCX_VERSION "0.5.0"
 
 #include <stdio.h>
 
