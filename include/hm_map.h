@@ -72,6 +72,7 @@ typedef struct hm_iter_map {
 
 #define hm_map_size(m) ((m)->size)
 #define hm_map_len(m) ((m)->len)
+extern double hm_map_get_load_factor(hm_map* map);
 
 /**
  * Some functin of map , like `insert`, `get` , `del` and `free`

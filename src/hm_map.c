@@ -399,3 +399,16 @@ hm_entry* hm_iter_map_next(hm_iter_map* iter) {
     return NULL;
 
 }
+
+
+/**
+ * Get the load factor of the map 
+ * @note - Return a negative number when the length of the map is 0
+ */
+double hm_map_get_load_factor(hm_map* map) {
+    if (map->len) {
+        return (double)map->size / map->len;
+    } else {
+        return -1;
+    }
+}
