@@ -15,6 +15,18 @@ static const size_t invalid_index = SIZE_MAX;
  */
 static const int hm_same = 0;
 
+
+/**
+ * Max load factor in map
+ */
+static const double max_load_factor = 0.75;
+
+
+/**
+ * Min load factor in map (only used in shrink function)
+ */
+static const double min_load_factor = 0.25;
+
 /**
  * Determine whether a number is a prime number
  */
@@ -204,10 +216,12 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     if (l == 0) {
         flag_fresh = true;
         new_len = 17;
-    } else if (4 * s > 3 * l) {
+    } else if (((double)(s) / l) > max_load_factor) {
+
         if (l > SIZE_MAX / 2) {
             return hm_map_ret_error;
         }
+
         flag_fresh = true;
         new_len = max_prime(2 * l);
         // Check the return number of `max_prime`
@@ -299,7 +313,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
-    if (l < 34 || 4 * s > l) {
+    if (l < 34 || ((double)s / l) > min_load_factor) {
         return hm_map_ret_none;
     }
 

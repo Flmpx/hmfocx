@@ -407,7 +407,7 @@ void test_map_shrink() {
     for (int i = 0; i < cnt; i++) {
         size_t l = map.len, s = map.size;
         hm_map_ret ret = hm_map_shrink(&map);
-        if (l < 34 || 4 * s > l) {
+        if (l < 34 || ((double)s / l) > 0.25) {
             if (ret != hm_map_ret_none) {
                 fail_shrink++;
             }
