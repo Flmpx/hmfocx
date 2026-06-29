@@ -150,6 +150,9 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     hm_map_init(&new_map, map->hash, map->cmp, map->free_key, map->free_val);
     new_map.len = new_len;
 
+    if (new_len > SIZE_MAX / sizeof(hm_entry) || new_len > SIZE_MAX / sizeof(hm_entry_status)) {
+        return hm_map_ret_error;
+    }
     new_map.buckets = (hm_entry*)malloc(new_len * sizeof(hm_entry));
     if (new_map.buckets == NULL) {
         return hm_map_ret_error;
@@ -202,7 +205,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
         flag_fresh = true;
         new_len = 17;
     } else if (4 * s > 3 * l) {
-        if ( 2 * l < l) {
+        if (l > SIZE_MAX / 2) {
             return hm_map_ret_error;
         }
         flag_fresh = true;
