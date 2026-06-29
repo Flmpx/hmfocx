@@ -5,7 +5,11 @@
 - The version number follows [Semantic Versioning](https://semver.org/)
 
 ## [Unreleased]
+### Fixed
+-  Add the check the overflow before expand the length of map
 
+### Added 
+- Add the new function for map -- `hm_map_get_load_factor`
 
 ## [0.5.0] - 2026-06-28
 
