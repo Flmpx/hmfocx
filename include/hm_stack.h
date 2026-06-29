@@ -13,9 +13,9 @@
  * The return signal of function in stack
  */
 typedef enum hm_stack_ret {
-    hm_stack_ret_error = 0x9,       // Malloc faile when expand the capacity of stack
-    hm_stack_ret_warn,              // The pass parameter is incorrect
-    hm_stack_ret_none,              // Operation invalid
+    hm_stack_ret_error = 0x9,       // Malloc fail when expand the capacity of stack or init the stack
+    hm_stack_ret_full,              // stack is full now
+    hm_stack_ret_empty,             // stack is empty now
     hm_stack_ret_suc                // Operation successful, like push and init successful
 } hm_stack_ret;
 
