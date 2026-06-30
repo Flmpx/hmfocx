@@ -5,8 +5,32 @@
 - The version number follows [Semantic Versioning](https://semver.org/)
 
 ## [Unreleased]
+### Fixed
+-  Add the check the overflow before expand the length of map
 
-## [0.4.2] -2026-06-23
+### Added 
+- Add the new function for map -- `hm_map_get_load_factor`
+
+## [0.5.0] - 2026-06-28
+
+### Added
+- Add the memory pool(fixed-size block) container, it includes some basic operation, such as `allocate` and `free` block, other detailed information see [hm_pool](docs/hm_pool.md)
+
+### Fixed 
+- Fix the wrong behavior in function `hm_pool_block_allocate` when the pass-in `block_size` or `blocks_per_page` is too big
+
+- Fix the function `hm_pool_get_pages` can't get the number of page correctly
+
+- Fix the wrong free logic in function `hm_pool_free`
+
+## Changed
+- `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` or `block_size` is `zero`
+
+- **Breaking** Change `hm_cmp` and `hm_hash` signatures from `void*` to use `const void*`
+
+
+
+## [0.4.2] - 2026-06-23
 
 ### Changed
 - **refactor:** extracted the `node-finding` logic from `hm_list_get`, `hm_list_del_index` and `hm_list_insert_index` into a standalone function `hm_list_get_node`, eliminating duplicate code.

@@ -96,6 +96,12 @@ void hm_map_free(hm_map* map);
 ```c
 #define hm_map_size(l) ((l)->size)
 #define hm_map_len(l) ((l)->len)
+
+/**
+ * Get the load factor of the map 
+ * @note - Return a negative number when the length of the map is 0
+ */
+double hm_map_get_load_factor(hm_map* map);
 ```
 
 ## Tips

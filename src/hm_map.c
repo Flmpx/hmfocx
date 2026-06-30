@@ -15,6 +15,18 @@ static const size_t invalid_index = SIZE_MAX;
  */
 static const int hm_same = 0;
 
+
+/**
+ * Max load factor in map
+ */
+static const double max_load_factor = 0.75;
+
+
+/**
+ * Min load factor in map (only used in shrink function)
+ */
+static const double min_load_factor = 0.25;
+
 /**
  * Determine whether a number is a prime number
  */
@@ -150,6 +162,9 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     hm_map_init(&new_map, map->hash, map->cmp, map->free_key, map->free_val);
     new_map.len = new_len;
 
+    if (new_len > SIZE_MAX / sizeof(hm_entry) || new_len > SIZE_MAX / sizeof(hm_entry_status)) {
+        return hm_map_ret_error;
+    }
     new_map.buckets = (hm_entry*)malloc(new_len * sizeof(hm_entry));
     if (new_map.buckets == NULL) {
         return hm_map_ret_error;
@@ -201,10 +216,12 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     if (l == 0) {
         flag_fresh = true;
         new_len = 17;
-    } else if (4 * s > 3 * l) {
-        if ( 2 * l < l) {
+    } else if (((double)(s) / l) > max_load_factor) {
+
+        if (l > SIZE_MAX / 2) {
             return hm_map_ret_error;
         }
+
         flag_fresh = true;
         new_len = max_prime(2 * l);
         // Check the return number of `max_prime`
@@ -296,7 +313,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
-    if (l < 34 || 4 * s > l) {
+    if (l < 34 || ((double)s / l) > min_load_factor) {
         return hm_map_ret_none;
     }
 
@@ -381,4 +398,17 @@ hm_entry* hm_iter_map_next(hm_iter_map* iter) {
     iter->index = index;
     return NULL;
 
+}
+
+
+/**
+ * Get the load factor of the map 
+ * @note - Return a negative number when the length of the map is 0
+ */
+double hm_map_get_load_factor(hm_map* map) {
+    if (map->len) {
+        return (double)map->size / map->len;
+    } else {
+        return -1;
+    }
 }
