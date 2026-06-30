@@ -46,7 +46,7 @@ typedef struct hm_stack {
  */
 
 extern hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
-extern hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free);
+extern hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 
 
 

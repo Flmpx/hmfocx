@@ -29,7 +29,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
  * @note - 初始化成功时返回 `hm_stack_ret_suc`
  * @note - 如果不想让栈释放其值，请将 `hm_free` 函数指针设为 `NULL`
  */
-hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free);
+hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
 
 - **入栈**
