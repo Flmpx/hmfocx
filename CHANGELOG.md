@@ -8,6 +8,9 @@
 ### Fixed
 -  Add the check the overflow before expand the length of map
 
+-  Fix the function `hm_stack_init_dynamic_grow` missing variable name
+    - It will use the `free` function in `stdlib.h` in funciton `hm_stack_init_dynamic_grow`, not the `pass-in free` function
+
 ### Added 
 - Add the new function for map -- `hm_map_get_load_factor`
 
