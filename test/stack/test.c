@@ -12,8 +12,13 @@ int all_failure_num = 0;
 
 // every test function ...
 
-void test_stack_integrity(hm_stack* stack, int* fail_cnt) {
+void test_stack_integrity(hm_stack* stack, int* fail_cnt, size_t top, bool dynamic_gorwth, size_t capacity) {
     // because the limitation of stack, the integrity test only test these
+    check_res(stack->top == top, "TEST OF INTEGRITY: stack's top isn't the expected size", fail_cnt);
+    check_res(stack->dynamic_grow == dynamic_gorwth, "TEST OF INTEGRITY: stack'dynamic signal is unexpected", fail_cnt);
+    if (!dynamic_gorwth) {
+        check_res(stack->capacity == capacity, "TEST OF INTEGRITY: stack's capacity isn't the expected size", fail_cnt);
+    }
     check_res(stack->capacity >= stack->top, "TEST OF INTEGRITY: `capacity` should greater than `top`", fail_cnt);
     check_res(!(stack->capacity == 0 && stack->vals != NULL), "stack's capacity is 0, but vals have memory", fail_cnt);
     check_res(!(stack->capacity != 0 && stack->vals == NULL), "stack's capacity isn't 0, but vals is NULL", fail_cnt);
@@ -28,7 +33,7 @@ void test_stack_fixed_init() {
     size_t capacity = 64;
     // pass in `free` for stack
     hm_stack_init(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, 0, false, capacity);
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt);
     check_res(stack.dynamic_grow == false, "the stack's dynamic-gorwth should is `false`", &fail_cnt);
@@ -42,7 +47,8 @@ void test_stack_fixed_init() {
     
     hm_stack_init(&stack, capacity, NULL);
     check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt);
-    
+    test_stack_integrity(&stack, &fail_cnt, 0, false, capacity);
+
     hm_stack_free(&stack);
 
     print_end("STACK(FIXED) | FUNC | INIT | CAPACITY: 64", fail_cnt);
@@ -52,14 +58,14 @@ void test_stack_fixed_init() {
 }
 
 void test_stack_dynamic_init() {
-    // fixed-size
+    // dynamic-growth
     int fail_cnt = 0;
     print_run("STACK(DYNAMIC) | FUNC | INIT | CAPACITY: 64");
     hm_stack stack;
     size_t capacity = 64;
     // pass in `free` for stack
     hm_stack_init_dynamic_grow(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, 0, true, capacity);
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt);
     check_res(stack.dynamic_grow == true, "the stack's dynamic-gorwth should is `true`", &fail_cnt);
@@ -73,7 +79,8 @@ void test_stack_dynamic_init() {
     
     hm_stack_init_dynamic_grow(&stack, capacity, NULL);
     check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt);
-    
+    test_stack_integrity(&stack, &fail_cnt, 0, true, capacity);
+
     hm_stack_free(&stack);
 
     print_end("STACK(DYNAMIC) | FUNC | INIT | CAPACITY: 64", fail_cnt);
