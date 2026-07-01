@@ -88,13 +88,151 @@ void test_stack_dynamic_init() {
     HM_TEST_COUNTER
 }
 
+
+void test_stack_fixed_push() {
+    int fail_cnt = 0;
+    print_run("STACK(FIXED) | FUNC | PUSH | CAPACITY: 64 TYPE: [INT]");
+    int capacity = 64;
+    hm_stack stack;
+    hm_stack_init(&stack, capacity, free);
+    
+    int fail = 0;
+
+    // push vals, the amount is same as capacity
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) != hm_stack_ret_suc) {
+            fail++;
+            free(v);
+        }
+    }
+    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, capacity, false, capacity);
+    // verify
+
+    fail = 0;
+    int** vals = (int**)stack.vals;
+    for (int i = 0; i < capacity; i++) {
+        int* v = vals[i];
+        if (*v != i * 10) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt);
+
+    // push more vals, let it return `full`
+    fail = 0;
+    for (int i = capacity; i < 2 * capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) != hm_stack_ret_full) {
+            fail++;
+        } else {
+            free(v);
+        }
+    }
+    check_res(fail == 0, "the push function should reuturn full when push vals beyond the capacity", &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, capacity, false, capacity);
+
+
+    fail = 0;
+    vals = (int**)stack.vals;
+    for (int i = 0; i < capacity; i++) {
+        int* v = vals[i];
+        if (*v != i * 10) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt);
+
+    hm_stack_free(&stack);
+
+    print_end("STACK(FIXED) | FUNC | PUSH | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+
+}
+
+void test_stack_dynamic_push() {
+    int fail_cnt = 0;
+    print_run("STACK(DYNAMIC) | FUNC | PUSH | CAPACITY: 64 TYPE: [INT]");
+
+    hm_stack stack;
+    int start_capacity = 64;
+    hm_stack_init_dynamic_grow(&stack, start_capacity, free);
+
+    int fail = 0;
+    // push vals, the amount is same as start_capacity
+    for (int i = 0; i < start_capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) != hm_stack_ret_suc) {
+            fail++;
+            free(v);
+        }
+    }
+    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, start_capacity, true, start_capacity);
+
+
+    // verify
+    fail = 0;
+    int** vals = (int**)stack.vals;
+    for (int i = 0; i < start_capacity; i++) {
+        int* v = vals[i];
+        if (*v != i * 10) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt);
+
+    // push more vals
+    fail = 0;
+    for (int i = start_capacity; i < 2 * start_capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) != hm_stack_ret_suc) {
+            fail++;
+            free(v);
+        }
+    }
+    
+    check_res(fail == 0, "push function should return suc when push vals beyond the capacity", &fail_cnt);
+    test_stack_integrity(&stack, &fail_cnt, start_capacity * 2, true, start_capacity);
+
+
+    // verify
+
+    fail = 0;
+    vals = (int**)stack.vals;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = vals[i];
+        if (*v != i * 10) {
+            fail++;
+        }
+    }
+
+    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt);
+
+    hm_stack_free(&stack);
+
+    print_end("STACK(DYNAMIC) | FUNC | PUSH | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+}
+
 void test_stack_fixed() {
     test_stack_fixed_init();                                        printf("\n");
+
+    test_stack_fixed_push();                                        printf("\n");
 }
 
 
 void test_stack_dynamic() {
     test_stack_dynamic_init();                                      printf("\n");
+
+    test_stack_dynamic_push();                                      printf("\n");
 }
 
 void function_test() {
