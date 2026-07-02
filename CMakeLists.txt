@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28.3)
 
-project(hm-focx)
+project(hmfocx)
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
