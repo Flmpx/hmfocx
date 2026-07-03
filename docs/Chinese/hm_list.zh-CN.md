@@ -78,6 +78,8 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 
 - **迭代器**
 ```c
+// 这些函数将会被移除
+
 /**
  * 初始化链表迭代器
  */
@@ -94,6 +96,49 @@ bool hm_iter_list_has_next(hm_iter_list* iter);
  * @note - 请先调用 `hm_iter_list_has_next()` 检查是否存在下一个值
  */
 void* hm_iter_list_next(hm_iter_list* iter);
+
+
+// 迭代器的新函数
+
+/**
+ * 初始化链表的迭代器
+ * @note - 让迭代器指向链表头部
+ */
+void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
+
+/**
+ * 初始化链表的迭代器
+ * @note - 让迭代器指向链表尾部
+ */
+void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
+
+/**
+ * 初始化链表的迭代器
+ * @note - 让迭代器指向链表中指定的索引位置
+ * @note - 如果索引越界，迭代器将指向 `NULL`
+ */
+void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+
+/**
+ * 检查迭代器的当前指向是否有效
+ */
+bool hm_iter_list_has_cur(hm_iter_list* iter);
+
+/**
+ * 获取迭代器的当前值
+ * 在调用 `hm_iter_list_cur()` 之前，请先使用 `hm_iter_list_has_cur()` 进行检查
+ */
+void* hm_iter_list_cur(hm_iter_list* iter);
+
+/**
+ * 将迭代器的指针移动到下一个节点
+ */
+void hm_iter_list_move_next(hm_iter_list* iter);
+
+/**
+ * 将迭代器的指针移动到上一个节点
+ */
+void hm_iter_list_move_prev(hm_iter_list* iter);
 ```
 
 - **释放**
