@@ -10,6 +10,16 @@
 
 ### Added 
 - Add the new function for map -- `hm_map_get_load_factor`
+- Add the new iterator's function for list, These function is more flexible
+    -  **Init:** `hm_iter_list_init_head` `hm_iter_list_init_tail`  `hm_iter_list_init_index`
+    -  **Cur:** `hm_iter_list_has_cur` `hm_iter_list_cur`
+    -  **Move:** `hm_iter_list_move_next` `hm_iter_list_move_prev`
+
+### Deprecated
+- The old list iterator's function will be removed
+    -  `hm_iter_list_init()`
+    -  `hm_iter_list_has_next()`
+    -  `hm_iter_list_next`
 
 ## [0.5.0] - 2026-06-28
 
