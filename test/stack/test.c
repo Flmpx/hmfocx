@@ -231,7 +231,7 @@ void test_stack_fixed_peek() {
     hm_stack stack;
     hm_stack_init(&stack, capacity, free);
 
-    
+    int fail_wrong = 0, fail_null = 0;
     // push reasonable number of vals
     for (int i = 0; i < capacity; i++) {
         int* v = (int*)malloc(sizeof(int));
@@ -243,13 +243,17 @@ void test_stack_fixed_peek() {
 
         int* p = hm_stack_peek(&stack);
         test_stack_integrity(&stack, &fail_cnt, num, false, capacity);
-        check_res(p != NULL, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt);
-        if (p) {
-            check_res(*p == (num - 1) * 10, "the val peeked by the peek function is wrong", &fail_cnt);
+        if (p == NULL) {
+            fail_null++;
+        } else if (*p != (num - 1) * 10) {
+            fail_wrong++;
         }
     }
-
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt);
+    
     // push beyond the capacity
+    fail_null = fail_wrong = 0;
     for (int i = capacity; i < capacity * 2; i++) {
         int v = i * 10;
         hm_stack_push(&stack, &v);
@@ -257,12 +261,15 @@ void test_stack_fixed_peek() {
         // according the logic, the val shouldn't push to fixed-size and full stack
         int* p = hm_stack_peek(&stack);
         test_stack_integrity(&stack, &fail_cnt, num, false, capacity);
-        check_res(p != NULL, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt);
-        if (p) {
-            check_res(*p == (num - 1) * 10, "the val peeked by the peek function is wrong", &fail_cnt);
+        if (p == NULL) {
+            fail_null++;
+        } else if (*p != (num - 1) * 10) {
+            fail_wrong++;
         }
     }
-
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong after push more vals than the capacity of stack", &fail_cnt);
+    
     hm_stack_free(&stack);
     print_end("STACK(FIXED) | FUNC | PEEK | CAPACITY: 32 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -280,6 +287,7 @@ void test_stack_dynamic_peek() {
     hm_stack_init_dynamic_grow(&stack, start_capacity, free);
 
     
+    int fail_wrong = 0, fail_null = 0;
     // push vals(include beyond the capacity)
     for (int i = 0; i < start_capacity * 2; i++) {
         int* v = (int*)malloc(sizeof(int));
@@ -291,11 +299,14 @@ void test_stack_dynamic_peek() {
 
         int* p = hm_stack_peek(&stack);
         test_stack_integrity(&stack, &fail_cnt, num, true, start_capacity);
-        check_res(p != NULL, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt);
-        if (p) {
-            check_res(*p == (num - 1) * 10, "the val peeked by the peek function is wrong", &fail_cnt);
+        if (p == NULL) {
+            fail_null++;
+        } else if (*p != (num - 1) * 10) {
+            fail_wrong++;
         }
     }
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt);
 
 
     hm_stack_free(&stack);
