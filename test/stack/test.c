@@ -426,6 +426,136 @@ void test_stack_dynamic_pop() {
     HM_TEST_COUNTER
 }
 
+void test_stack_fixed_clear() {
+    int fail_cnt = 0;
+    print_run("STACK(FIXED) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]");
+    hm_stack stack;
+    int capacity = 64;
+    hm_stack_init(&stack, capacity, free);
+
+    // push
+    for (int i = 0; i < capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) == hm_stack_ret_full) {
+            free(v);
+        }
+    }
+
+    test_stack_integrity(&stack, &fail_cnt, capacity, false, capacity);
+
+    hm_stack_clear(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, 0, false, capacity);
+
+    int* val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt);
+    
+    hm_stack_free(&stack);
+    print_end("STACK(FIXED) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+}
+
+void test_stack_dynamic_clear() {
+    int fail_cnt = 0;
+    print_run("STACK(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]");
+
+    hm_stack stack;
+    int start_capacity = 64;
+    hm_stack_init_dynamic_grow(&stack, start_capacity, free);
+
+    // push
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        hm_stack_push(&stack, v);
+    }
+
+    test_stack_integrity(&stack, &fail_cnt, start_capacity * 2, true, start_capacity);
+
+    hm_stack_clear(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, 0, true, start_capacity);
+
+    int* val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt);
+
+    print_end("STACK(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    hm_stack_free(&stack);
+    HM_TEST_COUNTER
+}
+
+void test_stack_fixed_free() {
+    int fail_cnt = 0;
+    print_run("STACK(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]");
+
+    hm_stack stack;
+    int capacity = 64;
+    hm_stack_init(&stack, capacity, free);
+
+    // push
+    for (int i = 0; i < capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        if (hm_stack_push(&stack, v) == hm_stack_ret_full) {
+            free(v);
+        }
+    }
+    test_stack_integrity(&stack, &fail_cnt, capacity, false, capacity);
+    hm_stack_free(&stack);
+    test_stack_integrity(&stack, &fail_cnt, 0, false, 0);
+
+    int* val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt);
+
+    print_end("STACK(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+}
+
+void test_stack_dynamic_free() {
+    int fail_cnt = 0;
+    print_run("STACK(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]");
+
+    hm_stack stack;
+    int start_capacity = 64;
+    hm_stack_init_dynamic_grow(&stack, start_capacity, free);
+
+    // push
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 10;
+        hm_stack_push(&stack, v);
+    }
+
+    test_stack_integrity(&stack, &fail_cnt, start_capacity * 2, true, start_capacity);
+
+    hm_stack_free(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, 0, true, 0);
+
+    int* val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt);
+
+    print_end("STACK(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+}
+
 void test_stack_fixed() {
     test_stack_fixed_init();                                        printf("\n");
 
@@ -434,6 +564,10 @@ void test_stack_fixed() {
     test_stack_fixed_peek();                                        printf("\n");
 
     test_stack_fixed_pop();                                         printf("\n");
+
+    test_stack_fixed_clear();                                       printf("\n");
+
+    test_stack_fixed_free();                                        printf("\n");
 }
 
 
@@ -445,6 +579,10 @@ void test_stack_dynamic() {
     test_stack_dynamic_peek();                                      printf("\n");
 
     test_stack_dynamic_pop();                                       printf("\n");
+
+    test_stack_dynamic_clear();                                     printf("\n");
+
+    test_stack_dynamic_free();                                      printf("\n");
 }
 
 void function_test() {
