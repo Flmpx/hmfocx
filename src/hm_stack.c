@@ -150,7 +150,7 @@ void hm_stack_clear(hm_stack* stack) {
     if (stack->free) {
         size_t total = stack->top;
         void** vals = stack->vals;
-        for (size_t i = 0; i < stack->top; i++) {
+        for (size_t i = 0; i < total; i++) {
             stack->free(vals[i]);
         }
     }
