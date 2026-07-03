@@ -317,12 +317,123 @@ void test_stack_dynamic_peek() {
 
 }
 
+
+void test_stack_fixed_pop() {
+    int fail_cnt = 0;
+    print_run("STACK(FIXED) | FUNC | POP | CAPACITY: 8 TYPE: [INT]");
+
+    hm_stack stack;
+    int capacity = 8;
+    hm_stack_init(&stack, capacity, free);
+    // push reasonable number of vals
+    int fail_null = 0, fail_wrong = 0;
+    for (int i = 0; i < capacity; i++) {
+        // push
+        for (int j = 0; j <= i; j++) {
+            int* v = (int*)malloc(sizeof(int));
+            *v = j * 10;
+            hm_stack_push(&stack, v);
+        }
+
+        // pop and verify
+        int fail = 0;
+        for (int j = i; j >= 0; j--) {
+            test_stack_integrity(&stack, &fail_cnt, j + 1, false, capacity);
+            int* v = hm_stack_pop(&stack);
+            if (v == NULL) {
+                fail_null++;
+            } else if (*v != j * 10) {
+                fail_wrong++;
+            }
+            free(v);
+        }
+    }
+    
+    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt);
+
+    // push beyond the capacity of stack
+    fail_null = fail_wrong = 0;
+    for (int i = capacity; i < capacity * 2; i++) {
+        // push
+        for (int j = 0; j <= i; j++) {
+            int* v = (int*)malloc(sizeof(int));
+            *v = j * 10;
+            if (hm_stack_push(&stack, v) == hm_stack_ret_full) {
+                free(v);
+            }
+        }
+
+        // pop and verify
+
+        for (int j = capacity - 1; j >= 0; j--) {
+            test_stack_integrity(&stack, &fail_cnt, j + 1, false, capacity);
+            int* v = hm_stack_pop(&stack);
+            if (v == NULL) {
+                fail_null++;
+            } else if (*v != j * 10) {
+                fail_wrong++;
+            }
+            free(v);
+        }
+    }
+    check_res(fail_null == 0, "the pop val shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function after push more vals than the capacity of stack", &fail_cnt);
+    
+
+    hm_stack_free(&stack);
+    print_end("STACK(FIXED) | FUNC | POP | CAPACITY: 8 TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_stack_dynamic_pop() {
+    int fail_cnt = 0;
+    print_run("STACK(DYNAMIC) | FUNC | POP | CAPACITY: 8 TYPE: [INT]");
+
+    hm_stack stack;
+    int start_capacity = 8;
+    hm_stack_init_dynamic_grow(&stack, start_capacity, free);
+    // push reasonable number of vals
+    int fail_null = 0, fail_wrong = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        // push
+        for (int j = 0; j <= i; j++) {
+            int* v = (int*)malloc(sizeof(int));
+            *v = j * 10;
+            hm_stack_push(&stack, v);
+        }
+
+        // pop and verify
+        int fail = 0;
+        for (int j = i; j >= 0; j--) {
+            test_stack_integrity(&stack, &fail_cnt, j + 1, true, start_capacity);
+            int* v = hm_stack_pop(&stack);
+            if (v == NULL) {
+                fail_null++;
+            } else if (*v != j * 10) {
+                fail_wrong++;
+            }
+            free(v);
+        }
+    }
+    
+    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt);
+
+
+    hm_stack_free(&stack);
+    print_end("STACK(DYNAMIC) | FUNC | POP | CAPACITY: 8 TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void test_stack_fixed() {
     test_stack_fixed_init();                                        printf("\n");
 
     test_stack_fixed_push();                                        printf("\n");
 
     test_stack_fixed_peek();                                        printf("\n");
+
+    test_stack_fixed_pop();                                         printf("\n");
 }
 
 
@@ -332,6 +443,8 @@ void test_stack_dynamic() {
     test_stack_dynamic_push();                                      printf("\n");
 
     test_stack_dynamic_peek();                                      printf("\n");
+
+    test_stack_dynamic_pop();                                       printf("\n");
 }
 
 void function_test() {
