@@ -1406,6 +1406,18 @@ void test_empty_list_oper() {
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over empty list should yield zero elements", &fail_cnt);
+    
+    // new iterator(only test one)
+    hm_iter_list_init_head(&iter, &list);
+    loop_cnt = 0;
+    while (hm_iter_list_has_cur(&iter)) {
+        hm_iter_list_cur(&iter);
+        hm_iter_list_move_next(&iter);
+        loop_cnt++;
+    }
+    check_res(loop_cnt == 0, "iterator from head over empty list should yield zero elements", &fail_cnt);
+
+
 
     // sort
     hm_list_sort(&list, cmp_int_up);
@@ -1523,6 +1535,17 @@ void test_freed_list_oper() {
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over freed list should yield zero elements", &fail_cnt);
+
+    // new iterator(only test one)
+    hm_iter_list_init_head(&iter, &list);
+    loop_cnt = 0;
+    while (hm_iter_list_has_cur(&iter)) {
+        hm_iter_list_cur(&iter);
+        hm_iter_list_move_next(&iter);
+        loop_cnt++;
+    }
+    check_res(loop_cnt == 0, "iterator from head over freed list should yield zero elements", &fail_cnt);
+
 
     // sort
 
