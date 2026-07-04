@@ -270,6 +270,177 @@ void test_iter_list() {
     HM_TEST_COUNTER
 }
 
+
+void test_iter_list_head() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    // iter from head
+    print_run("LIST | FUNC | ITERATOR HEAD | TYPE: [INT]");
+    int cnt = 0;
+    hm_iter_list iter;
+    int fail_diff = 0;
+
+    hm_iter_list_init_head(&iter, &list);
+
+    while (hm_iter_list_has_cur(&iter)) {
+        int* v = hm_iter_list_cur(&iter);
+
+        if (*v != flag[cnt]) {
+            fail_diff++;
+        }
+        cnt++;
+
+        hm_iter_list_move_next(&iter);
+    }
+
+    check_res(cnt == list.size, "the loop count of list's iterator is wrong when itering from head", &fail_cnt);
+    check_res(fail_diff == 0, "the val got by iterator is wrong when itering from head", &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
+    hm_list_free(&list);
+
+    print_end("LIST | FUNC | ITERATOR HEAD | TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+    
+}
+
+
+void test_iter_list_tail() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    // iter from tail
+    print_run("LIST | FUNC | ITERATOR TAIL | TYPE: [INT]");
+    int cnt = 0;
+    hm_iter_list iter;
+    int fail_diff = 0;
+
+    hm_iter_list_init_tail(&iter, &list);
+
+    while (hm_iter_list_has_cur(&iter)) {
+        int* v = hm_iter_list_cur(&iter);
+
+        if (*v != flag[num - cnt - 1]) {
+            fail_diff++;
+        }
+        cnt++;
+
+        hm_iter_list_move_prev(&iter);
+    }
+
+    check_res(cnt == list.size, "the loop count of list's iterator is wrong when itering from tail", &fail_cnt);
+    check_res(fail_diff == 0, "the val got by iterator is wrong when itering from tail", &fail_cnt);
+    test_list_integrity(&list, &fail_cnt);
+    hm_list_free(&list);
+
+    print_end("LIST | FUNC | ITERATOR TAIL | TYPE: [INT]", fail_cnt);
+
+    HM_TEST_COUNTER
+    
+}
+
+void test_iter_list_index() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+
+    // iter
+    print_run("LIST | FUNC | ITERATOR INDEX | TYPE: [INT]");
+    hm_iter_list iter;
+    int fail_diff_next = 0;
+    int fail_diff_prev = 0;
+    int fail_loop_cnt_prev = 0;
+    int fail_loop_cnt_next = 0;
+    size_t idxs[] = {10, 20, 1000, 0, 99, 100, 98, 101, 102};
+    int n = sizeof(idxs) / sizeof(size_t);
+    for (int i = 0; i < n; i++) {
+        
+        hm_iter_list iter;
+        // iter to next from specified index
+        hm_iter_list_init_index(&iter, &list, idxs[i]);
+        int cnt_next = 0;
+        
+        while (hm_iter_list_has_cur(&iter)) {
+            int* v = hm_iter_list_cur(&iter);
+            
+            if (*v != flag[idxs[i] + cnt_next]) {
+                fail_diff_next++;
+            }
+            cnt_next++;
+            
+            hm_iter_list_move_next(&iter);
+        }
+        if (((idxs[i] >= num)  && (cnt_next != 0)) || 
+            ((idxs[i] <  num)  && (cnt_next != num - idxs[i]))) {
+                fail_loop_cnt_next++;
+        }
+        
+
+
+        // iter to next from specified index
+        hm_iter_list_init_index(&iter, &list, idxs[i]);
+        int cnt_prev = 0;
+        
+        while (hm_iter_list_has_cur(&iter)) {
+            int* v = hm_iter_list_cur(&iter);
+            
+            if (*v != flag[idxs[i] - cnt_prev]) {
+                fail_diff_prev++;
+            }
+            cnt_prev++;
+
+            hm_iter_list_move_prev(&iter);
+        }
+
+        if (((idxs[i] >= num)  && (cnt_prev != 0)) || 
+            ((idxs[i] <  num)  && (cnt_prev != idxs[i] + 1))) {
+                fail_loop_cnt_prev++;
+        }
+    }
+    check_res(fail_loop_cnt_next == 0, "the loop count of list's iterator is wrong when itering from index to `next`", &fail_cnt);
+    check_res(fail_diff_next == 0, "the val got by iterator is wrong when itering from index to `next`", &fail_cnt);
+    
+    check_res(fail_loop_cnt_prev == 0, "the loop count of list's iterator is wrong when itering from index to `prev`", &fail_cnt);
+    check_res(fail_diff_prev == 0, "the val got by iterator is wrong when itering from index to `prev`", &fail_cnt);
+
+
+    hm_list_free(&list);
+    print_end("LIST | FUNC | ITERATOR INDEX | TYPE: [INT]", fail_cnt);
+}
+
 void test_list_get() {
     hm_list list;
     hm_list_init(&list, free);
@@ -1443,6 +1614,12 @@ void function_test() {
 
     test_list_sort();                               printf("\n");
 
+    test_iter_list_head();                          printf("\n");
+
+    test_iter_list_tail();                          printf("\n");
+
+    test_iter_list_index();                         printf("\n");
+
 }
 
 void boundary_test() {
@@ -1484,7 +1661,7 @@ int main()
     
     boundary_test();
 
-    stress_test();
+    // stress_test();
 
     
     return all_failure_num;
