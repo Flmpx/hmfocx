@@ -556,7 +556,7 @@ void test_stack_dynamic_free() {
     HM_TEST_COUNTER
 }
 
-void test_stack_fixed() {
+void test_stack_fixed_func() {
     test_stack_fixed_init();                                        printf("\n");
 
     test_stack_fixed_push();                                        printf("\n");
@@ -571,7 +571,7 @@ void test_stack_fixed() {
 }
 
 
-void test_stack_dynamic() {
+void test_stack_dynamic_func() {
     test_stack_dynamic_init();                                      printf("\n");
 
     test_stack_dynamic_push();                                      printf("\n");
@@ -586,9 +586,9 @@ void test_stack_dynamic() {
 }
 
 void function_test() {
-    test_stack_fixed();                                             
+    test_stack_fixed_func();                                             
 
-    test_stack_dynamic();      
+    test_stack_dynamic_func();      
 }
 
 void boundary_test() {
