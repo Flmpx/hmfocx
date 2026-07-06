@@ -916,16 +916,11 @@ void boundary_test() {
     test_stack_dynamic_boundary();
 }
 
-void stress_test() {
-    
-}
-
 int main()
 {
     // Group the test roughly
     function_test();
     boundary_test();
-    stress_test();
     return all_failure_num;
 }
 
