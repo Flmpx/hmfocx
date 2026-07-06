@@ -8,7 +8,11 @@
 ### Fixed
 -  Add the check the overflow before expand the length of map
 
+-  Fix the function `hm_stack_init_dynamic_grow` missing variable name
+    - It will use the `free` function in `stdlib.h` in funciton `hm_stack_init_dynamic_grow`, not the `pass-in free` function
+
 ### Added 
+- Add new container for this library -- `hm_stack`, it includes some basic operation, such as `push` and `pop`, other detailed information see [hm_stack](docs/hm_stack.md)
 - Add the new function for map -- `hm_map_get_load_factor`
 - Add the new iterator's function for list, These function is more flexible
     -  **Init:** `hm_iter_list_init_head` `hm_iter_list_init_tail`  `hm_iter_list_init_index`
