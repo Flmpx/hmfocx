@@ -41,3 +41,5 @@ mingw32-make
 2. [hm_map](docs/Chinese/hm_map.zh-CN.md)
 
 3. [hm_pool](docs/Chinese/hm_pool.zh-CN.md)
+
+4. [hm_stack](docs/Chinese/hm_stack.zh-CN.md)
