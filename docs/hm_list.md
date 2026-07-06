@@ -81,6 +81,9 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 
 - **Iterator**
 ```c
+
+// These functions will be remove
+
 /**
  * Initialize iterator of list
  * 
@@ -98,6 +101,49 @@ bool hm_iter_list_has_next(hm_iter_list* iter);
  * @note - Use `hm_iter_list_has_next()` to check before calling `hm_iter_list_next()`
  */
 void* hm_iter_list_next(hm_iter_list* iter);
+
+
+// New functions of iterator
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the head of the list
+ */
+void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the tail of the list
+ */
+void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the specified `index` of the list
+ * @note - Iterator will point to `NULL` if `index` is out of bounds
+ */
+void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+
+/**
+ * Check if the iterator's current pointer is valid
+ */
+bool hm_iter_list_has_cur(hm_iter_list* iter);
+
+/**
+ * Get the current value of the iterator
+ * Use `hm_iter_list_has_cur()` to check before calling `hm_iter_list_cur()`
+ */
+void* hm_iter_list_cur(hm_iter_list* iter);
+
+/**
+ * Move the iterator's pointer to next
+ */
+void hm_iter_list_move_next(hm_iter_list* iter);
+
+/**
+ * Move the iterator's pointer to prev
+ */
+void hm_iter_list_move_prev(hm_iter_list* iter);
 ```
 
 

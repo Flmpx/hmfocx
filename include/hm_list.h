@@ -52,7 +52,7 @@ typedef struct hm_list {
  */
 
 typedef struct hm_iter_list {
-    hm_listnode* next;
+    hm_listnode* cur;
 } hm_iter_list;
 
 
@@ -98,10 +98,23 @@ extern void* hm_list_get(hm_list* list, size_t index);
  * Iterator functions
  */
 
+// These functions will be remove
+
 extern void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
 extern bool hm_iter_list_has_next(hm_iter_list* iter);
 extern void* hm_iter_list_next(hm_iter_list* iter);
 
+// New function of iterator
+
+extern void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
+extern void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
+extern void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+
+extern bool hm_iter_list_has_cur(hm_iter_list* iter);
+extern void* hm_iter_list_cur(hm_iter_list* iter);
+
+extern void hm_iter_list_move_next(hm_iter_list* iter);
+extern void hm_iter_list_move_prev(hm_iter_list* iter);
 
 /**
  * Sort functions
