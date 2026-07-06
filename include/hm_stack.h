@@ -3,6 +3,12 @@
  * Licensed under MIT (see LICENSE).
  */
 
+
+/*********************************************************************
+ * Latest API Description see https://github.com/Flmpx/hmfocx/blob/main/docs/hm_stack.md
+ * 
+ ********************************************************************/
+
 #ifndef HM_STACK_H
 #define HM_STACK_H
 
