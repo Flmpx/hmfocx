@@ -4,9 +4,9 @@ name: Test for all containers
 
 on:
   push:
-    branches: [ "feat/hm_list/func" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "feat/hm_list/func" ]
+    branches: [ "main" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -39,7 +39,6 @@ jobs:
 
  # The test part for `hm_map`
   test_hm_map:
-    if: ${{false}}
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -66,7 +65,6 @@ jobs:
 
  # The test part for `hm_pool`
   test_hm_pool:
-    if: ${{false}}
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
