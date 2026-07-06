@@ -703,7 +703,7 @@ void test_full_dynamic_stack_oper() {
 
 void test_no_capacity_fixed_stack() {
     int fail_cnt = 0;
-    print_run("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | CAPACITY: 64 TYPE: [INT]");
+    print_run("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]");
     hm_stack stack;
     int capacity = 0;
     hm_stack_init(&stack, capacity, free);
@@ -736,14 +736,14 @@ void test_no_capacity_fixed_stack() {
     test_stack_integrity(&stack, &fail_cnt, 0, false, capacity);
     
     
-    print_end("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    print_end("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 }
 
 
 void test_no_capacity_dynamic_stack() {
     int fail_cnt = 0;
-    print_run("STACK(DYNAMIC) | BOUNDARY | NO CAPACITY STACK OPER | CAPACITY: 64 TYPE: [INT]");
+    print_run("STACK(DYNAMIC) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]");
 
     hm_stack stack;
     int capacity = 0;
@@ -779,14 +779,14 @@ void test_no_capacity_dynamic_stack() {
     test_stack_integrity(&stack, &fail_cnt, 0, true, capacity);
     
     
-    print_end("STACK(DYNAMIC) | BOUNDARY | NO CAPACITY STACK OPER | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    print_end("STACK(DYNAMIC) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
 }
 
 void test_init_big_capacity_fixed_stack() {
     int fail_cnt = 0;
-    print_run("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]");
+    print_run("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | TYPE: [INT]");
     
     hm_stack stack;
     hm_stack_ret ret;
@@ -813,14 +813,14 @@ void test_init_big_capacity_fixed_stack() {
     check_res(ret == hm_stack_ret_error, "init SIZE_MAX/sizeof(void*)-capacity stack should return error", &fail_cnt);
 
 
-    print_end("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    print_end("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
 }
 
 void test_init_big_capacity_dynamic_stack() {
     int fail_cnt = 0;
-    print_run("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]");
+    print_run("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | TYPE: [INT]");
     
     hm_stack stack;
     hm_stack_ret ret;
@@ -846,7 +846,7 @@ void test_init_big_capacity_dynamic_stack() {
     ret = hm_stack_init_dynamic_grow(&stack, start_capaicty, free);
     check_res(ret == hm_stack_ret_error, "init SIZE_MAX/sizeof(void*)-capacity stack should return error", &fail_cnt);
     
-    print_end("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    print_end("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
 }
