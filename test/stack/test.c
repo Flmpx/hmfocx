@@ -1,6 +1,7 @@
 #include "../../include/hm_stack.h"
 #include "../hm_test.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
@@ -783,6 +784,73 @@ void test_no_capacity_dynamic_stack() {
     
 }
 
+void test_init_big_capacity_fixed_stack() {
+    int fail_cnt = 0;
+    print_run("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]");
+    
+    hm_stack stack;
+    hm_stack_ret ret;
+    size_t capaicty;
+
+    // SIZE_MAX 
+    capaicty = SIZE_MAX;
+    ret = hm_stack_init(&stack, capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX-capacity stack should return error", &fail_cnt);
+    
+    // SIZE_MAX / 2
+    capaicty = SIZE_MAX / 2;
+    ret = hm_stack_init(&stack, capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX/2-capacity stack should return error", &fail_cnt);
+    
+    // SIZE_MAX * ( 2 / 3)
+    capaicty = SIZE_MAX / 3 * 2;
+    ret = hm_stack_init(&stack, capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX*(2/3)-capacity stack should return error", &fail_cnt);
+    
+    // SIZE_MAX / sizeof(void*)
+    capaicty = SIZE_MAX / sizeof(void*);
+    ret = hm_stack_init(&stack, capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX/sizeof(void*)-capacity stack should return error", &fail_cnt);
+
+
+    print_end("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_init_big_capacity_dynamic_stack() {
+    int fail_cnt = 0;
+    print_run("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]");
+    
+    hm_stack stack;
+    hm_stack_ret ret;
+    size_t start_capaicty;
+    
+    // SIZE_MAX 
+    start_capaicty = SIZE_MAX;
+    ret = hm_stack_init_dynamic_grow(&stack, start_capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX-capacity stack should return error", &fail_cnt);
+    
+    // SIZE_MAX / 2
+    start_capaicty = SIZE_MAX / 2;
+    ret = hm_stack_init_dynamic_grow(&stack, start_capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX/2-capacity stack should return error", &fail_cnt);
+    
+    // SIZE_MAX * ( 2 / 3)
+    start_capaicty = SIZE_MAX / 3 * 2;
+    ret = hm_stack_init_dynamic_grow(&stack, start_capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX*(2/3)-capacity stack should return error", &fail_cnt);
+
+    // SIZE_MAX / sizeof(void*)
+    start_capaicty = SIZE_MAX / sizeof(void*);
+    ret = hm_stack_init_dynamic_grow(&stack, start_capaicty, free);
+    check_res(ret == hm_stack_ret_error, "init SIZE_MAX/sizeof(void*)-capacity stack should return error", &fail_cnt);
+    
+    print_end("STACK(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 
 void test_stack_fixed_func() {
     test_stack_fixed_init();                                        printf("\n");
@@ -821,6 +889,8 @@ void test_stack_fixed_boundary() {
     test_full_fixed_stack_oper();                                   printf("\n");
 
     test_no_capacity_fixed_stack();                                 printf("\n");
+
+    test_init_big_capacity_fixed_stack();                           printf("\n");
 }
 
 void test_stack_dynamic_boundary() {
@@ -829,6 +899,8 @@ void test_stack_dynamic_boundary() {
     test_full_dynamic_stack_oper();                                 printf("\n");
 
     test_no_capacity_dynamic_stack();                               printf("\n");
+
+    test_init_big_capacity_dynamic_stack();                           printf("\n");
 
 }
 
