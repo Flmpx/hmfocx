@@ -8,7 +8,7 @@
 - Building in `Linux`
 1. Git clone
 ```shell
-git clone https://github.com/Flmpx/hm-focx.git
+git clone https://github.com/Flmpx/hmfocx.git
 ```
 2. Build with cmake(enter the `build` folder firstly)
 ```shell
@@ -25,7 +25,7 @@ you can find a file named `libhmfocx.a` in the `bin` folder, this is a static li
 - Building in `Windows` (MinGW)
 - The steps are the same as above, just the command is different
 ```shell
-git clone https://github.com/Flmpx/hm-focx.git
+git clone https://github.com/Flmpx/hmfocx.git
 
 cmake .. -G "MinGW Makefiles"
 

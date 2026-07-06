@@ -8,7 +8,7 @@
 - 在 `Linux` 上构建
 1. 克隆Git仓库
 ```shell
-git clone https://github.com/Flmpx/hm-focx.git
+git clone https://github.com/Flmpx/hmfocx.git
 ```
 2. 使用cmake进行构建(先进入 `build` 文件夹)
 ```shell
@@ -25,7 +25,7 @@ make
 - 在Windows中构建
 - 步骤和上面都是一样的, 只是输入的命令不同
 ```shell
-git clone https://github.com/Flmpx/hm-focx.git
+git clone https://github.com/Flmpx/hmfocx.git
 
 cmake .. -G "MinGW Makefiles"
 

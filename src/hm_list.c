@@ -277,7 +277,7 @@ void* hm_list_get(hm_list* list, size_t index) {
  * 
  */
 void hm_iter_list_init(hm_iter_list* iter, hm_list* list) {
-    iter->next = list->head;
+    iter->cur = list->head;
 }
 
 
@@ -287,7 +287,7 @@ void hm_iter_list_init(hm_iter_list* iter, hm_list* list) {
  * @note - Return true if iterator has next
  */
 bool hm_iter_list_has_next(hm_iter_list* iter) {
-    return iter->next != NULL;
+    return iter->cur != NULL;
 }
 
 /**
@@ -295,7 +295,7 @@ bool hm_iter_list_has_next(hm_iter_list* iter) {
  * @note - Use `hm_iter_list_has_next()` to check before calling `hm_iter_list_next()`
  */
 void* hm_iter_list_next(hm_iter_list* iter) {
-    hm_listnode* cur = iter->next;
+    hm_listnode* cur = iter->cur;
 
     if (cur == NULL) {
         return NULL;
@@ -303,9 +303,87 @@ void* hm_iter_list_next(hm_iter_list* iter) {
 
     void* val = cur->val;
 
-    iter->next = cur->next;
+    iter->cur = cur->next;
 
     return val;
+}
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the head of the list
+ */
+void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list) {
+    iter->cur = list->head;
+}
+
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the tail of the list
+ */
+void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list) {
+    iter->cur = list->tail;
+}
+
+
+/**
+ * Initialize iterator of list
+ * @note - Let the iterator point to the specified `index` of the list
+ * @note - Iterator will point to `NULL` if `index` is out of bounds
+ */
+void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index) {
+    if (index >= list->size) {
+        iter->cur = NULL;
+    } else {
+        iter->cur = hm_list_get_node(list, index);
+    }
+}
+
+
+/**
+ * Check if the iterator's current pointer is valid
+ */
+bool hm_iter_list_has_cur(hm_iter_list* iter) {
+    return iter->cur != NULL;
+}
+
+/**
+ * Get the current value of the iterator
+ * Use `hm_iter_list_has_cur()` to check before calling `hm_iter_list_cur()`
+ */
+void* hm_iter_list_cur(hm_iter_list* iter) {
+    hm_listnode* cur = iter->cur;
+    if (cur) {
+        return cur->val;
+    } else {
+        return NULL;
+    }
+}
+
+/**
+ * Move the iterator's pointer to next
+ */
+void hm_iter_list_move_next(hm_iter_list* iter) {
+    hm_listnode* cur = iter->cur;
+
+    if (cur == NULL) {
+        return;
+    }
+    
+    iter->cur = cur->next;
+}
+
+/**
+ * Move the iterator's pointer to prev
+ */
+void hm_iter_list_move_prev(hm_iter_list* iter) {
+    hm_listnode* cur = iter->cur;
+
+    if (cur == NULL) {
+        return;
+    }
+
+    iter->cur = cur->prev;
 }
 
 
