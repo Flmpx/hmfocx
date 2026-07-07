@@ -4,9 +4,9 @@ name: Test for all containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feat/hm_queue" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "feat/hm_queue" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
