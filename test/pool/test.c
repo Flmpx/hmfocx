@@ -4,7 +4,7 @@
  */
 #include "../../include/hm_pool.h"
 #include <stdbool.h>
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
