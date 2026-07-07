@@ -1,22 +1,24 @@
 cmake_minimum_required(VERSION 3.28.3)
 
-project(test_hm_list)
+set(HM_TARGET hm_list)
 
-set(hm_list ../../src/hm_list.c)
+project(test_${HM_TARGET})
+
+set(hm_src ../../src/${HM_TARGET}.c)
 
 set(hm_test test.c)
 
-set(hm_func ../hm_test.c)
+set(hm_test_tool ../hm_test.c)
 
-set(hm_cmp ../../function/cmp/hm_cmp.c)
+set(hm_functions ../../function/cmp/hm_cmp.c)
 
 
 # remote is the same as the local
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_hm_list ${hm_list} ${hm_test} ${hm_func} ${hm_cmp})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
 
-add_test(NAME test_hm_list COMMAND test_hm_list)
+add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})

@@ -1,24 +1,27 @@
-cmake_minimum_required(VERSION 3.28.3)  
+cmake_minimum_required(VERSION 3.28.3)
 
-project(test_hm_pool)       # project name format: `test_hm_{container}`
+# Set the target container name that will be test, format: hm_{container}
+# And use this variable to reduce repetitive container's name 
+set(HM_TARGET hm_pool)                  
 
-set(hm_pool ../../src/hm_pool.c)       # The C file that need to test
+project(test_${HM_TARGET})              # project name, use the HM_TARGET to replace
 
-set(hm_test test.c)                # test file -- name: must be `test.c`
+set(hm_src ../../src/${HM_TARGET}.c)                # The C file that needs to be tested
 
-set(hm_func ../hm_test.c)          # some basic funciton for every test part, like print test information
+set(hm_test test.c)                     # test file -- name: must be `test.c`
+
+set(hm_test_tool ../hm_test.c)              # some useful tools for each test part, such as printing test information
+
+# set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
 
 
-
-# The output path of executable in remote and loacal test is the same -- `bin/`
-# And you should add commane `-DBUILD_TESTS=ON` in file `.github/workflows/cmake-single-platform.yml` to ensure this test can be run rightly
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-
+# The output path of executable in remote and local test is the same -- `bin/`
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # The following code is normal build process
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_hm_pool ${hm_pool} ${hm_test} ${hm_func})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
 
-add_test(NAME test_hm_pool COMMAND test_hm_pool) # register test, name format: `test_hm_{container}`
+add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
