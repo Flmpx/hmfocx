@@ -1,22 +1,26 @@
 cmake_minimum_required(VERSION 3.28.3)
 
-project(test_hm_map)
+set(HM_TARGET hm_map)
 
-set(hm_map ../../src/hm_map.c)
+project(test_${HM_TARGET})
 
-set(hm_hash ../../function/hash/hm_hash.c)
-
-set(hm_cmp ../../function/cmp/hm_cmp.c)
+set(hm_src ../../src/${HM_TARGET}.c)
 
 set(hm_test test.c)
 
-set(hm_func ../hm_test.c)
+set(hm_test_tool ../hm_test_tool.c)
+
+set(hm_functions ../../function/cmp/hm_cmp.c
+                 ../../function/hash/hm_hash.c
+)
+
+
+# remote is the same as the local
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
 
 set(CMAKE_BUILD_TYPE Debug)
 
-# remote is the same as the local
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
 
-add_executable(test_hm_map ${hm_test} ${hm_map} ${hm_cmp} ${hm_hash} ${hm_func})
-
-add_test(NAME test_hm_map COMMAND test_hm_map)
+add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})

@@ -2,8 +2,8 @@
  * Copyright (c) 2026 Flmpx
  * Licensed under MIT (see LICENSE).
  */
-#ifndef HM_TEST_H
-#define HM_TEST_H
+#ifndef HM_TEST_TOOLS_H
+#define HM_TEST_TOOLS_H
 #include <time.h>
 #include <stdbool.h>
 

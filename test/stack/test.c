@@ -4,7 +4,7 @@
  */
 
 #include "../../include/hm_stack.h"
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 #include <stdlib.h>
 #include <stdint.h>
 

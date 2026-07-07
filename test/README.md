@@ -10,35 +10,40 @@
 
 - File Location: `test/{container}/`
 ```cmake
-cmake_minimum_required(VERSION 3.28.3)  
 
-project(test_hm_list)       # project name format: `test_hm_{container}`
+cmake_minimum_required(VERSION 3.28.3)
 
-set(hm_list ../../src/hm_list.c)       # The C file that needs to be tested
+# Set the target container name that will be test, format: hm_{container}
+# And use this variable to reduce repetitive container's name 
+set(HM_TARGET hm_list)                  
 
-set(hm_test test.c)                # test file -- name: must be `test.c`
+project(test_${HM_TARGET})              # project name, use the HM_TARGET to replace
 
-set(hm_func ../hm_test.c)          # some basic function for each test part, such as printing test information
+set(hm_src ../../src/${HM_TARGET}.c)                # The C file that needs to be tested
 
-set(hm_cmp ../../function/cmp/hm_cmp.c)        # some files are needed for testing this container
+set(hm_test test.c)                     # test file -- name: must be `test.c`
+
+set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information
+
+set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
 
 
 # The output path of executable in remote and local test is the same -- `bin/`
-# And you should add command `-DBUILD_TESTS=ON` in file `.github/workflows/cmake-single-platform.yml` to ensure this test can be run correctly
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # The following code is normal build process
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_hm_list ${hm_list} ${hm_test} ${hm_func} ${hm_cmp})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
 
-add_test(NAME test_hm_list COMMAND test_hm_list) # register test, name format: `test_hm_{container}`
+add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
+
 
 ```
 - And you should add a line to the root `CMakeLists.txt`, see following code
 ```cmake
+# You should add command `-DBUILD_TESTS=ON` in file `.github/workflows/cmake-single-platform.yml` to ensure this test can be run correctly
 if (BUILD_TESTS)
     enable_testing()
     # This is new test
@@ -71,7 +76,7 @@ endif()
 ```c
 #include "../../include/hm_list.h"
 #include "../../function/cmp/hm_cmp.h"
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
@@ -148,7 +153,7 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 ```
 
 
-- Some brief information about important functions, some parameters in [test/hm_test.h](hm_test.h) and [test/hm_test.c](hm_test.c)
+- Some brief information about important and auxiliary functions, some parameters in [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c)
 
 
 | Function | Brief Desctiption|
@@ -160,3 +165,5 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `print_speed_vs` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |
 
 ## Tips
+- You can delete some test group if you think some test is unnecessary, such as `hm_stack` doesn't rellay need stress test
+- You can add some test group if you think some test is needed

@@ -12,36 +12,41 @@
 - 文件位置：`test/{容器名}/`
 
 ```cmake
-cmake_minimum_required(VERSION 3.28.3)  
 
-project(test_hm_list)       # 项目名格式：`test_hm_{容器名}`
+cmake_minimum_required(VERSION 3.28.3)
 
-set(hm_list ../../src/hm_list.c)       # 待测的 C 文件
+# 设置目标容器名, 格式: hm_{容器名}
+# 使用该变量来省去代码中的重复的容器名
+set(HM_TARGET hm_list)                  
 
-set(hm_test test.c)                # 测试文件(必须叫 `test.c`)
+project(test_${HM_TARGET})              # 项目名称, 使用 HM_TARGET 来替换
 
-set(hm_func ../hm_test.c)          # 通用测试辅助函数(如打印测试信息)
+set(hm_src ../../src/${HM_TARGET}.c)                # 待测的 C 文件
 
-set(hm_cmp ../../function/cmp/hm_cmp.c)        # 该容器测试所需的额外文件
+set(hm_test test.c)                     # 测试文件(必须叫 `test.c`)
+
+set(hm_test_tool ../hm_test_tool.c)              # 通用测试辅助工具函数(如打印测试信息)
+
+set(hm_functions ../../function/cmp/hm_cmp.c)           # 该容器测试所需的额外文件
 
 
 # 远程和本地测试的可执行文件都输出到 `bin/`
-# 需要在 `.github/workflows/cmake-single-platform.yml` 中添加 `-DBUILD_TESTS=ON` 才能正确运行测试
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # 以下是常规构建流程
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_hm_list ${hm_list} ${hm_test} ${hm_func} ${hm_cmp})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
 
-add_test(NAME test_hm_list COMMAND test_hm_list) # 注册测试，名字格式：`test_hm_{容器名}`
+add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
+
 ```
 
 - 还需在根目录的 `CMakeLists.txt` 中添加一行，参见以下代码：
 
 ```cmake
+# 需要在 `.github/workflows/cmake-single-platform.yml` 中添加 `-DBUILD_TESTS=ON` 才能正确运行测试
 if (BUILD_TESTS)
     enable_testing()
     # 新增的测试
@@ -145,7 +150,7 @@ void test_list_insert_head() {
 print_run_time("INSERT", start, end, nums[i], nums[i]);
 ```
 
-- 重要函数简介(详细参数见 [test/hm_test.h](hm_test.h) and [test/hm_test.c](hm_test.c))
+- 重要的辅助函数简介(详细参数见 [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c))
 
 | 函数 | 作用 |
 | --- | --- |
@@ -156,3 +161,5 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `print_speed_vs` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |
 
 ## 提示
+- 如果你觉得有些测试组并不需要, 那你可以删掉这个测试组, 比如 `hm_stack` 并不需要压力测试
+- 如果你觉得有些测试组是必须的, 那就加上

@@ -5,7 +5,7 @@
 #include "../../include/hm_map.h"
 #include "../../function/hash/hm_hash.h"
 #include "../../function/cmp/hm_cmp.h"
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
