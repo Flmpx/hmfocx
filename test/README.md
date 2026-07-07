@@ -165,3 +165,5 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `print_speed_vs` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |
 
 ## Tips
+- You can delete some test group if you think some test is unnecessary, such as `hm_stack` doesn't rellay need stress test
+- You can add some test group if you think some test is needed
