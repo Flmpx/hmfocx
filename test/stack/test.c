@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Flmpx
+ * Licensed under MIT (see LICENSE).
+ */
+
 #include "../../include/hm_stack.h"
 #include "../hm_test.h"
 #include <stdlib.h>
