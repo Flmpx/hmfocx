@@ -8,7 +8,7 @@ set(hm_src ../../src/${HM_TARGET}.c)
 
 set(hm_test test.c)
 
-set(hm_test_tool ../hm_test.c)
+set(hm_test_tool ../hm_test_tool.c)
 
 set(hm_functions ../../function/cmp/hm_cmp.c
                  ../../function/hash/hm_hash.c

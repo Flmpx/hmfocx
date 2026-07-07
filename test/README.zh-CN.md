@@ -25,7 +25,7 @@ set(hm_src ../../src/${HM_TARGET}.c)                # 待测的 C 文件
 
 set(hm_test test.c)                     # 测试文件(必须叫 `test.c`)
 
-set(hm_test_tool ../hm_test.c)              # 通用测试辅助工具函数(如打印测试信息)
+set(hm_test_tool ../hm_test_tool.c)              # 通用测试辅助工具函数(如打印测试信息)
 
 set(hm_functions ../../function/cmp/hm_cmp.c)           # 该容器测试所需的额外文件
 
@@ -150,7 +150,7 @@ void test_list_insert_head() {
 print_run_time("INSERT", start, end, nums[i], nums[i]);
 ```
 
-- 重要函数简介(详细参数见 [test/hm_test.h](hm_test.h) and [test/hm_test.c](hm_test.c))
+- 重要的辅助函数简介(详细参数见 [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c))
 
 | 函数 | 作用 |
 | --- | --- |

@@ -23,7 +23,7 @@ set(hm_src ../../src/${HM_TARGET}.c)                # The C file that needs to b
 
 set(hm_test test.c)                     # test file -- name: must be `test.c`
 
-set(hm_test_tool ../hm_test.c)              # some useful tools for each test part, such as printing test information
+set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information
 
 set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
 
@@ -76,7 +76,7 @@ endif()
 ```c
 #include "../../include/hm_list.h"
 #include "../../function/cmp/hm_cmp.h"
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
@@ -153,7 +153,7 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 ```
 
 
-- Some brief information about important functions, some parameters in [test/hm_test.h](hm_test.h) and [test/hm_test.c](hm_test.c)
+- Some brief information about important and auxiliary functions, some parameters in [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c)
 
 
 | Function | Brief Desctiption|
