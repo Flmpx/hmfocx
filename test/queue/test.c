@@ -5,7 +5,7 @@
 
 #include "../../include/hm_list.h"
 #include "../../function/cmp/hm_cmp.h"
-#include "../hm_test.h"
+#include "../hm_test_tool.h"
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
