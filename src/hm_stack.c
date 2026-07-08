@@ -164,10 +164,6 @@ void hm_stack_clear(hm_stack* stack) {
 void hm_stack_free(hm_stack* stack) {
     hm_stack_clear(stack);
     free(stack->vals);
-    if (stack->dynamic_grow) {
-        hm_stack_init_dynamic_grow(stack, 0, stack->free);
-    } else {
-        // free no-dynamic growth indicate the stack can't use repetitive
-        hm_stack_init(stack, 0, stack->free);
-    }
+    stack->vals = NULL;
+    stack->capacity = 0;
 }
