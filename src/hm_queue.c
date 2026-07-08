@@ -155,7 +155,7 @@ void* hm_queue_deq(hm_queue* queue) {
         return NULL;
     }
     void* val = queue->vals[queue->front];
-    queue->front = (queue->front + 1) % queue->front;
+    queue->front = (queue->front + 1) % queue->capacity;
     queue->size--;
 
     return val;
