@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-09
+
 ### Added
 - Add new container for this library -- `hm_queue`, it includes some basic operation, such as `dequeue` and `enqueue`, other detailed information see [hm_queue](docs/hm_queue.md)
 
