@@ -6,6 +6,13 @@
 
 ## [Unreleased]
 
+### Added
+- Add new container for this library -- `hm_queue`, it includes some basic operation, such as `dequeue` and `enqueue`, other detailed information see [hm_queue](docs/hm_queue.md)
+
+### Fixed
+- Fixed bug in `hm_queue_deq`
+    - It should take the remainder using `queue->capacity`, not `queue->front`
+
 ## [0.6.0] - 2026-07-06
 
 ### Fixed
