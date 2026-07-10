@@ -45,3 +45,5 @@ mingw32-make
 4. [hm_stack](docs/Chinese/hm_stack.zh-CN.md)
 
 5. [hm_queue](docs/Chinese/hm_queue.zh-CN.md)
+
+6. [hm_heap](docs/Chinese/hm_heap.zh-CN.md)
