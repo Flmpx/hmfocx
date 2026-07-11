@@ -85,7 +85,7 @@ void hm_queue_clear(hm_queue* queue);
 void hm_queue_free(hm_queue* queue);
 ```
 
-- **辅助宏**
+- **小功能**
 ```c
 #define hm_queue_size(s) ((s)->size)
 #define hm_queue_capacity(s) ((s)->capacity)

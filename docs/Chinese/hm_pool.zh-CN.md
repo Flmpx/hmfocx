@@ -45,7 +45,7 @@ void hm_pool_block_free(hm_pool* pool, void* block);
 void hm_pool_free(hm_pool* pool);
 ```
 
-- **小型函数**
+- **小功能**
 ```c
 /**
  * 获取给定内存池的页数

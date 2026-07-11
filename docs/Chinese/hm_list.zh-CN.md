@@ -159,7 +159,7 @@ void hm_list_free(hm_list* list);
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```
 
-- **小型函数**
+- **小功能**
 ```c
 #define hm_list_size(l) ((l)->size)
 ```
