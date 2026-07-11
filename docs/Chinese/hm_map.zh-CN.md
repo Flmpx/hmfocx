@@ -93,7 +93,7 @@ void hm_map_clear(hm_map* map);
 void hm_map_free(hm_map* map);
 ```
 
-- **小型函数**
+- **小功能**
 ```c
 #define hm_map_size(l) ((l)->size)
 #define hm_map_len(l) ((l)->len)

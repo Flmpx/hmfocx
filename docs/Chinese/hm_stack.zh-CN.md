@@ -86,7 +86,7 @@ void hm_stack_clear(hm_stack* stack);
 void hm_stack_free(hm_stack* stack);
 ```
 
-- **辅助宏**
+- **小功能**
 ```c
 #define hm_stack_size(s) ((s)->top)
 #define hm_stack_capacity(s) ((s)->capacity)
