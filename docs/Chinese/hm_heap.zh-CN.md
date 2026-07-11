@@ -109,7 +109,7 @@ void hm_heap_clear(hm_heap* heap);
 void hm_heap_free(hm_heap* heap);
 ```
 
-- **小功能宏**
+- **小功能**
 ```c
 #define hm_heap_size(s) ((s)->size)
 #define hm_heap_capacity(s) ((s)->capacity)
