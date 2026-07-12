@@ -13,7 +13,7 @@ set(hm_test test.c)                     # test file -- name: must be `test.c`
 
 set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information
 
-# set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
+set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
 
 
 # The output path of executable in remote and local test is the same -- `bin/`
