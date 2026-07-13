@@ -322,10 +322,89 @@ void test_heap_dynamic_extract() {
     HM_TEST_COUNTER
 }
 
+
+void test_heap_fixed_peek() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | FUNC | PEEK | CAPAITY: 64");
+
+    hm_heap heap;
+    int capacity = 64;
+    int arr[capacity];
+    
+    int seeds[] = {100, 200, 520, 23333333, 7777};
+    int cnt = sizeof(seeds) / sizeof(int);
+    for (int i = 0; i < cnt; i++) {
+        hm_heap_init(&heap, capacity, free, cmp_int_up);
+    
+        srand(seeds[i]);
+        // insert
+        int fail = 0;
+        for (int i = 0; i < capacity; i++) {
+            int val = rand();
+            arr[i] = val;
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            hm_heap_insert(&heap, v);
+        }
+
+        qsort(arr, capacity, sizeof(int), cmp_int_up);
+        int* v = hm_heap_peek(&heap);
+
+        check_res(*v == arr[0], "the peek val is wrong", &fail_cnt);
+        test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+
+        hm_heap_free(&heap);
+    }
+
+    print_end("HEAP(FIXED) | FUNC | PEEK | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_heap_dynamic_peek() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | PEEK | CAPAITY: 64");
+    
+    hm_heap heap;
+    int start_capacity = 64;
+    int arr[start_capacity * 2];
+    
+    int seeds[] = {100, 200, 520, 23333333, 9420};
+    int cnt = sizeof(seeds) / sizeof(int);
+    for (int i = 0; i < cnt; i++) {
+        hm_heap_init_dynamic_grow(&heap, start_capacity, free, cmp_int_up);
+    
+        srand(seeds[i]);
+        // insert
+        int fail = 0;
+        for (int i = 0; i < start_capacity * 2; i++) {
+            int val = rand();
+            arr[i] = val;
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            hm_heap_insert(&heap, v);
+        }
+    
+        qsort(arr, start_capacity * 2, sizeof(int), cmp_int_up);
+        int* v = hm_heap_peek(&heap);
+    
+        check_res(*v == arr[0], "the peek val is wrong", &fail_cnt);
+        test_heap_integrity(&heap, &fail_cnt, start_capacity * 2, true, start_capacity, free, cmp_int_up);
+    
+        hm_heap_free(&heap);
+    }
+    
+    print_end("HEAP(DYNAMIC) | FUNC | PEEK | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
     test_heap_fixed_insert();                                                                   printf("\n");
+
+    test_heap_fixed_peek();                                                                     printf("\n");
 
     test_heap_fixed_extract();                                                                  printf("\n");
 }
@@ -334,6 +413,8 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_init();                                                                   printf("\n");
 
     test_heap_dynamic_insert();                                                                 printf("\n");
+
+    test_heap_dynamic_peek();                                                                   printf("\n");
  
     test_heap_dynamic_extract();                                                                printf("\n");
 }
