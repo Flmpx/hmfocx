@@ -9,7 +9,7 @@ project(test_${HM_TARGET})              # project name, use the HM_TARGET to rep
 
 set(hm_src ../../src/${HM_TARGET}.c)                # The C file that needs to be tested
 
-set(hm_test test.c)                     # test file -- name: must be `test.c`
+set(hm_test test_${HM_TARGET}.c)                     # test file
 
 set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information
 
