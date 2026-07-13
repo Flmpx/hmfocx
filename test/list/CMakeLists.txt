@@ -6,7 +6,7 @@ project(test_${HM_TARGET})
 
 set(hm_src ../../src/${HM_TARGET}.c)
 
-set(hm_test test.c)
+set(hm_test test_${HM_TARGET}.c)
 
 set(hm_test_tool ../hm_test_tool.c)
 
