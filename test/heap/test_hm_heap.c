@@ -399,6 +399,116 @@ void test_heap_dynamic_peek() {
     
 }
 
+
+void test_heap_fixed_clear() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | FUNC | CLEAR | CAPAITY: 64");
+    
+    hm_heap heap;
+    int capacity = 64;
+    
+    
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int val = rand();
+        int* v = (int*)malloc(sizeof(int));
+        *v = val;
+        hm_heap_insert(&heap, v);
+    }
+
+    hm_heap_clear(&heap);
+    test_heap_integrity(&heap, &fail_cnt, 0, false, capacity, free, cmp_int_up);
+
+    hm_heap_free(&heap);
+    // use valgrind to check leak memory
+        
+    print_end("HEAP(FIXED) | FUNC | CLEAR | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_heap_dynamic_clear() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | CLEAR | CAPAITY: 64");
+    
+    hm_heap heap;
+    int start_capacity = 64;
+    
+    
+    hm_heap_init_dynamic_grow(&heap, start_capacity, free, cmp_int_up);
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int val = rand();
+        int* v = (int*)malloc(sizeof(int));
+        *v = val;
+        hm_heap_insert(&heap, v);
+    }
+    
+    hm_heap_clear(&heap);
+    test_heap_integrity(&heap, &fail_cnt, 0, true, start_capacity, free, cmp_int_up);
+    
+    hm_heap_free(&heap);
+    // use valgrind to check leak memory
+    
+    print_end("HEAP(DYNAMIC) | FUNC | CLEAR | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_heap_fixed_free() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | FUNC | FREE | CAPAITY: 64");
+    
+    hm_heap heap;
+    int capacity = 64;
+    
+    
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int val = rand();
+        int* v = (int*)malloc(sizeof(int));
+        *v = val;
+        hm_heap_insert(&heap, v);
+    }
+
+    hm_heap_free(&heap);
+    test_heap_integrity(&heap, &fail_cnt, 0, false, 0, free, cmp_int_up);
+
+    // use valgrind to check leak memory
+        
+    print_end("HEAP(FIXED) | FUNC | FREE | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_heap_dynamic_free() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | FREE | CAPAITY: 64");
+    
+    hm_heap heap;
+    int start_capacity = 64;
+    
+    
+    hm_heap_init_dynamic_grow(&heap, start_capacity, free, cmp_int_up);
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int val = rand();
+        int* v = (int*)malloc(sizeof(int));
+        *v = val;
+        hm_heap_insert(&heap, v);
+    }
+    
+    hm_heap_free(&heap);
+
+    test_heap_integrity(&heap, &fail_cnt, 0, true, 0, free, cmp_int_up);
+    // use valgrind to check leak memory
+    
+    print_end("HEAP(DYNAMIC) | FUNC | FREE | CAPAITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
@@ -407,6 +517,10 @@ void test_heap_fixed_func() {
     test_heap_fixed_peek();                                                                     printf("\n");
 
     test_heap_fixed_extract();                                                                  printf("\n");
+
+    test_heap_fixed_clear();                                                                    printf("\n");
+
+    test_heap_fixed_free();                                                                     printf("\n");
 }
 
 void test_heap_dynamic_func() {
@@ -417,6 +531,10 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_peek();                                                                   printf("\n");
  
     test_heap_dynamic_extract();                                                                printf("\n");
+
+    test_heap_dynamic_clear();                                                                  printf("\n");
+
+    test_heap_dynamic_clear();                                                                  printf("\n");
 }
 
 
