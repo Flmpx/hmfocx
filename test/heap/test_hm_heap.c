@@ -130,7 +130,7 @@ void test_heap_fixed_insert() {
         
         // insert | reasonable number
         int fail = 0;
-        for (int i = 0; i < capacity; i++) {
+        for (int j = 0; j < capacity; j++) {
             int val = rand() % mod;
             arr_real[val]++;
             int* v = (int*)malloc(sizeof(int));
@@ -143,12 +143,12 @@ void test_heap_fixed_insert() {
         check_res(fail == 0, "the insert function should return full when insert with reasonable number", &fail_cnt);
         test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
         void** vals = heap.vals;
-        for (int i = 0; i < capacity; i++) {
-            arr_tmp[*(int*)vals[i]]++;
+        for (int j = 0; j < capacity; j++) {
+            arr_tmp[*(int*)vals[j]]++;
         }
         int fail_diff = 0;
-        for (int i = 0; i < mod; i++) {
-            if (arr_tmp[i] != arr_real[i]) {
+        for (int j = 0; j < mod; j++) {
+            if (arr_tmp[j] != arr_real[j]) {
                 fail_diff++;
             }
         }
@@ -199,7 +199,7 @@ void test_heap_dynamic_insert() {
         
         // insert
         int fail = 0;
-        for (int i = 0; i < start_capacity * 2; i++) {
+        for (int j = 0; j < start_capacity * 2; j++) {
             int val = rand() % mod;
             arr_real[val]++;
             int* v = (int*)malloc(sizeof(int));
@@ -212,12 +212,12 @@ void test_heap_dynamic_insert() {
         check_res(fail == 0, "the insert function should return full when insert with reasonable number", &fail_cnt);
         test_heap_integrity(&heap, &fail_cnt, start_capacity * 2, true, start_capacity, free, cmp_int_up);
         void** vals = heap.vals;
-        for (int i = 0; i < start_capacity * 2; i++) {
-            arr_tmp[*(int*)vals[i]]++;
+        for (int j = 0; j < start_capacity * 2; j++) {
+            arr_tmp[*(int*)vals[j]]++;
         }
         int fail_diff = 0;
-        for (int i = 0; i < mod; i++) {
-            if (arr_tmp[i] != arr_real[i]) {
+        for (int j = 0; j < mod; j++) {
+            if (arr_tmp[j] != arr_real[j]) {
                 fail_diff++;
             }
         }
@@ -245,9 +245,9 @@ void test_heap_fixed_extract() {
         srand(seeds[i]);
         // insert
         int fail = 0;
-        for (int i = 0; i < capacity; i++) {
+        for (int j = 0; j < capacity; j++) {
             int val = rand();
-            arr[i] = val;
+            arr[j] = val;
             int* v = (int*)malloc(sizeof(int));
             *v = val;
             hm_heap_insert(&heap, v);
@@ -255,11 +255,11 @@ void test_heap_fixed_extract() {
         qsort(arr, capacity, sizeof(int), cmp_int_up);
         int fail_null = 0;
         int fail_diff = 0;
-        for (int i = 0; i < capacity; i++) {
+        for (int j = 0; j < capacity; j++) {
             int* v = hm_heap_extract(&heap);
             if (v == NULL) {
                 fail_null++;
-            } else if (*v != arr[i]) {
+            } else if (*v != arr[j]) {
                 fail_diff++;
             }
             free(v);
@@ -292,9 +292,9 @@ void test_heap_dynamic_extract() {
         srand(seeds[i]);
         // insert
         int fail = 0;
-        for (int i = 0; i < start_capacity * 2; i++) {
+        for (int j = 0; j < start_capacity * 2; j++) {
             int val = rand();
-            arr[i] = val;
+            arr[j] = val;
             int* v = (int*)malloc(sizeof(int));
             *v = val;
             hm_heap_insert(&heap, v);
@@ -302,11 +302,11 @@ void test_heap_dynamic_extract() {
         qsort(arr, start_capacity * 2, sizeof(int), cmp_int_up);
         int fail_null = 0;
         int fail_diff = 0;
-        for (int i = 0; i < start_capacity * 2; i++) {
+        for (int j = 0; j < start_capacity * 2; j++) {
             int* v = hm_heap_extract(&heap);
             if (v == NULL) {
                 fail_null++;
-            } else if (*v != arr[i]) {
+            } else if (*v != arr[j]) {
                 fail_diff++;
             }
             free(v);
@@ -339,9 +339,9 @@ void test_heap_fixed_peek() {
         srand(seeds[i]);
         // insert
         int fail = 0;
-        for (int i = 0; i < capacity; i++) {
+        for (int j = 0; j < capacity; j++) {
             int val = rand();
-            arr[i] = val;
+            arr[j] = val;
             int* v = (int*)malloc(sizeof(int));
             *v = val;
             hm_heap_insert(&heap, v);
@@ -377,9 +377,9 @@ void test_heap_dynamic_peek() {
         srand(seeds[i]);
         // insert
         int fail = 0;
-        for (int i = 0; i < start_capacity * 2; i++) {
+        for (int j = 0; j < start_capacity * 2; j++) {
             int val = rand();
-            arr[i] = val;
+            arr[j] = val;
             int* v = (int*)malloc(sizeof(int));
             *v = val;
             hm_heap_insert(&heap, v);
