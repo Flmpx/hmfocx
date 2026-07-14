@@ -228,7 +228,8 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
 
     heap->vals = vals;
     
-    for (size_t parent = ((heap->size - 1) - 1) / 2; parent >= 0; parent--) {
+    for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
+        size_t parent = ((heap->size - 1) - 1) / 2 - i;
         hm_heap_sift_down(heap, parent);
     }
 
@@ -256,7 +257,8 @@ hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, 
  */
 void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp) {
     heap->cmp = new_cmp;
-    for (size_t parent = ((heap->size - 1) - 1) / 2; parent >= 0; parent--) {
+    for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
+        size_t parent = ((heap->size - 1) - 1) / 2 - i;
         hm_heap_sift_down(heap, parent);
     }
 }

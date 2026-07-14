@@ -509,6 +509,298 @@ void test_heap_dynamic_free() {
     HM_TEST_COUNTER
 }
 
+
+
+
+void test_heap_fixed_build() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | FUNC | BUILD | CAPACITY: 64");
+
+    int capacity = 64;
+    int mod = 1000;
+    int seeds[] = {20, 1000890, 10086};
+    int cnt = sizeof(seeds) / sizeof(int);
+    
+    for (int i = 0; i < cnt; i++) {
+        srand(seeds[i]);
+        void** vals = (void**)malloc(sizeof(void*) * capacity);
+        int vals_real[capacity];
+        
+        int arr_real[mod];
+        int arr_now[mod];
+        
+        memset(arr_now, 0, sizeof(arr_now));
+        memset(arr_real, 0, sizeof(arr_real));
+
+        for (int j = 0; j < capacity; j++) {
+            int val = rand() % mod;
+            arr_real[val]++;
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            vals[j] = v;
+
+            vals_real[j] = val;
+        }
+
+        hm_heap heap;
+
+        hm_heap_build(&heap, vals, capacity, capacity, free, cmp_int_up);
+
+        // verify
+        test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+        
+        vals = heap.vals;
+
+        for (int j = 0; j < capacity; j++) {
+            arr_now[*(int*)vals[j]]++;
+        }
+        int fail_diff = 0;
+        for (int j = 0; j < mod; j++) {
+            if (arr_now[j] != arr_real[j]) {
+                fail_diff++;
+            }
+        }
+        check_res(fail_diff == 0, "some vals doesn't exist in the built heap's vals array", &fail_cnt);
+        
+        int fail_p_null = 0, fail_p_diff = 0;
+        int fail_e_null = 0, fail_e_diff = 0;
+        qsort(vals_real, capacity, sizeof(int), cmp_int_up);
+        for (int j = 0; j < capacity; j++) {
+            int* peek_v = hm_heap_peek(&heap);
+            if (peek_v == NULL) {
+                fail_p_null++;
+            } else if (*peek_v != vals_real[j]) {
+                fail_p_diff++;
+            }
+            
+            int* extract_v = hm_heap_extract(&heap);
+
+            if (extract_v == NULL) {
+                fail_e_null++;
+            } else if (*extract_v != vals_real[j]) {
+                fail_e_diff++;
+            }
+            free(extract_v);
+        }
+        check_res(fail_p_null == 0, "the peek val shouldn't be NULL", &fail_cnt);
+        check_res(fail_p_diff == 0, "the peek val is wrong", &fail_cnt);
+
+        check_res(fail_e_null == 0, "the extract val shouldn't be NULL", &fail_cnt);
+        check_res(fail_e_diff == 0, "the extract val is wrong", &fail_cnt);
+
+        hm_heap_free(&heap);
+    }
+
+    print_end("HEAP(FIXED) | FUNC | BUILD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_heap_dynamic_build() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | BUILD | CAPACITY: 64");
+    
+    int capacity = 64;
+    int mod = 1000;
+    int seeds[] = {20, 1000890, 10086, 1001};
+    int cnt = sizeof(seeds) / sizeof(int);
+    
+    for (int i = 0; i < cnt; i++) {
+        srand(seeds[i]);
+        void** vals = (void**)malloc(sizeof(void*) * capacity);
+        int vals_real[capacity];
+        
+        int arr_real[mod];
+        int arr_now[mod];
+        
+        memset(arr_now, 0, sizeof(arr_now));
+        memset(arr_real, 0, sizeof(arr_real));
+    
+        for (int j = 0; j < capacity; j++) {
+            int val = rand() % mod;
+            arr_real[val]++;
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            vals[j] = v;
+    
+            vals_real[j] = val;
+        }
+    
+        hm_heap heap;
+    
+        hm_heap_build_dynamic_grow(&heap, vals, capacity, capacity, free, cmp_int_up);
+    
+        // verify
+        test_heap_integrity(&heap, &fail_cnt, capacity, true, capacity, free, cmp_int_up);
+        
+        vals = heap.vals;
+    
+        for (int j = 0; j < capacity; j++) {
+            arr_now[*(int*)vals[j]]++;
+        }
+        int fail_diff = 0;
+        for (int j = 0; j < mod; j++) {
+            if (arr_now[j] != arr_real[j]) {
+                fail_diff++;
+            }
+        }
+        check_res(fail_diff == 0, "some vals doesn't exist in the built heap's vals array", &fail_cnt);
+        
+        int fail_p_null = 0, fail_p_diff = 0;
+        int fail_e_null = 0, fail_e_diff = 0;
+        qsort(vals_real, capacity, sizeof(int), cmp_int_up);
+        for (int j = 0; j < capacity; j++) {
+            int* peek_v = hm_heap_peek(&heap);
+            if (peek_v == NULL) {
+                fail_p_null++;
+            } else if (*peek_v != vals_real[j]) {
+                fail_p_diff++;
+            }
+            
+            int* extract_v = hm_heap_extract(&heap);
+    
+            if (extract_v == NULL) {
+                fail_e_null++;
+            } else if (*extract_v != vals_real[j]) {
+                fail_e_diff++;
+            }
+            free(extract_v);
+        }
+        check_res(fail_p_null == 0, "the peek val shouldn't be NULL", &fail_cnt);
+        check_res(fail_p_diff == 0, "the peek val is wrong", &fail_cnt);
+    
+        check_res(fail_e_null == 0, "the extract val shouldn't be NULL", &fail_cnt);
+        check_res(fail_e_diff == 0, "the extract val is wrong", &fail_cnt);
+    
+        hm_heap_free(&heap);
+    }
+    
+    print_end("HEAP(DYNAMIC) | FUNC | BUILD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
+void test_heap_fixed_rebuild() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | FUNC | REBUILD | CAPACITY: 64");
+
+    int capacity = 64;
+    int seeds[] = {20, 1000890, 10086, 1001};
+    int cnt = sizeof(seeds) / sizeof(int);
+    int arr[capacity];
+    for (int i = 0; i < cnt; i++) {
+        srand(seeds[i]);
+        hm_heap heap;
+        // init | down
+        hm_heap_init(&heap, capacity, free, cmp_int_down);
+        // insert
+        for (int j = 0; j < capacity; j++) {
+            int val = rand();
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            arr[j] = val;
+            hm_heap_insert(&heap, v);
+        }
+        // rebuild | up
+        hm_heap_rebuild(&heap, cmp_int_up);
+        qsort(arr, capacity, sizeof(int), cmp_int_up);
+        test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+
+        int fail_p_null = 0, fail_p_diff = 0;
+        int fail_e_null = 0, fail_e_diff = 0;
+        for (int j = 0; j < capacity; j++) {
+            int* peek_v = hm_heap_peek(&heap);
+            if (peek_v == NULL) {
+                fail_p_null++;
+            } else if (*peek_v != arr[j]) {
+                fail_p_diff++;
+            }
+            
+            int* extract_v = hm_heap_extract(&heap);
+    
+            if (extract_v == NULL) {
+                fail_e_null++;
+            } else if (*extract_v != arr[j]) {
+                fail_e_diff++;
+            }
+            free(extract_v);
+        }
+
+        check_res(fail_p_null == 0, "the peek val shouldn't be NULL", &fail_cnt);
+        check_res(fail_p_diff == 0, "the peek val is wrong", &fail_cnt);
+    
+        check_res(fail_e_null == 0, "the extract val shouldn't be NULL", &fail_cnt);
+        check_res(fail_e_diff == 0, "the extract val is wrong", &fail_cnt);
+    
+        hm_heap_free(&heap);
+    }
+    
+
+    print_end("HEAP(FIXED) | FUNC | REBUILD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_heap_dynamic_rebuild() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | REBUILD | CAPACITY: 64");
+    
+    
+    int capacity = 64;
+    int seeds[] = {20, 1000890, 10086, 1001};
+    int cnt = sizeof(seeds) / sizeof(int);
+    int arr[capacity];
+    for (int i = 0; i < cnt; i++) {
+        srand(seeds[i]);
+        hm_heap heap;
+        // init | down
+        hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_down);
+        // insert
+        for (int j = 0; j < capacity; j++) {
+            int val = rand();
+            int* v = (int*)malloc(sizeof(int));
+            *v = val;
+            arr[j] = val;
+            hm_heap_insert(&heap, v);
+        }
+        // rebuild | up
+        hm_heap_rebuild(&heap, cmp_int_up);
+        qsort(arr, capacity, sizeof(int), cmp_int_up);
+        test_heap_integrity(&heap, &fail_cnt, capacity, true, capacity, free, cmp_int_up);
+
+        int fail_p_null = 0, fail_p_diff = 0;
+        int fail_e_null = 0, fail_e_diff = 0;
+        for (int j = 0; j < capacity; j++) {
+            int* peek_v = hm_heap_peek(&heap);
+            if (peek_v == NULL) {
+                fail_p_null++;
+            } else if (*peek_v != arr[j]) {
+                fail_p_diff++;
+            }
+            
+            int* extract_v = hm_heap_extract(&heap);
+    
+            if (extract_v == NULL) {
+                fail_e_null++;
+            } else if (*extract_v != arr[j]) {
+                fail_e_diff++;
+            }
+            free(extract_v);
+        }
+        
+        check_res(fail_p_null == 0, "the peek val shouldn't be NULL", &fail_cnt);
+        check_res(fail_p_diff == 0, "the peek val is wrong", &fail_cnt);
+    
+        check_res(fail_e_null == 0, "the extract val shouldn't be NULL", &fail_cnt);
+        check_res(fail_e_diff == 0, "the extract val is wrong", &fail_cnt);
+    
+        hm_heap_free(&heap);
+    }
+
+    print_end("HEAP(DYNAMIC) | FUNC | REBUILD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
@@ -521,6 +813,10 @@ void test_heap_fixed_func() {
     test_heap_fixed_clear();                                                                    printf("\n");
 
     test_heap_fixed_free();                                                                     printf("\n");
+
+    test_heap_fixed_build();                                                                    printf("\n");
+
+    test_heap_fixed_rebuild();                                                                  printf("\n");
 }
 
 void test_heap_dynamic_func() {
@@ -535,6 +831,10 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_clear();                                                                  printf("\n");
 
     test_heap_dynamic_clear();                                                                  printf("\n");
+
+    test_heap_dynamic_build();                                                                  printf("\n");
+
+    test_heap_dynamic_rebuild();                                                                printf("\n");
 }
 
 

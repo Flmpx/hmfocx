@@ -9,6 +9,10 @@
 ### Added
 - Add new container for this library -- `hm_heap`, it includes some basic operations, such as `insert` and `extract`, other detailed information see [hm_heap](docs/hm_heap.md)
 
+### Fixed
+- Fix bug in `hm_heap_build`, `hm_heap_build_dynamic_grow` and `hm_heap_rebuild`
+    - Bug: It will enter a infinite loop when call these function
+
 ## [0.7.0] - 2026-07-09
 
 ### Added
