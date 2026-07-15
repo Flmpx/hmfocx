@@ -949,6 +949,244 @@ void test_empty_dynamic_heap_oper() {
 
 }
 
+void test_full_fixed_heap_oper() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64");
+
+    hm_heap heap;
+    int capacity = 64;
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+
+    // insert to full
+
+    int seed = 10000;
+    srand(seed);
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+
+    // insert a val
+    int* val = (int*)malloc(sizeof(int));
+    *val = -1;
+    hm_heap_ret ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+    check_res(ret == hm_heap_ret_full, "insert function should return full when insert a val in a fixed-size and full heap", &fail_cnt);
+
+    void** vals = heap.vals;
+    int cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 0, "the insert val shouldn't existed in heap after insert a val in fixed-size and full heap", &fail_cnt);
+    
+    if (ret == hm_heap_ret_full) {
+        free(val);
+    }
+
+    hm_heap_free(&heap);
+    
+    srand(seed);
+
+    // build
+    vals = (void**)malloc(capacity * sizeof(void*));
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        vals[i] = v;       
+    }
+
+    hm_heap_build(&heap, vals, capacity, capacity, free, cmp_int_up);
+
+    test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+
+    // insert a val
+    val = (int*)malloc(sizeof(int));
+    *val = -1;
+    ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_up);
+    check_res(ret == hm_heap_ret_full, "insert function should return full when insert a val in a fixed-size and full `build` heap", &fail_cnt);
+
+    vals = heap.vals;
+    cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 0, "the insert val shouldn't existed in heap after insert a val in fixed-size and full `build` heap", &fail_cnt);
+    
+    if (ret == hm_heap_ret_full) {
+        free(val);
+    }
+
+    hm_heap_free(&heap);
+
+    // rebuild
+
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+    // insert to full
+
+    srand(seed);
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+
+    hm_heap_rebuild(&heap, cmp_int_down);
+    
+    test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_down);
+
+    // insert a val
+    val = (int*)malloc(sizeof(int));
+    *val = -1;
+    ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity, false, capacity, free, cmp_int_down);
+    check_res(ret == hm_heap_ret_full, "insert function should return full when insert a val in a fixed-size and full `rebuild` heap", &fail_cnt);
+
+    vals = heap.vals;
+    cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 0, "the insert val shouldn't existed in heap after insert a val in fixed-size and full `rebuild` heap", &fail_cnt);
+    
+    if (ret == hm_heap_ret_full) {
+        free(val);
+    }
+
+    hm_heap_free(&heap);
+
+    print_end("HEAP(FIXED) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_full_dynamic_heap_oper() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64");
+    
+    hm_heap heap;
+    int capacity = 4;
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    
+    // insert to full
+    
+    int seed = 10000;
+    srand(seed);
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+    
+    // insert a val
+    int* val = (int*)malloc(sizeof(int));
+    *val = -1;
+    hm_heap_ret ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity + 1, true, capacity, free, cmp_int_up);
+    check_res(ret == hm_heap_ret_suc, "insert function should return suc when insert a val in a fixed-size and full heap", &fail_cnt);
+    
+    void** vals = heap.vals;
+    int cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 1, "the insert val should(only one) existed in heap after insert a val in dynamic-grow and full heap", &fail_cnt);
+    
+
+    
+    hm_heap_free(&heap);
+    
+    
+    // build
+    srand(seed);
+    vals = (void**)malloc(capacity * sizeof(void*));
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        vals[i] = v;       
+    }
+    
+    hm_heap_build_dynamic_grow(&heap, vals, capacity, capacity, free, cmp_int_up);
+    
+    test_heap_integrity(&heap, &fail_cnt, capacity, true, capacity, free, cmp_int_up);
+    
+    // insert a val
+    val = (int*)malloc(sizeof(int));
+    *val = -1;
+    ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity + 1, true, capacity, free, cmp_int_up);
+    check_res(ret == hm_heap_ret_suc, "insert function should return full when insert a val in a dynamic-grow and full `build` heap", &fail_cnt);
+    
+    vals = heap.vals;
+    cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 1, "the insert val should(only one) existed in heap after insert a val in dynamic-grow and full `build` heap", &fail_cnt);
+    
+    hm_heap_free(&heap);
+    
+    // rebuild
+    
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    // insert to full
+    
+    srand(seed);
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+    
+    hm_heap_rebuild(&heap, cmp_int_down);
+    
+    test_heap_integrity(&heap, &fail_cnt, capacity, true, capacity, free, cmp_int_down);
+    
+    // insert a val
+    val = (int*)malloc(sizeof(int));
+    *val = -1;
+    ret = hm_heap_insert(&heap, val);
+    test_heap_integrity(&heap, &fail_cnt, capacity + 1, true, capacity, free, cmp_int_down);
+    check_res(ret == hm_heap_ret_suc, "insert function should return full when insert a val in a dynamic-grow and full `rebuild` heap", &fail_cnt);
+    
+    vals = heap.vals;
+    cnt = 0;
+    for (int i = 0; i < heap.capacity; i++) {
+        int* v = vals[i];
+        if (v == val) {
+            cnt++;
+        } 
+    }
+
+    check_res(cnt == 1, "the insert val should(only one) existed in heap after insert a val in dynamic-grow and full `rebuild` heap", &fail_cnt);
+    
+    hm_heap_free(&heap);
+    
+    print_end("HEAP(DYNAMIC) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
 
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
@@ -988,10 +1226,14 @@ void test_heap_dynamic_func() {
 
 void test_heap_fixed_boundary() {
     test_empty_fixed_heap_oper();                                                               printf("\n");
+
+    test_full_fixed_heap_oper();                                                                printf("\n");
 }
 
 void test_heap_dynamic_boundary() {
     test_empty_dynamic_heap_oper();                                                             printf("\n");
+
+    test_full_dynamic_heap_oper();                                                              printf("\n");
 }
 
 void function_test() {
