@@ -212,6 +212,7 @@ void* hm_heap_extract(hm_heap* heap) {
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
  * @warning - vals should be located in `heap memory` of system
+ * @note - Return `hm_heap_ret_warn` when `size > capacity`
  */
 hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp) {
     if (size > capacity) {
@@ -244,6 +245,7 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
 /**
  * Build a heap(dynamic-growth heap) by the pass-in vals and some parameter
  * @warning - vals should be located in `heap memory` of system
+ * @note - Return `hm_heap_ret_warn` when `size > capacity`
  */
 hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp) {
     

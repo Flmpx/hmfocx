@@ -79,12 +79,14 @@ bool hm_heap_is_empty(hm_heap* heap);
 /**
  * 通过传入的值数组和相关参数构建堆（固定大小模式）
  * @warning - vals 应位于系统的堆内存中
+ * @note - 当 `size > capacity` 返回 `hm_heap_ret_warn` 
  */
 hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
 
 /**
  * 通过传入的值数组和相关参数构建堆（动态增长模式）
  * @warning - vals 应位于系统的堆内存中
+ * @note - 当 `size > capacity` 返回 `hm_heap_ret_warn` 
  */
 hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
 
