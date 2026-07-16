@@ -45,3 +45,5 @@ mingw32-make
 4. [hm_stack](docs/hm_stack.md)
 
 5. [hm_queue](docs/hm_queue.md)
+
+6. [hm_heap](docs/hm_heap.md)
