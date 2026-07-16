@@ -126,7 +126,7 @@ int main()
 void test_list_insert_head() {
     
     int fail_cnt = 0;   // record the total number of failures of this part
-    
+    int tag = 0;
     // **START**
     print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");
     
@@ -135,7 +135,7 @@ void test_list_insert_head() {
     // some test ...
     
     // **CHECK**
-    check_res(fail == 0, "some deail information of faillure", &fail_cnt);
+    check_res(fail == 0, "some deail information of faillure", &fail_cnt, tag++);
     
     
     // **END**
@@ -159,7 +159,7 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | Function | Brief Desctiption|
 | --------- | ------- |
 | `print_run` | Print information at the start of a test part|  
-| `check_res`| Check if the result is true <br> It will `print information` and `change the value of fail_cnt` if `res == false` | 
+| `check_res`| Check if the result is true <br> It will `print information with tag` and `change the value of fail_cnt` if `res == false` | 
 | `print_end` | Print information of this test  according to the number of `fail_cnt` at end | 
 | `print_run_time` | prints `cost time` and `speed` according to the passed-in parameters |
 | `print_speed_vs` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |

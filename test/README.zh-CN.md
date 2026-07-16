@@ -125,6 +125,8 @@ void test_list_insert_head() {
     
     int fail_cnt = 0;   // 记录本部分的失败次数
     
+    int tag = 0;
+    
     // **开始**
     print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");
     
@@ -133,7 +135,7 @@ void test_list_insert_head() {
     // 测试代码……
     
     // **检查**
-    check_res(fail == 0, "失败详情", &fail_cnt);
+    check_res(fail == 0, "失败详情", &fail_cnt, tag++);
     
     
     // **结束**
@@ -155,7 +157,7 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | 函数 | 作用 |
 | --- | --- |
 | `print_run` | 测试开始时打印信息 |
-| `check_res` | 检查结果是否正确；若失败则`打印信息`并增加 `fail_cnt` |
+| `check_res` | 检查结果是否正确；若失败则 `打印信息加上标签` 并增加 `fail_cnt` |
 | `print_end` | 根据 `fail_cnt` 在结束时打印测试结果 |
 | `print_run_time` | 根据传入参数打印`耗时`和`速度` |
 | `print_speed_vs` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |

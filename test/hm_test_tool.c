@@ -10,9 +10,9 @@
 #define COLOR_GREEN   "\033[32m"
 #define COLOR_YELLOW  "\033[33m"
 
-void check_res(bool res, const char* info, int* fail_cnt) {
+void check_res(bool res, const char* info, int* fail_cnt, int tag) {
     if (!res) {
-        printf(COLOR_RED "[       FAIL]:%s " COLOR_RESET "\n", info);
+        printf(COLOR_RED "[       FAIL]" COLOR_YELLOW "[tag: %d]" COLOR_RED ":%s " COLOR_RESET "\n", tag, info);
         (*fail_cnt)++;
     }
 }
