@@ -1330,6 +1330,49 @@ void test_no_capacity_dynamic_heap_oper() {
     
 }
 
+void test_init_big_capacity_fixed_heap() {
+    int fail_cnt = 0;
+    print_run("HEAP(FIXED) | BOUNDARY | INIT BIG CAPACITY HEAP");
+
+    hm_heap heap;
+    hm_heap_ret ret;
+    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity heap should return error", capacity);
+        ret = hm_heap_init(&heap, capacity, free, cmp_int_up);
+        check_res(ret == hm_heap_ret_error, info, &fail_cnt);
+    }
+    
+
+    print_end("HEAP(FIXED) | BOUNDARY | INIT BIG CAPACITY HEAP", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_init_big_capacity_dynamic_heap() {
+    int fail_cnt = 0;
+    print_run("HEAP(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY HEAP");
+    
+    hm_heap heap;
+    hm_heap_ret ret;
+    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity heap should return error", capacity);
+        ret = hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+        check_res(ret == hm_heap_ret_error, info, &fail_cnt);
+    }
+    
+    
+    print_end("HEAP(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY HEAP", fail_cnt);
+    HM_TEST_COUNTER
+
+}
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
@@ -1372,6 +1415,8 @@ void test_heap_fixed_boundary() {
     test_full_fixed_heap_oper();                                                                printf("\n");
 
     test_no_capacity_fixed_heap_oper();                                                         printf("\n");
+
+    test_init_big_capacity_fixed_heap();                                                        printf("\n");
 }
 
 void test_heap_dynamic_boundary() {
@@ -1380,6 +1425,8 @@ void test_heap_dynamic_boundary() {
     test_full_dynamic_heap_oper();                                                              printf("\n");
 
     test_no_capacity_dynamic_heap_oper();                                                       printf("\n");
+
+    test_init_big_capacity_dynamic_heap();                                                      printf("\n");
 }
 
 void function_test() {
