@@ -33,19 +33,24 @@ void test_heap_integrity(hm_heap* heap, int* fail_cnt, size_t size, bool dynamic
     // verify logic of heap
 
     int fail = 0;
-    for (size_t parent = ((heap->size - 1) - 1) / 2; 2 * parent + 1 < heap->size; parent--) {
-        size_t l = 2 * parent + 1;
-        size_t r = l + 1;
-        size_t min;
-        if (r < heap->size) {
-            min = heap->cmp(heap->vals[l], heap->vals[r]) < 0 ? l : r;
-        } else {
-            min = l;
-        }
-        if (heap->cmp(heap->vals[parent], heap->vals[min]) > 0) {
-            fail++;
+    if (heap->size > 1) {
+        for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
+            size_t parent = ((heap->size - 1) - 1) / 2 - i;
+            size_t l = 2 * parent + 1;
+            size_t r = l + 1;
+            size_t min;
+            if (r < heap->size) {
+                min = heap->cmp(heap->vals[l], heap->vals[r]) < 0 ? l : r;
+            } else {
+                min = l;
+            }
+            if (heap->cmp(heap->vals[parent], heap->vals[min]) > 0) {
+                fail++;
+            }
+    
         }
     }
+
     check_res(fail == 0, "TEST OF INTEGRITY: the structure logic of heap is wrong", fail_cnt);
 
 
