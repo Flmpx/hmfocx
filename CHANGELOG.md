@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-16
+
 ### Added
 - Add new container for this library -- `hm_heap`, it includes some basic operations, such as `insert` and `extract`, other detailed information see [hm_heap](docs/hm_heap.md)
 
