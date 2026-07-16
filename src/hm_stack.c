@@ -62,7 +62,7 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
  * Check if the stack is full
  */
 bool hm_stack_is_full(hm_stack* stack) {
-    return !(stack->dynamic_grow) && stack->capacity == stack->top;
+    return !(stack->dynamic_grow) && stack->top >= stack->capacity;
 }
 
 /**

@@ -64,7 +64,7 @@ hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_f
  * Check if the heap is full
  */
 bool hm_heap_is_full(hm_heap* heap) {
-    return !(heap->dynamic_grow) && heap->size == heap->capacity;
+    return !(heap->dynamic_grow) && heap->size >= heap->capacity;
 }
 
 /**

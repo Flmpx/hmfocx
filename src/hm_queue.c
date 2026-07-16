@@ -61,7 +61,7 @@ hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, 
  * Check if the queue is full
  */
 bool hm_queue_is_full(hm_queue* queue) {
-    return !(queue->dynamic_grow) && queue->size == queue->capacity;
+    return !(queue->dynamic_grow) && queue->size >= queue->capacity;
 }
 
 
