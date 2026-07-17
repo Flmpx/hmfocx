@@ -852,33 +852,16 @@ void test_init_big_capacity_fixed_queue() {
     
     hm_queue queue;
     hm_queue_ret ret;
-    size_t capacity;
+    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity staack should return error", capacity);
+        ret = hm_queue_init(&queue, capacity, free);
+        check_res(ret == hm_queue_ret_error, info, &fail_cnt, tag);
+    } 
 
-    // SIZE_MAX
-    
-    capacity = SIZE_MAX;
-    ret = hm_queue_init(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX-capacity queue should return error", &fail_cnt, tag);
-    
-    
-    // SIZE_MAX / 2
-    capacity = SIZE_MAX / 2;
-    ret = hm_queue_init(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX/2-capacity queue should return error", &fail_cnt, tag);
-
-
-    // SIZE_MAX * (2 / 3)
-    capacity = SIZE_MAX / 3 * 2;
-    ret = hm_queue_init(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX*(2/3)-capacity queue should return error", &fail_cnt, tag);
-    
-
-    // SIZE_MAX / sizeof(void*)
-    capacity = SIZE_MAX / sizeof(void*);
-    ret = hm_queue_init(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX/sizeof(void*)-capacity queue should return error", &fail_cnt, tag);
-    
-    
     print_end("QUEUE(FIXED) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -891,32 +874,15 @@ void test_init_big_capacity_dynamic_queue() {
     
     hm_queue queue;
     hm_queue_ret ret;
-    size_t capacity;
-
-    // SIZE_MAX
     
-    capacity = SIZE_MAX;
-    ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX-capacity queue should return error", &fail_cnt, tag);
-    
-    
-    // SIZE_MAX / 2
-    capacity = SIZE_MAX / 2;
-    ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX/2-capacity queue should return error", &fail_cnt, tag);
-
-
-    // SIZE_MAX * (2 / 3)
-    capacity = SIZE_MAX / 3 * 2;
-    ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX*(2/3)-capacity queue should return error", &fail_cnt, tag);
-    
-
-    // SIZE_MAX / sizeof(void*)
-    capacity = SIZE_MAX / sizeof(void*);
-    ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
-    check_res(ret == hm_queue_ret_error, "init SIZE_MAX/sizeof(void*)-capacity queue should return error", &fail_cnt, tag);
-    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity queue should return error", capacity);
+        ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
+        check_res(ret == hm_queue_ret_error, info, &fail_cnt, tag++);
+    }
     print_end("QUEUE(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
