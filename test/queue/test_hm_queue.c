@@ -923,6 +923,76 @@ void test_init_big_capacity_dynamic_queue() {
 }
 
 
+void test_queue_fixed_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(FIXED) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_queue queue;
+    
+    hm_queue_init(&queue, capacity, free);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity + 1; i++) {
+        if (i == 0 && hm_queue_is_empty(&queue) == false) {
+            fail_empty++;
+        }
+        if (i == capacity && hm_queue_is_full(&queue) == false) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        if (hm_queue_enq(&queue, v) == hm_queue_ret_full) {
+            // it will become full
+            free(v);
+        }
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_queue_free(&queue);
+
+    print_end("QUEUE(FIXED) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_queue_dynamic_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_queue queue;
+    
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity * 2; i++) {
+        if (i == 0 && hm_queue_is_empty(&queue) == false) {
+            fail_empty++;
+        }
+        // dynamic grow queue shoudn't be full
+        if (hm_queue_is_full(&queue) == true) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_queue_enq(&queue, v);
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_queue_free(&queue);
+
+    print_end("QUEUE(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
 
 void test_queue_fixed_func() {
     test_queue_fixed_init();                                    printf("\n");
@@ -936,6 +1006,8 @@ void test_queue_fixed_func() {
     test_queue_fixed_clear();                                   printf("\n");
 
     test_queue_fixed_free();                                    printf("\n");
+
+    test_queue_fixed_judge();                                   printf("\n");
     
 }
 
@@ -951,6 +1023,8 @@ void test_queue_dynamic_func() {
     test_queue_dynamic_clear();                                 printf("\n");
     
     test_queue_dynamic_free();                                  printf("\n");
+
+    test_queue_dynamic_judge();                                 printf("\n");
     
 }
 

@@ -876,6 +876,77 @@ void test_init_big_capacity_dynamic_stack() {
     
 }
 
+void test_stack_fixed_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STACK(FIXED) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_stack stack;
+    
+    hm_stack_init(&stack, capacity, free);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity + 1; i++) {
+        if (i == 0 && hm_stack_is_empty(&stack) == false) {
+            fail_empty++;
+        }
+        if (i == capacity && hm_stack_is_full(&stack) == false) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        if (hm_stack_push(&stack, v) == hm_stack_ret_full) {
+            // it will become full
+            free(v);
+        }
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_stack_free(&stack);
+    
+    print_end("STACK(FIXED) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_stack_dynamic_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STACK(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_stack stack;
+    
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity * 2; i++) {
+        if (i == 0 && hm_stack_is_empty(&stack) == false) {
+            fail_empty++;
+        }
+        // dynamic grow stack shoudn't be full
+        if (hm_stack_is_full(&stack) == true) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_stack_push(&stack, v);
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_stack_free(&stack);
+
+    print_end("STACK(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 
 void test_stack_fixed_func() {
     test_stack_fixed_init();                                        printf("\n");
@@ -889,6 +960,8 @@ void test_stack_fixed_func() {
     test_stack_fixed_clear();                                       printf("\n");
 
     test_stack_fixed_free();                                        printf("\n");
+
+    test_stack_fixed_judge();                                       printf("\n");
 }
 
 
@@ -904,6 +977,8 @@ void test_stack_dynamic_func() {
     test_stack_dynamic_clear();                                     printf("\n");
 
     test_stack_dynamic_free();                                      printf("\n");
+
+    test_stack_dynamic_judge();                                     printf("\n");
 }
 
 

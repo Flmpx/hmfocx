@@ -1397,6 +1397,78 @@ void test_init_big_capacity_dynamic_heap() {
     HM_TEST_COUNTER
 
 }
+
+
+void test_heap_fixed_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(FIXED) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_heap heap;
+    
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity + 1; i++) {
+        if (i == 0 && hm_heap_is_empty(&heap) == false) {
+            fail_empty++;
+        }
+        if (i == capacity && hm_heap_is_full(&heap) == false) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        if (hm_heap_insert(&heap, v) == hm_heap_ret_full) {
+            // it will become full
+            free(v);
+        }
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_heap_free(&heap);
+
+    print_end("HEAP(FIXED) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_heap_dynamic_judge() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]");
+
+    int capacity = 64;
+    hm_heap heap;
+    
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    int seed = 101;
+    srand(seed);
+
+    int fail_full = 0, fail_empty = 0;
+    for (int i = 0; i < capacity * 2; i++) {
+        if (i == 0 && hm_heap_is_empty(&heap) == false) {
+            fail_empty++;
+        }
+        // dynamic grow heap shoudn't be full
+        if (hm_heap_is_full(&heap) == true) {
+            fail_full++;
+        }
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+    check_res(fail_empty == 0, "the judge empty function is wrong", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the judge full function is wrong", &fail_cnt, tag++);
+
+    hm_heap_free(&heap);
+
+    print_end("HEAP(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
@@ -1413,6 +1485,8 @@ void test_heap_fixed_func() {
     test_heap_fixed_build();                                                                    printf("\n");
 
     test_heap_fixed_rebuild();                                                                  printf("\n");
+
+    test_heap_fixed_judge();                                                                    printf("\n");
 }
 
 void test_heap_dynamic_func() {
@@ -1431,6 +1505,8 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_build();                                                                  printf("\n");
 
     test_heap_dynamic_rebuild();                                                                printf("\n");
+
+    test_heap_dynamic_judge();                                                                  printf("\n");
 }
 
 void test_heap_fixed_boundary() {
