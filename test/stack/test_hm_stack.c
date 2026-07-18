@@ -40,21 +40,21 @@ void test_stack_fixed_init() {
     size_t capacity = 64;
     // pass in `free` for stack
     hm_stack_init(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
-    check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag);
-    check_res(stack.dynamic_grow == false, "the stack's dynamic-gorwth should is `false`", &fail_cnt, tag);
-    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag);
-    check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag);
-    check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag);
+    check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
+    check_res(stack.dynamic_grow == false, "the stack's dynamic-gorwth should is `false`", &fail_cnt, tag++);
+    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
+    check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
+    check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
     
     hm_stack_free(&stack);
     
     // pass in NULL for stack
     
     hm_stack_init(&stack, capacity, NULL);
-    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
     hm_stack_free(&stack);
 
@@ -73,21 +73,21 @@ void test_stack_dynamic_init() {
     size_t capacity = 64;
     // pass in `free` for stack
     hm_stack_init_dynamic_grow(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
 
-    check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag);
-    check_res(stack.dynamic_grow == true, "the stack's dynamic-gorwth should is `true`", &fail_cnt, tag);
-    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag);
-    check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag);
-    check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag);
+    check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
+    check_res(stack.dynamic_grow == true, "the stack's dynamic-gorwth should is `true`", &fail_cnt, tag++);
+    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
+    check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
+    check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
     
     hm_stack_free(&stack);
     
     // pass in NULL for stack
     
     hm_stack_init_dynamic_grow(&stack, capacity, NULL);
-    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
 
     hm_stack_free(&stack);
 
@@ -116,8 +116,8 @@ void test_stack_fixed_push() {
             free(v);
         }
     }
-    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, capacity, false, capacity);
+    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity);
     // verify
 
     fail = 0;
@@ -128,7 +128,7 @@ void test_stack_fixed_push() {
             fail++;
         }
     }
-    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt, tag);
+    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt, tag++);
 
     // push more vals, let it return `full`
     fail = 0;
@@ -141,8 +141,8 @@ void test_stack_fixed_push() {
             free(v);
         }
     }
-    check_res(fail == 0, "the push function should reuturn full when push vals beyond the capacity", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, capacity, false, capacity);
+    check_res(fail == 0, "the push function should reuturn full when push vals beyond the capacity", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity);
 
 
     fail = 0;
@@ -153,7 +153,7 @@ void test_stack_fixed_push() {
             fail++;
         }
     }
-    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt, tag);
+    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt, tag++);
 
     hm_stack_free(&stack);
 
@@ -182,8 +182,8 @@ void test_stack_dynamic_push() {
             free(v);
         }
     }
-    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, start_capacity, true, start_capacity);
+    check_res(fail == 0, "push vals should return suc with a reasonable amount", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity, true, start_capacity);
 
 
     // verify
@@ -195,7 +195,7 @@ void test_stack_dynamic_push() {
             fail++;
         }
     }
-    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt, tag);
+    check_res(fail == 0, "the vals is wrong in the stack", &fail_cnt, tag++);
 
     // push more vals
     fail = 0;
@@ -208,8 +208,8 @@ void test_stack_dynamic_push() {
         }
     }
     
-    check_res(fail == 0, "push function should return suc when push vals beyond the capacity", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, start_capacity * 2, true, start_capacity);
+    check_res(fail == 0, "push function should return suc when push vals beyond the capacity", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2, true, start_capacity);
 
 
     // verify
@@ -223,7 +223,7 @@ void test_stack_dynamic_push() {
         }
     }
 
-    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt, tag);
+    check_res(fail == 0, "the vals is wrong in the stack after push vals beyond the capacity", &fail_cnt, tag++);
 
     hm_stack_free(&stack);
 
@@ -253,15 +253,15 @@ void test_stack_fixed_peek() {
         num++;
 
         int* p = hm_stack_peek(&stack);
-        test_stack_integrity(&stack, &fail_cnt, tag, num, false, capacity);
+        test_stack_integrity(&stack, &fail_cnt, tag++, num, false, capacity);
         if (p == NULL) {
             fail_null++;
         } else if (*p != (num - 1) * 10) {
             fail_wrong++;
         }
     }
-    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt, tag);
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt, tag++);
     
     // push beyond the capacity
     fail_null = fail_wrong = 0;
@@ -271,15 +271,15 @@ void test_stack_fixed_peek() {
 
         // according the logic, the val shouldn't push to fixed-size and full stack
         int* p = hm_stack_peek(&stack);
-        test_stack_integrity(&stack, &fail_cnt, tag, num, false, capacity);
+        test_stack_integrity(&stack, &fail_cnt, tag++, num, false, capacity);
         if (p == NULL) {
             fail_null++;
         } else if (*p != (num - 1) * 10) {
             fail_wrong++;
         }
     }
-    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong after push more vals than the capacity of stack", &fail_cnt, tag);
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong after push more vals than the capacity of stack", &fail_cnt, tag++);
     
     hm_stack_free(&stack);
     print_end("STACK(FIXED) | FUNC | PEEK | CAPACITY: 32 TYPE: [INT]", fail_cnt);
@@ -310,15 +310,15 @@ void test_stack_dynamic_peek() {
         num++;
 
         int* p = hm_stack_peek(&stack);
-        test_stack_integrity(&stack, &fail_cnt, tag, num, true, start_capacity);
+        test_stack_integrity(&stack, &fail_cnt, tag++, num, true, start_capacity);
         if (p == NULL) {
             fail_null++;
         } else if (*p != (num - 1) * 10) {
             fail_wrong++;
         }
     }
-    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt, tag);
+    check_res(fail_null == 0, "the val peeked by the peek function shouldn't be NULL after push some vals to stack", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the val peeked by the peek function is wrong", &fail_cnt, tag++);
 
 
     hm_stack_free(&stack);
@@ -351,7 +351,7 @@ void test_stack_fixed_pop() {
         // pop and verify
         int fail = 0;
         for (int j = i; j >= 0; j--) {
-            test_stack_integrity(&stack, &fail_cnt, tag, j + 1, false, capacity);
+            test_stack_integrity(&stack, &fail_cnt, tag++, j + 1, false, capacity);
             int* v = hm_stack_pop(&stack);
             if (v == NULL) {
                 fail_null++;
@@ -362,8 +362,8 @@ void test_stack_fixed_pop() {
         }
     }
     
-    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt, tag);
+    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt, tag++);
 
     // push beyond the capacity of stack
     fail_null = fail_wrong = 0;
@@ -380,7 +380,7 @@ void test_stack_fixed_pop() {
         // pop and verify
 
         for (int j = capacity - 1; j >= 0; j--) {
-            test_stack_integrity(&stack, &fail_cnt, tag, j + 1, false, capacity);
+            test_stack_integrity(&stack, &fail_cnt, tag++, j + 1, false, capacity);
             int* v = hm_stack_pop(&stack);
             if (v == NULL) {
                 fail_null++;
@@ -390,8 +390,8 @@ void test_stack_fixed_pop() {
             free(v);
         }
     }
-    check_res(fail_null == 0, "the pop val shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the pop val is wrong when run pop function after push more vals than the capacity of stack", &fail_cnt, tag);
+    check_res(fail_null == 0, "the pop val shouldn't be NULL after push more vals than the capacity of stack", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function after push more vals than the capacity of stack", &fail_cnt, tag++);
     
 
     hm_stack_free(&stack);
@@ -420,7 +420,7 @@ void test_stack_dynamic_pop() {
         // pop and verify
         int fail = 0;
         for (int j = i; j >= 0; j--) {
-            test_stack_integrity(&stack, &fail_cnt, tag, j + 1, true, start_capacity);
+            test_stack_integrity(&stack, &fail_cnt, tag++, j + 1, true, start_capacity);
             int* v = hm_stack_pop(&stack);
             if (v == NULL) {
                 fail_null++;
@@ -431,8 +431,8 @@ void test_stack_dynamic_pop() {
         }
     }
     
-    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt, tag);
-    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt, tag);
+    check_res(fail_null == 0, "the pop val shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the pop val is wrong when run pop function", &fail_cnt, tag++);
 
 
     hm_stack_free(&stack);
@@ -457,17 +457,17 @@ void test_stack_fixed_clear() {
         }
     }
 
-    test_stack_integrity(&stack, &fail_cnt, tag, capacity, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity);
 
     hm_stack_clear(&stack);
 
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
     int* val = hm_stack_peek(&stack);
-    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt, tag++);
     
     val = hm_stack_pop(&stack);
-    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag++);
     
     hm_stack_free(&stack);
     print_end("STACK(FIXED) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -491,17 +491,17 @@ void test_stack_dynamic_clear() {
         hm_stack_push(&stack, v);
     }
 
-    test_stack_integrity(&stack, &fail_cnt, tag, start_capacity * 2, true, start_capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2, true, start_capacity);
 
     hm_stack_clear(&stack);
 
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, start_capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity);
 
     int* val = hm_stack_peek(&stack);
-    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the peek top should be NULL after clear the stack", &fail_cnt, tag++);
     
     val = hm_stack_pop(&stack);
-    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag++);
 
     print_end("STACK(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
 
@@ -526,15 +526,15 @@ void test_stack_fixed_free() {
             free(v);
         }
     }
-    test_stack_integrity(&stack, &fail_cnt, tag, capacity, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity);
     hm_stack_free(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, 0);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, 0);
 
     int* val = hm_stack_peek(&stack);
-    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt, tag++);
     
     val = hm_stack_pop(&stack);
-    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag++);
 
     print_end("STACK(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
 
@@ -557,17 +557,17 @@ void test_stack_dynamic_free() {
         hm_stack_push(&stack, v);
     }
 
-    test_stack_integrity(&stack, &fail_cnt, tag, start_capacity * 2, true, start_capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2, true, start_capacity);
 
     hm_stack_free(&stack);
 
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, 0);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, 0);
 
     int* val = hm_stack_peek(&stack);
-    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the peek top should be NULL after free the stack", &fail_cnt, tag++);
     
     val = hm_stack_pop(&stack);
-    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag);
+    check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag++);
 
     print_end("STACK(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
 
@@ -588,23 +588,23 @@ void test_empty_fixed_stack_oper() {
     hm_stack_init(&stack, capacity, NULL);
     // peek
     void* pointer = hm_stack_peek(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
-    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
+    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag++);
     // pop
     pointer = hm_stack_pop(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
-    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
+    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag++);
     // push
     hm_stack_push(&stack, &val);
-    test_stack_integrity(&stack, &fail_cnt, tag, 1, false, capacity);
-    check_res(*(int*)(stack.vals[0]) == val, "the val in stack is wrong when push val in a empty stack", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 1, false, capacity);
+    check_res(*(int*)(stack.vals[0]) == val, "the val in stack is wrong when push val in a empty stack", &fail_cnt, tag++);
     // clear
     hm_stack_clear(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     
     // free
     hm_stack_free(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, 0);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, 0);
 
     
     print_end("STACK(FIXED) | BOUNDARY | OPER EMPTY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -627,23 +627,23 @@ void test_empty_dynamic_stack_oper() {
     hm_stack_init_dynamic_grow(&stack, start_capacity, NULL);
     // peek
     void* pointer = hm_stack_peek(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, start_capacity);
-    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity);
+    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag++);
     // pop
     pointer = hm_stack_pop(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, start_capacity);
-    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity);
+    check_res(pointer == NULL, "the peek top should be NULL when stack is empty", &fail_cnt, tag++);
     // push
     hm_stack_push(&stack, &val);
-    test_stack_integrity(&stack, &fail_cnt, tag, 1, true, start_capacity);
-    check_res(*(int*)(stack.vals[0]) == val, "the val in stack is wrong when push val in a empty stack", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 1, true, start_capacity);
+    check_res(*(int*)(stack.vals[0]) == val, "the val in stack is wrong when push val in a empty stack", &fail_cnt, tag++);
     // clear
     hm_stack_clear(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, start_capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity);
     
     // free
     hm_stack_free(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, start_capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity);
     
     
     print_end("STACK(DYNAMIC) | BOUNDARY | OPER EMPTY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -672,11 +672,11 @@ void test_full_fixed_stack_oper() {
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_stack_ret ret = hm_stack_push(&stack, val);
-    test_stack_integrity(&stack, &fail_cnt, tag, capacity, false, capacity);
-    check_res(ret == hm_stack_ret_full, "push function should return full when fixed-size stack is full", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity);
+    check_res(ret == hm_stack_ret_full, "push function should return full when fixed-size stack is full", &fail_cnt, tag++);
 
     int* top = hm_stack_peek(&stack);
-    check_res(*top != -1, "the peek val is wrong after push a val in a full and fixed-size stack", &fail_cnt, tag);
+    check_res(*top != -1, "the peek val is wrong after push a val in a full and fixed-size stack", &fail_cnt, tag++);
     
     if (ret == hm_stack_ret_full) {
         free(val);
@@ -708,11 +708,11 @@ void test_full_dynamic_stack_oper() {
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_stack_ret ret = hm_stack_push(&stack, val);
-    test_stack_integrity(&stack, &fail_cnt, tag, start_capacity + 1, true, start_capacity);
-    check_res(ret == hm_stack_ret_suc, "push function should return suc when dynamic stack is full", &fail_cnt, tag);
+    test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity + 1, true, start_capacity);
+    check_res(ret == hm_stack_ret_suc, "push function should return suc when dynamic stack is full", &fail_cnt, tag++);
     
     val = hm_stack_peek(&stack);
-    check_res(*val == -1, "the peek val is wrong after push a val in a full and dynamic stack", &fail_cnt, tag);
+    check_res(*val == -1, "the peek val is wrong after push a val in a full and dynamic stack", &fail_cnt, tag++);
     
     
     hm_stack_free(&stack);
@@ -729,33 +729,33 @@ void test_no_capacity_fixed_stack() {
     hm_stack stack;
     int capacity = 0;
     hm_stack_init(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     // push
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_stack_ret ret = hm_stack_push(&stack, val);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     
-    check_res(ret == hm_stack_ret_full, "it should return full when push a val in 0-capacity and fixed-sizestack", &fail_cnt, tag);
+    check_res(ret == hm_stack_ret_full, "it should return full when push a val in 0-capacity and fixed-sizestack", &fail_cnt, tag++);
     if (ret == hm_stack_ret_full) {
         free(val);
     }
 
     // peek
-    check_res(hm_stack_peek(&stack) == NULL, "the peek val should be NULL in a 0-capacity and fixed-sizestack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    check_res(hm_stack_peek(&stack) == NULL, "the peek val should be NULL in a 0-capacity and fixed-sizestack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
     // push
-    check_res(hm_stack_pop(&stack) == NULL, "the pop val should be NULL in a 0-capacity and fixed-sizestack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    check_res(hm_stack_pop(&stack) == NULL, "the pop val should be NULL in a 0-capacity and fixed-sizestack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     
     // clear
     hm_stack_clear(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     
     // free
     hm_stack_free(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, false, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
     
     
     print_end("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]", fail_cnt);
@@ -771,35 +771,35 @@ void test_no_capacity_dynamic_stack() {
     hm_stack stack;
     int capacity = 0;
     hm_stack_init_dynamic_grow(&stack, capacity, free);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     // push
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_stack_ret ret = hm_stack_push(&stack, val);
-    test_stack_integrity(&stack, &fail_cnt, tag, 1, true, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 1, true, capacity);
     
-    check_res(ret == hm_stack_ret_suc, "it should return suc when push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag);
+    check_res(ret == hm_stack_ret_suc, "it should return suc when push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
     
     // peek
     int* pointer = hm_stack_peek(&stack);
-    check_res(pointer == val, "the peek val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 1, true, capacity);
+    check_res(pointer == val, "the peek val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 1, true, capacity);
     
     // pop
     pointer = hm_stack_pop(&stack);
-    check_res(pointer == val, "the pop val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    check_res(pointer == val, "the pop val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     if (pointer == val) {
         free(val);
     }
     
     // clear
     hm_stack_clear(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     
     // free
     hm_stack_free(&stack);
-    test_stack_integrity(&stack, &fail_cnt, tag, 0, true, capacity);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     
     
     print_end("STACK(DYNAMIC) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]", fail_cnt);
@@ -821,7 +821,7 @@ void test_init_big_capacity_fixed_stack() {
         size_t capacity = SIZE_MAX / i;
         sprintf(info, "init %zu-capacity staack should return error", capacity);
         ret = hm_stack_init(&stack, capacity, free);
-        check_res(ret == hm_stack_ret_error, info, &fail_cnt, tag);
+        check_res(ret == hm_stack_ret_error, info, &fail_cnt, tag++);
     }
     print_end("STACK(FIEXE) | BOUNDARY | INIT BIG CAPACITY STACK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
