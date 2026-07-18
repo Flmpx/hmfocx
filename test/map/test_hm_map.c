@@ -969,7 +969,7 @@ void test_single_entry_oper() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     int k = 1, v = 10;
-    print_run("MAP | BOUNDARY | OPER SINGLE ENTRY'S LIST | TYPE K:[INT] V:[INT]");
+    print_run("MAP | BOUNDARY | OPER SINGLE ENTRY'S MAP | TYPE K:[INT] V:[INT]");
 
     // insert single entry and get
 
@@ -1001,7 +1001,7 @@ void test_single_entry_oper() {
     hm_map_free(&map);
 
 
-    print_end("MAP | BOUNDARY | OPER SINGLE ENTRY'S LIST | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | BOUNDARY | OPER SINGLE ENTRY'S MAP | TYPE K:[INT] V:[INT]", fail_cnt);
     HM_TEST_COUNTER
 }
 
