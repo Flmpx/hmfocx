@@ -10,6 +10,12 @@
  */
 static const size_t invalid_index = SIZE_MAX;
 
+
+/**
+ * `min_len` represents the minimal length of map
+ */
+static const size_t min_len = 17;
+
 /**
  * `hm_same` represents that two pieces of key are equal
  */
@@ -215,7 +221,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     size_t new_len = 0;
     if (l == 0) {
         flag_fresh = true;
-        new_len = 17;
+        new_len = min_len;
     } else if (((double)(s) / l) > max_load_factor) {
 
         if (l > SIZE_MAX / 2) {
@@ -313,7 +319,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
-    if (l < 34 || ((double)s / l) > min_load_factor) {
+    if (l < min_len * 2 || ((double)s / l) > min_load_factor) {
         return hm_map_ret_none;
     }
 
