@@ -11,7 +11,21 @@
 
 ## 函数
 
-- **初始化**
+### **小功能**
+```c
+/**
+ * 获取给定内存池的页数
+ */
+size_t hm_pool_get_pages(hm_pool* pool);
+
+/**
+ * 获取内存池中每页的理论字节数
+ */
+size_t hm_pool_get_bytes_per_page(hm_pool* pool);
+```
+
+
+### **初始化**
 ```c
 /**
  * 初始化内存池
@@ -20,7 +34,7 @@
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
 
-- **分配**
+### **分配**
 ```c
 /**
  * 获取一个块的指针
@@ -30,7 +44,7 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 void* hm_pool_block_allocate(hm_pool* pool);
 ```
 
-- **释放**
+### **释放**
 ```c
 /**
  * 释放一个块
@@ -43,19 +57,6 @@ void hm_pool_block_free(hm_pool* pool, void* block);
  * @note - 释放后请勿使用来自该内存池的块
  */
 void hm_pool_free(hm_pool* pool);
-```
-
-- **小功能**
-```c
-/**
- * 获取给定内存池的页数
- */
-size_t hm_pool_get_pages(hm_pool* pool);
-
-/**
- * 获取内存池中每页的理论字节数
- */
-size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```
 
 ## 提示

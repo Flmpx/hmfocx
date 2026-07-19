@@ -12,6 +12,13 @@
 
 ## 函数
 
+### **小功能**
+```c
+#define hm_list_size(l) ((l)->size)
+```
+<br><br>
+
+
 ### **初始化**
 ```c
 /**
@@ -529,12 +536,6 @@ int main()
 
 </details>
 <br><br>
-
-
-### **小功能**
-```c
-#define hm_list_size(l) ((l)->size)
-```
 
 ## 提示
 

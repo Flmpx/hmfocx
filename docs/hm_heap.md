@@ -12,7 +12,14 @@
 - It supports build by your vals array
 
 ## Functions
-- **Initialize**
+
+### **Small Functions**
+```c
+#define hm_heap_size(s) ((s)->size)
+#define hm_heap_capacity(s) ((s)->capacity)
+```
+
+### **Initialize**
 ```c
 /**
  * Initialize the heap(fixed-size heap)
@@ -37,7 +44,7 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cm
 hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp);
 ```
 
-- **Insert**
+### **Insert**
 ```c
 /**
  * Insert a value in the heap
@@ -48,7 +55,7 @@ hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_f
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
-- **Extract And Peek**
+### **Extract And Peek**
 ```c
 /**
  * Extract a value 
@@ -63,7 +70,7 @@ void* hm_heap_extract(hm_heap* heap);
 void* hm_heap_peek(hm_heap* heap);
 ```
 
-- **Judge**
+### **Judge**
 ```c
 /**
  * Check if the heap is full
@@ -76,7 +83,7 @@ bool hm_heap_is_full(hm_heap* heap);
 bool hm_heap_is_empty(hm_heap* heap);
 ```
 
-- **Build**
+### **Build**
 ```c
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
@@ -98,7 +105,7 @@ hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, 
 void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
 ```
 
-- **Clear And Free**
+### **Clear And Free**
 ```c
 /**
  * Clear the heap 
@@ -111,12 +118,6 @@ void hm_heap_clear(hm_heap* heap);
  * @note - The heap can be reused when it is `dynamic-growth` but `fixed-size` cannot
  */
 void hm_heap_free(hm_heap* heap);
-```
-
-- **Small Functions**
-```c
-#define hm_heap_size(s) ((s)->size)
-#define hm_heap_capacity(s) ((s)->capacity)
 ```
 
 ## Tips

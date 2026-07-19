@@ -10,7 +10,14 @@
 - It supports `dynamic-growth` and `fixed-size` modes
 
 ## Functions
-- **Initialize**
+
+### **Small Functions**
+```c
+#define hm_stack_size(s) ((s)->top)
+#define hm_stack_capacity(s) ((s)->capacity)
+```
+
+### **Initialize**
 ```c
 /**
  * Initialize the stack(fixed-size stack)
@@ -33,7 +40,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
 
-- **Push**
+### **Push**
 ```c
 /**
  * Push a value to the stack
@@ -44,7 +51,7 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
-- **Pop And Peek**
+### **Pop And Peek**
 ```c
 /**
  * Pop a value from the stack
@@ -59,7 +66,7 @@ void* hm_stack_pop(hm_stack* stack);
 void* hm_stack_peek(hm_stack* stack);
 ```
 
-- **Judge**
+### **Judge**
 ```c
 /**
  * Check if the stack is full
@@ -72,7 +79,7 @@ bool hm_stack_is_full(hm_stack* stack);
 bool hm_stack_is_empty(hm_stack* stack);
 ```
 
-- **Clear And Free**
+### **Clear And Free**
 ```c
 /**
  * Clear the stack 
@@ -85,12 +92,6 @@ void hm_stack_clear(hm_stack* stack);
  * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
  */
 void hm_stack_free(hm_stack* stack);
-```
-
-- **Small Functions**
-```c
-#define hm_stack_size(s) ((s)->top)
-#define hm_stack_capacity(s) ((s)->capacity)
 ```
 
 ## Tips

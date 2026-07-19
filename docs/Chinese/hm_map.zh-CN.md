@@ -11,7 +11,19 @@
 
 ## 函数
 
-- **初始化**
+### **小功能**
+```c
+#define hm_map_size(l) ((l)->size)
+#define hm_map_len(l) ((l)->len)
+
+/**
+ * 获取散列表的负载因子
+ * @note - 如果散列表的容量为0, 那将返回一个负数
+ */
+double hm_map_get_load_factor(hm_map* map)
+```
+
+### **初始化**
 ```c
 /**
  * 初始化 hm_map
@@ -21,7 +33,7 @@
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 ```
 
-- **插入**
+### **插入**
 ```c
 /**
  * 向散列表中插入一个键值对
@@ -33,7 +45,7 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
 
-- **获取**
+### **获取**
 ```c
 /**
  * 获取散列表中条目的指针
@@ -42,7 +54,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 hm_entry* hm_map_get(hm_map* map, void* key);
 ```
 
-- **删除**
+### **删除**
 ```c
 /**
  * 根据键删除散列表中的条目
@@ -51,7 +63,7 @@ hm_entry* hm_map_get(hm_map* map, void* key);
 hm_map_ret hm_map_del(hm_map* map, void* key);
 ```
 
-- **收缩**
+### **收缩**
 ```c
 /**
  * 如果可以, 对散列表进行缩容
@@ -60,7 +72,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key);
 hm_map_ret hm_map_shrink(hm_map* map);
 ```
 
-- **迭代器**
+### **迭代器**
 ```c
 /**
  * 初始化散列表的迭代器
@@ -80,7 +92,7 @@ bool hm_iter_map_has_next(hm_iter_map* iter);
 hm_entry* hm_iter_map_next(hm_iter_map* iter);
 ```
 
-- **清空与释放**
+### **清空与释放**
 ```c
 /**
  * 释放散列表中的键和值，但保留桶和状态标志数组
@@ -93,17 +105,6 @@ void hm_map_clear(hm_map* map);
 void hm_map_free(hm_map* map);
 ```
 
-- **小功能**
-```c
-#define hm_map_size(l) ((l)->size)
-#define hm_map_len(l) ((l)->len)
-
-/**
- * 获取散列表的负载因子
- * @note - 如果散列表的容量为0, 那将返回一个负数
- */
-double hm_map_get_load_factor(hm_map* map)
-```
 
 ## 提示
 

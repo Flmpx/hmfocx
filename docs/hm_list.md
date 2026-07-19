@@ -9,6 +9,14 @@
 - It provides basic list operations
 
 ## Functions
+
+### **Small Functions**
+```c
+#define hm_list_size(l) ((l)->size)
+```
+<br><br>
+
+
 ### **Initialize**
 ```c
 /**
@@ -533,13 +541,6 @@ int main()
 
 </details>
 <br><br>
-
-### **Small Functions**
-```c
-#define hm_list_size(l) ((l)->size)
-```
-
-
 
 ## Tips
 

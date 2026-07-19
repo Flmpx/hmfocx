@@ -11,7 +11,15 @@
 - 支持动态增长和固定大小两种模式。
 
 ## 函数
-- **初始化**
+
+
+### **小功能**
+```c
+#define hm_stack_size(s) ((s)->top)
+#define hm_stack_capacity(s) ((s)->capacity)
+```
+
+### **初始化**
 ```c
 /**
  * 初始化栈（固定大小模式）
@@ -32,7 +40,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
 
-- **入栈**
+### **入栈**
 ```c
 /**
  * 将一个值压入栈
@@ -43,7 +51,7 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
-- **出栈与查看**
+### **出栈与查看**
 ```c
 /**
  * 从栈中弹出一个值
@@ -58,7 +66,7 @@ void* hm_stack_pop(hm_stack* stack);
 void* hm_stack_peek(hm_stack* stack);
 ```
 
-- **判断**
+### **判断**
 ```c
 /**
  * 检查栈是否已满
@@ -71,7 +79,7 @@ bool hm_stack_is_full(hm_stack* stack);
 bool hm_stack_is_empty(hm_stack* stack);
 ```
 
-- **清空与释放**
+### **清空与释放**
 ```c
 /**
  * 清空栈
@@ -84,12 +92,6 @@ void hm_stack_clear(hm_stack* stack);
  * @note - 动态增长模式的栈可重复使用，但固定大小模式的栈不可以
  */
 void hm_stack_free(hm_stack* stack);
-```
-
-- **小功能**
-```c
-#define hm_stack_size(s) ((s)->top)
-#define hm_stack_capacity(s) ((s)->capacity)
 ```
 
 ## 提示

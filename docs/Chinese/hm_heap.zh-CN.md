@@ -12,7 +12,15 @@
 - 支持通过传入的数组构建堆。
 
 ## 函数
-- **初始化**
+
+### **小功能**
+```c
+#define hm_heap_size(s) ((s)->size)
+#define hm_heap_capacity(s) ((s)->capacity)
+```
+
+
+### **初始化**
 ```c
 /**
  * 初始化堆（固定大小模式）
@@ -35,7 +43,7 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cm
 hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp);
 ```
 
-- **插入**
+### **插入**
 ```c
 /**
  * 向堆中插入一个值
@@ -46,7 +54,7 @@ hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_f
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
-- **取出与查看**
+### **取出与查看**
 ```c
 /**
  * 从堆中取出一个值
@@ -61,7 +69,7 @@ void* hm_heap_extract(hm_heap* heap);
 void* hm_heap_peek(hm_heap* heap);
 ```
 
-- **判断**
+### **判断**
 ```c
 /**
  * 检查堆是否已满
@@ -74,7 +82,7 @@ bool hm_heap_is_full(hm_heap* heap);
 bool hm_heap_is_empty(hm_heap* heap);
 ```
 
-- **构建**
+### **构建**
 ```c
 /**
  * 通过传入的值数组和相关参数构建堆（固定大小模式）
@@ -96,7 +104,7 @@ hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, 
 void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
 ```
 
-- **清空与释放**
+### **清空与释放**
 ```c
 /**
  * 清空堆
@@ -109,12 +117,6 @@ void hm_heap_clear(hm_heap* heap);
  * @note - 动态增长模式的堆可重复使用，而固定大小模式的堆不可以
  */
 void hm_heap_free(hm_heap* heap);
-```
-
-- **小功能**
-```c
-#define hm_heap_size(s) ((s)->size)
-#define hm_heap_capacity(s) ((s)->capacity)
 ```
 
 ## 提示

@@ -10,7 +10,15 @@
 - 支持动态增长和固定大小两种模式。
 
 ## 函数
-- **初始化**
+
+### **小功能**
+```c
+#define hm_queue_size(s) ((s)->size)
+#define hm_queue_capacity(s) ((s)->capacity)
+```
+
+
+### **初始化**
 ```c
 /**
  * 初始化队列（固定大小模式）
@@ -31,7 +39,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
 
-- **入队**
+### **入队**
 ```c
 /**
  * 将一个值入队
@@ -42,7 +50,7 @@ hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, 
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
-- **出队与查看**
+### **出队与查看**
 ```c
 /**
  * 从队列前端出队一个值
@@ -57,7 +65,7 @@ void* hm_queue_deq(hm_queue* queue);
 void* hm_queue_peek(hm_queue* queue);
 ```
 
-- **判断**
+### **判断**
 ```c
 /**
  * 检查队列是否已满
@@ -70,7 +78,7 @@ bool hm_queue_is_full(hm_queue* queue);
 bool hm_queue_is_empty(hm_queue* queue);
 ```
 
-- **清空与释放**
+### **清空与释放**
 ```c
 /**
  * 清空队列
@@ -83,12 +91,6 @@ void hm_queue_clear(hm_queue* queue);
  * @note - 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
  */
 void hm_queue_free(hm_queue* queue);
-```
-
-- **小功能**
-```c
-#define hm_queue_size(s) ((s)->size)
-#define hm_queue_capacity(s) ((s)->capacity)
 ```
 
 ## 提示

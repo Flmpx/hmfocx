@@ -8,7 +8,20 @@
 - You can pass a pointer to any value and key into this map
 - It provides basic map operations
 ## Functions
-- **Initialize**
+
+### **Small Functions**
+```c
+#define hm_map_size(l) ((l)->size)
+#define hm_map_len(l) ((l)->len)
+
+/**
+ * Get the load factor of the map 
+ * @note - Return a negative number when the length of the map is 0
+ */
+double hm_map_get_load_factor(hm_map* map);
+```
+
+### **Initialize**
 ```c
 /**
  * Initialize hm_map
@@ -20,7 +33,7 @@
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 ```
 
-- **Insert**
+### **Insert**
 ```c
 /**
  * Insert a key-value pair into the map
@@ -32,7 +45,7 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
 
-- **Get**
+### **Get**
 ```c
 /**
  * Get a pointer to the  entry in the map
@@ -41,7 +54,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 hm_entry* hm_map_get(hm_map* map, void* key);
 ```
 
-- **Del**
+### **Del**
 ```c
 /**
  * Delete the entry associated with the given key
@@ -50,7 +63,7 @@ hm_entry* hm_map_get(hm_map* map, void* key);
 hm_map_ret hm_map_del(hm_map* map, void* key);
 ```
 
-- **Shrink**
+### **Shrink**
 ```c
 /**
  * Shrink the length of map if possible
@@ -59,7 +72,7 @@ hm_map_ret hm_map_del(hm_map* map, void* key);
 hm_map_ret hm_map_shrink(hm_map* map);
 ```
 
-- **Iterator**
+### **Iterator**
 ```c
 /**
  * Initialize the iterator of map
@@ -79,7 +92,7 @@ bool hm_iter_map_has_next(hm_iter_map* iter);
 hm_entry* hm_iter_map_next(hm_iter_map* iter);
 ```
 
-- **Clear And Free**
+### **Clear And Free**
 ```c
 /**
  * Free the keys and values in map but keeps the buckets and buckets_status array existed
@@ -90,18 +103,6 @@ void hm_map_clear(hm_map* map);
  * Free all contents of the map
  */
 void hm_map_free(hm_map* map);
-```
-
-- **Small Functions**
-```c
-#define hm_map_size(l) ((l)->size)
-#define hm_map_len(l) ((l)->len)
-
-/**
- * Get the load factor of the map 
- * @note - Return a negative number when the length of the map is 0
- */
-double hm_map_get_load_factor(hm_map* map);
 ```
 
 ## Tips

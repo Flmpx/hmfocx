@@ -10,7 +10,14 @@
 - It supports `dynamic-growth` and `fixed-size` modes
 
 ## Functions
-- **Initialize**
+
+### **Small Functions**
+```c
+#define hm_queue_size(s) ((s)->size)
+#define hm_queue_capacity(s) ((s)->capacity)
+```
+
+### **Initialize**
 ```c
 /**
  * Initialize the queue(fixed-size queue)
@@ -33,7 +40,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
 
-- **Enqueue**
+### **Enqueue**
 ```c
 /**
  * Enqueue a value
@@ -44,7 +51,7 @@ hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, 
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
-- **Dequeue And Peek**
+### **Dequeue And Peek**
 ```c
 /**
  * Dequeue a value
@@ -59,7 +66,7 @@ void* hm_queue_deq(hm_queue* queue);
 void* hm_queue_peek(hm_queue* queue);
 ```
 
-- **Judge**
+### **Judge**
 ```c
 /**
  * Check if the queue is full
@@ -72,7 +79,7 @@ bool hm_queue_is_full(hm_queue* queue);
 bool hm_queue_is_empty(hm_queue* queue);
 ```
 
-- **Clear And Free**
+### **Clear And Free**
 ```c
 /**
  * Clear the queue 
@@ -85,12 +92,6 @@ void hm_queue_clear(hm_queue* queue);
  * @note - The queue can be reused when it is `dynamic-growth` but `fixed-size` cannot
  */
 void hm_queue_free(hm_queue* queue);
-```
-
-- **Small Functions**
-```c
-#define hm_queue_size(s) ((s)->size)
-#define hm_queue_capacity(s) ((s)->capacity)
 ```
 
 ## Tips
