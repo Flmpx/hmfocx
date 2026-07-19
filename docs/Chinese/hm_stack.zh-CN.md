@@ -18,6 +18,7 @@
 #define hm_stack_size(s) ((s)->top)
 #define hm_stack_capacity(s) ((s)->capacity)
 ```
+<br><br>
 
 ### **初始化**
 ```c
@@ -39,6 +40,33 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
  */
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
+<details>
+<summary style="color:yellow">Try: 初始化</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_stack stack;
+    // 固定大小模式
+    hm_stack_init(&stack, capacity, free);
+    hm_stack_free(&stack);
+    
+    // 动态增长模式
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    hm_stack_free(&stack);
+
+    return 0;
+}
+```
+</details>
+<br><br>
+
 
 ### **入栈**
 ```c
@@ -65,6 +93,60 @@ void* hm_stack_pop(hm_stack* stack);
  */
 void* hm_stack_peek(hm_stack* stack);
 ```
+</details>
+
+
+<details>
+<summary style="color:yellow">Try: 入栈 & 查看 & 出栈</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // 固定大小模式
+    hm_stack_init(&stack, capacity, free);
+    
+    // 入栈
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+    
+    // 查看
+    int* val = hm_stack_peek(&stack);
+    printf("%d\n", *val);
+
+    // 出栈
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_stack_pop(&stack);
+        printf("%d ", *v);
+        free(v);
+    }
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+19
+19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+```
+</details>
+
+</details>
+<br><br>
+
 
 ### **判断**
 ```c
@@ -78,6 +160,56 @@ bool hm_stack_is_full(hm_stack* stack);
  */
 bool hm_stack_is_empty(hm_stack* stack);
 ```
+<details>
+<summary style="color:yellow">Try: 判断</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // 固定大小模式
+    hm_stack_init(&stack, capacity, free);
+    
+    if (hm_stack_is_empty(&stack)) {
+        printf("stack is empty\n");
+    }
+
+    // 入栈
+    int i = 0;
+    while (!hm_stack_is_full(&stack)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+        i++;
+    }
+
+    if (hm_stack_is_full(&stack)) {
+        printf("stack is full\n");
+    }
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+stack is empty
+stack is full
+```
+</details>
+
+</details>
+<br><br>
+
 
 ### **清空与释放**
 ```c
@@ -93,5 +225,86 @@ void hm_stack_clear(hm_stack* stack);
  */
 void hm_stack_free(hm_stack* stack);
 ```
+<details>
+<summary style="color:yellow">Try: 清空</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_stack_status(hm_stack* stack) {
+    // 打印栈的 size 和 capacity
+    printf("size: %-3d, capacity: %-3d\n", hm_stack_size(stack), hm_stack_capacity(stack));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // 固定大小模式
+    hm_stack_init(&stack, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+    print_stack_status(&stack);
+    
+    // 清空
+    hm_stack_clear(&stack);
+    
+    print_stack_status(&stack);
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
+```
+</details>
+
+</details>
+
+
+<details>
+<summary style="color:yellow">Try: 释放</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // 固定大小模式
+    hm_stack_init(&stack, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+
+    // 在使用完栈后必须释放掉
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+</details>
+<br><br>
+
 
 ## 提示

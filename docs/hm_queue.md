@@ -16,6 +16,7 @@
 #define hm_queue_size(s) ((s)->size)
 #define hm_queue_capacity(s) ((s)->capacity)
 ```
+<br><br>
 
 ### **Initialize**
 ```c
@@ -39,6 +40,35 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
  */
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
+<details>
+<summary style="color:yellow">Try: init</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_queue queue;
+    // fixed-size
+    hm_queue_init(&queue, capacity, free);
+    hm_queue_free(&queue);
+    
+    // dynamic-grow
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    hm_queue_free(&queue);
+
+    return 0;
+}
+```
+
+
+</details>
+<br><br>
+
 
 ### **Enqueue**
 ```c
@@ -65,6 +95,56 @@ void* hm_queue_deq(hm_queue* queue);
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: enqueue & peek & dequeue</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // fixed-size
+    hm_queue_init(&queue, capacity, free);
+    
+    // enqueue
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+    
+    // peek
+    int* val = hm_queue_peek(&queue);
+    printf("%d\n", *val);
+
+    // dequeue
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_queue_deq(&queue);
+        printf("%d ", *v);
+        free(v);
+    }
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">Run Result</summary>
+
+```txt
+0
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+```
+</details>
+
+</details>
+<br><br>
 
 ### **Judge**
 ```c
@@ -78,6 +158,56 @@ bool hm_queue_is_full(hm_queue* queue);
  */
 bool hm_queue_is_empty(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: judge</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // fixed-size
+    hm_queue_init(&queue, capacity, free);
+    
+    if (hm_queue_is_empty(&queue)) {
+        printf("queue is empty\n");
+    }
+
+    // enqueue
+    int i = 0;
+    while (!hm_queue_is_full(&queue)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+        i++;
+    }
+
+    if (hm_queue_is_full(&queue)) {
+        printf("queue is full\n");
+    }
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">Run Result</summary>
+
+```txt
+queue is empty
+queue is full
+```
+</details>
+
+</details>
+<br><br>
+
 
 ### **Clear And Free**
 ```c
@@ -93,5 +223,86 @@ void hm_queue_clear(hm_queue* queue);
  */
 void hm_queue_free(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: clear</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_queue_status(hm_queue* queue) {
+    // print size and capacity of queue
+    printf("size: %-3d, capacity: %-3d\n", hm_queue_size(queue), hm_queue_capacity(queue));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // fixed-size
+    hm_queue_init(&queue, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+    print_queue_status(&queue);
+    
+    // clear
+    hm_queue_clear(&queue);
+    
+    print_queue_status(&queue);
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">Run Result</summary>
+
+```txt
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
+```
+</details>
+
+</details>
+
+
+<details>
+<summary style="color:yellow">Try: free</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // fixed-size
+    hm_queue_init(&queue, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    // queue must be freed after use
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+</details>
+<br><br>
+
 
 ## Tips

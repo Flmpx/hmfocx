@@ -16,6 +16,7 @@
 #define hm_queue_size(s) ((s)->size)
 #define hm_queue_capacity(s) ((s)->capacity)
 ```
+<br><br>
 
 
 ### **初始化**
@@ -38,6 +39,35 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
  */
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
+<details>
+<summary style="color:yellow">Try: 初始化</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_queue queue;
+    // 固定大小模式
+    hm_queue_init(&queue, capacity, free);
+    hm_queue_free(&queue);
+    
+    // 动态增长模式
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    hm_queue_free(&queue);
+
+    return 0;
+}
+```
+
+
+</details>
+<br><br>
+
 
 ### **入队**
 ```c
@@ -64,6 +94,57 @@ void* hm_queue_deq(hm_queue* queue);
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: 入队 & 查看 & 出队</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // 国定大小模式
+    hm_queue_init(&queue, capacity, free);
+    
+    // 入队
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+    
+    // 查看
+    int* val = hm_queue_peek(&queue);
+    printf("%d\n", *val);
+
+    // 出队
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_queue_deq(&queue);
+        printf("%d ", *v);
+        free(v);
+    }
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+0
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+```
+</details>
+
+</details>
+<br><br>
+
 
 ### **判断**
 ```c
@@ -77,6 +158,56 @@ bool hm_queue_is_full(hm_queue* queue);
  */
 bool hm_queue_is_empty(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: judge</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // 固定大小模式
+    hm_queue_init(&queue, capacity, free);
+    
+    if (hm_queue_is_empty(&queue)) {
+        printf("queue is empty\n");
+    }
+
+    // 入队
+    int i = 0;
+    while (!hm_queue_is_full(&queue)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+        i++;
+    }
+
+    if (hm_queue_is_full(&queue)) {
+        printf("queue is full\n");
+    }
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+queue is empty
+queue is full
+```
+</details>
+
+</details>
+<br><br>
+
 
 ### **清空与释放**
 ```c
@@ -92,5 +223,86 @@ void hm_queue_clear(hm_queue* queue);
  */
 void hm_queue_free(hm_queue* queue);
 ```
+<details>
+<summary style="color:yellow">Try: 清空</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_queue_status(hm_queue* queue) {
+    // 打印队列的 size 和capacity
+    printf("size: %-3d, capacity: %-3d\n", hm_queue_size(queue), hm_queue_capacity(queue));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // 固定大小模式
+    hm_queue_init(&queue, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+    print_queue_status(&queue);
+    
+    // 清空
+    hm_queue_clear(&queue);
+    
+    print_queue_status(&queue);
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary style="color:red">运行结果</summary>
+
+```txt
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
+```
+</details>
+
+</details>
+
+
+<details>
+<summary style="color:yellow">Try: 释放</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_queue queue;
+    // 固定大小模式
+    hm_queue_init(&queue, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    // 在使用完队列后必须释放掉
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+</details>
+<br><br>
+
 
 ## 提示
