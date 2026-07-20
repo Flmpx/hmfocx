@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.28.3)
 
 project(hmfocx)
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-file(GLOB SRC_LIST ${CMAKE_SOURCE_DIR}/src/*.c)
-
-include_directories(${CMAKE_SOURCE_DIR}/include)
+file(GLOB SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
 
 add_library(hmfocx STATIC ${SRC_LIST})
+
+target_include_directories(hmfocx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 option(BUILD_TESTS "Build test programs" OFF)
 
