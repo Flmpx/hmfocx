@@ -4,12 +4,35 @@
     English | <a href = "./Chinese/hm_stack.zh-CN.md">简体中文</a>
 </p>
 
+
+
+
+## Navigation
+- [Introduction](#intro)
+- [Functions](#func)
+    - [Small Functions](#smallfunc)
+    - [Initialize](#init)
+    - [Push](#push)
+    - [Pop And Peek](#poppeek)
+    - [Judge](#judge)
+    - [Clear And Free](#clearfree)
+- [Tips](#tip)
+
+
+<a id = "intro"></a>
+
 ## Introduction
 - You can pass a pointer to any value into this stack
 - It provides basic stack operations
 - It supports `dynamic-growth` and `fixed-size` modes
 
+
+<a id = "func"></a>
+
 ## Functions
+
+
+<a id = "smallfunc"></a>
 
 > **Small Functions**
 ```c
@@ -17,6 +40,9 @@
 #define hm_stack_capacity(s) ((s)->capacity)
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **Initialize**
 ```c
@@ -68,6 +94,9 @@ int main()
 <br><br><br>
 
 
+
+<a id = "push"></a>
+
 > **Push**
 ```c
 /**
@@ -78,6 +107,9 @@ int main()
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
+
+
+<a id = "poppeek"></a>
 
 > **Pop And Peek**
 ```c
@@ -149,6 +181,10 @@ int main()
 
 
 
+
+
+<a id = "judge"></a>
+
 > **Judge**
 ```c
 /**
@@ -211,6 +247,9 @@ stack is full
 </details>
 <br><br><br>
 
+
+
+<a id = "clearfree"></a>
 
 > **Clear And Free**
 ```c
@@ -307,5 +346,8 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "tip"></a>
 
 ## Tips

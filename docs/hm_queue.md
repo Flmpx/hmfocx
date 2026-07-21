@@ -4,12 +4,35 @@
     English | <a href = "./Chinese/hm_queue.zh-CN.md">简体中文</a>
 </p>
 
+
+
+## Navigation
+- [Introduction](#intro)
+- [Functions](#func)
+    - [Small Functions](#smallfunc)
+    - [Initialize](#init)
+    - [Enqueue](#enq)
+    - [Dequeue And Peek](#deqpeek)
+    - [Judge](#judge)
+    - [Clear And Free](#clearfree)
+- [Tips](#tip)
+
+
+
+<a id = "intro"></a>
+
 ## Introduction
 - You can pass a pointer to any value into this queue
 - It provides basic queue operations
 - It supports `dynamic-growth` and `fixed-size` modes
 
+
+<a id = "func"></a>
+
 ## Functions
+
+
+<a id = "smallfunc"></a>
 
 > **Small Functions**
 ```c
@@ -17,6 +40,9 @@
 #define hm_queue_capacity(s) ((s)->capacity)
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **Initialize**
 ```c
@@ -70,6 +96,9 @@ int main()
 <br><br><br>
 
 
+
+<a id = "enq"></a>
+
 > **Enqueue**
 ```c
 /**
@@ -80,6 +109,9 @@ int main()
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
+
+
+<a id = "deqpeek"></a>
 
 > **Dequeue And Peek**
 ```c
@@ -146,6 +178,11 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+<a id = "judge"></a>
+
 > **Judge**
 ```c
 /**
@@ -208,6 +245,9 @@ queue is full
 </details>
 <br><br><br>
 
+
+
+<a id = "clearfree"></a>
 
 > **Clear And Free**
 ```c
@@ -304,5 +344,9 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+<a id = "tip"></a>
 
 ## Tips

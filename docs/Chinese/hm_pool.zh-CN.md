@@ -4,12 +4,31 @@
     <a href = "../hm_pool.md">English</a> | 简体中文
 </p>
 
+## 导航
+- [介绍](#intro)
+- [函数](#func)
+    - [小功能](#smallfunc)
+    - [初始化](#init)
+    - [分配](#allocate)
+    - [释放](#free)
+- [提示](#tip)
+
+
+
+<a id = "intro"></a>
+
 ## 介绍
 
 - 你可以从该内存池中获取固定大小的内存块。
 - 它提供基本的固定大小块内存池操作。
 
+
+<a id = "func"></a>
+
 ## 函数
+
+
+<a id = "smallfunc"></a>
 
 > **小功能**
 ```c
@@ -24,6 +43,9 @@ size_t hm_pool_get_pages(hm_pool* pool);
 size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **初始化**
 ```c
@@ -57,6 +79,9 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "allocate"></a>
 
 > **分配**
 ```c
@@ -110,6 +135,9 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "free"></a>
 
 > **释放**
 ```c
@@ -195,5 +223,8 @@ int main()
 <br><br><br>
 
 
+
+
+<a id = "tip"></a>
 
 ## 提示

@@ -4,12 +4,35 @@
     <a href = "../hm_queue.md">English</a> | 简体中文
 </p>
 
+
+
+
+## 导航
+- [介绍](#intro)
+- [函数](#func)
+    - [小功能](#smallfunc)
+    - [初始化](#init)
+    - [入队](#enq)
+    - [出队与查看](#deqpeek)
+    - [判断](#judge)
+    - [清空与释放](#clearfree)
+- [提示](#tip)
+
+
+<a id = "intro"></a>
+
 ## 介绍
 - 你可以向此队列传递任意值的指针。
 - 它提供基本的队列操作。
 - 支持动态增长和固定大小两种模式。
 
+
+<a id = "func"></a>
+
 ## 函数
+
+
+<a id = "smallfunc"></a>
 
 > **小功能**
 ```c
@@ -18,6 +41,9 @@
 ```
 <br><br><br>
 
+
+
+<a id = "init"></a>
 
 > **初始化**
 ```c
@@ -69,6 +95,9 @@ int main()
 <br><br><br>
 
 
+
+<a id = "enq"></a>
+
 > **入队**
 ```c
 /**
@@ -79,6 +108,9 @@ int main()
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
+
+
+<a id = "deqpeek"></a>
 
 > **出队与查看**
 ```c
@@ -146,6 +178,9 @@ int main()
 <br><br><br>
 
 
+
+<a id = "judge"></a>
+
 > **判断**
 ```c
 /**
@@ -208,6 +243,8 @@ queue is full
 </details>
 <br><br><br>
 
+
+<a id = "clearfree"></a>
 
 > **清空与释放**
 ```c
@@ -304,5 +341,8 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "tip"></a>
 
 ## 提示

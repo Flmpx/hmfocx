@@ -4,12 +4,34 @@
     <a href = "../hm_map.md">English</a> | 简体中文
 </p>
 
+
+## 导航
+- [介绍](#intro)
+- [函数](#func)
+    - [小功能](#smallfunc)
+    - [初始化](#init)
+    - [插入](#insert)
+    - [获取](#get)
+    - [迭代器](#iter)
+    - [删除](#del)
+    - [收缩](#shrink)
+    - [清空与释放](#clearfree)
+- [提示](#tip)
+
+<a id = "intro"></a>
+
 ## 介绍
 
 - 你可以向此散列表传递任意值和键的指针。
 - 它提供基本的散列表操作。
 
+
+<a id = "func"></a>
+
 ## 函数
+
+
+<a id = "smallfunc"></a>
 
 > **小功能**
 ```c
@@ -23,6 +45,9 @@
 double hm_map_get_load_factor(hm_map* map)
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **初始化**
 ```c
@@ -69,6 +94,8 @@ int main()
 <br><br><br>
 
 
+<a id = "insert"></a>
+
 > **插入**
 ```c
 /**
@@ -80,6 +107,9 @@ int main()
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
+
+
+<a id = "get"></a>
 
 > **获取**
 ```c
@@ -185,6 +215,8 @@ int main()
 <br><br><br>
 
 
+<a id = "del"></a>
+
 > **删除**
 ```c
 /**
@@ -283,6 +315,8 @@ int main()
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
 
 > **收缩**
 ```c
@@ -385,6 +419,8 @@ int main()
 </details>
 <br><br><br>
 
+
+<a id = "iter"></a>
 
 > **迭代器**
 ```c
@@ -501,6 +537,10 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+<a id = "clearfree"></a>
 
 > **清空与释放**
 ```c
@@ -654,6 +694,8 @@ int main()
 <br><br><br>
 
 
+
+<a id = "tip"></a>
 
 ## 提示
 

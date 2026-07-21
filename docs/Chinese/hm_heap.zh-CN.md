@@ -4,6 +4,22 @@
     <a href = "../hm_heap.md">English</a> | 简体中文
 </p>
 
+
+## 导航
+- [介绍](#intro)
+- [函数](#func)
+    - [小功能](#smallfunc)
+    - [初始化](#init)
+    - [插入](#insert)
+    - [取出和查看](#extractpeek)
+    - [判断](#judge)
+    - [构建](#build)
+    - [清空与释放](#clearfree)
+- [提示](#tip)
+
+
+<a id = "intro"></a>
+
 ## 介绍
 - 你可以向此堆传递任意值的指针。
 - 它提供基本的堆操作。
@@ -11,7 +27,13 @@
 - 支持通过自定义 `cmp` 函数进行排序。
 - 支持通过传入的数组构建堆。
 
+
+<a id = "func"></a>
+
 ## 函数
+
+
+<a id = "smallfunc"></a>
 
 > **小功能**
 ```c
@@ -19,6 +41,9 @@
 #define hm_heap_capacity(s) ((s)->capacity)
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **初始化**
 ```c
@@ -77,6 +102,10 @@ int main()
 <br><br><br>
 
 
+
+
+<a id = "insert"></a>
+
 > **插入**
 ```c
 /**
@@ -87,6 +116,9 @@ int main()
  */
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
+
+
+<a id = "extractpeek"></a>
 
 > **取出与查看**
 ```c
@@ -169,6 +201,8 @@ int main()
 
 
 
+<a id = "judge"></a>
+
 > **判断**
 ```c
 /**
@@ -238,6 +272,8 @@ heap is full
 <br><br><br>
 
 
+
+<a id = "build"></a>
 
 > **构建**
 ```c
@@ -404,6 +440,8 @@ int main()
 <br><br><br>
 
 
+<a id = "clearfree"></a>
+
 > **清空与释放**
 ```c
 /**
@@ -510,5 +548,7 @@ int main()
 </details>
 <br><br><br>
 
+
+<a id = "tip"></a>
 
 ## 提示

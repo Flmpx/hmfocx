@@ -5,13 +5,35 @@
 </p>
 
 
+
+## 导航
+- [介绍](#intro)
+- [函数](#func)
+    - [小功能](#smallfunc)
+    - [初始化](#init)
+    - [入栈](#push)
+    - [出栈与查看](#poppeek)
+    - [判断](#judge)
+    - [清空与释放](#clearfree)
+- [提示](#tip)
+
+
+
+<a id = "intro"></a>
+
 ## 介绍
 - 你可以向此栈传递任意值的指针。
 - 它提供基本的栈操作。
 - 支持动态增长和固定大小两种模式。
 
+
+
+<a id = "func"></a>
+
 ## 函数
 
+
+<a id = "smallfunc"></a>
 
 > **小功能**
 ```c
@@ -19,6 +41,9 @@
 #define hm_stack_capacity(s) ((s)->capacity)
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **初始化**
 ```c
@@ -68,6 +93,8 @@ int main()
 <br><br><br>
 
 
+<a id = "push"></a>
+
 > **入栈**
 ```c
 /**
@@ -78,6 +105,9 @@ int main()
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
+
+
+<a id = "poppeek"></a>
 
 > **出栈与查看**
 ```c
@@ -148,6 +178,8 @@ int main()
 <br><br><br>
 
 
+<a id = "judge"></a>
+
 > **判断**
 ```c
 /**
@@ -210,6 +242,9 @@ stack is full
 </details>
 <br><br><br>
 
+
+
+<a id = "clearfree"></a>
 
 > **清空与释放**
 ```c
@@ -306,5 +341,7 @@ int main()
 </details>
 <br><br><br>
 
+
+<a id = "tip"></a>
 
 ## 提示

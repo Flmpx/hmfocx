@@ -4,23 +4,48 @@
     English | <a href = "./Chinese/hm_heap.zh-CN.md">简体中文</a>
 </p>
 
+## Navigation
+- [Introduction](#intro)
+- [Functions](#func)
+    - [Small Functions](#smallfunc)
+    - [Initialize](#init)
+    - [Insert](#insert)
+    - [Extract And Peek](#extractpeek)
+    - [Judge](#judge)
+    - [Build](#build)
+    - [Clear And Free](#clearfree)
+- [Tips](#tip)
+
+
+<a id = "intro"></a>
+
 ## Introduction
+
 - You can pass a pointer to any value into this heap
 - It provides basic heap operations
 - It supports `dynamic-growth` and `fixed-size` modes
 - It supports sort by your `cmp` function
 - It supports build by your vals array
 
+<a id = "func"></a>
+
 ## Functions
 
+
+<a id = "smallfunc"></a>
+
 > **Small Functions**
+
 ```c
 #define hm_heap_size(s) ((s)->size)
 #define hm_heap_capacity(s) ((s)->capacity)
 ```
 <br><br><br>
 
+<a id = "init"></a>
+
 > **Initialize**
+
 ```c
 /**
  * Initialize the heap(fixed-size heap)
@@ -79,7 +104,10 @@ int main()
 <br><br><br>
 
 
+<a id = "insert"></a>
+
 > **Insert**
+
 ```c
 /**
  * Insert a value in the heap
@@ -90,7 +118,10 @@ int main()
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
+<a id = "extractpeek"></a>
+
 > **Extract And Peek**
+
 ```c
 /**
  * Extract a value 
@@ -170,7 +201,10 @@ int main()
 <br><br><br>
 
 
+<a id = "judge"></a>
+
 > **Judge**
+
 ```c
 /**
  * Check if the heap is full
@@ -239,7 +273,10 @@ heap is full
 <br><br><br>
 
 
+<a id = "build"></a>
+
 > **Build**
+
 ```c
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
@@ -404,7 +441,10 @@ int main()
 <br><br><br>
 
 
+<a id = "clearfree"></a>
+
 > **Clear And Free**
+
 ```c
 /**
  * Clear the heap 
@@ -511,5 +551,7 @@ int main()
 <br><br><br>
 
 
+
+<a id = "tip"></a>
 
 ## Tips

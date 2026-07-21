@@ -4,10 +4,34 @@
     English | <a href = "./Chinese/hm_map.zh-CN.md">简体中文</a>
 </p>
 
+
+## Navigation
+- [Introduction](#intro)
+- [Functions](#func)
+    - [Small Functions](#smallfunc)
+    - [Initialize](#init)
+    - [Insert](#insert)
+    - [Get](#get)
+    - [Iterator](#iter)
+    - [Del](#del)
+    - [Shrink](#shrink)
+    - [Clear And Free](#clearfree)
+- [Tips](#tip)
+
+
+<a id = "intro"></a>
+
 ## Introduction
 - You can pass a pointer to any value and key into this map
 - It provides basic map operations
+
+
+<a id = "func"></a>
+
 ## Functions
+
+
+<a id = "smallfunc"></a>
 
 > **Small Functions**
 ```c
@@ -21,6 +45,9 @@
 double hm_map_get_load_factor(hm_map* map);
 ```
 <br><br><br>
+
+
+<a id = "init"></a>
 
 > **Initialize**
 ```c
@@ -69,6 +96,9 @@ int main()
 <br><br><br>
 
 
+
+<a id = "insert"></a>
+
 > **Insert**
 ```c
 /**
@@ -80,6 +110,10 @@ int main()
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
+
+
+
+<a id = "get"></a>
 
 > **Get**
 ```c
@@ -185,6 +219,8 @@ int main()
 <br><br><br>
 
 
+<a id = "del"></a>
+
 > **Del**
 ```c
 /**
@@ -283,6 +319,10 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+<a id = "shrink"></a>
 
 > **Shrink**
 ```c
@@ -385,6 +425,11 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+
+<a id = "iter"></a>
 
 > **Iterator**
 ```c
@@ -502,6 +547,10 @@ int main()
 </details>
 <br><br><br>
 
+
+
+
+<a id = "clearfree"></a>
 
 > **Clear And Free**
 ```c
@@ -654,6 +703,9 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "tip"></a>
 
 ## Tips
 
