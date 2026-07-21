@@ -16,6 +16,7 @@
     - [Free](#free)
     - [Sort](#sort)
 - [Tips](#tip)
+- [Other Containers](#othercontainer)
 
 
 <a id = "intro"></a>
@@ -587,3 +588,22 @@ int main()
 ## Tips
 
 - **Do not modify the list (del, insert, free, or sort) while iterating over it**
+
+
+
+
+
+
+<a id = "othercontainer"></a>
+
+## Other Containers
+
+1. [hm_map](hm_map.md)
+
+2. [hm_pool](hm_pool.md)
+
+3. [hm_stack](hm_stack.md)
+
+4. [hm_queue](hm_queue.md)
+
+5. [hm_heap](hm_heap.md)

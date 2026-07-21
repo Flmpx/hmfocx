@@ -17,6 +17,7 @@
     - [Shrink](#shrink)
     - [Clear And Free](#clearfree)
 - [Tips](#tip)
+- [Other Containers](#othercontainer)
 
 
 <a id = "intro"></a>
@@ -710,3 +711,21 @@ int main()
 ## Tips
 
 - **Do not modify the map(del, insert, clear, or free) while iterating over it**
+
+
+
+
+
+<a id = "othercontainer"></a>
+
+## Other Containers
+
+1. [hm_list](hm_list.md)
+
+2. [hm_pool](hm_pool.md)
+
+3. [hm_stack](hm_stack.md)
+
+4. [hm_queue](hm_queue.md)
+
+5. [hm_heap](hm_heap.md)

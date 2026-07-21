@@ -14,6 +14,7 @@
     - [Allocate](#allocate)
     - [Free](#free)
 - [Tips](#tip)
+- [Other Containers](#othercontainer)
 
 
 <a id = "intro"></a>
@@ -230,3 +231,22 @@ int main()
 <a id = "tip"></a>
 
 ## Tips
+
+
+
+
+
+
+<a id = "othercontainer"></a>
+
+## Other Containers
+
+1. [hm_list](hm_list.md)
+
+2. [hm_map](hm_map.md)
+
+3. [hm_stack](hm_stack.md)
+
+4. [hm_queue](hm_queue.md)
+
+5. [hm_heap](hm_heap.md)
