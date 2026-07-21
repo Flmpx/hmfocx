@@ -11,14 +11,14 @@
 
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 #define hm_stack_size(s) ((s)->top)
 #define hm_stack_capacity(s) ((s)->capacity)
 ```
-<br><br>
+<br><br><br>
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize the stack(fixed-size stack)
@@ -41,7 +41,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: init</summary>
+<summary>try: init</summary>
 
 ```c
 #include <hm_stack.h>
@@ -65,10 +65,10 @@ int main()
 }
 ```
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Push**
+> **Push**
 ```c
 /**
  * Push a value to the stack
@@ -79,7 +79,7 @@ int main()
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
-### **Pop And Peek**
+> **Pop And Peek**
 ```c
 /**
  * Pop a value from the stack
@@ -97,7 +97,7 @@ void* hm_stack_peek(hm_stack* stack);
 
 
 <details>
-<summary style="color:yellow">Try: push & peek & pop</summary>
+<summary>try: push & peek & pop</summary>
 
 ```c
 #include <hm_stack.h>
@@ -136,7 +136,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 19
@@ -145,11 +145,11 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
 
-### **Judge**
+> **Judge**
 ```c
 /**
  * Check if the stack is full
@@ -162,7 +162,7 @@ bool hm_stack_is_full(hm_stack* stack);
 bool hm_stack_is_empty(hm_stack* stack);
 ```
 <details>
-<summary style="color:yellow">Try: judge</summary>
+<summary>try: judge</summary>
 
 ```c
 #include <hm_stack.h>
@@ -200,7 +200,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 stack is empty
@@ -209,10 +209,10 @@ stack is full
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Clear And Free**
+> **Clear And Free**
 ```c
 /**
  * Clear the stack 
@@ -227,7 +227,7 @@ void hm_stack_clear(hm_stack* stack);
 void hm_stack_free(hm_stack* stack);
 ```
 <details>
-<summary style="color:yellow">Try: clear</summary>
+<summary>try: clear</summary>
 
 ```c
 #include <hm_stack.h>
@@ -265,7 +265,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 size: 20 , capacity: 20 
@@ -277,7 +277,7 @@ size: 0  , capacity: 20
 
 
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_stack.h>
@@ -305,7 +305,7 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
 ## Tips

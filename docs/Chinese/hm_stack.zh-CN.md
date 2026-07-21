@@ -13,14 +13,14 @@
 ## 函数
 
 
-### **小功能**
+> **小功能**
 ```c
 #define hm_stack_size(s) ((s)->top)
 #define hm_stack_capacity(s) ((s)->capacity)
 ```
-<br><br>
+<br><br><br>
 
-### **初始化**
+> **初始化**
 ```c
 /**
  * 初始化栈（固定大小模式）
@@ -41,7 +41,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: 初始化</summary>
+<summary>try: 初始化</summary>
 
 ```c
 #include <hm_stack.h>
@@ -65,10 +65,10 @@ int main()
 }
 ```
 </details>
-<br><br>
+<br><br><br>
 
 
-### **入栈**
+> **入栈**
 ```c
 /**
  * 将一个值压入栈
@@ -79,7 +79,7 @@ int main()
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
-### **出栈与查看**
+> **出栈与查看**
 ```c
 /**
  * 从栈中弹出一个值
@@ -97,7 +97,7 @@ void* hm_stack_peek(hm_stack* stack);
 
 
 <details>
-<summary style="color:yellow">Try: 入栈 & 查看 & 出栈</summary>
+<summary>try: 入栈 & 查看 & 出栈</summary>
 
 ```c
 #include <hm_stack.h>
@@ -136,7 +136,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 19
@@ -145,10 +145,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **判断**
+> **判断**
 ```c
 /**
  * 检查栈是否已满
@@ -161,7 +161,7 @@ bool hm_stack_is_full(hm_stack* stack);
 bool hm_stack_is_empty(hm_stack* stack);
 ```
 <details>
-<summary style="color:yellow">Try: 判断</summary>
+<summary>try: 判断</summary>
 
 ```c
 #include <hm_stack.h>
@@ -199,7 +199,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 stack is empty
@@ -208,10 +208,10 @@ stack is full
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **清空与释放**
+> **清空与释放**
 ```c
 /**
  * 清空栈
@@ -226,7 +226,7 @@ void hm_stack_clear(hm_stack* stack);
 void hm_stack_free(hm_stack* stack);
 ```
 <details>
-<summary style="color:yellow">Try: 清空</summary>
+<summary>try: 清空</summary>
 
 ```c
 #include <hm_stack.h>
@@ -264,7 +264,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 size: 20 , capacity: 20 
@@ -276,7 +276,7 @@ size: 0  , capacity: 20
 
 
 <details>
-<summary style="color:yellow">Try: 释放</summary>
+<summary>try: 释放</summary>
 
 ```c
 #include <hm_stack.h>
@@ -304,7 +304,7 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
 ## 提示

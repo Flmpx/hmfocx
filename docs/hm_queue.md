@@ -11,14 +11,14 @@
 
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 #define hm_queue_size(s) ((s)->size)
 #define hm_queue_capacity(s) ((s)->capacity)
 ```
-<br><br>
+<br><br><br>
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize the queue(fixed-size queue)
@@ -41,7 +41,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: init</summary>
+<summary>try: init</summary>
 
 ```c
 #include <hm_queue.h>
@@ -67,10 +67,10 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Enqueue**
+> **Enqueue**
 ```c
 /**
  * Enqueue a value
@@ -81,7 +81,7 @@ int main()
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
-### **Dequeue And Peek**
+> **Dequeue And Peek**
 ```c
 /**
  * Dequeue a value
@@ -96,7 +96,7 @@ void* hm_queue_deq(hm_queue* queue);
 void* hm_queue_peek(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: enqueue & peek & dequeue</summary>
+<summary>try: enqueue & peek & dequeue</summary>
 
 ```c
 #include <hm_queue.h>
@@ -135,7 +135,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 0
@@ -144,9 +144,9 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
-### **Judge**
+> **Judge**
 ```c
 /**
  * Check if the queue is full
@@ -159,7 +159,7 @@ bool hm_queue_is_full(hm_queue* queue);
 bool hm_queue_is_empty(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: judge</summary>
+<summary>try: judge</summary>
 
 ```c
 #include <hm_queue.h>
@@ -197,7 +197,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 queue is empty
@@ -206,10 +206,10 @@ queue is full
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Clear And Free**
+> **Clear And Free**
 ```c
 /**
  * Clear the queue 
@@ -224,7 +224,7 @@ void hm_queue_clear(hm_queue* queue);
 void hm_queue_free(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: clear</summary>
+<summary>try: clear</summary>
 
 ```c
 #include <hm_queue.h>
@@ -262,7 +262,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 size: 20 , capacity: 20 
@@ -274,7 +274,7 @@ size: 0  , capacity: 20
 
 
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_queue.h>
@@ -302,7 +302,7 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
 ## Tips

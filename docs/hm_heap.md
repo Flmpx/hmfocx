@@ -13,14 +13,14 @@
 
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 #define hm_heap_size(s) ((s)->size)
 #define hm_heap_capacity(s) ((s)->capacity)
 ```
-<br><br>
+<br><br><br>
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize the heap(fixed-size heap)
@@ -45,7 +45,7 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cm
 hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp);
 ```
 <details>
-<summary style="color:yellow">Try: init</summary>
+<summary>try: init</summary>
 
 ```c
 #include <hm_heap.h>
@@ -76,10 +76,10 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Insert**
+> **Insert**
 ```c
 /**
  * Insert a value in the heap
@@ -90,7 +90,7 @@ int main()
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
-### **Extract And Peek**
+> **Extract And Peek**
 ```c
 /**
  * Extract a value 
@@ -105,7 +105,7 @@ void* hm_heap_extract(hm_heap* heap);
 void* hm_heap_peek(hm_heap* heap);
 ```
 <details>
-<summary style="color:yellow">Try: insert & peek & extract</summary>
+<summary>try: insert & peek & extract</summary>
 
 ```c
 #include <hm_heap.h>
@@ -157,7 +157,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 11517 31859 16191 3650 6711 3535 9555 7633 30056 28891 26505 14682 
@@ -167,10 +167,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Judge**
+> **Judge**
 ```c
 /**
  * Check if the heap is full
@@ -183,7 +183,7 @@ bool hm_heap_is_full(hm_heap* heap);
 bool hm_heap_is_empty(hm_heap* heap);
 ```
 <details>
-<summary style="color:yellow">Try: judge</summary>
+<summary>try: judge</summary>
 
 ```c
 #include <hm_heap.h>
@@ -227,7 +227,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 heap is empty
@@ -236,10 +236,10 @@ heap is full
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Build**
+> **Build**
 ```c
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
@@ -261,7 +261,7 @@ hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, 
 void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
 ```
 <details>
-<summary style="color:yellow">Try: build</summary>
+<summary>try: build</summary>
 
 ```c
 #include <hm_heap.h>
@@ -308,7 +308,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 30800 4587 5285 22596 15026 6520 294 15244 32703 16870 21601 17036 
@@ -320,7 +320,7 @@ int main()
 
 
 <details>
-<summary style="color:yellow">Try: rebuild</summary>
+<summary>try: rebuild</summary>
 
 ```c
 #include <hm_heap.h>
@@ -391,7 +391,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 30800 4587 5285 22596 15026 6520 294 15244 32703 16870 21601 17036 
@@ -401,10 +401,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Clear And Free**
+> **Clear And Free**
 ```c
 /**
  * Clear the heap 
@@ -419,7 +419,7 @@ void hm_heap_clear(hm_heap* heap);
 void hm_heap_free(hm_heap* heap);
 ```
 <details>
-<summary style="color:yellow">Try: clear</summary>
+<summary>try: clear</summary>
 
 ```c
 #include <hm_heap.h>
@@ -463,7 +463,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 size: 20 , capacity: 20 
@@ -474,7 +474,7 @@ size: 0  , capacity: 20
 </details>
 
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_heap.h>
@@ -508,7 +508,7 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
 

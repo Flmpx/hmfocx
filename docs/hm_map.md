@@ -9,7 +9,7 @@
 - It provides basic map operations
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 #define hm_map_size(l) ((l)->size)
 #define hm_map_len(l) ((l)->len)
@@ -20,9 +20,9 @@
  */
 double hm_map_get_load_factor(hm_map* map);
 ```
-<br><br>
+<br><br><br>
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize hm_map
@@ -34,7 +34,7 @@ double hm_map_get_load_factor(hm_map* map);
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 ```
 <details>
-<summary style="color:yellow">Try: init</summary>
+<summary>try: init</summary>
 
 ```c
 #include <hm_map.h>
@@ -66,10 +66,10 @@ int main()
 }
 ```
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Insert**
+> **Insert**
 ```c
 /**
  * Insert a key-value pair into the map
@@ -81,7 +81,7 @@ int main()
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
 
-### **Get**
+> **Get**
 ```c
 /**
  * Get a pointer to the  entry in the map
@@ -90,7 +90,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 hm_entry* hm_map_get(hm_map* map, void* key);
 ```
 <details>
-<summary style="color:yellow">Try: insert & get</summary>
+<summary>try: insert & get</summary>
 
 ```c
 #include <hm_map.h>
@@ -159,7 +159,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 | k: 0, v: xl
@@ -182,10 +182,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Del**
+> **Del**
 ```c
 /**
  * Delete the entry associated with the given key
@@ -194,7 +194,7 @@ int main()
 hm_map_ret hm_map_del(hm_map* map, void* key);
 ```
 <details>
-<summary style="color:yellow">Try: del</summary>
+<summary>try: del</summary>
 
 ```c
 #include <hm_map.h>
@@ -261,7 +261,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 | k: 0, v: xl
@@ -281,10 +281,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Shrink**
+> **Shrink**
 ```c
 /**
  * Shrink the length of map if possible
@@ -293,7 +293,7 @@ int main()
 hm_map_ret hm_map_shrink(hm_map* map);
 ```
 <details>
-<summary style="color:yellow">Try: shrink</summary>
+<summary>try: shrink</summary>
 
 ```c
 #include <hm_map.h>
@@ -367,7 +367,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 | size: 7000  len: 10949, load factor: 0.639328
@@ -383,10 +383,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Iterator**
+> **Iterator**
 ```c
 /**
  * Initialize the iterator of map
@@ -406,7 +406,7 @@ bool hm_iter_map_has_next(hm_iter_map* iter);
 hm_entry* hm_iter_map_next(hm_iter_map* iter);
 ```
 <details>
-<summary style="color:yellow">Try: iter</summary>
+<summary>try: iter</summary>
 
 ```c
 #include <hm_map.h>
@@ -475,7 +475,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 | k: 0, v: xl
@@ -500,10 +500,10 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Clear And Free**
+> **Clear And Free**
 ```c
 /**
  * Free the keys and values in map but keeps the buckets and buckets_status array existed
@@ -516,7 +516,7 @@ void hm_map_clear(hm_map* map);
 void hm_map_free(hm_map* map);
 ```
 <details>
-<summary style="color:yellow">Try: clear</summary>
+<summary>try: clear</summary>
 
 ```c
 #include <hm_map.h>
@@ -585,7 +585,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 | k: 0, v: xl
@@ -605,7 +605,7 @@ int main()
 </details>
 
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_map.h>
@@ -652,7 +652,7 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
 ## Tips

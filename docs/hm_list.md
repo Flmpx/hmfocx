@@ -10,14 +10,14 @@
 
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 #define hm_list_size(l) ((l)->size)
 ```
-<br><br>
+<br><br><br>
 
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize a list
@@ -28,7 +28,7 @@
 void hm_list_init(hm_list* list, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: init </summary>
+<summary>try: init </summary>
 
 ```c
 #include <hm_list.h>
@@ -45,10 +45,10 @@ int main()
 }
 ```
 </details>  
-<br><br>
+<br><br><br>
 
 
-### **Insert**
+> **Insert**
 ```c
 /**
  * Insert a value at the head of the list
@@ -73,7 +73,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 ```
 
-### **Get**
+> **Get**
 ```c
 /**
  * Get a pointer to the value at the given `index`
@@ -83,7 +83,7 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 void* hm_list_get(hm_list* list, size_t index);
 ```
 <details>
-<summary style="color:yellow">Try: insert & get</summary>
+<summary>try: insert & get</summary>
 
 ```c
 #include <hm_list.h>
@@ -136,7 +136,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 9 8 7 6 5 4 3 2 1 0 
@@ -146,9 +146,9 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
-### **Del**
+> **Del**
 ```c
 /**
  * Delete the Node at the head of the list
@@ -172,7 +172,7 @@ hm_list_ret hm_list_del_tail(hm_list* list);
 hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 ```
 <details>
-<summary style="color:yellow">Try: del</summary>
+<summary>try: del</summary>
 
 ```c
 #include <hm_list.h>
@@ -228,7 +228,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -239,9 +239,9 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
-### **Iterator**
+> **Iterator**
 ```c
 
 // These functions will be remove
@@ -308,7 +308,7 @@ void hm_iter_list_move_next(hm_iter_list* iter);
 void hm_iter_list_move_prev(hm_iter_list* iter);
 ```
 <details>
-<summary style="color:yellow">Try: iter  [old]</summary>
+<summary>try: iter  [old]</summary>
 
 ```c
 #include <hm_list.h>
@@ -344,7 +344,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -354,7 +354,7 @@ int main()
 </details>
 
 <details>
-<summary style="color:yellow">Try: iter  [new]</summary>
+<summary>try: iter  [new]</summary>
 
 ```c
 #include <hm_list.h>
@@ -414,7 +414,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -424,10 +424,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Free**
+> **Free**
 ```c
 /**
  * Free a list
@@ -437,7 +437,7 @@ int main()
 void hm_list_free(hm_list* list);
 ```
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_list.h>
@@ -465,10 +465,10 @@ int main()
 }
 ```
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Sort**
+> **Sort**
 ```c
 /**
  * Sort list
@@ -477,7 +477,7 @@ int main()
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```
 <details>
-<summary style="color:yellow">Try: sort</summary>
+<summary>try: sort</summary>
 
 ```c
 #include <hm_list.h>
@@ -531,7 +531,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 11517 31859 16191 3650 6711 3535 9555 7633 30056 28891 
@@ -540,7 +540,7 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 ## Tips
 

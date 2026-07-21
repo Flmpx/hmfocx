@@ -12,14 +12,14 @@
 
 ## 函数
 
-### **小功能**
+> **小功能**
 ```c
 #define hm_list_size(l) ((l)->size)
 ```
-<br><br>
+<br><br><br>
 
 
-### **初始化**
+> **初始化**
 ```c
 /**
  * 初始化一个链表
@@ -29,7 +29,7 @@
 void hm_list_init(hm_list* list, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: 初始化 </summary>
+<summary>try: 初始化 </summary>
 
 ```c
 #include <hm_list.h>
@@ -46,10 +46,10 @@ int main()
 }
 ```
 </details>  
-<br><br>
+<br><br><br>
 
 
-### **插入**
+> **插入**
 ```c
 /**
  * 在链表头部插入值
@@ -72,7 +72,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 ```
 
-### **获取**
+> **获取**
 ```c
 /**
  * 根据索引获取值的指针
@@ -81,7 +81,7 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 void* hm_list_get(hm_list* list, size_t index);
 ```
 <details>
-<summary style="color:yellow">Try: 插入 & 获取</summary>
+<summary>try: 插入 & 获取</summary>
 
 ```c
 #include <hm_list.h>
@@ -134,7 +134,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 9 8 7 6 5 4 3 2 1 0 
@@ -144,10 +144,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **删除**
+> **删除**
 ```c
 /**
  * 删除链表头节点
@@ -169,7 +169,7 @@ hm_list_ret hm_list_del_tail(hm_list* list);
 hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 ```
 <details>
-<summary style="color:yellow">Try: 删除</summary>
+<summary>try: 删除</summary>
 
 ```c
 #include <hm_list.h>
@@ -225,7 +225,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -236,10 +236,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **迭代器**
+> **迭代器**
 ```c
 // 这些函数将会被移除
 
@@ -304,7 +304,7 @@ void hm_iter_list_move_next(hm_iter_list* iter);
 void hm_iter_list_move_prev(hm_iter_list* iter);
 ```
 <details>
-<summary style="color:yellow">Try: 迭代器  [旧]</summary>
+<summary>try: 迭代器  [旧]</summary>
 
 ```c
 #include <hm_list.h>
@@ -340,7 +340,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -350,7 +350,7 @@ int main()
 </details>
 
 <details>
-<summary style="color:yellow">Try: 迭代器  [新]</summary>
+<summary>try: 迭代器  [新]</summary>
 
 ```c
 #include <hm_list.h>
@@ -410,7 +410,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
@@ -420,10 +420,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **释放**
+> **释放**
 ```c
 /**
  * 释放链表
@@ -432,7 +432,7 @@ int main()
 void hm_list_free(hm_list* list);
 ```
 <details>
-<summary style="color:yellow">Try: free</summary>
+<summary>try: free</summary>
 
 ```c
 #include <hm_list.h>
@@ -460,10 +460,10 @@ int main()
 }
 ```
 </details>
-<br><br>
+<br><br><br>
 
 
-### **排序**
+> **排序**
 ```c
 /**
  * 对链表排序
@@ -472,7 +472,7 @@ int main()
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```
 <details>
-<summary style="color:yellow">Try: 排序</summary>
+<summary>try: 排序</summary>
 
 ```c
 #include <hm_list.h>
@@ -526,7 +526,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 11517 31859 16191 3650 6711 3535 9555 7633 30056 28891 
@@ -535,7 +535,7 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 ## 提示
 

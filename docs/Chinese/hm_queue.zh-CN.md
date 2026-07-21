@@ -11,15 +11,15 @@
 
 ## 函数
 
-### **小功能**
+> **小功能**
 ```c
 #define hm_queue_size(s) ((s)->size)
 #define hm_queue_capacity(s) ((s)->capacity)
 ```
-<br><br>
+<br><br><br>
 
 
-### **初始化**
+> **初始化**
 ```c
 /**
  * 初始化队列（固定大小模式）
@@ -40,7 +40,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
 ```
 <details>
-<summary style="color:yellow">Try: 初始化</summary>
+<summary>try: 初始化</summary>
 
 ```c
 #include <hm_queue.h>
@@ -66,10 +66,10 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **入队**
+> **入队**
 ```c
 /**
  * 将一个值入队
@@ -80,7 +80,7 @@ int main()
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
-### **出队与查看**
+> **出队与查看**
 ```c
 /**
  * 从队列前端出队一个值
@@ -95,7 +95,7 @@ void* hm_queue_deq(hm_queue* queue);
 void* hm_queue_peek(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: 入队 & 查看 & 出队</summary>
+<summary>try: 入队 & 查看 & 出队</summary>
 
 ```c
 #include <hm_queue.h>
@@ -134,7 +134,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 0
@@ -143,10 +143,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **判断**
+> **判断**
 ```c
 /**
  * 检查队列是否已满
@@ -159,7 +159,7 @@ bool hm_queue_is_full(hm_queue* queue);
 bool hm_queue_is_empty(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: judge</summary>
+<summary>try: judge</summary>
 
 ```c
 #include <hm_queue.h>
@@ -197,7 +197,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 queue is empty
@@ -206,10 +206,10 @@ queue is full
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **清空与释放**
+> **清空与释放**
 ```c
 /**
  * 清空队列
@@ -224,7 +224,7 @@ void hm_queue_clear(hm_queue* queue);
 void hm_queue_free(hm_queue* queue);
 ```
 <details>
-<summary style="color:yellow">Try: 清空</summary>
+<summary>try: 清空</summary>
 
 ```c
 #include <hm_queue.h>
@@ -262,7 +262,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">运行结果</summary>
+<summary>运行结果</summary>
 
 ```txt
 size: 20 , capacity: 20 
@@ -274,7 +274,7 @@ size: 0  , capacity: 20
 
 
 <details>
-<summary style="color:yellow">Try: 释放</summary>
+<summary>try: 释放</summary>
 
 ```c
 #include <hm_queue.h>
@@ -302,7 +302,7 @@ int main()
 ```
 
 </details>
-<br><br>
+<br><br><br>
 
 
 ## 提示

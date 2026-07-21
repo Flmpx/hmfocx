@@ -10,7 +10,7 @@
 
 ## Functions
 
-### **Small Functions**
+> **Small Functions**
 ```c
 /**
  * Get the number of pages in the given memory pool
@@ -24,9 +24,9 @@ size_t hm_pool_get_pages(hm_pool* pool);
  */
 size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```
-<br><br>
+<br><br><br>
 
-### **Initialize**
+> **Initialize**
 ```c
 /**
  * Initialize the memory pool 
@@ -35,7 +35,7 @@ size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
 <details>
-<summary style="color:yellow">Try: init</summary>
+<summary>try: init</summary>
 
 ```c
 #include <hm_pool.h>
@@ -56,10 +56,10 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Allocate**
+> **Allocate**
 ```c
 /**
  * Get pointer of to block
@@ -69,7 +69,7 @@ int main()
 void* hm_pool_block_allocate(hm_pool* pool);
 ```
 <details>
-<summary style="color:yellow">Try: allocate</summary>
+<summary>try: allocate</summary>
 
 ```c
 #include <hm_pool.h>
@@ -101,7 +101,7 @@ int main()
 ```
 
 <details>
-<summary style="color:red">Run Result</summary>
+<summary>run result</summary>
 
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99  
@@ -109,10 +109,10 @@ int main()
 </details>
 
 </details>
-<br><br>
+<br><br><br>
 
 
-### **Free**
+> **Free**
 ```c
 /**
  * Free a block
@@ -127,7 +127,7 @@ void hm_pool_block_free(hm_pool* pool, void* block);
 void hm_pool_free(hm_pool* pool);
 ```
 <details>
-<summary style="color:yellow">Try: free block</summary>
+<summary>try: free block</summary>
 
 ```c
 #include <hm_pool.h>
@@ -162,7 +162,7 @@ int main()
 
 
 <details>
-<summary style="color:yellow">Try: free pool</summary>
+<summary>try: free pool</summary>
 
 ```c
 #include <hm_pool.h>
@@ -193,7 +193,7 @@ int main()
 
 
 </details>
-<br><br>
+<br><br><br>
 
 
 
