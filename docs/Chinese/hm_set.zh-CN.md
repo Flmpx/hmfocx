@@ -51,8 +51,9 @@
 
 5. [hm_queue](hm_queue.zh-CN.md)
 
-6. [hm_heap](hm_queue.zh-CN.md)
+6. [hm_heap](hm_heap.zh-CN.md)
 
+7. hm_set
 
 
 

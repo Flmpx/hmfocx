@@ -48,6 +48,8 @@
 
 6. [hm_heap](hm_heap.md)
 
+7. hm_set
+
 
 
 <br><br><br>

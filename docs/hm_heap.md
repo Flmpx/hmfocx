@@ -608,7 +608,7 @@ int main()
 
 6. hm_heap
 
-6. [hm_set](hm_set.md)
+7. [hm_set](hm_set.md)
 
 
 
