@@ -1,16 +1,54 @@
+<a id = "head"></a>
 # The detailed information about `hm_stack`
 
 <p align = "center">
     English | <a href = "./Chinese/hm_stack.zh-CN.md">简体中文</a>
 </p>
 
+
+
+
+## Navigation
+- [Introduction](#intro)
+- [Functions](#func)
+    - [Small Functions](#smallfunc)
+    - [Initialize](#init)
+    - [Push](#push)
+    - [Pop](#pop)
+    - [Peek](#peek)
+    - [Judge](#judge)
+    - [Clear](#clear)
+    - [Free](#free)
+- [Tips](#tip)
+- [Other Containers](#othercontainer)
+
+
+<a id = "intro"></a>
+
 ## Introduction
 - You can pass a pointer to any value into this stack
 - It provides basic stack operations
 - It supports `dynamic-growth` and `fixed-size` modes
 
+
+<a id = "func"></a>
+
 ## Functions
-- **Initialize**
+
+
+<a id = "smallfunc"></a>
+
+> **Small Functions**
+```c
+#define hm_stack_size(s) ((s)->top)
+#define hm_stack_capacity(s) ((s)->capacity)
+```
+<br><br><br>
+
+
+<a id = "init"></a>
+
+> **Initialize**
 ```c
 /**
  * Initialize the stack(fixed-size stack)
@@ -32,8 +70,38 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
  */
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
+<details>
+<summary>try: init</summary>
 
-- **Push**
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_stack stack;
+    // fixed-size
+    hm_stack_init(&stack, capacity, free);
+    hm_stack_free(&stack);
+    
+    // dynamic-grow
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    hm_stack_free(&stack);
+
+    return 0;
+}
+```
+</details>
+<br><br><br>
+
+
+
+<a id = "push"></a>
+
+> **Push**
 ```c
 /**
  * Push a value to the stack
@@ -44,14 +112,24 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
-- **Pop And Peek**
+
+<a id = "pop"></a>
+
+> **Pop**
 ```c
 /**
  * Pop a value from the stack
  * @note - Return `NULL` when the stack is empty
  */
 void* hm_stack_pop(hm_stack* stack);
+```
+</details>
 
+
+<a id = "peek"></a>
+
+> **Peek**
+```c
 /**
  * Peek a value from the stack
  * @note - Return `NULL` when the stack is empty 
@@ -59,7 +137,65 @@ void* hm_stack_pop(hm_stack* stack);
 void* hm_stack_peek(hm_stack* stack);
 ```
 
-- **Judge**
+
+<details>
+<summary>try: push & peek & pop</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // fixed-size
+    hm_stack_init(&stack, capacity, free);
+    
+    // push
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+    
+    // peek
+    int* val = hm_stack_peek(&stack);
+    printf("%d\n", *val);
+
+    // pop
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_stack_pop(&stack);
+        printf("%d ", *v);
+        free(v);
+    }
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+19
+19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+```
+</details>
+
+</details>
+<br><br><br>
+
+
+
+
+
+<a id = "judge"></a>
+
+> **Judge**
 ```c
 /**
  * Check if the stack is full
@@ -71,15 +207,122 @@ bool hm_stack_is_full(hm_stack* stack);
  */
 bool hm_stack_is_empty(hm_stack* stack);
 ```
+<details>
+<summary>try: judge</summary>
 
-- **Clear And Free**
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // fixed-size
+    hm_stack_init(&stack, capacity, free);
+    
+    if (hm_stack_is_empty(&stack)) {
+        printf("stack is empty\n");
+    }
+
+    // push
+    int i = 0;
+    while (!hm_stack_is_full(&stack)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+        i++;
+    }
+
+    if (hm_stack_is_full(&stack)) {
+        printf("stack is full\n");
+    }
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+stack is empty
+stack is full
+```
+</details>
+
+</details>
+<br><br><br>
+
+
+
+<a id = "clear"></a>
+
+> **Clear**
 ```c
 /**
  * Clear the stack 
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack);
+```
+<details>
+<summary>try: clear</summary>
 
+```c
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_stack_status(hm_stack* stack) {
+    // print size and capacity of stack
+    printf("size: %-3d, capacity: %-3d\n", hm_stack_size(stack), hm_stack_capacity(stack));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // fixed-size
+    hm_stack_init(&stack, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+    print_stack_status(&stack);
+    
+    // clear
+    hm_stack_clear(&stack);
+    
+    print_stack_status(&stack);
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
+```
+</details>
+
+</details>
+<br><br><br>
+
+<a id = "free"></a>
+
+> **Free**
+```c
 /**
  * Free all contents of the stack
  * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
@@ -87,10 +330,65 @@ void hm_stack_clear(hm_stack* stack);
 void hm_stack_free(hm_stack* stack);
 ```
 
-- **Small Functions**
+<details>
+<summary>try: free</summary>
+
 ```c
-#define hm_stack_size(s) ((s)->top)
-#define hm_stack_capacity(s) ((s)->capacity)
+#include <hm_stack.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_stack stack;
+    // fixed-size
+    hm_stack_init(&stack, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+
+    // stack must be freed after use
+    hm_stack_free(&stack);
+    return 0;
+}
 ```
 
+</details>
+<br><br><br>
+
+
+
+<a id = "tip"></a>
+
 ## Tips
+
+
+
+
+
+
+<a id = "othercontainer"></a>
+
+## Other Containers
+
+1. [hm_list](hm_list.md)
+
+2. [hm_map](hm_map.md)
+
+3. [hm_pool](hm_pool.md)
+
+4. [hm_queue](hm_queue.md)
+
+5. [hm_heap](hm_heap.md)
+
+
+
+<br><br><br>
+<div align = "right">
+    <a href="#head">↑ Top</a>
+</div>
