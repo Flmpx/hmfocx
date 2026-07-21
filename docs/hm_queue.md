@@ -13,9 +13,11 @@
     - [Small Functions](#smallfunc)
     - [Initialize](#init)
     - [Enqueue](#enq)
-    - [Dequeue And Peek](#deqpeek)
+    - [Dequeue](#deq)
+    - [Peek](#peek)
     - [Judge](#judge)
-    - [Clear And Free](#clearfree)
+    - [Clear](#clear)
+    - [Free](#free)
 - [Tips](#tip)
 - [Other Containers](#othercontainer)
 
@@ -113,22 +115,29 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
 
-<a id = "deqpeek"></a>
+<a id = "deq"></a>
 
-> **Dequeue And Peek**
+> **Dequeue**
 ```c
 /**
  * Dequeue a value
  * @note - Return `NULL` when the queue is empty
  */
 void* hm_queue_deq(hm_queue* queue);
+```
 
+<a id = "peek"></a>
+
+> **Peek**
+```c
 /**
  * Peek a value
  * @note - Return `NULL` when the queue is empty 
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
+
+
 <details>
 <summary>try: enqueue & peek & dequeue</summary>
 
@@ -249,21 +258,15 @@ queue is full
 
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **Clear And Free**
+> **Clear**
 ```c
 /**
  * Clear the queue 
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_queue_clear(hm_queue* queue);
-
-/**
- * Free all contents of the queue
- * @note - The queue can be reused when it is `dynamic-growth` but `fixed-size` cannot
- */
-void hm_queue_free(hm_queue* queue);
 ```
 <details>
 <summary>try: clear</summary>
@@ -313,6 +316,18 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
+
+<a id = "free"></a>
+
+> **Free**
+```c
+/**
+ * Free all contents of the queue
+ * @note - The queue can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ */
+void hm_queue_free(hm_queue* queue);
+```
 
 
 <details>

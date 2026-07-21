@@ -14,9 +14,11 @@
     - [小功能](#smallfunc)
     - [初始化](#init)
     - [入队](#enq)
-    - [出队与查看](#deqpeek)
+    - [出队](#deq)
+    - [查看](#peek)
     - [判断](#judge)
-    - [清空与释放](#clearfree)
+    - [清空](#clear)
+    - [释放](#free)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -112,22 +114,28 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
 
 
-<a id = "deqpeek"></a>
+<a id = "deq"></a>
 
-> **出队与查看**
+> **出队**
 ```c
 /**
  * 从队列前端出队一个值
  * @note - 队列为空时返回 `NULL`
  */
 void* hm_queue_deq(hm_queue* queue);
+```
 
+<a id = "peek"></a>
+
+> **查看**
+```c
 /**
  * 查看队列前端的值
  * @note - 队列为空时返回 `NULL`
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
+
 <details>
 <summary>try: 入队 & 查看 & 出队</summary>
 
@@ -246,21 +254,15 @@ queue is full
 <br><br><br>
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **清空与释放**
+> **清空**
 ```c
 /**
  * 清空队列
  * @note - 仅释放值（如果可以），内部数组仍然保留
  */
 void hm_queue_clear(hm_queue* queue);
-
-/**
- * 释放队列的所有内容
- * @note - 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
- */
-void hm_queue_free(hm_queue* queue);
 ```
 <details>
 <summary>try: 清空</summary>
@@ -310,10 +312,25 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
+
+
+<a id = "free"></a>
+
+> **释放**
+```c
+/**
+ * 释放队列的所有内容
+ * @note - 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
+ */
+void hm_queue_free(hm_queue* queue);
+```
 
 
 <details>
 <summary>try: 释放</summary>
+
+
 
 ```c
 #include <hm_queue.h>

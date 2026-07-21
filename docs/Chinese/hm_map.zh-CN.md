@@ -16,7 +16,8 @@
     - [迭代器](#iter)
     - [删除](#del)
     - [收缩](#shrink)
-    - [清空与释放](#clearfree)
+    - [清空](#clear)
+    - [释放](#free)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -542,19 +543,14 @@ int main()
 
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **清空与释放**
+> **清空**
 ```c
 /**
  * 释放散列表中的键和值，但保留桶和状态标志数组
  */
 void hm_map_clear(hm_map* map);
-
-/**
- * 释放散列表的所有内容
- */
-void hm_map_free(hm_map* map);
 ```
 <details>
 <summary>try: 清空</summary>
@@ -644,6 +640,17 @@ int main()
 </details>
 
 </details>
+<br><br><br>
+
+<a id = "free"></a>
+
+> **释放**
+```c
+/**
+ * 释放散列表的所有内容
+ */
+void hm_map_free(hm_map* map);
+```
 
 <details>
 <summary>try: 释放</summary>

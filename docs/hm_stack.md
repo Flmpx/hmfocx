@@ -14,9 +14,11 @@
     - [Small Functions](#smallfunc)
     - [Initialize](#init)
     - [Push](#push)
-    - [Pop And Peek](#poppeek)
+    - [Pop](#pop)
+    - [Peek](#peek)
     - [Judge](#judge)
-    - [Clear And Free](#clearfree)
+    - [Clear](#clear)
+    - [Free](#free)
 - [Tips](#tip)
 - [Other Containers](#othercontainer)
 
@@ -111,23 +113,29 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
 
-<a id = "poppeek"></a>
+<a id = "pop"></a>
 
-> **Pop And Peek**
+> **Pop**
 ```c
 /**
  * Pop a value from the stack
  * @note - Return `NULL` when the stack is empty
  */
 void* hm_stack_pop(hm_stack* stack);
+```
+</details>
 
+
+<a id = "peek"></a>
+
+> **Peek**
+```c
 /**
  * Peek a value from the stack
  * @note - Return `NULL` when the stack is empty 
  */
 void* hm_stack_peek(hm_stack* stack);
 ```
-</details>
 
 
 <details>
@@ -251,21 +259,15 @@ stack is full
 
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **Clear And Free**
+> **Clear**
 ```c
 /**
  * Clear the stack 
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack);
-
-/**
- * Free all contents of the stack
- * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
- */
-void hm_stack_free(hm_stack* stack);
 ```
 <details>
 <summary>try: clear</summary>
@@ -315,7 +317,18 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
 
+<a id = "free"></a>
+
+> **Free**
+```c
+/**
+ * Free all contents of the stack
+ * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ */
+void hm_stack_free(hm_stack* stack);
+```
 
 <details>
 <summary>try: free</summary>

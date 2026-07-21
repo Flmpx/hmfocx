@@ -13,7 +13,8 @@
     - [Small Functions](#smallfunc)
     - [Initialize](#init)
     - [Allocate](#allocate)
-    - [Free](#free)
+    - [Free Block](#freeblock)
+    - [Free Pool](#freepool)
 - [Tips](#tip)
 - [Other Containers](#othercontainer)
 
@@ -142,21 +143,15 @@ int main()
 
 
 
-<a id = "free"></a>
+<a id = "freeblock"></a>
 
-> **Free**
+> **Free Block**
 ```c
 /**
  * Free a block
  * @note - The pointer of block must match the memory pool
  */
 void hm_pool_block_free(hm_pool* pool, void* block);
-
-/**
- * Free all content of the memory pool
- * @note Do not use blocks from a freed memory pool
- */
-void hm_pool_free(hm_pool* pool);
 ```
 <details>
 <summary>try: free block</summary>
@@ -191,7 +186,18 @@ int main()
 }
 ```
 </details>
+<br><br><br>
 
+<a id = "freepool"></a>
+
+> **Free Pool**
+```c
+/**
+ * Free all content of the memory pool
+ * @note Do not use blocks from a freed memory pool
+ */
+void hm_pool_free(hm_pool* pool);
+```
 
 <details>
 <summary>try: free pool</summary>

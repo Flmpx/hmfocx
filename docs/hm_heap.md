@@ -11,10 +11,13 @@
     - [Small Functions](#smallfunc)
     - [Initialize](#init)
     - [Insert](#insert)
-    - [Extract And Peek](#extractpeek)
+    - [Extract](#extract)
+    - [Peek](#peek)
     - [Judge](#judge)
     - [Build](#build)
-    - [Clear And Free](#clearfree)
+    - [Rebuild](#rebuild)
+    - [Clear](#clear)
+    - [Free](#free)
 - [Tips](#tip)
 - [Other Containers](#othercontainer)
 
@@ -121,9 +124,9 @@ int main()
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
-<a id = "extractpeek"></a>
+<a id = "extract"></a>
 
-> **Extract And Peek**
+> **Extract**
 
 ```c
 /**
@@ -131,13 +134,21 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
  * @note - Return `NULL` when the heap is empty
  */
 void* hm_heap_extract(hm_heap* heap);
+```
 
+<a id = "peek"></a>
+
+> **Peek**
+
+```c
 /**
  * Peek a value
  * @note - Return `NULL` when the heap is empty 
  */
 void* hm_heap_peek(hm_heap* heap);
 ```
+
+
 <details>
 <summary>try: insert & peek & extract</summary>
 
@@ -294,11 +305,6 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
  * @note - Return `hm_heap_ret_warn` when `size > capacity`
  */
 hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
-
-/**
- * Rebuild heap by the new cmp function
- */
-void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
 ```
 <details>
 <summary>try: build</summary>
@@ -357,6 +363,20 @@ int main()
 </details>
 
 </details>
+<br><br><br>
+
+
+
+<a id = "rebuild"></a>
+
+> **Rebuild**
+
+```c
+/**
+ * Rebuild heap by the new cmp function
+ */
+void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
+```
 
 
 <details>
@@ -444,9 +464,9 @@ int main()
 <br><br><br>
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **Clear And Free**
+> **Clear**
 
 ```c
 /**
@@ -454,12 +474,6 @@ int main()
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_heap_clear(hm_heap* heap);
-
-/**
- * Free all contents of the heap
- * @note - The heap can be reused when it is `dynamic-growth` but `fixed-size` cannot
- */
-void hm_heap_free(hm_heap* heap);
 ```
 <details>
 <summary>try: clear</summary>
@@ -515,6 +529,20 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
+
+
+<a id = "free"></a>
+
+> **Free**
+
+```c
+/**
+ * Free all contents of the heap
+ * @note - The heap can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ */
+void hm_heap_free(hm_heap* heap);
+```
 
 <details>
 <summary>try: free</summary>

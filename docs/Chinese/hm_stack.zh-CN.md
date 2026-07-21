@@ -13,9 +13,11 @@
     - [小功能](#smallfunc)
     - [初始化](#init)
     - [入栈](#push)
-    - [出栈与查看](#poppeek)
+    - [出栈](#pop)
+    - [查看](#peek)
     - [判断](#judge)
-    - [清空与释放](#clearfree)
+    - [清空](#clear)
+    - [释放](#free)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -109,23 +111,28 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
 
 
-<a id = "poppeek"></a>
+<a id = "pop"></a>
 
-> **出栈与查看**
+> **出栈**
 ```c
 /**
  * 从栈中弹出一个值
  * @note - 栈为空时返回 `NULL`
  */
 void* hm_stack_pop(hm_stack* stack);
+```
+</details>
 
+<a id = "peek"></a>
+
+> **查看**
+```c
 /**
  * 查看栈顶的值
  * @note - 栈为空时返回 `NULL`
  */
 void* hm_stack_peek(hm_stack* stack);
 ```
-</details>
 
 
 <details>
@@ -246,21 +253,15 @@ stack is full
 
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **清空与释放**
+> **清空**
 ```c
 /**
  * 清空栈
  * @note - 仅释放值（如果可以），内部数组仍然保留
  */
 void hm_stack_clear(hm_stack* stack);
-
-/**
- * 释放栈的所有内容
- * @note - 动态增长模式的栈可重复使用，但固定大小模式的栈不可以
- */
-void hm_stack_free(hm_stack* stack);
 ```
 <details>
 <summary>try: 清空</summary>
@@ -310,7 +311,18 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
 
+<a id = "free"></a>
+
+> **释放**
+```c
+/**
+ * 释放栈的所有内容
+ * @note - 动态增长模式的栈可重复使用，但固定大小模式的栈不可以
+ */
+void hm_stack_free(hm_stack* stack);
+```
 
 <details>
 <summary>try: 释放</summary>

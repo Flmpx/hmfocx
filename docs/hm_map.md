@@ -16,7 +16,8 @@
     - [Iterator](#iter)
     - [Del](#del)
     - [Shrink](#shrink)
-    - [Clear And Free](#clearfree)
+    - [Clear](#clear)
+    - [Free](#free)
 - [Tips](#tip)
 - [Other Containers](#othercontainer)
 
@@ -552,22 +553,20 @@ int main()
 
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **Clear And Free**
+> **Clear**
 ```c
 /**
  * Free the keys and values in map but keeps the buckets and buckets_status array existed
  */
 void hm_map_clear(hm_map* map);
-
-/**
- * Free all contents of the map
- */
-void hm_map_free(hm_map* map);
 ```
 <details>
 <summary>try: clear</summary>
+<br><br><br>
+
+
 
 ```c
 #include <hm_map.h>
@@ -654,6 +653,19 @@ int main()
 </details>
 
 </details>
+<br><br><br>
+
+
+
+<a id = "free"></a>
+
+> **Free**
+```c
+/**
+ * Free all contents of the map
+ */
+void hm_map_free(hm_map* map);
+```
 
 <details>
 <summary>try: free</summary>

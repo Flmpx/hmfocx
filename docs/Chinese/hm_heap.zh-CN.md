@@ -12,10 +12,13 @@
     - [小功能](#smallfunc)
     - [初始化](#init)
     - [插入](#insert)
-    - [取出和查看](#extractpeek)
+    - [取出](#extract)
+    - [查看](#peek)
     - [判断](#judge)
     - [构建](#build)
-    - [清空与释放](#clearfree)
+    - [重建](#rebuild)
+    - [清空](#clear)
+    - [释放](#free)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -120,22 +123,28 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
 
 
-<a id = "extractpeek"></a>
+<a id = "extract"></a>
 
-> **取出与查看**
+> **取出**
 ```c
 /**
  * 从堆中取出一个值
  * @note - 堆为空时返回 NULL
  */
 void* hm_heap_extract(hm_heap* heap);
+```
 
+<a id = "peek"></a>
+
+> **查看**
+```c
 /**
  * 查看堆顶的值
  * @note - 堆为空时返回 NULL
  */
 void* hm_heap_peek(hm_heap* heap);
 ```
+
 <details>
 <summary>try: 插入 & 查看 & 取出</summary>
 
@@ -292,11 +301,6 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
  * @note - 当 `size > capacity` 返回 `hm_heap_ret_warn` 
  */
 hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
-
-/**
- * 使用新的 cmp 函数重建堆
- */
-void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
 ```
 <details>
 <summary>try: 构建</summary>
@@ -355,7 +359,17 @@ int main()
 </details>
 
 </details>
+<br><br><br>
 
+<a id = "rebuild"></a>
+
+> **重建**
+```c
+/**
+ * 使用新的 cmp 函数重建堆
+ */
+void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
+```
 
 <details>
 <summary>try: 重建</summary>
@@ -442,21 +456,15 @@ int main()
 <br><br><br>
 
 
-<a id = "clearfree"></a>
+<a id = "clear"></a>
 
-> **清空与释放**
+> **清空**
 ```c
 /**
  * 清空堆
  * @note - 仅释放值（如果可以），内部数组仍然保留
  */
 void hm_heap_clear(hm_heap* heap);
-
-/**
- * 释放堆的所有内容
- * @note - 动态增长模式的堆可重复使用，而固定大小模式的堆不可以
- */
-void hm_heap_free(hm_heap* heap);
 ```
 <details>
 <summary>try: 清空</summary>
@@ -512,6 +520,20 @@ size: 0  , capacity: 20
 </details>
 
 </details>
+<br><br><br>
+
+
+<a id = "free"></a>
+
+> **释放**
+```c
+/**
+ * 释放堆的所有内容
+ * @note - 动态增长模式的堆可重复使用，而固定大小模式的堆不可以
+ */
+void hm_heap_free(hm_heap* heap);
+```
+
 
 <details>
 <summary>try: 释放</summary>

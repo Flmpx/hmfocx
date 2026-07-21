@@ -11,7 +11,8 @@
     - [小功能](#smallfunc)
     - [初始化](#init)
     - [分配](#allocate)
-    - [释放](#free)
+    - [释放块内存](#freeblock)
+    - [释放池](#freepool)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -139,21 +140,15 @@ int main()
 
 
 
-<a id = "free"></a>
+<a id = "freeblock"></a>
 
-> **释放**
+> **释放块内存**
 ```c
 /**
  * 释放一个块
  * @note - 块的指针必须属于该内存池
  */
 void hm_pool_block_free(hm_pool* pool, void* block);
-
-/**
- * 释放内存池的所有内容
- * @note - 释放后请勿使用来自该内存池的块
- */
-void hm_pool_free(hm_pool* pool);
 ```
 <details>
 <summary>try: 释放块内存</summary>
@@ -188,6 +183,18 @@ int main()
 }
 ```
 </details>
+<br><br><br>
+
+<a id = "freepool"></a>
+
+> **释放池**
+```c
+/**
+ * 释放内存池的所有内容
+ * @note - 释放后请勿使用来自该内存池的块
+ */
+void hm_pool_free(hm_pool* pool);
+```
 
 
 <details>
