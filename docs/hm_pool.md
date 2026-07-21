@@ -252,11 +252,13 @@ int main()
 
 2. [hm_map](hm_map.md)
 
-3. [hm_stack](hm_stack.md)
+3. hm_pool
 
-4. [hm_queue](hm_queue.md)
+4. [hm_stack](hm_stack.md)
 
-5. [hm_heap](hm_heap.md)
+5. [hm_queue](hm_queue.md)
+
+6. [hm_heap](hm_heap.md)
 
 
 

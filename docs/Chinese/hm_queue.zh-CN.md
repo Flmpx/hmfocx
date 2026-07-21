@@ -385,7 +385,9 @@ int main()
 
 4. [hm_stack](hm_stack.zh-CN.md)
 
-5. [hm_heap](hm_heap.zh-CN.md)
+5. hm_queue
+
+6. [hm_heap](hm_heap.zh-CN.md)
 
 
 <br><br><br>

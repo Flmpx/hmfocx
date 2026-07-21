@@ -598,6 +598,7 @@ int main()
 
 5. [hm_queue](hm_queue.zh-CN.md)
 
+6. hm_heap
 
 <br><br><br>
 <div align = "right">

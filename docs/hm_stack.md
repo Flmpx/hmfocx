@@ -382,9 +382,11 @@ int main()
 
 3. [hm_pool](hm_pool.md)
 
-4. [hm_queue](hm_queue.md)
+4. hm_stack
 
-5. [hm_heap](hm_heap.md)
+5. [hm_queue](hm_queue.md)
+
+6. [hm_heap](hm_heap.md)
 
 
 
