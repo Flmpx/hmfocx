@@ -743,6 +743,8 @@ int main()
 
 5. [hm_heap](hm_heap.md)
 
+6. [hm_set](hm_set.md)
+
 
 
 <br><br><br>

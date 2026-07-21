@@ -259,6 +259,9 @@ int main()
 
 5. [hm_heap](hm_heap.zh-CN.md)
 
+6. [hm_set](hm_set.zh-CN.md)
+
+
 
 
 <br><br><br>
