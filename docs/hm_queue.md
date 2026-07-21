@@ -384,7 +384,9 @@ int main()
 
 4. [hm_stack](hm_stack.md)
 
-5. [hm_heap](hm_heap.md)
+5. hm_queue
+
+6. [hm_heap](hm_heap.md)
 
 6. [hm_set](hm_set.md)
 

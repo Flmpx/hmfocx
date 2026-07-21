@@ -605,7 +605,11 @@ int main()
 
 5. [hm_queue](hm_queue.md)
 
+
+6. hm_heap
+
 6. [hm_set](hm_set.md)
+
 
 
 <br><br><br>
