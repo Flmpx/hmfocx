@@ -827,7 +827,7 @@ void test_list_del_index() {
             hm_list_iter_init(&iter, &list);
             while (hm_list_iter_has_next(&iter)) {
                 int* v = hm_list_iter_next(&iter);
-                if (*v == *del_v) {
+                if (v == del_v) {
                     fail_del_exist++;
                     break;
                 }
