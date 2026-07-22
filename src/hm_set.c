@@ -85,8 +85,8 @@ void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * 
  * @warning - Ensure there is enough space to insert before calling this function
  * 
- * @note - If the key already exists, the old key remains in the set. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(key) remains in the map. And return `hm_set_ret_existed`. 
+ * Therefore, you should handle this special situation
  */
 static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
     size_t l = set->len;
@@ -107,7 +107,7 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
         }
 
         if (set->buckets_status[index] == hm_exist_in_set && set->cmp(set->buckets[index].key, key) == hm_same) {
-            /*keep the same and old key */
+            /*keep the same and old entry(key) */
             return hm_set_ret_existed;
         }
 
@@ -206,8 +206,8 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
  * Insert a key into the set
  * @note - Return `hm_set_ret_error` on failure
  * @note - Return `hm_set_ret_suc` on success
- * @note - If the key already exists, the old key remains in the set. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(key) remains in the map. And return `hm_set_ret_existed`.
+ * Therefore, you should handle this special situation
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key) {
     size_t l = set->len, s = set->size;

@@ -105,8 +105,9 @@ int main()
  * 向散列表中插入一个键值对
  * @note - 插入失败时返回 `hm_map_ret_error`
  * @note - 插入成功时返回 `hm_map_ret_suc`
- * @note - 如果键已存在，旧键仍保留在散列表中，函数返回 `hm_map_ret_existed`
- * @note - 因此，如果你的键是动态分配的，建议你自行释放它(仅为建议)
+ * @note - 如果键已存在，旧条目(包括键和值)仍保留在散列表中，函数返回 `hm_map_ret_existed`
+ * 因此, 你需要处理这种特殊情况
+ * @note - 如果想改变 值 或者 它的指针 使用函数 `hm_map_get()`
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
@@ -181,9 +182,18 @@ int main()
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
-        // 如果这个 key 已经在 map 中了, 那这个 malloc 来的 key 最好释放掉(新 key 和 旧 key 的 不是同一块内存区域)
+        // 处理这个特殊情况, 释放掉key
         free(k);
     }
+    print_map(&map, num);
+
+    // 如果你想要改值, 那就使用get函数
+
+    k = (int*)malloc(sizeof(int));
+    *k = 5;
+    hm_map_entry* e = hm_map_get(&map, k);
+    e->val = v;
+
     print_map(&map, num);
 
     hm_map_free(&map);
@@ -208,7 +218,15 @@ int main()
 | k: 2, v: i
 | k: 3, v: hate
 | k: 4, v: love
-| k: 5, v: so, why
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so, why?
 | k: 6, v: family
 
 ```

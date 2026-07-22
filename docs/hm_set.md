@@ -107,8 +107,8 @@ int main()
  * Insert a key into the set
  * @note - Return `hm_set_ret_error` on failure
  * @note - Return `hm_set_ret_suc` on success
- * @note - If the key already exists, the old key remains in the set. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(key) remains in the map. And return `hm_set_ret_existed`.
+ * Therefore, you should handle this special situation
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key);
 ```
@@ -180,7 +180,7 @@ int main()
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_set_insert(&set, k) == hm_set_ret_existed) {
-        // you should free the key if it is existed in set(new key and old key is located at different memory)
+        // handle this special situation -- free key
         free(k);
     }
     print_set(&set, num);

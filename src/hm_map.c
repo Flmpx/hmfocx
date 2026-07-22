@@ -86,8 +86,8 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * 
  * @warning - Ensure there is enough space to insert before calling this function
  * 
- * @note - If the key already exists, the old key remains in the map. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(include key and val) remains in the map. 
+ * Therefore, you should handle this special situation
  */
 static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
     size_t l = map->len;
@@ -108,11 +108,7 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
         }
 
         if (map->buckets_status[index] == hm_exist_in_map && map->cmp(map->buckets[index].key, key) == hm_same) {
-            if (map->free_val) {
-                map->free_val(map->buckets[index].val);
-            }
-            /*keep the same and old key */
-            map->buckets[index].val = val;
+            /*keep the same and old entry(including key and val) */
             return hm_map_ret_existed;
         }
 
@@ -211,8 +207,9 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
  * Insert a key-value pair into the map
  * @note - Return `hm_map_ret_error` on failure
  * @note - Return `hm_map_ret_suc` on success
- * @note - If the key already exists, the old key remains in the map. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(include key and val) remains in the map. And return `hm_map_ret_existed`.
+ * Therefore, you should handle this special situation
+ * @note - Use `hm_map_get()` to change val if you want to change the val or it's pointer
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     size_t l = map->len, s = map->size;

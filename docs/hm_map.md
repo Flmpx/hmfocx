@@ -108,8 +108,9 @@ int main()
  * Insert a key-value pair into the map
  * @note - Return `hm_map_ret_error` on failure
  * @note - Return `hm_map_ret_suc` on success
- * @note - If the key already exists, the old key remains in the map. 
- * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
+ * @note - If the key already exists, the old entry(include key and val) remains in the map. And return `hm_map_ret_existed`.
+ * Therefore, you should handle this special situation
+ * @note - Use `hm_map_get()` to change val if you want to change the val or it's pointer
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
@@ -185,9 +186,18 @@ int main()
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
-        // you should free the key if it is existed in map(new key and old key is located at different memory)
+        // handle this special situation -- free key
         free(k);
     }
+    print_map(&map, num);
+
+    // use get function if you want to change it
+
+    k = (int*)malloc(sizeof(int));
+    *k = 5;
+    hm_map_entry* e = hm_map_get(&map, k);
+    e->val = v;
+
     print_map(&map, num);
 
     hm_map_free(&map);
@@ -212,7 +222,15 @@ int main()
 | k: 2, v: i
 | k: 3, v: hate
 | k: 4, v: love
-| k: 5, v: so, why
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so, why?
 | k: 6, v: family
 
 ```

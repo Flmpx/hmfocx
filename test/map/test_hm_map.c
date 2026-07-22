@@ -585,6 +585,7 @@ void test_map_insert_same() {
             hm_map_ret ret = hm_map_insert(&map, k, v);
             if (ret == hm_map_ret_existed) {
                 free(k);
+                free(v);
             }
         }
     }
@@ -988,11 +989,11 @@ void test_single_entry_oper() {
     // insert two indetical keys
 
     hm_map_insert(&map, &k, &v);
-    int new_v = 10;
+    int new_v = 100;
     hm_map_insert(&map, &k, &new_v);
     e = hm_map_get(&map, &k);
     check_res(*(int*)(e->key) == k, "the key is wrong when insert two indetical keys", &fail_cnt, tag++);
-    check_res(*(int*)(e->val) == new_v, "the key is wrong when insert two indetical keys", &fail_cnt, tag++);
+    check_res(*(int*)(e->val) == v, "the val isn't old val when insert two indetical keys", &fail_cnt, tag++);
 
     check_res(map.size == 1, "the map.size should be 1 when insert two indetical keys", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++);

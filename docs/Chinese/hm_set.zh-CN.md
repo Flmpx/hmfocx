@@ -106,8 +106,8 @@ int main()
  * 向集合中插入一个键
  * @note - 插入失败时返回 `hm_set_ret_error`
  * @note - 插入成功时返回 `hm_set_ret_suc`
- * @note - 如果键已存在，旧键仍保留在集合中，函数返回 `hm_set_ret_existed`
- * @note - 因此，如果你的键是动态分配的，建议你自行释放它(仅为建议)
+ * @note - 如果键已存在，旧条目(键)仍保留在集合中，函数返回 `hm_set_ret_existed`
+ * 因此，你需要处理这种特殊情况
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
 ```
@@ -178,7 +178,7 @@ int main()
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_set_insert(&set, k) == hm_set_ret_existed) {
-        // 如果这个 key 已经在 set 中了, 那这个 malloc 来的 key 最好释放掉(新 key 和 旧 key 的 不是同一块内存区域)
+        // 要处理这种特殊情况 -- 释放掉key
         free(k);
     }
     print_set(&set, num);

@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### Changed
+- **refactor:** Change the behavior when insert the same key in `hm_map` & `hm_set` --- The insert function(`hm_map_insert` & `hm_set_insert`) still remain the old entry(map --> key & val, set --> key) in `hm_map` or `hm_set` 
+    - You should handle this special sitution(insert same key)
+
 ## [0.9.0] - 2026-07-22
 
 ### Added
