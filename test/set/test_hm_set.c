@@ -145,10 +145,10 @@ void test_iter_set() {
     memset(counters, 0, sizeof(counters));
     
 
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, &set);
-    while (hm_iter_set_has_next(&iter)) {
-        hm_set_entry* e = hm_iter_set_next(&iter);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, &set);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_entry* e = hm_set_iter_next(&iter);
         if (e) {
             int* k = e->key;
                 if (k == NULL) {
@@ -855,11 +855,11 @@ void test_empty_set_oper() {
 
     // iter
 
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, &set);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, &set);
     int loop_cnt = 0;
-    while (hm_iter_set_has_next(&iter)) {
-        hm_iter_set_next(&iter);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_iter_next(&iter);
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over empty set should yield zero entrys", &fail_cnt, tag++);

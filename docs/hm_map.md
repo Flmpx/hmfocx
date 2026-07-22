@@ -439,19 +439,19 @@ int main()
 /**
  * Initialize the iterator of map
  */
-void hm_iter_map_init(hm_iter_map* iter, hm_map* map);
+void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 
 /**
  * Check if the iterator has a next entry
  * @note - Return true if the iterator has next
  */
-bool hm_iter_map_has_next(hm_iter_map* iter);
+bool hm_map_iter_has_next(hm_map_iter* iter);
 
 /**
  * Get next entry of map
- * @note - Use `hm_iter_map_has_next()` to check before calling `hm_iter_map_next()`
+ * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
  */
-hm_entry* hm_iter_map_next(hm_iter_map* iter);
+hm_entry* hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: iter</summary>
@@ -507,10 +507,10 @@ int main()
     }
     print_map(&map, num);
 
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, &map);
-    while (hm_iter_map_has_next(&iter)) {
-        hm_entry* e = hm_iter_map_next(&iter);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, &map);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);
@@ -594,10 +594,10 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map) {
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, map);
-    while (hm_iter_map_has_next(&iter)) {
-        hm_entry* e = hm_iter_map_next(&iter);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, map);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);

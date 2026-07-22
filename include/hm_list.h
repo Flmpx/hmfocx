@@ -51,9 +51,9 @@ typedef struct hm_list {
  * The iterator of list
  */
 
-typedef struct hm_iter_list {
+typedef struct hm_list_iter {
     hm_listnode* cur;
-} hm_iter_list;
+} hm_list_iter;
 
 
 /**
@@ -100,21 +100,21 @@ extern void* hm_list_get(hm_list* list, size_t index);
 
 // These functions will be remove
 
-extern void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
-extern bool hm_iter_list_has_next(hm_iter_list* iter);
-extern void* hm_iter_list_next(hm_iter_list* iter);
+extern void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
+extern bool hm_list_iter_has_next(hm_list_iter* iter);
+extern void* hm_list_iter_next(hm_list_iter* iter);
 
 // New function of iterator
 
-extern void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
-extern void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
-extern void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+extern void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
+extern void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
+extern void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
 
-extern bool hm_iter_list_has_cur(hm_iter_list* iter);
-extern void* hm_iter_list_cur(hm_iter_list* iter);
+extern bool hm_list_iter_has_cur(hm_list_iter* iter);
+extern void* hm_list_iter_cur(hm_list_iter* iter);
 
-extern void hm_iter_list_move_next(hm_iter_list* iter);
-extern void hm_iter_list_move_prev(hm_iter_list* iter);
+extern void hm_list_iter_move_next(hm_list_iter* iter);
+extern void hm_list_iter_move_prev(hm_list_iter* iter);
 
 /**
  * Sort functions

@@ -406,19 +406,19 @@ int main()
 /**
  * 初始化集合的迭代器
  */
-void hm_iter_set_init(hm_iter_set* iter, hm_set* set);
+void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 
 /**
  * 检查迭代器是否有下一个条目
  * @note - 有下一个条目时返回 `true`
  */
-bool hm_iter_set_has_next(hm_iter_set* iter);
+bool hm_set_iter_has_next(hm_set_iter* iter);
 
 /**
  * 通过迭代器获取下一个条目的指针
- * @note - 请先调用 `hm_iter_set_has_next()` 检查是否存在下一个条目
+ * @note - 请先调用 `hm_set_iter_has_next()` 检查是否存在下一个条目
  */
-hm_entry* hm_iter_set_next(hm_iter_set* iter);
+hm_entry* hm_set_iter_next(hm_set_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -469,10 +469,10 @@ int main()
     }
     print_set(&set, num);
 
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, &set);
-    while (hm_iter_set_has_next(&iter)) {
-        hm_set_entry* e = hm_iter_set_next(&iter);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, &set);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_entry* e = hm_set_iter_next(&iter);
         int* k = e->key;
         printf("| k: %d\n", *k);
     }
@@ -547,10 +547,10 @@ size_t hash(const void* key) {
 }
 
 void print_set(hm_set* set) {
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, set);
-    while (hm_iter_set_has_next(&iter)) {
-        hm_set_entry* e = hm_iter_set_next(&iter);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, set);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_entry* e = hm_set_iter_next(&iter);
         int* k = e->key;
         printf("| k: %d\n", *k);
     }

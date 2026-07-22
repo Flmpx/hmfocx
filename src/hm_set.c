@@ -350,7 +350,7 @@ void hm_set_free(hm_set* set) {
 /**
  * Initialize the iterator of set
  */
-void hm_iter_set_init(hm_iter_set* iter, hm_set* set) {
+void hm_set_iter_init(hm_set_iter* iter, hm_set* set) {
     iter->buckets = set->buckets;
     iter->buckets_status = set->buckets_status;
     iter->index = 0;
@@ -360,7 +360,7 @@ void hm_iter_set_init(hm_iter_set* iter, hm_set* set) {
  * Check if the iterator has a next entry
  * @note - Return true if the iterator has next
  */
-bool hm_iter_set_has_next(hm_iter_set* iter) {
+bool hm_set_iter_has_next(hm_set_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
     
@@ -378,9 +378,9 @@ bool hm_iter_set_has_next(hm_iter_set* iter) {
 }
 /**
  * Get next entry of set
- * @note - Use `hm_iter_set_has_next()` to check before calling `hm_iter_set_next()`
+ * @note - Use `hm_set_iter_has_next()` to check before calling `hm_set_iter_next()`
  */
-hm_set_entry* hm_iter_set_next(hm_iter_set* iter) {
+hm_set_entry* hm_set_iter_next(hm_set_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 

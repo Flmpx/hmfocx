@@ -413,19 +413,19 @@ int main()
 /**
  * Initialize the iterator of set
  */
-void hm_iter_set_init(hm_iter_set* iter, hm_set* set);
+void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 
 /**
  * Check if the iterator has a next entry
  * @note - Return true if the iterator has next
  */
-bool hm_iter_set_has_next(hm_iter_set* iter);
+bool hm_set_iter_has_next(hm_set_iter* iter);
 
 /**
  * Get next entry of set
- * @note - Use `hm_iter_set_has_next()` to check before calling `hm_iter_set_next()`
+ * @note - Use `hm_set_iter_has_next()` to check before calling `hm_set_iter_next()`
  */
-hm_set_entry* hm_iter_set_next(hm_iter_set* iter);
+hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
 ```
 <details>
 <summary>try: iter</summary>
@@ -476,10 +476,10 @@ int main()
     }
     print_set(&set, num);
 
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, &set);
-    while (hm_iter_set_has_next(&iter)) {
-        hm_set_entry* e = hm_iter_set_next(&iter);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, &set);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_entry* e = hm_set_iter_next(&iter);
         int* k = e->key;
         printf("| k: %d\n", *k);
     }
@@ -558,10 +558,10 @@ size_t hash(const void* key) {
 }
 
 void print_set(hm_set* set) {
-    hm_iter_set iter;
-    hm_iter_set_init(&iter, set);
-    while (hm_iter_set_has_next(&iter)) {
-        hm_set_entry* e = hm_iter_set_next(&iter);
+    hm_set_iter iter;
+    hm_set_iter_init(&iter, set);
+    while (hm_set_iter_has_next(&iter)) {
+        hm_set_entry* e = hm_set_iter_next(&iter);
         int* k = e->key;
         printf("| k: %d\n", *k);
     }

@@ -285,19 +285,19 @@ int main()
  * Initialize iterator of list
  * 
  */
-void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
 
 /**
  * Check if the iterator has a next element
  * @note - Return true if iterator has next
  */
-bool hm_iter_list_has_next(hm_iter_list* iter);
+bool hm_list_iter_has_next(hm_list_iter* iter);
 
 /**
  * Get next value of list
- * @note - Use `hm_iter_list_has_next()` to check before calling `hm_iter_list_next()`
+ * @note - Use `hm_list_iter_has_next()` to check before calling `hm_list_iter_next()`
  */
-void* hm_iter_list_next(hm_iter_list* iter);
+void* hm_list_iter_next(hm_list_iter* iter);
 
 
 // New functions of iterator
@@ -306,41 +306,41 @@ void* hm_iter_list_next(hm_iter_list* iter);
  * Initialize iterator of list
  * @note - Let the iterator point to the head of the list
  */
-void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
 
 /**
  * Initialize iterator of list
  * @note - Let the iterator point to the tail of the list
  */
-void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
 
 /**
  * Initialize iterator of list
  * @note - Let the iterator point to the specified `index` of the list
  * @note - Iterator will point to `NULL` if `index` is out of bounds
  */
-void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
 
 /**
  * Check if the iterator's current pointer is valid
  */
-bool hm_iter_list_has_cur(hm_iter_list* iter);
+bool hm_list_iter_has_cur(hm_list_iter* iter);
 
 /**
  * Get the current value of the iterator
- * Use `hm_iter_list_has_cur()` to check before calling `hm_iter_list_cur()`
+ * Use `hm_list_iter_has_cur()` to check before calling `hm_list_iter_cur()`
  */
-void* hm_iter_list_cur(hm_iter_list* iter);
+void* hm_list_iter_cur(hm_list_iter* iter);
 
 /**
  * Move the iterator's pointer to next
  */
-void hm_iter_list_move_next(hm_iter_list* iter);
+void hm_list_iter_move_next(hm_list_iter* iter);
 
 /**
  * Move the iterator's pointer to prev
  */
-void hm_iter_list_move_prev(hm_iter_list* iter);
+void hm_list_iter_move_prev(hm_list_iter* iter);
 ```
 <details>
 <summary>try: iter  [old]</summary>
@@ -367,10 +367,10 @@ int main()
     
     // iter [old]
     
-    hm_iter_list iter;
-    hm_iter_list_init(&iter, &list);
-    while (hm_iter_list_has_next(&iter)) {
-        int* v = hm_iter_list_next(&iter);
+    hm_list_iter iter;
+    hm_list_iter_init(&iter, &list);
+    while (hm_list_iter_has_next(&iter)) {
+        int* v = hm_list_iter_next(&iter);
         printf("%d ", *v);
     }
     hm_list_free(&list);
@@ -411,35 +411,35 @@ int main()
     }
     
     // iter [new]
-    hm_iter_list iter;
+    hm_list_iter iter;
 
     // iterate from head 
-    hm_iter_list_init_head(&iter, &list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_head(&iter, &list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // move next
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
     
     // iterate from tail | reverse
-    hm_iter_list_init_tail(&iter, &list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_tail(&iter, &list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // move prev
-        hm_iter_list_move_prev(&iter);
+        hm_list_iter_move_prev(&iter);
     }
     printf("\n");
     
     // iterate from index 4
-    hm_iter_list_init_index(&iter, &list, 4);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_index(&iter, &list, 4);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // move next
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
 
@@ -527,12 +527,12 @@ void hm_list_sort(hm_list* list, hm_cmp cmp);
 #include <stdio.h>
 
 void print_list(hm_list* list) {
-    hm_iter_list iter;
-    hm_iter_list_init_head(&iter, list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter iter;
+    hm_list_iter_init_head(&iter, list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
 }

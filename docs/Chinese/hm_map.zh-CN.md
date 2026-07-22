@@ -430,19 +430,19 @@ int main()
 /**
  * 初始化散列表的迭代器
  */
-void hm_iter_map_init(hm_iter_map* iter, hm_map* map);
+void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 
 /**
  * 检查迭代器是否有下一个条目
  * @note - 有下一个条目时返回 `true`
  */
-bool hm_iter_map_has_next(hm_iter_map* iter);
+bool hm_map_iter_has_next(hm_map_iter* iter);
 
 /**
  * 通过迭代器获取下一个条目的指针
- * @note - 请先调用 `hm_iter_map_has_next()` 检查是否存在下一个条目
+ * @note - 请先调用 `hm_map_iter_has_next()` 检查是否存在下一个条目
  */
-hm_entry* hm_iter_map_next(hm_iter_map* iter);
+hm_entry* hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -498,10 +498,10 @@ int main()
     }
     print_map(&map, num);
 
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, &map);
-    while (hm_iter_map_has_next(&iter)) {
-        hm_entry* e = hm_iter_map_next(&iter);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, &map);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);
@@ -581,10 +581,10 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map) {
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, map);
-    while (hm_iter_map_has_next(&iter)) {
-        hm_entry* e = hm_iter_map_next(&iter);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, map);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);

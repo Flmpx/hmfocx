@@ -357,7 +357,7 @@ void hm_map_free(hm_map* map) {
 /**
  * Initialize the iterator of map
  */
-void hm_iter_map_init(hm_iter_map* iter, hm_map* map) {
+void hm_map_iter_init(hm_map_iter* iter, hm_map* map) {
     iter->buckets = map->buckets;
     iter->buckets_status = map->buckets_status;
     iter->index = 0;
@@ -367,7 +367,7 @@ void hm_iter_map_init(hm_iter_map* iter, hm_map* map) {
  * Check if the iterator has a next entry
  * @note - Return true if the iterator has next
  */
-bool hm_iter_map_has_next(hm_iter_map* iter) {
+bool hm_map_iter_has_next(hm_map_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
     
@@ -385,9 +385,9 @@ bool hm_iter_map_has_next(hm_iter_map* iter) {
 }
 /**
  * Get next entry of map
- * @note - Use `hm_iter_map_has_next()` to check before calling `hm_iter_map_next()`
+ * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
  */
-hm_map_entry* hm_iter_map_next(hm_iter_map* iter) {
+hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 

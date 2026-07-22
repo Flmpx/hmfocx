@@ -284,19 +284,19 @@ int main()
 /**
  * 初始化链表迭代器
  */
-void hm_iter_list_init(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
 
 /**
  * 检查迭代器是否有下一个元素
  * @note - 有下一个元素时返回 `true`
  */
-bool hm_iter_list_has_next(hm_iter_list* iter);
+bool hm_list_iter_has_next(hm_list_iter* iter);
 
 /**
  * 获取下一个元素的值
- * @note - 请先调用 `hm_iter_list_has_next()` 检查是否存在下一个值
+ * @note - 请先调用 `hm_list_iter_has_next()` 检查是否存在下一个值
  */
-void* hm_iter_list_next(hm_iter_list* iter);
+void* hm_list_iter_next(hm_list_iter* iter);
 
 
 // 迭代器的新函数
@@ -305,41 +305,41 @@ void* hm_iter_list_next(hm_iter_list* iter);
  * 初始化链表的迭代器
  * @note - 让迭代器指向链表头部
  */
-void hm_iter_list_init_head(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
 
 /**
  * 初始化链表的迭代器
  * @note - 让迭代器指向链表尾部
  */
-void hm_iter_list_init_tail(hm_iter_list* iter, hm_list* list);
+void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
 
 /**
  * 初始化链表的迭代器
  * @note - 让迭代器指向链表中指定的索引位置
  * @note - 如果索引越界，迭代器将指向 `NULL`
  */
-void hm_iter_list_init_index(hm_iter_list* iter, hm_list* list, size_t index);
+void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
 
 /**
  * 检查迭代器的当前指向是否有效
  */
-bool hm_iter_list_has_cur(hm_iter_list* iter);
+bool hm_list_iter_has_cur(hm_list_iter* iter);
 
 /**
  * 获取迭代器的当前值
- * 在调用 `hm_iter_list_cur()` 之前，请先使用 `hm_iter_list_has_cur()` 进行检查
+ * 在调用 `hm_list_iter_cur()` 之前，请先使用 `hm_list_iter_has_cur()` 进行检查
  */
-void* hm_iter_list_cur(hm_iter_list* iter);
+void* hm_list_iter_cur(hm_list_iter* iter);
 
 /**
  * 将迭代器的指针移动到下一个节点
  */
-void hm_iter_list_move_next(hm_iter_list* iter);
+void hm_list_iter_move_next(hm_list_iter* iter);
 
 /**
  * 将迭代器的指针移动到上一个节点
  */
-void hm_iter_list_move_prev(hm_iter_list* iter);
+void hm_list_iter_move_prev(hm_list_iter* iter);
 ```
 <details>
 <summary>try: 迭代器  [旧]</summary>
@@ -366,10 +366,10 @@ int main()
     
     // 迭代器  [旧]
     
-    hm_iter_list iter;
-    hm_iter_list_init(&iter, &list);
-    while (hm_iter_list_has_next(&iter)) {
-        int* v = hm_iter_list_next(&iter);
+    hm_list_iter iter;
+    hm_list_iter_init(&iter, &list);
+    while (hm_list_iter_has_next(&iter)) {
+        int* v = hm_list_iter_next(&iter);
         printf("%d ", *v);
     }
     hm_list_free(&list);
@@ -410,35 +410,35 @@ int main()
     }
     
     // 迭代器  [新]
-    hm_iter_list iter;
+    hm_list_iter iter;
 
     // 从头开始遍历
-    hm_iter_list_init_head(&iter, &list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_head(&iter, &list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // 游标移至后一个节点
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
     
     // 从尾开始遍历 | 反向遍历
-    hm_iter_list_init_tail(&iter, &list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_tail(&iter, &list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // 游标移至前一个节点
-        hm_iter_list_move_prev(&iter);
+        hm_list_iter_move_prev(&iter);
     }
     printf("\n");
     
     // 从下标为 4 的节点开始遍历
-    hm_iter_list_init_index(&iter, &list, 4);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter_init_index(&iter, &list, 4);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
         // 游标移至后一个节点
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
 
@@ -524,12 +524,12 @@ void hm_list_sort(hm_list* list, hm_cmp cmp);
 #include <stdio.h>
 
 void print_list(hm_list* list) {
-    hm_iter_list iter;
-    hm_iter_list_init_head(&iter, list);
-    while (hm_iter_list_has_cur(&iter)) {
-        int* v = hm_iter_list_cur(&iter);
+    hm_list_iter iter;
+    hm_list_iter_init_head(&iter, list);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
-        hm_iter_list_move_next(&iter);
+        hm_list_iter_move_next(&iter);
     }
     printf("\n");
 }

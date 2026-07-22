@@ -138,10 +138,10 @@ void test_iter_map() {
     int fail_invalid_k = 0;
     int fail_diff_v = 0;
 
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, &map);
-    while (hm_iter_map_has_next(&iter)) {
-        hm_map_entry* e = hm_iter_map_next(&iter);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, &map);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_map_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         int* v = e->val;
         if (*k >= num || *k < 0) {
@@ -904,14 +904,14 @@ void test_map_iter_stress() {
 
         // itering map
 
-        hm_iter_map iter;
-        hm_iter_map_init(&iter, &map);
+        hm_map_iter iter;
+        hm_map_iter_init(&iter, &map);
 
         int fail_iter = 0;
         clock_t start = clock();
 
-        while (hm_iter_map_has_next(&iter)) {
-            hm_map_entry* e = hm_iter_map_next(&iter);
+        while (hm_map_iter_has_next(&iter)) {
+            hm_map_entry* e = hm_map_iter_next(&iter);
             int k = *(int*)(e->key);
             int v = *(int*)(e->val);
             if (v != 2 * k) {
@@ -947,11 +947,11 @@ void test_empty_map_oper() {
 
     // iter
 
-    hm_iter_map iter;
-    hm_iter_map_init(&iter, &map);
+    hm_map_iter iter;
+    hm_map_iter_init(&iter, &map);
     int loop_cnt = 0;
-    while (hm_iter_map_has_next(&iter)) {
-        hm_iter_map_next(&iter);
+    while (hm_map_iter_has_next(&iter)) {
+        hm_map_iter_next(&iter);
         loop_cnt++;
     }
     check_res(loop_cnt == 0, "iterator over empty map should yield zero entrys", &fail_cnt, tag++);

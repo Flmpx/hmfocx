@@ -64,12 +64,12 @@ typedef struct hm_set {
 /**
  * The iterator of set
  */
-typedef struct hm_iter_set {
+typedef struct hm_set_iter {
     hm_set_entry* buckets;
     hm_set_entry_status* buckets_status;
     size_t len;
     size_t index;
-} hm_iter_set;
+} hm_set_iter;
 
 
 /**
@@ -98,9 +98,9 @@ extern void hm_set_free(hm_set* set);
  * Some funtion of iterator of set , like `next` and `has next`
  */
 
-extern void hm_iter_set_init(hm_iter_set* iter, hm_set* set);
-extern bool hm_iter_set_has_next(hm_iter_set* iter);
-extern hm_set_entry* hm_iter_set_next(hm_iter_set* iter);
+extern void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
+extern bool hm_set_iter_has_next(hm_set_iter* iter);
+extern hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
 
 
 

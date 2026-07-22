@@ -65,12 +65,12 @@ typedef struct hm_map {
 /**
  * The iterator of map
  */
-typedef struct hm_iter_map {
+typedef struct hm_map_iter {
     hm_map_entry* buckets;
     hm_map_entry_status* buckets_status;
     size_t len;
     size_t index;
-} hm_iter_map;
+} hm_map_iter;
 
 
 /**
@@ -98,8 +98,8 @@ extern void hm_map_free(hm_map* map);
  * Some funtion of iterator of map , like `next` and `has next`
  */
 
-extern void hm_iter_map_init(hm_iter_map* iter, hm_map* map);
-extern bool hm_iter_map_has_next(hm_iter_map* iter);
-extern hm_map_entry* hm_iter_map_next(hm_iter_map* iter);
+extern void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
+extern bool hm_map_iter_has_next(hm_map_iter* iter);
+extern hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
 
 #endif

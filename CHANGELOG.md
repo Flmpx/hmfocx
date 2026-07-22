@@ -12,6 +12,8 @@
 ### Changed
 - **Breaking:** Change the entry and it's status variable of `hm_map` -- `hm_entry`  --> `hm_map_entry` & `hm_entry_status` --> `hm_map_entry_status`
     - The reason is that this entry variable of `hm_set` is `hm_set_entry` and `hm_set_entry_status` and make them easier to take apart, so change it 
+- **Breaking:** Change the iterator's name of valibale anf functions in `hm_list`, `hm_map` and `hm_set` -- `hm_iter_{container}_*` --> `hm_{container}_iter_*`
+    - The reason is that the name of most variable and functions of ervery container is start with `hm_{container}_*`, so change it
 
 
 ## [0.8.0] - 2026-07-16
