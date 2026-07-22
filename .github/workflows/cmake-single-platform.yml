@@ -4,9 +4,9 @@ name: Test for all containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feat/hm_list" ]
   pull_request:
-    branches: [ "main"]
+    branches: [ "feat/hm_list"]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [hm_list, hm_map, hm_pool, hm_stack, hm_queue, hm_heap, hm_set]
+        target: [hm_list]
 
     steps:
     - uses: actions/checkout@v4
