@@ -591,9 +591,40 @@ void test_list_change() {
         }
     }
     
-    check_res(fail_diff == 0, "the data that has changed is wrong", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val change by `get` is wrong", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++);
     hm_list_free(&list);
+
+    hm_list_init(&list, NULL);
+    // insert
+    for (int i = 0; i < num; i++) {
+        hm_list_insert_tail(&list, NULL);
+    }
+
+    // change pointer of node [use `hm_list_get_node`]
+    for (int i = 0; i < num; i++) {
+        hm_listnode* n = hm_list_get_node(&list, i);
+        n->val = &flag[i];
+    }
+
+    // verify
+
+    int fail_val_null = 0;
+    fail_diff = 0;
+    for (int i = 0; i < num; i++) {
+        int* v = hm_list_get(&list, i);
+        if (v == NULL) {
+            fail_val_null++;
+        } else if (*v != flag[i]) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_val_null == 0, "the val's pointer shouldn't be NULL after changed by `get_node` function", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val change by `get_node` is wrong", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+
+    hm_list_free(&list);
+
 
     print_end("LIST | FUNC | CHANGE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
