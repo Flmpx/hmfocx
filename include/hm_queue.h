@@ -19,7 +19,7 @@
  * The return signal of function in queue
  */
 typedef enum hm_queue_ret {
-    hm_queue_ret_error = 0x9,       // Malloc fail when expand the capacity of queue or init the queue
+    hm_queue_ret_error = 0xd,       // Malloc fail when expand the capacity of queue or init the queue
     hm_queue_ret_full,              // Queue is full now
     hm_queue_ret_empty,             // Queue is empty now
     hm_queue_ret_suc                // Operation successful, like push and init successful

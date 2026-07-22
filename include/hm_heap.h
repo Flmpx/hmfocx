@@ -19,7 +19,7 @@
  * The return signal of function in heap
  */
 typedef enum hm_heap_ret {
-    hm_heap_ret_error = 0x9,       // Malloc fail when expand the capacity of heap or init the heap
+    hm_heap_ret_error = 0x11,       // Malloc fail when expand the capacity of heap or init the heap
     hm_heap_ret_warn,              // The pass parameter is incorrect
     hm_heap_ret_full,              // Heap is full now
     hm_heap_ret_empty,             // Heap is empty now

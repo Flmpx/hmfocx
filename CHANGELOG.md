@@ -11,6 +11,7 @@
     - You should handle this special sitution(insert same key)
 - **refactor:** Use function instead of macro to achieve `small functions` of every container
     - The old code that using macro can use this new version `small functions` whitout any fix
+- Change the return code values in `hm_heap`, `hm_queue` and `hm_set`
 
 ### Improved
 - Improve the speed of `hm_map_clear` and `hm_set_clear` when `free_key` and `free_val` is `NULL`
