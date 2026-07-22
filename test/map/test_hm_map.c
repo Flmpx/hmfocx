@@ -141,7 +141,7 @@ void test_iter_map() {
     hm_iter_map iter;
     hm_iter_map_init(&iter, &map);
     while (hm_iter_map_has_next(&iter)) {
-        hm_entry* e = hm_iter_map_next(&iter);
+        hm_map_entry* e = hm_iter_map_next(&iter);
         int* k = e->key;
         int* v = e->val;
         if (*k >= num || *k < 0) {
@@ -190,7 +190,7 @@ void test_map_get() {
     int fail_diff_v = 0;
     int fail_invalid_k = 0;
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         if (e) {
             int* k = e->key;
             int* v = e->val;
@@ -216,7 +216,7 @@ void test_map_get() {
 
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         if (e) {
             fail_exist++;
         }
@@ -257,7 +257,7 @@ void test_map_change() {
     // change
     int diff = 99;
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         flag[i] += diff;
         *(int*)(e->val) += diff;
     }
@@ -266,7 +266,7 @@ void test_map_change() {
     int fail_diff = 0;
     int fail_no_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         if (e) {
             int* v = e->val;
             if (*v != flag[i]) {
@@ -324,7 +324,7 @@ void test_map_del() {
     int fail_no_exist = 0;
 
     for (int i = 0; i < num / 2; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         if (e) {
             fail_no_exist++;
         }
@@ -336,7 +336,7 @@ void test_map_del() {
     int fail_exist = 0;
     int fail_diff_v = 0;
     for (int i = num / 2; i < num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
 
         if (e) {
             int* v = e->val;
@@ -468,7 +468,7 @@ void test_map_clear() {
 
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get(&map, &i);
         if (e) {
             fail_exist++;
         }
@@ -629,7 +629,7 @@ void test_map_get_stress() {
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
-            hm_entry* e = hm_map_get(&map, &j);
+            hm_map_entry* e = hm_map_get(&map, &j);
             if (e == NULL) {
                 fail_existed++;
             }
@@ -644,7 +644,7 @@ void test_map_get_stress() {
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
-            hm_entry* e = hm_map_get(&map, &j);
+            hm_map_entry* e = hm_map_get(&map, &j);
             if (e) {
                 fail_no_existed++;
             }
@@ -911,7 +911,7 @@ void test_map_iter_stress() {
         clock_t start = clock();
 
         while (hm_iter_map_has_next(&iter)) {
-            hm_entry* e = hm_iter_map_next(&iter);
+            hm_map_entry* e = hm_iter_map_next(&iter);
             int k = *(int*)(e->key);
             int v = *(int*)(e->val);
             if (v != 2 * k) {
@@ -974,7 +974,7 @@ void test_single_entry_oper() {
     // insert single entry and get
 
     hm_map_insert(&map, &k, &v);
-    hm_entry* e = hm_map_get(&map, &k);
+    hm_map_entry* e = hm_map_get(&map, &k);
     check_res(*(int*)(e->key) == k, "the key is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     check_res(*(int*)(e->val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);

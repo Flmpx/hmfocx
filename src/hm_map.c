@@ -122,7 +122,7 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
         index = first_del_index;
     }
 
-    map->buckets[index] = (hm_entry){key, val};
+    map->buckets[index] = (hm_map_entry){key, val};
     map->buckets_status[index] = hm_exist_in_map;
 
     map->size++;
@@ -145,7 +145,7 @@ static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
         index = (index + 1) % l;
     }
 
-    map->buckets[index] = (hm_entry){key, val};
+    map->buckets[index] = (hm_map_entry){key, val};
     map->buckets_status[index] = hm_exist_in_map;
     map->size++;
 
@@ -168,14 +168,14 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     hm_map_init(&new_map, map->hash, map->cmp, map->free_key, map->free_val);
     new_map.len = new_len;
 
-    if (new_len > SIZE_MAX / sizeof(hm_entry) || new_len > SIZE_MAX / sizeof(hm_entry_status)) {
+    if (new_len > SIZE_MAX / sizeof(hm_map_entry) || new_len > SIZE_MAX / sizeof(hm_map_entry_status)) {
         return hm_map_ret_error;
     }
-    new_map.buckets = (hm_entry*)malloc(new_len * sizeof(hm_entry));
+    new_map.buckets = (hm_map_entry*)malloc(new_len * sizeof(hm_map_entry));
     if (new_map.buckets == NULL) {
         return hm_map_ret_error;
     }
-    new_map.buckets_status = (hm_entry_status*)malloc(new_len * sizeof(hm_entry_status));
+    new_map.buckets_status = (hm_map_entry_status*)malloc(new_len * sizeof(hm_map_entry_status));
     if (new_map.buckets_status == NULL) {
         free(new_map.buckets);
         return hm_map_ret_error;
@@ -184,7 +184,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
         new_map.buckets_status[i] = hm_none_in_map;
     }
 
-    hm_entry e;
+    hm_map_entry e;
     for (size_t i = 0; i < old_l; i++) {
         if (map->buckets_status[i] == hm_exist_in_map) {
             e = map->buckets[i];
@@ -258,7 +258,7 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
 
     size_t index = map->hash(key) % l;
 
-    hm_entry_status status;
+    hm_map_entry_status status;
     for (size_t i = 0; i < l; i++) {
         status = map->buckets_status[index];
         
@@ -276,7 +276,7 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
  * Get a pointer to the  entry in the map
  * @note - If the key does not exist, return `NULL`
  */
-hm_entry* hm_map_get(hm_map* map, void* key) {
+hm_map_entry* hm_map_get(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return NULL;
@@ -371,7 +371,7 @@ bool hm_iter_map_has_next(hm_iter_map* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
     
-    hm_entry_status status;
+    hm_map_entry_status status;
     while (index < l) {
         status = iter->buckets_status[index];
         if (status == hm_exist_in_map) {
@@ -387,11 +387,11 @@ bool hm_iter_map_has_next(hm_iter_map* iter) {
  * Get next entry of map
  * @note - Use `hm_iter_map_has_next()` to check before calling `hm_iter_map_next()`
  */
-hm_entry* hm_iter_map_next(hm_iter_map* iter) {
+hm_map_entry* hm_iter_map_next(hm_iter_map* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 
-    hm_entry_status status;
+    hm_map_entry_status status;
     while (index < l) {
         status = iter->buckets_status[index];
         if (status == hm_exist_in_map) {

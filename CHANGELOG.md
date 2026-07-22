@@ -9,7 +9,9 @@
 ### Added
 - Add new container for this library -- `hm_set`, it including some basic operations, such as `insert`, `get` and `del`, other detailed information see [hm_set](docs/hm_set.md)
 
-
+### Changed
+- **Breaking:** Change the entry and it's status variable of `hm_map` -- `hm_entry`  --> `hm_map_entry` & `hm_entry_status` --> `hm_map_entry_status`
+    - The reason is that this entry variable of `hm_set` is `hm_set_entry` and `hm_set_entry_status` and make them easier to take apart, so change it 
 
 
 ## [0.8.0] - 2026-07-16
