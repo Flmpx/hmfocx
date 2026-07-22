@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-07-22
+
 ### Added
 - Add the new function for `hm_list` -- `hm_list_get_node`
     - It handle the problem -- You can't change the pointer of the `hm_listnode`
