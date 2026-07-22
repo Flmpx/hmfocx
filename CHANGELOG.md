@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### Added
+- Add the new function for `hm_list` -- `hm_list_get_node`
+    - It handle the problem -- You can't change the pointer of the `hm_listnode`
+
 ### Changed
 - **refactor:** Change the behavior when insert the same key in `hm_map` & `hm_set` --- The insert function(`hm_map_insert` & `hm_set_insert`) still remain the old entry(map --> key & val, set --> key) in `hm_map` or `hm_set` 
     - You should handle this special sitution(insert same key)

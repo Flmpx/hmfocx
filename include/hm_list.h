@@ -93,6 +93,7 @@ extern hm_list_ret hm_list_del_index(hm_list* list, size_t index);
  */
 
 extern void* hm_list_get(hm_list* list, size_t index);
+extern hm_listnode* hm_list_get_node(hm_list* list, size_t index);
 
 /**
  * Iterator functions

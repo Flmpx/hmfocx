@@ -110,6 +110,14 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
  * @note - This function will return nullptr when the `index ` is out of bounds
  */
 void* hm_list_get(hm_list* list, size_t index);
+
+/**
+ * Get a pointer to the Node at the given `index`
+ * @note - `Index` must be >= `0`, and < `the size of list`
+ * @note - This function will return nullptr when the `index ` is out of bounds
+ * @warning - Prohibit to change the `prev` and `next` of Node
+ */
+hm_listnode* hm_list_get_node(hm_list* list, size_t index);
 ```
 <details>
 <summary>try: insert & get</summary>
@@ -125,7 +133,12 @@ void print_list(hm_list* list) {
     // get and print
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
-        printf("%d ", *v);
+        hm_listnode* n = hm_list_get_node(list, i);
+        if (n->val == v) {
+            printf("%d ", *v);
+        } else {
+            printf("[%d|%d] ", *v, *(int*)n->val);
+        }
     }
     printf("\n");
 }

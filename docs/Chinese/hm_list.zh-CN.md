@@ -113,6 +113,14 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
  * @note - 索引无效时返回`空指针`
  */
 void* hm_list_get(hm_list* list, size_t index);
+
+/**
+ * 根据索引获取链表节点的指针
+ * @note - 索引必须 >= `0` 且 < `链表大小`
+ * @note - 索引无效时返回 `空指针`
+ * @warning - 禁止修改 `Node` 的 `prev` 和 `next`
+ */
+hm_listnode* hm_list_get_node(hm_list* list, size_t index);
 ```
 <details>
 <summary>try: 插入 & 获取</summary>
@@ -128,7 +136,12 @@ void print_list(hm_list* list) {
     // 获取和打印
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
-        printf("%d ", *v);
+        hm_listnode* n = hm_list_get_node(list, i);
+        if (n->val == v) {
+            printf("%d ", *v);
+        } else {
+            printf("[%d|%d] ", *v, *(int*)n->val);
+        }
     }
     printf("\n");
 }

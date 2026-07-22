@@ -495,8 +495,67 @@ void test_list_get() {
     hm_list_free(&list);
     print_end("LIST | FUNC | GET | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
+    
+}
+
+void test_list_get_node() {
+    hm_list list;
+    hm_list_init(&list, free);
+    int fail_cnt = 0;
+    int tag = 0;
+    int num = 100;
+    int flag[num];
+    
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 100;
+        int* v = (int*)malloc(sizeof(int));
+        *v = flag[i];
+        hm_list_insert_tail(&list, v);
+    }
+    
+    print_run("LIST | FUNC | GET NODE | TYPE: [INT]");
+
+    int fail_node_nullptr = 0;
+    int fail_val_nullptr = 0;
+    int fial_val_diff = 0;
+    // get and verify[valid]
+    for (int i = 0; i < num; i++) {
+        hm_listnode* n = hm_list_get_node(&list, i);
+        if (n == NULL) {
+            fail_node_nullptr++;
+        } else {
+            int* v = n->val;
+            if (v == NULL) {
+                fail_val_nullptr++;
+            } else if (*v != flag[i]) {
+                fial_val_diff++;
+            }
+        }
+    }
+    check_res(fail_node_nullptr == 0, "the get Node is NULL", &fail_cnt, tag++);
+    check_res(fail_val_nullptr == 0, "the val in get Node is NULL", &fail_cnt, tag++);
+    check_res(fial_val_diff == 0, "the val in get Node is NULL", &fail_cnt, tag++);
+
+    test_list_integrity(&list, &fail_cnt, tag++);
+
+    // get and verify[invalid]
+    int fail_exist = 0;
+    for (int i = num; i < num * 2; i++) {
+        hm_listnode* n = hm_list_get_node(&list, i);
+        if (n) {
+            fail_exist++;
+        }
+    }
+    check_res(fail_exist == 0, "Node should be NULL when index is out of bound", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+    
+    hm_list_free(&list);
+    print_end("LIST | FUNC | GET NODE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
 
 }
+
 
 void test_list_change() {
     hm_list list;
@@ -532,9 +591,40 @@ void test_list_change() {
         }
     }
     
-    check_res(fail_diff == 0, "the data that has changed is wrong", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val change by `get` is wrong", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++);
     hm_list_free(&list);
+
+    hm_list_init(&list, NULL);
+    // insert
+    for (int i = 0; i < num; i++) {
+        hm_list_insert_tail(&list, NULL);
+    }
+
+    // change pointer of node [use `hm_list_get_node`]
+    for (int i = 0; i < num; i++) {
+        hm_listnode* n = hm_list_get_node(&list, i);
+        n->val = &flag[i];
+    }
+
+    // verify
+
+    int fail_val_null = 0;
+    fail_diff = 0;
+    for (int i = 0; i < num; i++) {
+        int* v = hm_list_get(&list, i);
+        if (v == NULL) {
+            fail_val_null++;
+        } else if (*v != flag[i]) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_val_null == 0, "the val's pointer shouldn't be NULL after changed by `get_node` function", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val change by `get_node` is wrong", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+
+    hm_list_free(&list);
+
 
     print_end("LIST | FUNC | CHANGE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -737,7 +827,7 @@ void test_list_del_index() {
             hm_list_iter_init(&iter, &list);
             while (hm_list_iter_has_next(&iter)) {
                 int* v = hm_list_iter_next(&iter);
-                if (*v == *del_v) {
+                if (v == del_v) {
                     fail_del_exist++;
                     break;
                 }
@@ -1002,6 +1092,112 @@ void test_list_insert_index_stress() {
     print_end("LIST | STRESS | INSERT INDEX(MID) | TYPE: [INT]\n", fail_cnt);
     HM_TEST_COUNTER
 
+}
+
+
+void test_list_get_node_stress() {   
+    int v = 666666;
+    int fail_cnt = 0;
+    int tag = 0;
+    hm_list list;
+    hm_list_init(&list, NULL);
+
+
+
+    // get head
+    print_run("LIST | STRESS | GET HEAD NODE | TYPE: [INT]");
+    // the numbers of list cann't too big
+    size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums_head) / sizeof(size_t);
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_head[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+
+        // get
+        size_t oper_cnt = 10000000;
+        int fail_get = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get_node(&list, 0) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        test_list_integrity(&list, &fail_cnt, tag++);
+        check_res(fail_get == 0, "the Node that got by get_node function is NULL when get head stress test", &fail_cnt, tag++);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_head[i], oper_cnt);
+    }
+    print_end("LIST | STRESS | GET HEAD NODE | TYPE: [INT]\n", fail_cnt);
+    HM_TEST_COUNTER
+    
+    fail_cnt = 0;
+
+
+
+    // get tail
+    print_run("LIST | STRESS | GET TAIL NODE | TYPE: [INT]");
+    size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    cnt = sizeof(nums_tail) / sizeof(size_t);
+
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_tail[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+
+        // get
+        size_t oper_cnt = 10000000;
+        int fail_get = 0;
+        clock_t start = clock();
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get_node(&list, list.size - 1) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_get == 0, "the Node that got by get_node function is NULL when get tail stress test", &fail_cnt, tag++);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_tail[i], oper_cnt);
+    }
+    print_end("LIST | STRESS | GET TAIL NODE | TYPE: [INT]\n", fail_cnt);
+    HM_TEST_COUNTER
+    
+    
+    
+    // get mid
+    print_run("LIST | STRESS | GET MID NODE | TYPE: [INT]");
+    
+    // the nums cann't to big because it's time complexity is O(n^2)
+    size_t nums_mid[] = {10000, 50000};
+    cnt = sizeof(nums_mid) / sizeof(size_t);
+    
+    for (int i = 0; i < cnt; i++) {
+        // insert
+        for (size_t j = 0; j < nums_mid[i]; j++) {
+            hm_list_insert_tail(&list, &v);
+        }
+        
+        // get
+        int fail_get = 0;
+        clock_t start = clock();
+        size_t oper_cnt = 10000;
+        for (size_t j = 0; j < oper_cnt; j++) {
+            if (hm_list_get_node(&list, list.size / 2) == NULL) {
+                fail_get++;
+            }
+        }
+        clock_t end = clock();
+        check_res(fail_get == 0, "the Node that got by get_node function is NULL when get mid stress test", &fail_cnt, tag++);
+        hm_list_free(&list);
+        print_run_time("GET", start, end, nums_mid[i], oper_cnt);
+    }
+    print_end("LIST | STRESS | GET MID NODE | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
 }
 
 
@@ -1652,6 +1848,8 @@ void function_test() {
     test_iter_list();                               printf("\n");
     
     test_list_get();                                printf("\n");
+
+    test_list_get_node();                           printf("\n");
     
     test_list_change();                             printf("\n");
     
@@ -1689,6 +1887,8 @@ void stress_test() {
     test_list_insert_index_stress();                printf("\n");
     
     test_list_get_stress();                         printf("\n");
+
+    test_list_get_node_stress();                    printf("\n");
     
     test_list_del_head_stress();                    printf("\n");
     
