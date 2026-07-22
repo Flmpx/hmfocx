@@ -45,9 +45,12 @@ void hm_list_free(hm_list* list) {
 
 /**
  * Get a pointer to the Node at the given `index`
- * @warning - You must ensure the `index` is valid because the function does not check this variable
+ * @note - `Index` must be >= `0`, and < `the size of list`
+ * @note - This function will return nullptr when the `index ` is out of bounds
+ * @warning - Prohibit to change the `prev` and `next` of Node
  */
-static hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
+hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
+    if (index >= list->size) return NULL;
 
     hm_listnode* cur = NULL;
     size_t cnt = 0;
