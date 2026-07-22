@@ -382,6 +382,7 @@ int main()
 
 6. [hm_heap](hm_heap.zh-CN.md)
 
+7. [hm_set](hm_set.zh-CN.md)
 
 
 

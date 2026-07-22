@@ -600,6 +600,9 @@ int main()
 
 6. hm_heap
 
+7. [hm_set](hm_set.zh-CN.md)
+
+
 <br><br><br>
 <div align = "right">
     <a href="#head">↑ Top</a>

@@ -6,6 +6,12 @@
 
 ## [Unreleased]
 
+### Added
+- Add new container for this library -- `hm_set`, it including some basic operations, such as `insert`, `get` and `del`, other detailed information see [hm_set](docs/hm_set.md)
+
+
+
+
 ## [0.8.0] - 2026-07-16
 
 ### Added

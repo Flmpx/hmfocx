@@ -47,3 +47,5 @@ mingw32-make
 5. [hm_queue](docs/Chinese/hm_queue.zh-CN.md)
 
 6. [hm_heap](docs/Chinese/hm_heap.zh-CN.md)
+
+7. [hm_set](docs/Chinese/hm_set.zh-CN.md)

@@ -388,6 +388,8 @@ int main()
 
 6. [hm_heap](hm_heap.md)
 
+7. [hm_set](hm_set.md)
+
 
 
 <br><br><br>
