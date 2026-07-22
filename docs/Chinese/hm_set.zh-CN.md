@@ -39,8 +39,8 @@
 
 > **小功能**
 ```c
-#define hm_set_size(s) ((s)->size)
-#define hm_set_len(s) ((s)->len)
+size_t hm_set_size(hm_set* set);
+size_t hm_set_len(hm_set* set);
 
 /**
  * 获取集合的负载因子

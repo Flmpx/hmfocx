@@ -38,8 +38,8 @@
 
 > **Small Functions**
 ```c
-#define hm_map_size(l) ((l)->size)
-#define hm_map_len(l) ((l)->len)
+size_t hm_map_size(hm_map* map);
+size_t hm_map_len(hm_map* map);
 
 /**
  * Get the load factor of the map 

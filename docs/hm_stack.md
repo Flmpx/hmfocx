@@ -40,8 +40,8 @@
 
 > **Small Functions**
 ```c
-#define hm_stack_size(s) ((s)->top)
-#define hm_stack_capacity(s) ((s)->capacity)
+size_t hm_stack_size(hm_stack* stack);
+size_t hm_stack_capacity(hm_stack* stack);
 ```
 <br><br><br>
 

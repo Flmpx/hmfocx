@@ -43,8 +43,8 @@ typedef struct hm_stack {
  * Simple functions
  */
 
-#define hm_stack_size(s) ((s)->top)
-#define hm_stack_capacity(s) ((s)->capacity)
+extern size_t hm_stack_size(hm_stack* stack);
+extern size_t hm_stack_capacity(hm_stack* stack);
 
 
 /**

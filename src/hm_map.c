@@ -5,6 +5,17 @@
 #include "../include/hm_map.h"
 #include <stdlib.h>
 #include <stdint.h>
+
+
+size_t hm_map_size(hm_map* map) {
+    return map->size;
+}
+
+size_t hm_map_len(hm_map* map) {
+    return map->len;
+}
+
+
 /**
  * `hm_map_get_index()` returns `invalid_index(SIZE_MAX)` to represents that the key was not found
  */

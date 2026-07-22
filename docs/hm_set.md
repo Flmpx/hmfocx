@@ -37,8 +37,8 @@
 
 > **Small Functions**
 ```c
-#define hm_set_size(s) ((s)->size)
-#define hm_set_len(s) ((s)->len)
+size_t hm_set_size(hm_set* set);
+size_t hm_set_len(hm_set* set);
 
 /**
  * Get the load factor of the set 

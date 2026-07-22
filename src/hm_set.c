@@ -5,6 +5,16 @@
 #include "../include/hm_set.h"
 #include <stdlib.h>
 #include <stdint.h>
+
+size_t hm_set_size(hm_set* set) {
+    return set->size;
+}
+
+size_t hm_set_len(hm_set* set) {
+    return set->len;
+}
+
+
 /**
  * `hm_set_get_index()` returns `invalid_index(SIZE_MAX)` to represents that the key was not found
  */

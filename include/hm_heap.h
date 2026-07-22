@@ -44,8 +44,8 @@ typedef struct hm_heap {
  * Simple functions
  */
 
-#define hm_heap_size(s) ((s)->size)
-#define hm_heap_capacity(s) ((s)->capacity)
+extern size_t hm_heap_size(hm_heap* heap);
+extern size_t hm_heap_capacity(hm_heap* heap);
 
 /**
  * Initialize

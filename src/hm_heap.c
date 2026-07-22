@@ -6,6 +6,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+size_t hm_heap_size(hm_heap* heap) {
+    return heap->size;
+}
+
+size_t hm_heap_capacity(hm_heap* heap) {
+    return heap->capacity;
+}
+
 
 /**
  * Initialize the heap(fixed-size heap)

@@ -60,7 +60,7 @@ typedef struct hm_list_iter {
  * Some simple functions
  */
 
-#define hm_list_size(l) ((l)->size)
+extern size_t hm_list_size(hm_list* list);
 
 
 /**

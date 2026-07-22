@@ -40,8 +40,8 @@
 
 > **小功能**
 ```c
-#define hm_queue_size(s) ((s)->size)
-#define hm_queue_capacity(s) ((s)->capacity)
+size_t hm_queue_size(hm_queue* queue);
+size_t hm_queue_capacity(hm_queue* queue);
 ```
 <br><br><br>
 

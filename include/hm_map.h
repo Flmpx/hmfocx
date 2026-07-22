@@ -77,8 +77,8 @@ typedef struct hm_map_iter {
  * Some simple functions
  */
 
-#define hm_map_size(m) ((m)->size)
-#define hm_map_len(m) ((m)->len)
+extern size_t hm_map_size(hm_map* map);
+extern size_t hm_map_len(hm_map* map);
 extern double hm_map_get_load_factor(hm_map* map);
 
 /**

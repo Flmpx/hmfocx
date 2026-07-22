@@ -8,6 +8,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+size_t hm_stack_size(hm_stack* stack) {
+    return stack->top;
+}
+
+size_t hm_stack_capacity(hm_stack* stack) {
+    return stack->capacity;
+}
+
 
 
 /**

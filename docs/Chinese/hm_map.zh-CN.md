@@ -38,8 +38,8 @@
 
 > **小功能**
 ```c
-#define hm_map_size(l) ((l)->size)
-#define hm_map_len(l) ((l)->len)
+size_t hm_map_size(hm_map* map);
+size_t hm_map_len(hm_map* map);
 
 /**
  * 获取散列表的负载因子

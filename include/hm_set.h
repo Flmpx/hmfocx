@@ -76,8 +76,8 @@ typedef struct hm_set_iter {
  * Some simple functions
  */
 
-#define hm_set_size(s) ((s)->size)
-#define hm_set_len(s) ((s)->len)
+extern size_t hm_set_size(hm_set* set);
+extern size_t hm_set_len(hm_set* set);
 extern double hm_set_get_load_factor(hm_set* set);
 
 

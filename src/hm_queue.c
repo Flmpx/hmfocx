@@ -7,6 +7,15 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+size_t hm_queue_size(hm_queue* queue) {
+    return queue->size;
+}
+
+size_t hm_queue_capacity(hm_queue* queue) {
+    return queue->capacity;
+}
+
+
 /**
  * Initialize the queue(fixed-size queue)
  * @note - Use the parameter `capacity` to set the size for this queue

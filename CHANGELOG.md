@@ -9,6 +9,8 @@
 ### Changed
 - **refactor:** Change the behavior when insert the same key in `hm_map` & `hm_set` --- The insert function(`hm_map_insert` & `hm_set_insert`) still remain the old entry(map --> key & val, set --> key) in `hm_map` or `hm_set` 
     - You should handle this special sitution(insert same key)
+- **refactor:** Use function instead of macro to achieve `small functions` of every container
+    - The old code that using macro can use this new version `small functions` whitout any fix
 
 ## [0.9.0] - 2026-07-22
 

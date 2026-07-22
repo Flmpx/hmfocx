@@ -42,8 +42,8 @@
 
 > **小功能**
 ```c
-#define hm_heap_size(s) ((s)->size)
-#define hm_heap_capacity(s) ((s)->capacity)
+size_t hm_heap_size(hm_heap* heap);
+size_t hm_heap_capacity(hm_heap* heap);
 ```
 <br><br><br>
 

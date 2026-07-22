@@ -8,6 +8,10 @@
 #include <stdbool.h>
 
 
+size_t hm_list_size(hm_list* list) {
+    return list->size;
+}
+
 
 /**
  * Initialize a list

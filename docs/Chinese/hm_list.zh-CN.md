@@ -41,7 +41,7 @@
 
 > **小功能**
 ```c
-#define hm_list_size(l) ((l)->size)
+size_t hm_list_size(hm_list* list);
 ```
 <br><br><br>
 
