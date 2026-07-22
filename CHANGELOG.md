@@ -12,6 +12,9 @@
 - **refactor:** Use function instead of macro to achieve `small functions` of every container
     - The old code that using macro can use this new version `small functions` whitout any fix
 
+### Improved
+- Improve the speed of `hm_map_clear` and `hm_set_clear` when `free_key` and `free_val` is `NULL`
+
 ## [0.9.0] - 2026-07-22
 
 ### Added

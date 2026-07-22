@@ -341,13 +341,35 @@ hm_map_ret hm_map_shrink(hm_map* map) {
  */
 void hm_map_clear(hm_map* map) {
     size_t l = map->len;
-    for (size_t i = 0; i < l; i++) {
-        if (map->buckets_status[i] == hm_exist_in_map) {
-            if (map->free_key) map->free_key(map->buckets[i].key);
-            if (map->free_val) map->free_val(map->buckets[i].val);
+    
+    if (!map->free_key && !map->free_val) {
+        for (size_t i = 0; i < l; i++) {
+            map->buckets_status[i] = hm_none_in_map;
         }
-        map->buckets_status[i] = hm_none_in_map;
+    } else if (map->free_key && !map->free_val) {
+        for (size_t i = 0; i < l; i++) {
+            if (map->buckets_status[i] == hm_exist_in_map) {
+                map->free_key(map->buckets[i].key);
+            }
+            map->buckets_status[i] = hm_none_in_map;
+        }
+    } else if (!map->free_key && map->free_val) {
+        for (size_t i = 0; i < l; i++) {
+            if (map->buckets_status[i] == hm_exist_in_map) {
+                map->free_val(map->buckets[i].val);
+            }
+            map->buckets_status[i] = hm_none_in_map;
+        }
+    } else {
+        for (size_t i = 0; i < l; i++) {
+            if (map->buckets_status[i] == hm_exist_in_map) {
+                map->free_key(map->buckets[i].key);
+                map->free_val(map->buckets[i].val);
+            }
+            map->buckets_status[i] = hm_none_in_map;
+        }  
     }
+
     map->size = 0;
 
 }

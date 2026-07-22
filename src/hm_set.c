@@ -337,11 +337,17 @@ hm_set_ret hm_set_shrink(hm_set* set) {
  */
 void hm_set_clear(hm_set* set) {
     size_t l = set->len;
-    for (size_t i = 0; i < l; i++) {
-        if (set->buckets_status[i] == hm_exist_in_set) {
-            if (set->free_key) set->free_key(set->buckets[i].key);
+    if (set->free_key) {
+        for (size_t i = 0; i < l; i++) {
+            if (set->buckets_status[i] == hm_exist_in_set) {
+                set->free_key(set->buckets[i].key);
+            }
+            set->buckets_status[i] = hm_none_in_set;
         }
-        set->buckets_status[i] = hm_none_in_set;
+    } else {
+        for (size_t i = 0; i < l; i++) {
+            set->buckets_status[i] = hm_none_in_set;
+        }
     }
     set->size = 0;
 
