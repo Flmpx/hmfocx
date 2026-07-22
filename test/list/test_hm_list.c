@@ -3,7 +3,6 @@
  * Licensed under MIT (see LICENSE).
  */
 #include "../../include/hm_list.h"
-#include "../../function/cmp/hm_cmp.h"
 #include "../hm_test_tool.h"
 #include <time.h>
 #include <stdio.h>

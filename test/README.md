@@ -23,9 +23,8 @@ set(hm_src ../../src/${HM_TARGET}.c)                # The C file that needs to b
 
 set(hm_test test_${HM_TARGET}.c)                     # test file
 
-set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information
+set(hm_test_tool ../hm_test_tool.c)              # some useful tools for each test part, such as printing test information, cmp and hash
 
-set(hm_functions ../../function/cmp/hm_cmp.c)           # some functions are needed for testing this container
 
 
 # The output path of executable in remote and local test is the same -- `bin/`
@@ -35,7 +34,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool})
 
 add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
 
@@ -75,7 +74,6 @@ endif()
 
 ```c
 #include "../../include/hm_list.h"
-#include "../../function/cmp/hm_cmp.h"
 #include "../hm_test_tool.h"
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed

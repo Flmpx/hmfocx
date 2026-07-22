@@ -10,8 +10,6 @@ set(hm_test test_${HM_TARGET}.c)
 
 set(hm_test_tool ../hm_test_tool.c)
 
-set(hm_functions ../../function/cmp/hm_cmp.c)
-
 
 # remote is the same as the local
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)

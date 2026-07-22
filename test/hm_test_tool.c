@@ -5,10 +5,18 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "hm_test_tool.h"
+#include <string.h>
 #define COLOR_RESET   "\033[0m"
 #define COLOR_RED     "\033[31m"
 #define COLOR_GREEN   "\033[32m"
 #define COLOR_YELLOW  "\033[33m"
+
+
+
+/**
+ * Print tools
+ * 
+ */
 
 void check_res(bool res, const char* info, int* fail_cnt, int tag) {
     if (!res) {
@@ -77,4 +85,58 @@ void print_speed_vs(const char* info_a, clock_t start_a, clock_t end_a,
     }
     
 
+}
+
+
+
+
+/**
+ * Cmp tools
+ * 
+ */
+
+int cmp_int_up(const void* ptr1, const void* ptr2) {
+    int a = *(int*)ptr1, b = *(int*)ptr2;
+    return (a > b) - (a < b);
+}
+
+int cmp_int_down(const void* ptr1, const void* ptr2) {
+    int a = *(int*)ptr1, b = *(int*)ptr2;
+    return (a < b) - (a > b);
+}
+
+int cmp_str_up(const void* ptr1, const void* ptr2) {
+    return strcmp((const char*)ptr1, (const char*)ptr2);
+    
+}
+
+int cmp_str_down(const void* ptr1, const void* ptr2) {
+    return -strcmp((const char*)ptr2, (const char*)ptr1);
+    
+}
+
+
+/**
+ * Hash tools
+ */
+
+size_t hash_int_1(const void* ptr) {
+    unsigned int key = (unsigned int)(*(int*)ptr);
+    key = ((key >> 16) ^ key) * 0x45d9f3b;
+    key = ((key >> 16) ^ key) * 0x45d9f3b;
+    key = (key >> 16) ^ key;
+    return (size_t)key;
+}
+
+static const size_t mod = 1000000009;
+static const size_t base = 131;
+
+
+size_t hash_str_1(const void* ptr) {
+    char* key = (char*)ptr;
+    size_t hash_res = 0;
+    for (size_t i = 0; key[i]; i++) {
+        hash_res = (hash_res * base + key[i] + 199) % mod;
+    }
+    return hash_res;
 }

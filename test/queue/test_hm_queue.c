@@ -4,7 +4,6 @@
  */
 
 
-#include "../../function/cmp/hm_cmp.h"
 #include "../hm_test_tool.h"
 #include <stdlib.h>
 #include "../../include/hm_queue.h"

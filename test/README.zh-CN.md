@@ -25,9 +25,8 @@ set(hm_src ../../src/${HM_TARGET}.c)                # 待测的 C 文件
 
 set(hm_test test_${HM_TARGET}.c)                     # 测试文件
 
-set(hm_test_tool ../hm_test_tool.c)              # 通用测试辅助工具函数(如打印测试信息)
+set(hm_test_tool ../hm_test_tool.c)              # 通用测试辅助工具函数(如打印测试信息, 比较 和 哈希算法)
 
-set(hm_functions ../../function/cmp/hm_cmp.c)           # 该容器测试所需的额外文件
 
 
 # 远程和本地测试的可执行文件都输出到 `bin/`
@@ -37,7 +36,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 set(CMAKE_BUILD_TYPE Debug)
 
-add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool} ${hm_functions})
+add_executable(test_${HM_TARGET} ${hm_src} ${hm_test} ${hm_test_tool})
 
 add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
 
@@ -75,7 +74,6 @@ endif()
 
 ```c
 #include "../../include/hm_list.h"
-#include "../../function/cmp/hm_cmp.h"
 #include "../hm_test.h"
 
 // 该变量记录总失败次数，可作为返回值判断测试是否通过
