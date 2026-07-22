@@ -106,7 +106,7 @@ int main()
 ```c
 /**
  * Insert a key-value pair into the map
- * @note - Rreturn `hm_map_ret_error` on failure
+ * @note - Return `hm_map_ret_error` on failure
  * @note - Return `hm_map_ret_suc` on success
  * @note - If the key already exists, the old key remains in the map. 
  * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)
@@ -124,7 +124,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
  * Get a pointer to the  entry in the map
  * @note - If the key does not exist, return `NULL`
  */
-hm_entry* hm_map_get(hm_map* map, void* key);
+hm_map_entry* hm_map_get(hm_map* map, void* key);
 ```
 <details>
 <summary>try: insert & get</summary>
@@ -157,7 +157,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -263,7 +263,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -366,7 +366,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -393,7 +393,7 @@ int main()
     }
     print_load_factor(&map);
     
-    // del all
+    // del some
     for (int i = 0; i < num * 1000 - num * 10; i++) {
         hm_map_del(&map, &i);
     }
@@ -451,7 +451,7 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * Get next entry of map
  * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
  */
-hm_entry* hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: iter</summary>
@@ -484,7 +484,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -510,7 +510,7 @@ int main()
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_entry* e = hm_map_iter_next(&iter);
+        hm_map_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);
@@ -597,7 +597,7 @@ void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_entry* e = hm_map_iter_next(&iter);
+        hm_map_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);

@@ -105,7 +105,7 @@ int main()
 ```c
 /**
  * Insert a key into the set
- * @note - Rreturn `hm_set_ret_error` on failure
+ * @note - Return `hm_set_ret_error` on failure
  * @note - Return `hm_set_ret_suc` on success
  * @note - If the key already exists, the old key remains in the set. 
  * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)

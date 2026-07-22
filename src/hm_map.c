@@ -209,7 +209,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
 
 /**
  * Insert a key-value pair into the map
- * @note - Rreturn `hm_map_ret_error` on failure
+ * @note - Return `hm_map_ret_error` on failure
  * @note - Return `hm_map_ret_suc` on success
  * @note - If the key already exists, the old key remains in the map. 
  * Therefore, if your key was dynamically allocated, you should free it (optional suggestion)

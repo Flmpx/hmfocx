@@ -120,7 +120,7 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
  * 获取散列表中条目的指针
  * @note - 如果键不存在，返回 `NULL`
  */
-hm_entry* hm_map_get(hm_map* map, void* key);
+hm_map_entry* hm_map_get(hm_map* map, void* key);
 ```
 <details>
 <summary>try: 插入 & 获取</summary>
@@ -153,7 +153,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取 和 打印
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -259,7 +259,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -360,7 +360,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -387,7 +387,7 @@ int main()
     }
     print_load_factor(&map);
     
-    // 全删掉
+    // 删掉大部分
     for (int i = 0; i < num * 1000 - num * 10; i++) {
         hm_map_del(&map, &i);
     }
@@ -442,7 +442,7 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * 通过迭代器获取下一个条目的指针
  * @note - 请先调用 `hm_map_iter_has_next()` 检查是否存在下一个条目
  */
-hm_entry* hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -475,7 +475,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -501,7 +501,7 @@ int main()
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_entry* e = hm_map_iter_next(&iter);
+        hm_map_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);
@@ -584,7 +584,7 @@ void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_entry* e = hm_map_iter_next(&iter);
+        hm_map_entry* e = hm_map_iter_next(&iter);
         int* k = e->key;
         char* v = e->val;
         printf("| k: %d, v: %s\n", *k, v);
@@ -692,7 +692,7 @@ int main()
         hm_map_insert(&map, k, v);
     }
     
-    // map must be freed after use
+    // 散列表在使用完后必须释放掉
     hm_map_free(&map);
     return 0;
 }

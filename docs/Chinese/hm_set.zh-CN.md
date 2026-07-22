@@ -121,7 +121,7 @@ hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
  * 获取集合中条目的指针
  * @note - 如果键不存在，返回 `NULL`
  */
-hm_entry* hm_set_get(hm_set* set, void* key);
+hm_set_entry* hm_set_get(hm_set* set, void* key);
 ```
 <details>
 <summary>try: 插入 & 获取</summary>
@@ -178,7 +178,7 @@ int main()
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_set_insert(&set, k) == hm_set_ret_existed) {
-        // 如果这个 key 已经在 map 中了, 那这个 malloc 来的 key 最好释放掉(新 key 和 旧 key 的 不是同一块内存区域)
+        // 如果这个 key 已经在 set 中了, 那这个 malloc 来的 key 最好释放掉(新 key 和 旧 key 的 不是同一块内存区域)
         free(k);
     }
     print_set(&set, num);
@@ -418,7 +418,7 @@ bool hm_set_iter_has_next(hm_set_iter* iter);
  * 通过迭代器获取下一个条目的指针
  * @note - 请先调用 `hm_set_iter_has_next()` 检查是否存在下一个条目
  */
-hm_entry* hm_set_iter_next(hm_set_iter* iter);
+hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
