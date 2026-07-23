@@ -22,7 +22,9 @@ typedef enum hm_stack_ret {
     hm_stack_ret_error = 0x9,       // Malloc fail when expand the capacity of stack or init the stack
     hm_stack_ret_full,              // stack is full now
     hm_stack_ret_empty,             // stack is empty now
-    hm_stack_ret_suc                // Operation successful, like push and init successful
+    hm_stack_ret_suc,               // Operation successful, like push and init successful
+    hm_stack_ret_none,              // Operation invalid, like shrink capacity of a fixed-size stack
+    hm_stack_ret_warn               // The pass parameter is incorrect
 } hm_stack_ret;
 
 
@@ -71,6 +73,7 @@ extern bool hm_stack_is_empty(hm_stack* stack);
 extern hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 extern void* hm_stack_peek(hm_stack* stack);
 extern void* hm_stack_pop(hm_stack* stack);
+extern hm_stack_ret hm_stack_shrink(hm_stack* stack);
 
 
 /**

@@ -11,6 +11,8 @@
     - It can reserve a start capacity for map when initizlize map
 - Add new function `hm_set_init_reserve` for `hm_set`
     - It can reserve a start capacity for set when initizlize set
+- Add new function `hm_stack_shrink` for `hm_stack`
+    - It can decrease the capacity of stack if possible
 
 
 ## [0.10.0] - 2026-07-22

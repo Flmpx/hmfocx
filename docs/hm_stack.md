@@ -17,6 +17,7 @@
     - [Pop](#pop)
     - [Peek](#peek)
     - [Judge](#judge)
+    - [Shrink](#shrink)
     - [Clear](#clear)
     - [Free](#free)
 - [Tips](#tip)
@@ -257,6 +258,19 @@ stack is full
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
+
+> **Shrink**
+```c
+/**
+ * Shrink the capacity of stack if possible
+ * @note - Only dynamic-grow stack have a chance to shrink
+ * @note - Returns `hm_stack_ret_none` if the stack can't be shrunk
+ */
+hm_stack_ret hm_stack_shrink(hm_stack* stack);
+```
+<br><br><br>
 
 
 <a id = "clear"></a>

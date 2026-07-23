@@ -16,6 +16,7 @@
     - [出栈](#pop)
     - [查看](#peek)
     - [判断](#judge)
+    - [收缩](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -251,6 +252,19 @@ stack is full
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
+
+> **收缩**
+```c
+/**
+ * 如果可以, 对栈进行缩容
+ * @note - 只用动态增长的栈有机会缩容
+ * @note - 如果栈不可以被缩容, 返回 `hm_stack_ret_none`
+ */
+hm_stack_ret hm_stack_shrink(hm_stack* stack);
+```
+<br><br><br>
 
 
 <a id = "clear"></a>

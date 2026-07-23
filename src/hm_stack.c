@@ -80,6 +80,27 @@ bool hm_stack_is_empty(hm_stack* stack) {
     return stack->top == 0;
 }
 
+
+static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
+    if (stack->top > new_capacity) {
+        return hm_stack_ret_warn;
+    }
+
+    // prevent overflow
+    if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        return hm_stack_ret_error;
+    }
+
+    void** new_vals = (void**)realloc(stack->vals, new_capacity * sizeof(void*));
+    if (new_vals == NULL) {
+        return hm_stack_ret_error;
+    }
+    stack->vals = new_vals;
+    stack->capacity = new_capacity;
+
+    return hm_stack_ret_suc;
+}
+
 /**
  * Push a value to the stack
  * @note - Return `hm_stack_ret_full` when stack is full
@@ -107,17 +128,10 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
             new_capacity = 1;
         }
 
-        // prevent overflow
-        if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        if (hm_stack_fresh(stack, new_capacity) != hm_stack_ret_suc) {
             return hm_stack_ret_error;
         }
-
-        void** new_vals = (void**)realloc(stack->vals, new_capacity * sizeof(void*));
-        if (new_vals == NULL) {
-            return hm_stack_ret_error;
-        }
-        stack->vals = new_vals;
-        stack->capacity = new_capacity;
+        
     }
 
     stack->vals[stack->top++] = val;
@@ -147,6 +161,22 @@ void* hm_stack_pop(hm_stack* stack) {
         return NULL;
     } 
     return stack->vals[--(stack->top)];
+}
+
+
+/**
+ * Shrink the capacity of stack if possible
+ * @note - Only dynamic-grow stack have a chance to shrink
+ * @note - Returns `hm_stack_ret_none` if the stack can't be shrunk
+ */
+hm_stack_ret hm_stack_shrink(hm_stack* stack) {
+    if (!stack->dynamic_grow || stack->top >= stack->capacity / 2) {
+        return hm_stack_ret_none;
+    }
+    size_t new_capacity = stack->capacity / 2;
+
+    return hm_stack_fresh(stack, new_capacity);
+
 }
 
 
