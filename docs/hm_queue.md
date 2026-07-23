@@ -16,6 +16,7 @@
     - [Dequeue](#deq)
     - [Peek](#peek)
     - [Judge](#judge)
+    - [Shrink](#shrink)
     - [Clear](#clear)
     - [Free](#free)
 - [Tips](#tip)
@@ -256,6 +257,19 @@ queue is full
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
+
+> **Shrink**
+```c
+/**
+ * Shrink the capacity of queue if possible
+ * @note - Only dynamic-grow queue have a chance to shrink
+ * @note - Returns `hm_queue_ret_none` if the queue can't be shrunk
+ */
+hm_queue_ret hm_queue_shrink(hm_queue* queue);
+```
+<br><br><br>
 
 
 <a id = "clear"></a>

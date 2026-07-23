@@ -17,6 +17,7 @@
     - [出队](#deq)
     - [查看](#peek)
     - [判断](#judge)
+    - [收缩](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -252,6 +253,21 @@ queue is full
 
 </details>
 <br><br><br>
+
+
+<a id = "shrink"></a>
+
+> **收缩**
+```c
+/**
+ * 如果可以, 对队列进行缩容
+ * @note - 只用动态增长的队列有机会缩容
+ * @note - 如果队列不可以被缩容, 返回 `hm_queue_ret_none`
+ */
+hm_queue_ret hm_queue_shrink(hm_queue* queue);
+```
+<br><br><br>
+
 
 
 <a id = "clear"></a>

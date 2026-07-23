@@ -602,6 +602,10 @@ void test_empty_fixed_queue_oper() {
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
     check_res(pointer == NULL, "the peek front should be NULL when queue is emtpy", &fail_cnt, tag++);
     
+    // shrink
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when queue is empty", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
+
     // dequeue
     pointer = hm_queue_deq(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
@@ -682,6 +686,14 @@ void test_empty_dynamic_queue_oper() {
     hm_queue_free(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
 
+
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
+
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_suc, "shrink should return suc when queue is empty", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
+    hm_queue_free(&queue);
+
+
     print_end("QUEUE(DYNAMIC) | BOUNDARY | OPER EMPTY QUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -717,6 +729,10 @@ void test_full_fixed_queue_oper() {
         free(val);
     }
 
+    // shrink
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when when queue is full", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, capacity, false, capacity, free);
+
     hm_queue_free(&queue);
     print_end("QUEUE(FIXED) | BOUNDARY | OPER FULL QUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -738,6 +754,10 @@ void test_full_dynamic_queue_oper() {
         *v = i * 10;
         hm_queue_enq(&queue, v);
     }
+
+    // shrink
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when when queue is full", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, capacity, true, capacity, free);    
 
     // dequeue a val
     int* val = (int*)malloc(sizeof(int));
@@ -794,6 +814,12 @@ void test_no_capacity_fixed_queue() {
     hm_queue_free(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
 
+    // shrink
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and fixed-size queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+
+    hm_queue_free(&queue);
+
 
     print_end("QUEUE(FIXED) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -839,6 +865,12 @@ void test_no_capacity_dynamic_queue() {
     hm_queue_free(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
     
+
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
+
+    hm_queue_free(&queue);
+
     print_end("QUEUE(DYNAMIC) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -959,6 +991,81 @@ void test_queue_dynamic_judge() {
     HM_TEST_COUNTER
 }
 
+
+void test_queue_fixed_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(FIXED) | FUNC | SHRINK | TYPE: [INT]");
+    
+    int capacity = 64;
+    hm_queue queue;
+    hm_queue_init(&queue, capacity, free);
+
+    // push
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_queue_shrink(&queue) != hm_queue_ret_none) {
+            fail++;
+        }
+        test_queue_integrity(&queue, &fail_cnt, tag++, capacity - i, false, capacity, free);
+        int* v = hm_queue_deq(&queue);
+        free(v);
+    }
+    check_res(fail == 0, "shrink function shouldn return `none` when shrink fixed-size queue", &fail_cnt, tag++);
+    
+    hm_queue_free(&queue);
+    print_end("QUEUE(FIXED) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_queue_dynamic_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]");
+    
+    int capacity = 64;
+    hm_queue queue;
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+
+    // push
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    int fail_not_shrink = 0, fail_shrink = 0;
+    for (int i = 0; i < capacity; i++) {
+        size_t s = hm_queue_size(&queue), c = hm_queue_capacity(&queue);
+
+        hm_queue_ret ret = hm_queue_shrink(&queue);
+        if (s >= c / 2 && ret != hm_queue_ret_none) {
+            fail_not_shrink++;
+        } else if (s < c / 2 && ret != hm_queue_ret_suc) {
+            fail_shrink++;
+        }
+        test_queue_integrity(&queue, &fail_cnt, tag++, capacity - i, true, capacity, free);
+
+        int* v = hm_queue_deq(&queue);
+        free(v);
+    }
+    check_res(fail_not_shrink == 0, "shrink function should return none when `s >= c / 2`", &fail_cnt, tag++);
+    check_res(fail_shrink == 0, "shrink function should return suc when `s < c / 2`", &fail_cnt, tag++);
+    
+    hm_queue_free(&queue);
+    print_end("QUEUE(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
 void test_queue_fixed_func() {
     test_queue_fixed_init();                                    printf("\n");
     
@@ -973,6 +1080,8 @@ void test_queue_fixed_func() {
     test_queue_fixed_free();                                    printf("\n");
 
     test_queue_fixed_judge();                                   printf("\n");
+
+    test_queue_fixed_shrink();                                  printf("\n");
     
 }
 
@@ -990,6 +1099,8 @@ void test_queue_dynamic_func() {
     test_queue_dynamic_free();                                  printf("\n");
 
     test_queue_dynamic_judge();                                 printf("\n");
+
+    test_queue_dynamic_shrink();                                printf("\n");
     
 }
 

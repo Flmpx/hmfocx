@@ -15,6 +15,8 @@
     - It can decrease the capacity of stack if possible
 - Add new function `hm_heap_shrink` for `hm_heap`
     - It can decrease the capacity of heap if possible
+- Add new function `hm_queue_shrink` for `hm_queue`
+    - It can decrease the capacity of queue if possible
 
 
 ## [0.10.0] - 2026-07-22

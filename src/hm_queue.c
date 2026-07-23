@@ -83,6 +83,40 @@ bool hm_queue_is_empty(hm_queue* queue) {
 }
 
 
+static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
+    if (queue->size > new_capacity) {
+        return hm_queue_ret_warn;
+    }
+
+    // prevent overflow
+    if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        return hm_queue_ret_error;
+    }
+
+    void** new_vals = (void**)malloc(sizeof(void*) * new_capacity);
+
+    if (new_vals == NULL) {
+        return hm_queue_ret_error;
+    }
+
+    for (size_t i = 0; i < queue->size; i++) {
+        size_t pos = (i + queue->front) % queue->capacity;
+        new_vals[i] = queue->vals[pos];
+    }
+
+    free(queue->vals);
+    queue->vals = new_vals;
+
+    queue->front = 0;
+    queue->rear = queue->size;
+
+    queue->capacity = new_capacity;
+
+    return hm_queue_ret_suc;
+}
+
+
+
 /**
  * Enqueue a value
  * @note - Return `hm_queue_ret_full` when queue is full
@@ -110,29 +144,9 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
             new_capacity = 1;
         }
 
-        // prevent overflow
-        if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        if (hm_queue_fresh(queue, new_capacity) != hm_queue_ret_suc) {
             return hm_queue_ret_error;
         }
-
-        void** new_vals = (void**)malloc(sizeof(void*) * new_capacity);
-
-        if (new_vals == NULL) {
-            return hm_queue_ret_error;
-        }
-
-        for (size_t i = 0; i < queue->size; i++) {
-            size_t pos = (i + queue->front) % queue->capacity;
-            new_vals[i] = queue->vals[pos];
-        }
-
-        free(queue->vals);
-        queue->vals = new_vals;
-
-        queue->front = 0;
-        queue->rear = queue->size;
-
-        queue->capacity = new_capacity;
         
     }
 
@@ -170,6 +184,21 @@ void* hm_queue_deq(hm_queue* queue) {
     return val;
 }
 
+
+/**
+ * Shrink the capacity of queue if possible
+ * @note - Only dynamic-grow queue have a chance to shrink
+ * @note - Returns `hm_queue_ret_none` if the queue can't be shrunk
+ */
+hm_queue_ret hm_queue_shrink(hm_queue* queue) {
+    if (!queue->dynamic_grow || queue->size >= queue->capacity / 2) {
+        return hm_queue_ret_none;
+    }
+
+    size_t new_capacity = queue->capacity / 2;
+
+    return hm_queue_fresh(queue, new_capacity);
+}
 
 
 /**
