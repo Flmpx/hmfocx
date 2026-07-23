@@ -86,6 +86,7 @@ extern double hm_map_get_load_factor(hm_map* map);
  */
 
 extern void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
+extern hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len);
 extern hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 extern hm_map_entry* hm_map_get(hm_map* map, void* key);
 extern hm_map_ret hm_map_del(hm_map* map, void* key);

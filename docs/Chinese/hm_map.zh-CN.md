@@ -60,6 +60,15 @@ double hm_map_get_load_factor(hm_map* map)
  * @note - 与链表类似，`free_key` 和 `free_val` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
  */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
+
+
+/**
+ * 初始化 hm_map 并预分配空间
+ * @note - 该函数不仅需要键和值的`释放`函数，还需要`哈希`和`比较`键的函数
+ * @note - 与链表类似，`free_key` 和 `free_val` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
+ * @note - 参数 `len` 代表这个散列表的初始长度, 最小长度为 17, 如果 `len` < `min_len`, 那长度就等于 `min_len` 
+ */
+hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len);
 ```
 <details>
 <summary>try: 初始化</summary>

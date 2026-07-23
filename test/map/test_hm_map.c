@@ -64,6 +64,49 @@ void test_map_init() {
     HM_TEST_COUNTER
 }
 
+void test_map_init_reserve() {
+    hm_map map;
+    int fail_cnt = 0;
+    int tag = 0;
+    int len = 64;
+    print_run("MAP | FUNC | INIT RESERVE");
+    hm_map_init_reserve(&map, hash_int_1, cmp_int_up, free, free, len);
+    
+    check_res(map.buckets, "the buckets shouldn't be NULL", &fail_cnt, tag++);
+    check_res(map.buckets_status, "the buckets_status shouldn't be NULL", &fail_cnt, tag++);
+    check_res(map.cmp == cmp_int_up, "pass `cmp_int_up` but map.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(map.hash == hash_int_1, "pass `hash_int_1` but map.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(map.free_key == free, "pass `free` for map.free_key but map.free_key isn't `free`", &fail_cnt, tag++);   
+    check_res(map.free_val == free, "pass `free` for map.free_val but map.free_val isn't `free`", &fail_cnt, tag++);   
+    check_res(map.len == len, "map.len should be len", &fail_cnt, tag++);
+    check_res(map.size == 0, "map.size isn't 0", &fail_cnt, tag++);
+    test_map_integrity(&map, &fail_cnt, tag++);
+
+    hm_map_free(&map);
+
+
+    hm_map_init_reserve(&map, hash_int_1, cmp_int_up, NULL, NULL, len);
+    
+    check_res(map.free_key == NULL, "pass `NULL` but map.free_key isn't `NULL`", &fail_cnt, tag++);
+    check_res(map.free_val == NULL, "pass `NULL` but map.free_val isn't `NULL`", &fail_cnt, tag++);
+    test_map_integrity(&map, &fail_cnt, tag++);
+    
+    hm_map_free(&map);
+    
+    int s_len = 0;
+    int min_len = 17;
+    hm_map_init_reserve(&map, hash_int_1, cmp_int_up, NULL, NULL, s_len);
+    check_res(map.len == 17, "the map.len should be 17 when pass-in len < min_len", &fail_cnt, tag++);
+    check_res(map.size == 0, "the map.size should be 0", &fail_cnt, tag++);
+
+    hm_map_free(&map);
+    
+
+    print_end("MAP | FUNC | INIT RESERVE", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_map_insert() {
     int num = 100;
     hm_map map;
@@ -563,6 +606,52 @@ void test_map_insert_stress() {
     HM_TEST_COUNTER
 }
 
+
+void test_map_insert_with_reserve_stress() {
+    // type : int
+    int fail_cnt = 0;
+    int tag = 0;
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    print_run("MAP | STRESS | INSERT WITH RESERVE | TYPE K:[INT] V:[INT]");
+    for (int i = 0; i < cnt; i++) {
+        int* k = (int*)malloc(nums[i] * sizeof(int));
+        int* v = (int*)malloc(nums[i] * sizeof(int));
+        for (size_t j = 0; j < nums[i]; j++) {
+            k[j] = j;
+            v[j] = j;
+        }
+    
+        size_t same = 0, suc = 0, fail = 0;
+    
+        hm_map map;
+        hm_map_init_reserve(&map, hash_int_1, cmp_int_up, NULL, NULL, nums[i]);
+        clock_t start = clock();
+        for (size_t j = 0; j < nums[i]; j++) {
+            hm_map_ret ret = hm_map_insert(&map, &k[j], &v[j]);
+            
+            switch (ret) {
+                case hm_map_ret_suc: suc++; break;
+                case hm_map_ret_error: fail++; break;
+                case hm_map_ret_existed: same++; break;
+            }
+    
+        }
+        clock_t end = clock();
+        check_res(suc == map.size, "the successful counter is different from map.size", &fail_cnt, tag++);
+        check_res(suc + fail + same == nums[i], "the all tag of reurn from map_insert is different from the size of this insert stressful test", &fail_cnt, tag++);
+        test_map_integrity(&map, &fail_cnt, tag++);
+        print_run_time("INSERT WHIT RESERVE", start, end, nums[i], nums[i]);
+    
+        free(k);
+        free(v);
+        hm_map_free(&map);
+    }
+    print_end("MAP | STRESS | INSERT WITH RESERVE | TYPE K:[INT] V:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_map_insert_same() {
 
     print_run("MAP | BOUNDARY | INSRET SAME ENTRY | TYPE K:[INT] V:[INT]");
@@ -1006,6 +1095,8 @@ void test_single_entry_oper() {
 
 void function_test() {
     test_map_init();                                printf("\n");
+
+    test_map_init_reserve();                        printf("\n");
     
     test_map_insert();                              printf("\n");
     
@@ -1037,6 +1128,8 @@ void boundary_test() {
 
 void stress_test() {
     test_map_insert_stress();                       printf("\n");
+
+    test_map_insert_with_reserve_stress();          printf("\n");
     
     test_map_get_stress();                          printf("\n");
 

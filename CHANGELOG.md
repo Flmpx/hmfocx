@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### Added
+- Add new function `hm_map_init_reserve` for `hm_map`
+    - It can reserve a start capacity for map when initizlize map
+
 ## [0.10.0] - 2026-07-22
 
 ### Added

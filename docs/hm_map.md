@@ -62,6 +62,16 @@ double hm_map_get_load_factor(hm_map* map);
  * but `hash_key` and `cmp_key` must not be NULL
  */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
+
+/**
+ * Reserve capacity and initialize map
+ * @note - This function requires not only `free` function for key and value, 
+ * but also `hash` and `cmp` functions for keys
+ * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
+ * but `hash_key` and `cmp_key` must not be NULL
+ * @note - parameter `len` represents the start length of this map, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ */
+hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len);
 ```
 <details>
 <summary>try: init</summary>

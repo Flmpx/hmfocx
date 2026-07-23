@@ -254,6 +254,22 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
 
 }
 
+
+/**
+ * Reserve capacity and initialize map
+ * @note - This function requires not only `free` function for key and value, 
+ * but also `hash` and `cmp` functions for keys
+ * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
+ * but `hash_key` and `cmp_key` must not be NULL
+ * @note - parameter `len` represents the start length of this map, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ */
+hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len) {
+    hm_map_init(map, hash_key, cmp_key, free_key, free_val);
+
+    return hm_map_fresh(map, (len > min_len) ? len : min_len);
+
+}
+
 /**
  * Get the index of the key in the map
  * @note - If the key does not exist in the map, this function returns `invalid_index(SIZE_MAX)`
