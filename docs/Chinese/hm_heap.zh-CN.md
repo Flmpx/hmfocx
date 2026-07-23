@@ -15,7 +15,7 @@
     - [取出](#extract)
     - [查看](#peek)
     - [判断](#judge)
-    - [收缩](#shrink)
+    - [缩容](#shrink)
     - [构建](#build)
     - [重建](#rebuild)
     - [清空](#clear)
@@ -286,7 +286,7 @@ heap is full
 
 <a id = "shrink"></a>
 
-> **收缩**
+> **缩容**
 
 ```c
 /**
@@ -298,7 +298,7 @@ hm_heap_ret hm_heap_shrink(hm_heap* heap);
 ```
 
 <details>
-<summary>try: 收缩</summary>
+<summary>try: 缩容</summary>
 
 ```c
 #include <hm_heap.h>

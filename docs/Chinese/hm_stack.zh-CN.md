@@ -16,7 +16,7 @@
     - [出栈](#pop)
     - [查看](#peek)
     - [判断](#judge)
-    - [收缩](#shrink)
+    - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -255,7 +255,7 @@ stack is full
 
 <a id = "shrink"></a>
 
-> **收缩**
+> **缩容**
 ```c
 /**
  * 如果可以, 对栈进行缩容
@@ -266,7 +266,7 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack);
 ```
 
 <details>
-<summary>try: 收缩</summary>
+<summary>try: 缩容</summary>
 
 ```c
 #include <hm_stack.h>

@@ -15,7 +15,7 @@
     - [获取](#get)
     - [迭代器](#iter)
     - [删除](#del)
-    - [收缩](#shrink)
+    - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -371,7 +371,7 @@ int main()
 
 <a id = "shrink"></a>
 
-> **收缩**
+> **缩容**
 ```c
 /**
  * 如果可以, 对散列表进行缩容
@@ -380,7 +380,7 @@ int main()
 hm_map_ret hm_map_shrink(hm_map* map);
 ```
 <details>
-<summary>try: 收缩</summary>
+<summary>try: 缩容</summary>
 
 ```c
 #include <hm_map.h>

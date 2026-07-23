@@ -17,7 +17,7 @@
     - [出队](#deq)
     - [查看](#peek)
     - [判断](#judge)
-    - [收缩](#shrink)
+    - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -257,7 +257,7 @@ queue is full
 
 <a id = "shrink"></a>
 
-> **收缩**
+> **缩容**
 ```c
 /**
  * 如果可以, 对队列进行缩容
@@ -268,7 +268,7 @@ hm_queue_ret hm_queue_shrink(hm_queue* queue);
 ```
 
 <details>
-<summary>try: 收缩</summary>
+<summary>try: 缩容</summary>
 
 ```c
 #include <hm_queue.h>

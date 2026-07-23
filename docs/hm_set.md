@@ -87,7 +87,7 @@ int cmp(const void* p1, const void* p2) {
     return (a > b) - (a < b);
 }
 
-size_t hash(void* key) {
+size_t hash(const void* key) {
     unsigned int k = *(int*)key;
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
@@ -140,7 +140,7 @@ size: 0, length: 1314
  * Insert a key into the set
  * @note - Return `hm_set_ret_error` on failure
  * @note - Return `hm_set_ret_suc` on success
- * @note - If the key already exists, the old entry(key) remains in the map. And return `hm_set_ret_existed`.
+ * @note - If the key already exists, the old entry(key) remains in the set. And return `hm_set_ret_existed`.
  * Therefore, you should handle this special situation
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key);

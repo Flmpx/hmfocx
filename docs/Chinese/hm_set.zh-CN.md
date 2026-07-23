@@ -16,7 +16,7 @@
     - [获取](#get)
     - [迭代器](#iter)
     - [删除](#del)
-    - [收缩](#shrink)
+    - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
 - [提示](#tip)
@@ -85,7 +85,7 @@ int cmp(const void* p1, const void* p2) {
     return (a > b) - (a < b);
 }
 
-size_t hash(void* key) {
+size_t hash(const void* key) {
     unsigned int k = *(int*)key;
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
@@ -345,7 +345,7 @@ int main()
 
 <a id = "shrink"></a>
 
-> **收缩**
+> **缩容**
 ```c
 /**
  * 如果可以, 对集合进行缩容
@@ -354,7 +354,7 @@ int main()
 hm_set_ret hm_set_shrink(hm_set* set);
 ```
 <details>
-<summary>try: 收缩</summary>
+<summary>try: 缩容</summary>
 
 ```c
 #include <hm_set.h>
