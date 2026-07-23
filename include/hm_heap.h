@@ -23,7 +23,8 @@ typedef enum hm_heap_ret {
     hm_heap_ret_warn,              // The pass parameter is incorrect
     hm_heap_ret_full,              // Heap is full now
     hm_heap_ret_empty,             // Heap is empty now
-    hm_heap_ret_suc                // Operation successful, like insert and init successful
+    hm_heap_ret_suc,               // Operation successful, like insert and init successful
+    hm_heap_ret_none,              // Operation invalid, like shrink capacity of a fixed-size heap
 } hm_heap_ret;
 
 
@@ -69,6 +70,7 @@ extern bool hm_heap_is_empty(hm_heap* heap);
 extern hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 extern void* hm_heap_peek(hm_heap* heap);
 extern void* hm_heap_extract(hm_heap* heap);
+extern hm_heap_ret hm_heap_shrink(hm_heap* heap);
 
 
 /**

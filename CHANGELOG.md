@@ -13,6 +13,8 @@
     - It can reserve a start capacity for set when initizlize set
 - Add new function `hm_stack_shrink` for `hm_stack`
     - It can decrease the capacity of stack if possible
+- Add new function `hm_heap_shrink` for `hm_heap`
+    - It can decrease the capacity of heap if possible
 
 
 ## [0.10.0] - 2026-07-22

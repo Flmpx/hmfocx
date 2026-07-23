@@ -841,6 +841,12 @@ void test_empty_fixed_heap_oper() {
     
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
 
+
+    // shrink
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when heap is empty", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    
+
     // extract
     check_res(hm_heap_extract(&heap) == NULL, "the extract val should be NULL when heap is empty", &fail_cnt, tag++);
     
@@ -970,6 +976,12 @@ void test_empty_dynamic_heap_oper() {
     
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, NULL, cmp_int_up);
 
+    // shrink
+
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_suc, "shrink should return suc when heap is empty", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
+    hm_heap_free(&heap);
 
     print_end("HEAP(DYNAMIC) | BOUNDARY | OPER EMPTY HEAP | CAPACITY: 64", fail_cnt);
     HM_TEST_COUNTER
@@ -1095,6 +1107,13 @@ void test_full_fixed_heap_oper() {
         free(val);
     }
 
+
+    // shrink
+
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when when heap is full", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, capacity, false, capacity, free, cmp_int_down);
+
+
     hm_heap_free(&heap);
 
     print_end("HEAP(FIXED) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64", fail_cnt);
@@ -1211,6 +1230,22 @@ void test_full_dynamic_heap_oper() {
     check_res(cnt == 1, "the insert val should(only one) existed in heap after insert a val in dynamic-grow and full `rebuild` heap", &fail_cnt, tag++);
     
     hm_heap_free(&heap);
+
+
+    // shrink
+
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    // insert
+    srand(seed);
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        hm_heap_insert(&heap, v);
+    }
+
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when when heap is full", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, capacity, true, capacity, free, cmp_int_up);
+    hm_heap_free(&heap);
     
     print_end("HEAP(DYNAMIC) | BOUNDARY | OPER FULL HEAP | CAPACITY: 64", fail_cnt);
     HM_TEST_COUNTER
@@ -1268,7 +1303,9 @@ void test_no_capacity_fixed_heap_oper() {
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_down);
     hm_heap_free(&heap);
 
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and fixed-size heap", &fail_cnt, tag++);;
 
+    hm_heap_free(&heap);
     print_end("HEAP(FIXED) | BOUNDARY | NO CAPACITY HEAP OPER | CAPACITY: 0", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -1349,6 +1386,12 @@ void test_no_capacity_dynamic_heap_oper() {
     v = (int*)vals[0];
     check_res(v == &val, "the val is wrong when insert a val in a 0-capacity and dynamic-grow `rebuild` heap", &fail_cnt, tag++);
     
+    hm_heap_free(&heap);
+
+    // shrink
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
     hm_heap_free(&heap);
 
     print_end("HEAP(DYNAMIC) | BOUNDARY | NO CAPACITY HEAP OPER | CAPACITY: 0", fail_cnt);
@@ -1473,6 +1516,81 @@ void test_heap_dynamic_judge() {
     HM_TEST_COUNTER
 }
 
+
+void test_heap_fixed_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(FIXED) | FUNC | SHRINK | TYPE: [INT]");
+    
+    int capacity = 64;
+    hm_heap heap;
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+
+    // push
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_heap_insert(&heap, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_heap_shrink(&heap) != hm_heap_ret_none) {
+            fail++;
+        }
+        test_heap_integrity(&heap, &fail_cnt, tag++, capacity - i, false, capacity, free, cmp_int_up);
+        int* v = hm_heap_extract(&heap);
+        free(v);
+    }
+    check_res(fail == 0, "shrink function shouldn return `none` when shrink fixed-size heap", &fail_cnt, tag++);
+    
+    hm_heap_free(&heap);
+    print_end("HEAP(FIXED) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_heap_dynamic_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]");
+    
+    int capacity = 64;
+    hm_heap heap;
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+
+    // push
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_heap_insert(&heap, v);
+    }
+
+    int fail_not_shrink = 0, fail_shrink = 0;
+    for (int i = 0; i < capacity; i++) {
+        size_t s = hm_heap_size(&heap), c = hm_heap_capacity(&heap);
+
+        hm_heap_ret ret = hm_heap_shrink(&heap);
+        if (s >= c / 2 && ret != hm_heap_ret_none) {
+            fail_not_shrink++;
+        } else if (s < c / 2 && ret != hm_heap_ret_suc) {
+            fail_shrink++;
+        }
+        test_heap_integrity(&heap, &fail_cnt, tag++, capacity - i, true, capacity, free, cmp_int_up);
+
+        int* v = hm_heap_extract(&heap);
+        free(v);
+    }
+    check_res(fail_not_shrink == 0, "shrink function should return none when `s >= c / 2`", &fail_cnt, tag++);
+    check_res(fail_shrink == 0, "shrink function should return suc when `s < c / 2`", &fail_cnt, tag++);
+    
+    hm_heap_free(&heap);
+    print_end("HEAP(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
 
@@ -1491,6 +1609,9 @@ void test_heap_fixed_func() {
     test_heap_fixed_rebuild();                                                                  printf("\n");
 
     test_heap_fixed_judge();                                                                    printf("\n");
+
+    test_heap_fixed_shrink();                                                                   printf("\n");
+
 }
 
 void test_heap_dynamic_func() {
@@ -1511,6 +1632,9 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_rebuild();                                                                printf("\n");
 
     test_heap_dynamic_judge();                                                                  printf("\n");
+
+    test_heap_dynamic_shrink();                                                                 printf("\n");
+
 }
 
 void test_heap_fixed_boundary() {

@@ -146,6 +146,27 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
     return hm_heap_ret_suc;
 }
 
+static hm_heap_ret hm_heap_fresh(hm_heap* heap, size_t new_capacity) {
+    if (heap->size > new_capacity) {
+        return hm_heap_ret_warn;
+    }
+
+    // prevent overflow
+    if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        return hm_heap_ret_error;
+    }
+
+    void** new_vals = (void**)realloc(heap->vals, new_capacity * sizeof(void*));
+    if (new_vals == NULL) {
+        return hm_heap_ret_error;
+    }
+    heap->vals = new_vals;
+    heap->capacity = new_capacity;
+
+    return hm_heap_ret_suc;
+}
+
+
 /**
  * Insert a value in the heap
  * @note - Return `hm_heap_ret_full` when heap is full
@@ -173,17 +194,9 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val) {
             new_capacity = 1;
         }
 
-        // prevent overflow
-        if (new_capacity > SIZE_MAX / sizeof(void*)) {
+        if (hm_heap_fresh(heap, new_capacity) != hm_heap_ret_suc) {
             return hm_heap_ret_error;
         }
-
-        void** new_vals = (void**)realloc(heap->vals, new_capacity * sizeof(void*));
-        if (new_vals == NULL) {
-            return hm_heap_ret_error;
-        }
-        heap->vals = new_vals;
-        heap->capacity = new_capacity;
     }
 
     heap->vals[heap->size++] = val;
@@ -279,6 +292,20 @@ void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp) {
     }
 }
 
+/**
+ * Shrink the capacity of heap if possible
+ * @note - Only dynamic-grow heap have a chance to shrink
+ * @note - Return `hm_heap_ret_none` if the heap can't be shrunk
+ */
+hm_heap_ret hm_heap_shrink(hm_heap* heap) {
+    if (!heap->dynamic_grow || heap->size >= heap->capacity / 2) {
+        return hm_heap_ret_none;
+    }
+
+    size_t new_capacity = heap->capacity / 2;
+
+    return hm_heap_fresh(heap, new_capacity);
+}
 
 /**
  * Clear the heap 

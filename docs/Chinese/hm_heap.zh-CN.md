@@ -15,6 +15,7 @@
     - [取出](#extract)
     - [查看](#peek)
     - [判断](#judge)
+    - [收缩](#shrink)
     - [构建](#build)
     - [重建](#rebuild)
     - [清空](#clear)
@@ -282,6 +283,20 @@ heap is full
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
+
+> **收缩**
+
+```c
+/**
+ * 如果可以, 对堆进行缩容
+ * @note - 只用动态增长的堆有机会缩容
+ * @note - 如果堆不可以被缩容, 返回 `hm_heap_ret_none`
+ */
+hm_heap_ret hm_heap_shrink(hm_heap* heap);
+```
+<br><br><br>
 
 
 <a id = "build"></a>

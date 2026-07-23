@@ -14,6 +14,7 @@
     - [Extract](#extract)
     - [Peek](#peek)
     - [Judge](#judge)
+    - [Shrink](#shrink)
     - [Build](#build)
     - [Rebuild](#rebuild)
     - [Clear](#clear)
@@ -285,6 +286,22 @@ heap is full
 
 </details>
 <br><br><br>
+
+
+<a id = "shrink"></a>
+
+> **Shrink**
+
+```c
+/**
+ * Shrink the capacity of heap if possible
+ * @note - Only dynamic-grow heap have a chance to shrink
+ * @note - Return `hm_heap_ret_none` if the heap can't be shrunk
+ */
+hm_heap_ret hm_heap_shrink(hm_heap* heap);
+```
+<br><br><br>
+
 
 
 <a id = "build"></a>
