@@ -62,6 +62,47 @@ void test_set_init() {
     HM_TEST_COUNTER
 }
 
+void test_set_init_reserve() {
+    hm_set set;
+    int fail_cnt = 0;
+    int tag = 0;
+    int len = 64;
+    print_run("SET | FUNC | INIT RESERVE");
+    hm_set_init_reserve(&set, hash_int_1, cmp_int_up, free, len);
+    
+    check_res(set.buckets, "the buckets shouldn't be NULL", &fail_cnt, tag++);
+    check_res(set.buckets_status, "the buckets_status shouldn't be NULL", &fail_cnt, tag++);
+    check_res(set.cmp == cmp_int_up, "pass `cmp_int_up` but set.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(set.hash == hash_int_1, "pass `hash_int_1` but set.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(set.free_key == free, "pass `free` for set.free_key but set.free_key isn't `free`", &fail_cnt, tag++);   
+    check_res(set.len == len, "set.len should be len", &fail_cnt, tag++);
+    check_res(set.size == 0, "set.size isn't 0", &fail_cnt, tag++);
+    test_set_integrity(&set, &fail_cnt, tag++);
+
+    hm_set_free(&set);
+
+
+    hm_set_init_reserve(&set, hash_int_1, cmp_int_up, NULL, len);
+    
+    check_res(set.free_key == NULL, "pass `NULL` but set.free_key isn't `NULL`", &fail_cnt, tag++);
+    test_set_integrity(&set, &fail_cnt, tag++);
+    
+    hm_set_free(&set);
+    
+    int s_len = 0;
+    int min_len = 17;
+    hm_set_init_reserve(&set, hash_int_1, cmp_int_up, NULL, s_len);
+    check_res(set.len == 17, "the set.len should be 17 when pass-in len < min_len", &fail_cnt, tag++);
+    check_res(set.size == 0, "the set.size should be 0", &fail_cnt, tag++);
+
+    hm_set_free(&set);
+    
+
+    print_end("SET | FUNC | INIT RESERVE", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_set_insert() {
     int num = 100;
     int counters[num];
@@ -529,6 +570,50 @@ void test_set_insert_stress() {
     HM_TEST_COUNTER
 }
 
+
+void test_set_insert_with_reserve_stress() {
+    // type : int
+    int fail_cnt = 0;
+    int tag = 0;
+    size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    print_run("SET | STRESS | INSERT WITH RESERVE | TYPE K:[INT] V:[INT]");
+    for (int i = 0; i < cnt; i++) {
+        int* k = (int*)malloc(nums[i] * sizeof(int));
+        for (size_t j = 0; j < nums[i]; j++) {
+            k[j] = j;
+        }
+    
+        size_t same = 0, suc = 0, fail = 0;
+    
+        hm_set set;
+        hm_set_init_reserve(&set, hash_int_1, cmp_int_up, NULL, nums[i]);
+        clock_t start = clock();
+        for (size_t j = 0; j < nums[i]; j++) {
+            hm_set_ret ret = hm_set_insert(&set, &k[j]);
+            
+            switch (ret) {
+                case hm_set_ret_suc: suc++; break;
+                case hm_set_ret_error: fail++; break;
+                case hm_set_ret_existed: same++; break;
+            }
+    
+        }
+        clock_t end = clock();
+        check_res(suc == set.size, "the successful counter is different from set.size", &fail_cnt, tag++);
+        check_res(suc + fail + same == nums[i], "the all tag of reurn from set_insert is different from the size of this insert stressful test", &fail_cnt, tag++);
+        test_set_integrity(&set, &fail_cnt, tag++);
+        print_run_time("INSERT WHIT RESERVE", start, end, nums[i], nums[i]);
+    
+        free(k);
+        hm_set_free(&set);
+    }
+    print_end("SET | STRESS | INSERT WITH RESERVE | TYPE K:[INT] V:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
 void test_set_insert_same() {
 
     print_run("SET | BOUNDARY | INSRET SAME ENTRY | TYPE: [INT]");
@@ -911,6 +996,8 @@ void test_single_entry_oper() {
 
 void function_test() {
     test_set_init();                                printf("\n");
+
+    test_set_init_reserve();                        printf("\n");
     
     test_set_insert();                              printf("\n");
     
@@ -940,6 +1027,8 @@ void boundary_test() {
 
 void stress_test() {
     test_set_insert_stress();                       printf("\n");
+
+    test_set_insert_with_reserve_stress();          printf("\n");
     
     test_set_get_stress();                          printf("\n");
 

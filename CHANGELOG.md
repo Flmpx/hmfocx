@@ -9,6 +9,9 @@
 ### Added
 - Add new function `hm_map_init_reserve` for `hm_map`
     - It can reserve a start capacity for map when initizlize map
+- Add new function `hm_set_init_reserve` for `hm_set`
+    - It can reserve a start capacity for set when initizlize set
+
 
 ## [0.10.0] - 2026-07-22
 

@@ -61,6 +61,14 @@ double hm_set_get_load_factor(hm_set* set)
  * @note - 与链表类似，`free_key` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
  */
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
+
+/**
+ * 预分配容量并初始化 set
+ * @note - 该函数不仅需要键的`释放`函数，还需要`哈希`和`比较`键的函数
+ * @note - 与链表类似，`free_key` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
+ * @note - 参数 `len` 代表这个集合的初始长度, 最小长度为 17, 如果 `len` < `min_len`, 那长度就等于 `min_len`
+ */
+hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len);
 ```
 <details>
 <summary>try: 初始化</summary>

@@ -251,6 +251,22 @@ hm_set_ret hm_set_insert(hm_set* set, void* key) {
 
 }
 
+
+/**
+ * Reserve capacity and initialize set
+ * @note - This function requires not only `free` function for keys, 
+ * but also `hash` and `cmp` functions for keys
+ * @note - Like `list`, the `free_key` parameters is optional (can be NULL), 
+ * but `hash_key` and `cmp_key` must not be NULL
+ * @note - parameter `len` represents the start length of this set, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ */
+hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len) {
+    hm_set_init(set, hash_key, cmp_key, free_key);
+
+    return hm_set_fresh(set, (len > min_len) ? len : min_len);
+
+}
+
 /**
  * Get the index of the key in the set
  * @note - If the key does not exist in the set, this function returns `invalid_index(SIZE_MAX)`

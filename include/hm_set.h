@@ -86,6 +86,7 @@ extern double hm_set_get_load_factor(hm_set* set);
  */
 
 extern void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
+extern hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len);
 extern hm_set_ret hm_set_insert(hm_set* set, void* key);
 extern hm_set_entry* hm_set_get(hm_set* set, void* key);
 extern hm_set_ret hm_set_del(hm_set* set, void* key);
