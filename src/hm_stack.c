@@ -80,7 +80,10 @@ bool hm_stack_is_empty(hm_stack* stack) {
     return stack->top == 0;
 }
 
-
+/**
+ * Fresh stack with the new capapcity
+ * @note - This function return `hm_stack_ret_warn` when size of stack is greater than the `new_capacity`
+ */
 static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
     if (stack->top > new_capacity) {
         return hm_stack_ret_warn;

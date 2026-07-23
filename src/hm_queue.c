@@ -82,7 +82,10 @@ bool hm_queue_is_empty(hm_queue* queue) {
     return queue->size == 0;
 }
 
-
+/**
+ * Fresh queue with the new capapcity
+ * @note - This function return `hm_queue_ret_warn` when size of queue is greater than the `new_capacity`
+ */
 static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
     if (queue->size > new_capacity) {
         return hm_queue_ret_warn;

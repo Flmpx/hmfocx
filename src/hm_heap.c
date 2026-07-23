@@ -146,6 +146,11 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
     return hm_heap_ret_suc;
 }
 
+
+/**
+ * Fresh heap with the new capapcity
+ * @note - This function return `hm_heap_ret_warn` when size of heap is greater than the `new_capacity`
+ */
 static hm_heap_ret hm_heap_fresh(hm_heap* heap, size_t new_capacity) {
     if (heap->size > new_capacity) {
         return hm_heap_ret_warn;

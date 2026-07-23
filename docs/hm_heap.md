@@ -300,8 +300,63 @@ heap is full
  */
 hm_heap_ret hm_heap_shrink(hm_heap* heap);
 ```
-<br><br><br>
 
+<details>
+<summary>try: shrink</summary>
+
+```c
+#include <hm_heap.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int cmp_up(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+void print_heap_status(hm_heap* heap) {
+    printf("size: %zu, capacity: %zu\n", hm_heap_size(heap), hm_heap_capacity(heap));
+}
+
+int main()
+{
+    hm_heap heap;
+    int capacity = 520;
+    // only dynamic-grow heap can do
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_up);
+    print_heap_status(&heap);
+
+    while (hm_heap_shrink(&heap) == hm_heap_ret_suc) {
+        print_heap_status(&heap);
+    }
+
+    hm_heap_free(&heap);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 260
+size: 0, capacity: 130
+size: 0, capacity: 65
+size: 0, capacity: 32
+size: 0, capacity: 16
+size: 0, capacity: 8
+size: 0, capacity: 4
+size: 0, capacity: 2
+size: 0, capacity: 1
+```
+</details>
+
+</details>
+
+<br><br><br>
 
 
 <a id = "build"></a>

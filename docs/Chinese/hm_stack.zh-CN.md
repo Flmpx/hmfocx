@@ -264,6 +264,58 @@ stack is full
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack);
 ```
+
+<details>
+<summary>try: 收缩</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_stack_status(hm_stack* stack) {
+    printf("size: %zu, capacity: %zu\n", hm_stack_size(stack), hm_stack_capacity(stack));
+}
+
+int main()
+{
+    hm_stack stack;
+    int capacity = 520;
+    // 只用动态增长的栈才可以做到
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    print_stack_status(&stack);
+
+    while (hm_stack_shrink(&stack) == hm_stack_ret_suc) {
+        print_stack_status(&stack);
+    }
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 260
+size: 0, capacity: 130
+size: 0, capacity: 65
+size: 0, capacity: 32
+size: 0, capacity: 16
+size: 0, capacity: 8
+size: 0, capacity: 4
+size: 0, capacity: 2
+size: 0, capacity: 1
+```
+</details>
+
+
+</details>
+
+
 <br><br><br>
 
 

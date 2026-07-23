@@ -95,15 +95,38 @@ size_t hash(void* key) {
     return (size_t)k;
 }
 
+void print_set_status(hm_set* set) {
+    printf("size: %zu, length: %zu\n", hm_set_size(set), hm_set_len(set));
+}
+
 int main() 
 {
     hm_set set;
-    hm_set_init(&set, hash, cmp, free);
 
+    // init
+    hm_set_init(&set, hash, cmp, free);
+    print_set_status(&set);
     hm_set_free(&set);
+    
+    // init with reverse
+    int start_len = 1314;
+    hm_set_init_reserve(&set, hash, cmp, free, start_len);
+    print_set_status(&set);
+    hm_set_free(&set);
+
     return 0;
 }
 ```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, length: 0
+size: 0, length: 1314
+```
+</details>
+
 </details>
 <br><br><br>
 

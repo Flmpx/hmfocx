@@ -266,6 +266,59 @@ queue is full
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue);
 ```
+
+<details>
+<summary>try: 收缩</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_queue_status(hm_queue* queue) {
+    printf("size: %zu, capacity: %zu\n", hm_queue_size(queue), hm_queue_capacity(queue));
+}
+
+int main()
+{
+    hm_queue queue;
+    int capacity = 520;
+    // 只有动态增长的队列可以做到
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    print_queue_status(&queue);
+
+    while (hm_queue_shrink(&queue) == hm_queue_ret_suc) {
+        print_queue_status(&queue);
+    }
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 260
+size: 0, capacity: 130
+size: 0, capacity: 65
+size: 0, capacity: 32
+size: 0, capacity: 16
+size: 0, capacity: 8
+size: 0, capacity: 4
+size: 0, capacity: 2
+size: 0, capacity: 1
+```
+</details>
+
+
+
+</details>
+
+
 <br><br><br>
 
 

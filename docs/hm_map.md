@@ -88,7 +88,7 @@ int cmp(const void* p1, const void* p2) {
     return (a > b) - (a < b);
 }
 
-size_t hash(void* key) {
+size_t hash(const void* key) {
     unsigned int k = *(int*)key;
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
     k = ((k >> 16) ^ k) * 0x45d9f3b; 
@@ -96,15 +96,38 @@ size_t hash(void* key) {
     return (size_t)k;
 }
 
+void print_map_status(hm_map* map) {
+    printf("size: %zu, length: %zu\n", hm_map_size(map), hm_map_len(map));
+}
+
 int main() 
 {
     hm_map map;
+    // init
     hm_map_init(&map, hash, cmp, free, free);
-
+    print_map_status(&map);
     hm_map_free(&map);
+    
+    // init with reserve
+    size_t start_len = 520;
+    hm_map_init_reserve(&map, hash, cmp, free, free, start_len);
+    print_map_status(&map);
+    hm_map_free(&map);
+
     return 0;
 }
 ```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, length: 0
+size: 0, length: 520
+```
+</details>
+
+
 </details>
 <br><br><br>
 
