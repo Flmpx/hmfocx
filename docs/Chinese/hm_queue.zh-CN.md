@@ -54,21 +54,25 @@ size_t hm_queue_capacity(hm_queue* queue);
 ```c
 /**
  * 初始化队列（固定大小模式）
- * @note - 使用参数 `capacity` 设置队列的大小
- * @note - 初始化失败时返回 `hm_queue_ret_error`
- * @note - 初始化成功时返回 `hm_queue_ret_suc`
- * @note - 如果不想让队列释放其值，请将 `hm_free` 函数指针设为 `NULL`
+ * 
+ * @note 使用参数 **capacity** 设置队列的大小
+ * @note 如果不想让队列释放其值，将 **hm_free** 函数指针设为 **NULL**
+ * 
+ * @return 初始化失败时返回 **hm_queue_ret_error**
+ * @return 初始化成功时返回 **hm_queue_ret_suc**
  */
-hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
+hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val);
 
 /**
  * 初始化队列（动态增长模式）
- * @note - 使用参数 `start_capacity` 设置队列的初始大小
- * @note - 初始化失败时返回 `hm_queue_ret_error`
- * @note - 初始化成功时返回 `hm_queue_ret_suc`
- * @note - 如果不想让队列释放其值，请将 `hm_free` 函数指针设为 `NULL`
+ * 
+ * @note 使用参数 **start_capacity** 设置队列的初始大小
+ * @note 如果不想让队列释放其值，将 **hm_free** 函数指针设为 **NULL**
+ * 
+ * @return 初始化失败时返回 **hm_queue_ret_error**
+ * @return 初始化成功时返回 **hm_queue_ret_suc**
  */
-hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
+hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free_val);
 ```
 <details>
 <summary>try: 初始化</summary>
@@ -106,10 +110,11 @@ int main()
 > **入队**
 ```c
 /**
- * 将一个值入队
- * @note - 队列满时返回 `hm_queue_ret_full`
- * @note - 入队成功时返回 `hm_queue_ret_suc`
- * @note - 若队列为动态增长模式且扩容失败，返回 `hm_queue_ret_error`
+ * 将一个值入队列
+ * 
+ * @return 队列满时返回 **hm_queue_ret_full**
+ * @return 入队成功时返回 **hm_queue_ret_suc**
+ * @return 若队列为动态增长模式且扩容失败，返回 **hm_queue_ret_error**
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
@@ -120,8 +125,9 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 > **出队**
 ```c
 /**
- * 从队列前端出队一个值
- * @note - 队列为空时返回 `NULL`
+ * 从队首出队
+ * 
+ * @return 队列为空时返回 **NULL**
  */
 void* hm_queue_deq(hm_queue* queue);
 ```
@@ -131,8 +137,9 @@ void* hm_queue_deq(hm_queue* queue);
 > **查看**
 ```c
 /**
- * 查看队列前端的值
- * @note - 队列为空时返回 `NULL`
+ * 查看队首的值
+ * 
+ * @return 队列为空时返回 **NULL**
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
@@ -261,8 +268,12 @@ queue is full
 ```c
 /**
  * 如果可以, 对队列进行缩容
- * @note - 只用动态增长的队列有机会缩容
- * @note - 如果队列不可以被缩容, 返回 `hm_queue_ret_none`
+ * 
+ * @note 只用动态增长的队列有机会缩容
+ * 
+ * @return 如果缩容成功, 返回 **hm_queue_ret_suc**
+ * @return 如果队列无法缩容，返回 **hm_queue_ret_none**
+ * @return 如果缩容失败, 返回 **hm_queue_ret_error**
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue);
 ```
@@ -329,7 +340,8 @@ size: 0, capacity: 1
 ```c
 /**
  * 清空队列
- * @note - 仅释放值（如果可以），内部数组仍然保留
+ * 
+ * @note 仅释放值（如果可以），内部数组仍然保留
  */
 void hm_queue_clear(hm_queue* queue);
 ```
@@ -390,7 +402,8 @@ size: 0  , capacity: 20
 ```c
 /**
  * 释放队列的所有内容
- * @note - 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
+ * 
+ * @note 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
  */
 void hm_queue_free(hm_queue* queue);
 ```
