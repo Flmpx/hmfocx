@@ -15,9 +15,9 @@ size_t hm_list_size(hm_list* list) {
 
 /**
  * Initialize a list
+ * 
  * @note - Use `hm_list_free()` to free the list
- * @note - If you do `NOT` want the list to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * @note - If you do `NOT` want the list to free its values, set the `free_val` function pointer to `NULL`
  */
 void hm_list_init(hm_list* list, hm_free free_val) {
     list->head = list->tail = NULL;
@@ -31,8 +31,8 @@ void hm_list_init(hm_list* list, hm_free free_val) {
 
 /**
  * Free a list
- * @note - If the list was initialized without freeing capacity, 
- * this function can't free the values stored in the Nodes
+ * 
+ * @note - If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
  */
 void hm_list_free(hm_list* list) {
     hm_listnode* cur = list->head;
@@ -49,8 +49,11 @@ void hm_list_free(hm_list* list) {
 
 /**
  * Get a pointer to the Node at the given `index`
+ * 
  * @note - `Index` must be >= `0`, and < `the size of list`
- * @note - This function will return nullptr when the `index ` is out of bounds
+ * 
+ * @return - Return `NULL` when the `index` is out of bounds
+ * 
  * @warning - Prohibit to change the `prev` and `next` of Node
  */
 hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
@@ -83,7 +86,9 @@ hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
 
 /**
  * Insert a value at the head of the list
- * @note - This function will return `hm_list_ret_error` when insertion fails
+ * 
+ * @return - Return `hm_list_ret_error` when insert failure
+ * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
 
@@ -110,7 +115,9 @@ hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
 
 /**
  * Insert a value at the tail of the list
- * @note - This function will return `hm_list_ret_error` when insertion fails
+ * 
+ * @return - Return `hm_list_ret_error` when insert failure
+ * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
     hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
@@ -136,11 +143,12 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
 
 /**
  * Insert a value at the given `index`
+ * 
  * @note - `Index` must be >= `0`, and <= `the size of list`
  * 
- * @note - This function will return `hm_list_ret_warn` when the `index` is out of bounds
- * 
- * @note - Also, this function will return `hm_list_ret_error` when insertion fails
+ * @return - Return `hm_list_ret_warn` when the `index` is out of bounds
+ * @return - Return `hm_list_ret_error` when insert failure
+ * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
@@ -176,7 +184,9 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
 /**
  * Delete the Node at the head of the list
- * @note - This function will return `hm_list_ret_none` when list is empty
+ * 
+ * @return - Return `hm_list_ret_none` when list is empty
+ * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_head(hm_list* list) {
     if (list->size == 0) {
@@ -205,7 +215,9 @@ hm_list_ret hm_list_del_head(hm_list* list) {
 
 /**
  * Delete the Node at the tail of the list
- * @note - This function will return `hm_list_ret_none` when list is empty
+ * 
+ * @return - Return `hm_list_ret_none` when list is empty
+ * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_tail(hm_list* list) {
     if (list->size == 0) {
@@ -234,10 +246,11 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
 
 /**
  * Delete the Node at the specified `index`
+ * 
  * @note - `Index` must be >= `0`, and < `the size of list`
  * 
- * @note - This function will return `hm_list_ret_none` when the `index` is out of bounds
- * 
+ * @return - Return `hm_list_ret_none` when the `index` is out of bounds
+ * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
     if (index >= list->size) {
@@ -267,8 +280,10 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
 
 /**
  * Get a pointer to the value at the given `index`
+ * 
  * @note - `Index` must be >= `0`, and < `the size of list`
- * @note - This function will return nullptr when the `index ` is out of bounds
+ * 
+ * @return - Return `NULL` when the `index` is out of bounds
  */
 void* hm_list_get(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
@@ -281,7 +296,6 @@ void* hm_list_get(hm_list* list, size_t index) {
 
 /**
  * Initialize iterator of list
- * 
  */
 void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
     iter->cur = list->head;
@@ -291,7 +305,8 @@ void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
 
 /**
  * Check if the iterator has a next element
- * @note - Return true if iterator has next
+ * 
+ * @return - Return `true` if iterator has next
  */
 bool hm_list_iter_has_next(hm_list_iter* iter) {
     return iter->cur != NULL;
@@ -299,7 +314,10 @@ bool hm_list_iter_has_next(hm_list_iter* iter) {
 
 /**
  * Get next value of list
+ * 
  * @note - Use `hm_list_iter_has_next()` to check before calling `hm_list_iter_next()`
+ * 
+ * @return - Return `NULL` when iterator doesn't has next
  */
 void* hm_list_iter_next(hm_list_iter* iter) {
     hm_listnode* cur = iter->cur;
@@ -317,6 +335,7 @@ void* hm_list_iter_next(hm_list_iter* iter) {
 
 /**
  * Initialize iterator of list
+ * 
  * @note - Let the iterator point to the head of the list
  */
 void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list) {
@@ -326,6 +345,7 @@ void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list) {
 
 /**
  * Initialize iterator of list
+ * 
  * @note - Let the iterator point to the tail of the list
  */
 void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
@@ -335,6 +355,7 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
 
 /**
  * Initialize iterator of list
+ * 
  * @note - Let the iterator point to the specified `index` of the list
  * @note - Iterator will point to `NULL` if `index` is out of bounds
  */
@@ -349,6 +370,8 @@ void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
 
 /**
  * Check if the iterator's current pointer is valid
+ * 
+ * @return - Return `true` when iterator's current pointer is valid
  */
 bool hm_list_iter_has_cur(hm_list_iter* iter) {
     return iter->cur != NULL;
@@ -356,7 +379,10 @@ bool hm_list_iter_has_cur(hm_list_iter* iter) {
 
 /**
  * Get the current value of the iterator
- * Use `hm_list_iter_has_cur()` to check before calling `hm_list_iter_cur()`
+ * 
+ * @note - Use `hm_list_iter_has_cur()` to check before calling `hm_list_iter_cur()`
+ * 
+ * @return - Return `NULL` when iterator current pointer is invalid
  */
 void* hm_list_iter_cur(hm_list_iter* iter) {
     hm_listnode* cur = iter->cur;
@@ -396,7 +422,9 @@ void hm_list_iter_move_prev(hm_list_iter* iter) {
 
 /**
  * Take the first `n` Node from the head and form a separate sub-list
- * @note - It will return the pointer to head Node of the remaining part
+ * 
+ * @return - Return the pointer to head Node of the remaining part
+ * @return - Return `NULL` when the list is less than `n` Node
  */
 static hm_listnode* split(hm_listnode* head, size_t n) {
     if (!head) return NULL;
@@ -419,7 +447,9 @@ static hm_listnode* split(hm_listnode* head, size_t n) {
 
 /**
  * Merge two lists and attach them to the tail 
- * @note - Return the pointer to last Node of the merged list
+ * 
+ * @return - Return the pointer to last Node of the merged list
+ * @return - Return `NULL` when `left` and `right` are both `NULL`
  */
 static hm_listnode* merge(hm_listnode* left, hm_listnode* right, hm_listnode* tail, hm_cmp cmp) {
     hm_listnode* l = left;
@@ -453,6 +483,7 @@ static hm_listnode* merge(hm_listnode* left, hm_listnode* right, hm_listnode* ta
 
 /**
  * Sort list
+ * 
  * @note - Pass a comparison function to this function
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp) {
