@@ -12,7 +12,7 @@
     - [初始化](#init)
     - [分配](#allocate)
     - [释放块内存](#freeblock)
-    - [释放池](#freepool)
+    - [释放内存池](#freepool)
 - [提示](#tip)
 - [其他容器](#othercontainer)
 
@@ -54,7 +54,8 @@ size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```c
 /**
  * 初始化内存池
- * @note - 如果 `blocks_per_page` 或者 `block_size` 为零，`hm_pool_block_allocate` 将返回 `NULL`
+ * 
+ * @note 如果 **blocks_per_page** 或者 **block_size** 为零，**hm_pool_block_allocate()** 将返回 **NULL**
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
@@ -89,9 +90,10 @@ int main()
 > **分配**
 ```c
 /**
- * 获取一个块的指针
- * @note - 分配失败时返回 `NULL`
- * @note - 如果 `blocks_per_page` 或者 `block_size` 为零，`hm_pool_block_allocate` 将返回 `NULL`
+ * 获取一个内存块的指针
+ * 
+ * @return 内存分配失败时返回 **NULL**
+ * @return 如果内存池的 **blocks_per_page** 或者 **block_size** 为零时返回 **NULL**
  */
 void* hm_pool_block_allocate(hm_pool* pool);
 ```
@@ -146,7 +148,10 @@ int main()
 ```c
 /**
  * 释放一个块
- * @note - 块的指针必须属于该内存池
+ * 
+ * @note 传入空指针(内存块指针)也是被允许的
+ * 
+ * @warning 待释放的内存块的指针必须属于该内存池
  */
 void hm_pool_block_free(hm_pool* pool, void* block);
 ```
@@ -187,18 +192,19 @@ int main()
 
 <a id = "freepool"></a>
 
-> **释放池**
+> **释放内存池**
 ```c
 /**
  * 释放内存池的所有内容
- * @note - 释放后请勿使用来自该内存池的块
+ * 
+ * @note 释放后请勿使用该内存池的块内存
  */
 void hm_pool_free(hm_pool* pool);
 ```
 
 
 <details>
-<summary>try: 释放池</summary>
+<summary>try: 释放内存池</summary>
 
 ```c
 #include <hm_pool.h>
