@@ -55,23 +55,27 @@ size_t hm_heap_capacity(hm_heap* heap);
 ```c
 /**
  * 初始化堆（固定大小模式）
- * @note - 使用参数 capacity 设置堆的容量
- * @note - 初始化失败时返回 hm_heap_ret_error
- * @note - 初始化成功时返回 hm_heap_ret_suc
- * @note - 如果不想让堆释放其值，请将 hm_free 函数指针设为 NULL
- * @note - hm_cmp 函数指针不能为 NULL
+ * 
+ * @note - 使用参数 `capacity` 设置堆的容量
+ * @note - 如果不想让堆释放其值，请将 `free_val` 函数指针设为 `NULL`
+ * @note - `cmp_val` 函数指针不能为 `NULL`
+ * 
+ * @return - 初始化失败时返回 `hm_heap_ret_error`
+ * @return - 初始化成功时返回 `hm_heap_ret_suc`
  */
-hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cmp);
+hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 
 /**
  * 初始化堆（动态增长模式）
- * @note - 使用参数 start_capacity 设置堆的初始容量
- * @note - 初始化失败时返回 hm_heap_ret_error
- * @note - 初始化成功时返回 hm_heap_ret_suc
- * @note - 如果不想让堆释放其值，请将 hm_free 函数指针设为 NULL
- * @note - hm_cmp 函数指针不能为 NULL
+ * 
+ * @note - 使用参数 `start_capacity` 设置堆的初始容量
+ * @note - 如果不想让堆释放其值，请将 `free_val` 函数指针设为 `NULL`
+ * @note - `cmp_val` 函数指针不能为 `NULL`
+ * 
+ * @return - 初始化失败时返回 `hm_heap_ret_error`
+ * @return - 初始化成功时返回 `hm_heap_ret_suc`
  */
-hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp);
+hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free_val, hm_cmp cmp_val);
 ```
 <details>
 <summary>try: 初始化</summary>
@@ -116,9 +120,10 @@ int main()
 ```c
 /**
  * 向堆中插入一个值
- * @note - 堆满时返回 hm_heap_ret_full
- * @note - 插入成功时返回 hm_heap_ret_suc
- * @note - 若堆为动态增长模式且扩容失败，返回 hm_heap_ret_error
+ * 
+ * @return - 堆满时返回 `hm_heap_ret_full`
+ * @return - 插入成功时返回 `hm_heap_ret_suc`
+ * @return - 若堆为动态增长模式且扩容失败，返回 `hm_heap_ret_error`
  */
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
@@ -130,7 +135,8 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```c
 /**
  * 从堆中取出一个值
- * @note - 堆为空时返回 NULL
+ * 
+ * @return - 堆为空时返回 `NULL`
  */
 void* hm_heap_extract(hm_heap* heap);
 ```
@@ -141,7 +147,8 @@ void* hm_heap_extract(hm_heap* heap);
 ```c
 /**
  * 查看堆顶的值
- * @note - 堆为空时返回 NULL
+ * 
+ * @return - 堆为空时返回 `NULL`
  */
 void* hm_heap_peek(hm_heap* heap);
 ```
@@ -291,8 +298,12 @@ heap is full
 ```c
 /**
  * 如果可以, 对堆进行缩容
+ * 
  * @note - 只用动态增长的堆有机会缩容
- * @note - 如果堆不可以被缩容, 返回 `hm_heap_ret_none`
+ * 
+ * @return 如果缩容成功, 返回 **hm_heap_ret_suc**
+ * @return 如果堆无法缩容，返回 **hm_heap_ret_none**
+ * @return 如果缩容失败, 返回 **hm_heap_ret_error**
  */
 hm_heap_ret hm_heap_shrink(hm_heap* heap);
 ```
@@ -361,17 +372,23 @@ size: 0, capacity: 1
 ```c
 /**
  * 通过传入的值数组和相关参数构建堆（固定大小模式）
- * @warning - vals 应位于系统的堆内存中
- * @note - 当 `size > capacity` 返回 `hm_heap_ret_warn` 
+ * 
+ * @return - 当 `size` > `capacity` 返回 `hm_heap_ret_warn` 
+ * @return - 当构建成功时返回 `hm_heap_ret_suc`
+ * 
+ * @warning - `vals` 应位于系统的堆内存中
  */
-hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
+hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 
 /**
  * 通过传入的值数组和相关参数构建堆（动态增长模式）
- * @warning - vals 应位于系统的堆内存中
- * @note - 当 `size > capacity` 返回 `hm_heap_ret_warn` 
+ * 
+ * @return - 当 `size` > `capacity` 返回 `hm_heap_ret_warn` 
+ * @return - 当构建成功时返回 `hm_heap_ret_suc`
+ * 
+ * @warning - `vals` 应位于系统的堆内存中
  */
-hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp);
+hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 ```
 <details>
 <summary>try: 构建</summary>
@@ -439,7 +456,7 @@ int main()
 /**
  * 使用新的 cmp 函数重建堆
  */
-void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp);
+void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp_val);
 ```
 
 <details>
@@ -533,6 +550,7 @@ int main()
 ```c
 /**
  * 清空堆
+ * 
  * @note - 仅释放值（如果可以），内部数组仍然保留
  */
 void hm_heap_clear(hm_heap* heap);
@@ -600,6 +618,7 @@ size: 0  , capacity: 20
 ```c
 /**
  * 释放堆的所有内容
+ * 
  * @note - 动态增长模式的堆可重复使用，而固定大小模式的堆不可以
  */
 void hm_heap_free(hm_heap* heap);
