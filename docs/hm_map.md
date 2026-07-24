@@ -43,7 +43,8 @@ size_t hm_map_len(hm_map* map);
 
 /**
  * Get the load factor of the map 
- * @note - Return a negative number when the length of the map is 0
+ * 
+ * @return Return a **negative number** when the length of the map is **0**
  */
 double hm_map_get_load_factor(hm_map* map);
 ```
@@ -56,20 +57,21 @@ double hm_map_get_load_factor(hm_map* map);
 ```c
 /**
  * Initialize hm_map
- * @note - This function requires not only `free` function for key and value, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
+ * 
+ * @note This function requires not only **free** function for key and value, but also **hash** and **cmp** functions for keys
+ * @note Like **list**, the **free_key** and **free_val** parameters are optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
  */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 
 /**
  * Reserve capacity and initialize map
- * @note - This function requires not only `free` function for key and value, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
- * @note - parameter `len` represents the start length of this map, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ * 
+ * @note This function requires not only **free** function for key and value, but also **hash** and **cmp** functions for keys
+ * @note Like **list**, the **free_key** and **free_val** parameters are optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
+ * @note parameter **len** represents the start length of this map, the **min_len** is 17, len will be **min_len** if **len** < **min_len**
+ * 
+ * @return Return **hm_map_ret_error** when initialize failure
+ * @return Return **hm_map_ret_suc** when initialize success
  */
 hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len);
 ```
@@ -139,11 +141,13 @@ size: 0, length: 520
 ```c
 /**
  * Insert a key-value pair into the map
- * @note - Return `hm_map_ret_error` on failure
- * @note - Return `hm_map_ret_suc` on success
- * @note - If the key already exists, the old entry(include key and val) remains in the map. And return `hm_map_ret_existed`.
- * Therefore, you should handle this special situation
- * @note - Use `hm_map_get()` to change val if you want to change the val or it's pointer
+ * 
+ * @note If the key already exists, the old entry (include key and val) remains in the map. Therefore, you should handle this special situation
+ * @note Use **hm_map_get()** to change val if you want to change the val or it's pointer
+ * 
+ * @return Return **hm_map_ret_suc** when insert success
+ * @return Return **hm_map_ret_error** when insert failure 
+ * @return Return **hm_map_ret_existed** when the key has existed in map
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```
@@ -156,7 +160,8 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 ```c
 /**
  * Get a pointer to the  entry in the map
- * @note - If the key does not exist, return `NULL`
+ * 
+ * @return Return **NULL** when key is not existed in map
  */
 hm_map_entry* hm_map_get(hm_map* map, void* key);
 ```
@@ -279,7 +284,9 @@ int main()
 ```c
 /**
  * Delete the entry associated with the given key
- * @note - If the key does not exist, returns `hm_map_ret_none`
+ * 
+ * @return Return **hm_map_ret_suc** when delete success
+ * @return Return **hm_map_ret_none** when key is not existed in map
  */
 hm_map_ret hm_map_del(hm_map* map, void* key);
 ```
@@ -382,7 +389,10 @@ int main()
 ```c
 /**
  * Shrink the length of map if possible
- * @note - Returns `hm_map_ret_none` if the map can't be shrunk
+ * 
+ * @return Return **hm_map_ret_suc** when shrink success
+ * @return Return **hm_map_ret_none** when the map can't be shrunk
+ * @return Return **hm_map_ret_error** when shrink failure
  */
 hm_map_ret hm_map_shrink(hm_map* map);
 ```
@@ -494,13 +504,17 @@ void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 
 /**
  * Check if the iterator has a next entry
- * @note - Return true if the iterator has next
+ * 
+ * @return Return **true** if the iterator has next
  */
 bool hm_map_iter_has_next(hm_map_iter* iter);
 
 /**
  * Get next entry of map
- * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
+ * 
+ * @note Use **hm_map_iter_has_next()** to check before calling **hm_map_iter_next()**
+ * 
+ * @return Return **NULL** when iterator doesn't has next 
  */
 hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
 ```
