@@ -19,7 +19,7 @@ int all_failure_num = 0;
 
 // every test function ...
 
-void test_heap_integrity(hm_heap* heap, int* fail_cnt, int tag, size_t size, bool dynamic_grow, size_t capacity, hm_free free, hm_cmp cmp) {
+void test_heap_integrity(hm_heap* heap, int* fail_cnt, int tag, size_t size, bool dynamic_grow, size_t capacity, hm_free free_val, hm_cmp cmp_val) {
 
     check_res(heap->size == size, "TEST OF INTEGRITY: the heap's size(heap.size) is wrong", fail_cnt, tag);
     check_res(heap->dynamic_grow == dynamic_grow, "TEST OF INTEGRITY: heap's dynamic signal is unexpected", fail_cnt, tag);
@@ -31,8 +31,8 @@ void test_heap_integrity(hm_heap* heap, int* fail_cnt, int tag, size_t size, boo
     check_res(!(heap->capacity == 0 && heap->vals != NULL), "TEST OF INTEGRITY: heap's capacity is 0, but vals have memory", fail_cnt, tag);
     check_res(!(heap->capacity != 0 && heap->vals == NULL), "TEST OF INTEGRITY: heap's capacity isn't 0, but vals is NULL", fail_cnt, tag);
 
-    check_res(heap->free == free, "TEST OF INTEGRITY: heap's free function is wrong", fail_cnt, tag);
-    check_res(heap->cmp == cmp, "TEST OF INTEGRITY: heap's cmp function is wrong", fail_cnt, tag);
+    check_res(heap->free_val == free_val, "TEST OF INTEGRITY: heap's free function is wrong", fail_cnt, tag);
+    check_res(heap->cmp_val == cmp_val, "TEST OF INTEGRITY: heap's cmp function is wrong", fail_cnt, tag);
 
     // verify logic of heap
 
@@ -44,11 +44,11 @@ void test_heap_integrity(hm_heap* heap, int* fail_cnt, int tag, size_t size, boo
             size_t r = l + 1;
             size_t min;
             if (r < heap->size) {
-                min = heap->cmp(heap->vals[l], heap->vals[r]) < 0 ? l : r;
+                min = heap->cmp_val(heap->vals[l], heap->vals[r]) < 0 ? l : r;
             } else {
                 min = l;
             }
-            if (heap->cmp(heap->vals[parent], heap->vals[min]) > 0) {
+            if (heap->cmp_val(heap->vals[parent], heap->vals[min]) > 0) {
                 fail++;
             }
     
@@ -71,9 +71,9 @@ void test_heap_fixed_init() {
     
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, free, cmp_int_up);
     check_res(heap.capacity == capacity, "the heap's capaity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(heap.cmp == cmp_int_up, "the heap's cmp function should be `cmp_int_up`", &fail_cnt, tag++);
+    check_res(heap.cmp_val == cmp_int_up, "the heap's cmp function should be `cmp_int_up`", &fail_cnt, tag++);
     check_res(heap.dynamic_grow == false, "the heap dynamic signal should be false", &fail_cnt, tag++);
-    check_res(heap.free == free, "the heap's free function should be free", &fail_cnt, tag++);
+    check_res(heap.free_val == free, "the heap's free function should be free", &fail_cnt, tag++);
     check_res(heap.size == 0, "the heap's size should be 0", &fail_cnt, tag++);
 
     hm_heap_free(&heap);
@@ -81,7 +81,7 @@ void test_heap_fixed_init() {
     // pass in NULL for heap
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
-    check_res(heap.free == NULL, "the heap's free function should be NULL", &fail_cnt, tag++);
+    check_res(heap.free_val == NULL, "the heap's free function should be NULL", &fail_cnt, tag++);
 
     hm_heap_free(&heap);
     print_end("HEAP(FIXED) | FUNC | INIT | CAPAITY: 64", fail_cnt);
@@ -99,9 +99,9 @@ void test_heap_dynamic_init() {
     
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
     check_res(heap.capacity == capacity, "the heap's capaity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(heap.cmp == cmp_int_up, "the heap's cmp function should be `cmp_int_up`", &fail_cnt, tag++);
+    check_res(heap.cmp_val == cmp_int_up, "the heap's cmp function should be `cmp_int_up`", &fail_cnt, tag++);
     check_res(heap.dynamic_grow == true, "the heap dynamic signal should be false", &fail_cnt, tag++);
-    check_res(heap.free == free, "the heap's free function should be free", &fail_cnt, tag++);
+    check_res(heap.free_val == free, "the heap's free function should be free", &fail_cnt, tag++);
     check_res(heap.size == 0, "the heap's size should be 0", &fail_cnt, tag++);
     
     hm_heap_free(&heap);
@@ -109,7 +109,7 @@ void test_heap_dynamic_init() {
     // pass in NULL for heap
     hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
-    check_res(heap.free == NULL, "the heap's free function should be NULL", &fail_cnt, tag++);
+    check_res(heap.free_val == NULL, "the heap's free function should be NULL", &fail_cnt, tag++);
     
     hm_heap_free(&heap);
     

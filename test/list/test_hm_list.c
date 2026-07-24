@@ -48,7 +48,7 @@ void test_list_init() {
     print_run("LIST | FUNC | INIT");
     hm_list_init(&list_1, free);
     
-    check_res(list_1.free == free, "Pass `free` but list.free isn't `free`", &fail_cnt, tag++);
+    check_res(list_1.free_val == free, "Pass `free` but list.free isn't `free`", &fail_cnt, tag++);
     check_res(list_1.head == NULL, "list.head isn't `NULL`", &fail_cnt, tag++);
     check_res(list_1.tail == NULL, "list.tail isn't `NULL`", &fail_cnt, tag++);
     check_res(list_1.size == 0, "list.size isn't 0", &fail_cnt, tag++);
@@ -58,7 +58,7 @@ void test_list_init() {
     hm_list_init(&list_2, NULL);
     
     
-    check_res(list_2.free == NULL, "Pass `NULL` but list.free isn't `NULL`", &fail_cnt, tag++);
+    check_res(list_2.free_val == NULL, "Pass `NULL` but list.free isn't `NULL`", &fail_cnt, tag++);
     test_list_integrity(&list_2, &fail_cnt, tag++);
     print_end("LIST | FUNC | INIT", fail_cnt);
     HM_TEST_COUNTER

@@ -83,10 +83,10 @@ static size_t max_prime(size_t n) {
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val) {
     *map = (hm_map){.buckets = NULL,
                     .buckets_status = NULL,
-                    .cmp = cmp_key,
+                    .cmp_key = cmp_key,
                     .free_key = free_key,
                     .free_val = free_val,
-                    .hash = hash_key,
+                    .hash_key = hash_key,
                     .len = 0,
                     .size = 0};
 }
@@ -103,7 +103,7 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
 static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
     size_t l = map->len;
 
-    size_t index = map->hash(key) % l;
+    size_t index = map->hash_key(key) % l;
 
     bool flag_find_del = false;
     size_t first_del_index = invalid_index;
@@ -118,7 +118,7 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
             first_del_index = index;
         }
 
-        if (map->buckets_status[index] == hm_exist_in_map && map->cmp(map->buckets[index].key, key) == hm_same) {
+        if (map->buckets_status[index] == hm_exist_in_map && map->cmp_key(map->buckets[index].key, key) == hm_same) {
             /*keep the same and old entry(including key and val) */
             return hm_map_ret_existed;
         }
@@ -147,7 +147,7 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
  */
 static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
     size_t l = map->len;
-    size_t index = map->hash(key) % l;
+    size_t index = map->hash_key(key) % l;
     while (map->buckets_status[index] != hm_none_in_map) {
         index = (index + 1) % l;
     }
@@ -172,7 +172,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
 
     hm_map new_map;
 
-    hm_map_init(&new_map, map->hash, map->cmp, map->free_key, map->free_val);
+    hm_map_init(&new_map, map->hash_key, map->cmp_key, map->free_key, map->free_val);
     new_map.len = new_len;
 
     if (new_len > SIZE_MAX / sizeof(hm_map_entry) || new_len > SIZE_MAX / sizeof(hm_map_entry_status)) {
@@ -280,7 +280,7 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
         return invalid_index;
     }
 
-    size_t index = map->hash(key) % l;
+    size_t index = map->hash_key(key) % l;
 
     hm_map_entry_status status;
     for (size_t i = 0; i < l; i++) {
@@ -289,7 +289,7 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
         if (status == hm_none_in_map) {
             break;
         }
-        if (status == hm_exist_in_map && map->cmp(map->buckets[index].key, key) == hm_same) {
+        if (status == hm_exist_in_map && map->cmp_key(map->buckets[index].key, key) == hm_same) {
             return index;
         } 
         index = (index + 1) % l;
@@ -396,7 +396,7 @@ void hm_map_free(hm_map* map) {
     hm_map_clear(map);
     free(map->buckets);
     free(map->buckets_status);
-    hm_map_init(map, map->hash, map->cmp, map->free_key, map->free_val);
+    hm_map_init(map, map->hash_key, map->cmp_key, map->free_key, map->free_val);
 }
 
 

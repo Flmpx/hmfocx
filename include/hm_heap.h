@@ -35,8 +35,8 @@ typedef struct hm_heap {
     void** vals;
     size_t size;
     size_t capacity;
-    hm_free free;
-    hm_cmp cmp;
+    hm_free free_val;
+    hm_cmp cmp_val;
     bool dynamic_grow;
 } hm_heap;
 
@@ -52,8 +52,8 @@ extern size_t hm_heap_capacity(hm_heap* heap);
  * Initialize
  */
 
-extern hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cmp);
-extern hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp);
+extern hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cmp cmp_val);
+extern hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free_val, hm_cmp cmp_val);
 
 
 /**

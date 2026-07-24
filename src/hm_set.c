@@ -82,9 +82,9 @@ static size_t max_prime(size_t n) {
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key) {
     *set = (hm_set){.buckets = NULL,
                     .buckets_status = NULL,
-                    .cmp = cmp_key,
+                    .cmp_key = cmp_key,
                     .free_key = free_key,
-                    .hash = hash_key,
+                    .hash_key = hash_key,
                     .len = 0,
                     .size = 0};
 }
@@ -101,7 +101,7 @@ void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
 static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
     size_t l = set->len;
 
-    size_t index = set->hash(key) % l;
+    size_t index = set->hash_key(key) % l;
 
     bool flag_find_del = false;
     size_t first_del_index = invalid_index;
@@ -116,7 +116,7 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
             first_del_index = index;
         }
 
-        if (set->buckets_status[index] == hm_exist_in_set && set->cmp(set->buckets[index].key, key) == hm_same) {
+        if (set->buckets_status[index] == hm_exist_in_set && set->cmp_key(set->buckets[index].key, key) == hm_same) {
             /*keep the same and old entry(key) */
             return hm_set_ret_existed;
         }
@@ -145,7 +145,7 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
  */
 static hm_set_ret hm_set_addfunc_fresh(hm_set* set, void* key) {
     size_t l = set->len;
-    size_t index = set->hash(key) % l;
+    size_t index = set->hash_key(key) % l;
     while (set->buckets_status[index] != hm_none_in_set) {
         index = (index + 1) % l;
     }
@@ -170,7 +170,7 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
 
     hm_set new_set;
 
-    hm_set_init(&new_set, set->hash, set->cmp, set->free_key);
+    hm_set_init(&new_set, set->hash_key, set->cmp_key, set->free_key);
     new_set.len = new_len;
 
     if (new_len > SIZE_MAX / sizeof(hm_set_entry) || new_len > SIZE_MAX / sizeof(hm_set_entry_status)) {
@@ -277,7 +277,7 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
         return invalid_index;
     }
 
-    size_t index = set->hash(key) % l;
+    size_t index = set->hash_key(key) % l;
 
     hm_set_entry_status status;
     for (size_t i = 0; i < l; i++) {
@@ -286,7 +286,7 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
         if (status == hm_none_in_set) {
             break;
         }
-        if (status == hm_exist_in_set && set->cmp(set->buckets[index].key, key) == hm_same) {
+        if (status == hm_exist_in_set && set->cmp_key(set->buckets[index].key, key) == hm_same) {
             return index;
         } 
         index = (index + 1) % l;
@@ -375,7 +375,7 @@ void hm_set_free(hm_set* set) {
     hm_set_clear(set);
     free(set->buckets);
     free(set->buckets_status);
-    hm_set_init(set, set->hash, set->cmp, set->free_key);
+    hm_set_init(set, set->hash_key, set->cmp_key, set->free_key);
 }
 
 

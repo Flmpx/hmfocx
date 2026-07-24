@@ -26,7 +26,7 @@ size_t hm_stack_capacity(hm_stack* stack) {
  * @note - If you do `NOT` want the stack to free its values,
  * set the `hm_free` function pointer to `NULL`
  */
-hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free) {
+hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -41,7 +41,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free) {
     }
     stack->dynamic_grow = false;
     stack->capacity = capacity;
-    stack->free = free;
+    stack->free_val = free_val;
     // Because the `size_t` type is a positive number 
     stack->top = 0;
     return hm_stack_ret_suc;    
@@ -57,8 +57,8 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free) {
  * @note - If you do `NOT` want the stack to free its values,
  * set the `hm_free` function pointer to `NULL`
  */
-hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free) {
-    hm_stack_ret ret = hm_stack_init(stack, start_capacity, free);
+hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free_val) {
+    hm_stack_ret ret = hm_stack_init(stack, start_capacity, free_val);
     if (ret == hm_stack_ret_suc) {
         stack->dynamic_grow = true;
     }
@@ -188,11 +188,11 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack) {
-    if (stack->free) {
+    if (stack->free_val) {
         size_t total = stack->top;
         void** vals = stack->vals;
         for (size_t i = 0; i < total; i++) {
-            stack->free(vals[i]);
+            stack->free_val(vals[i]);
         }
     }
     stack->top = 0;

@@ -55,8 +55,8 @@ typedef struct hm_set {
     size_t size;
     size_t len;
 
-    hm_cmp cmp;
-    hm_hash hash;
+    hm_cmp cmp_key;
+    hm_hash hash_key;
     hm_free free_key;
 } hm_set;
 

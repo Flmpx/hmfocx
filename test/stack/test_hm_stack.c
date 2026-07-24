@@ -44,7 +44,7 @@ void test_stack_fixed_init() {
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
     check_res(stack.dynamic_grow == false, "the stack's dynamic-gorwth should is `false`", &fail_cnt, tag++);
-    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
+    check_res(stack.free_val == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
     check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
     check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
     
@@ -53,7 +53,7 @@ void test_stack_fixed_init() {
     // pass in NULL for stack
     
     hm_stack_init(&stack, capacity, NULL);
-    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
+    check_res(stack.free_val == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
     hm_stack_free(&stack);
@@ -77,7 +77,7 @@ void test_stack_dynamic_init() {
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
     check_res(stack.dynamic_grow == true, "the stack's dynamic-gorwth should is `true`", &fail_cnt, tag++);
-    check_res(stack.free == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
+    check_res(stack.free_val == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
     check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
     check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
     
@@ -86,7 +86,7 @@ void test_stack_dynamic_init() {
     // pass in NULL for stack
     
     hm_stack_init_dynamic_grow(&stack, capacity, NULL);
-    check_res(stack.free == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
+    check_res(stack.free_val == NULL, "the stack's free should be `NULL` when pass in `NULL` to stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
 
     hm_stack_free(&stack);

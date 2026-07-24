@@ -19,10 +19,10 @@ size_t hm_list_size(hm_list* list) {
  * @note - If you do `NOT` want the list to free its values,
  * set the `hm_free` function pointer to `NULL`
  */
-void hm_list_init(hm_list* list, hm_free free) {
+void hm_list_init(hm_list* list, hm_free free_val) {
     list->head = list->tail = NULL;
     list->size = 0;
-    list->free = free;
+    list->free_val = free_val;
 }
 
 
@@ -39,12 +39,12 @@ void hm_list_free(hm_list* list) {
     while (cur) {
         hm_listnode* tmp = cur;
         cur = cur->next;
-        if (list->free) {
-            list->free(tmp->val);
+        if (list->free_val) {
+            list->free_val(tmp->val);
         }
         free(tmp);
     }
-    hm_list_init(list, list->free);
+    hm_list_init(list, list->free_val);
 }
 
 /**
@@ -185,8 +185,8 @@ hm_list_ret hm_list_del_head(hm_list* list) {
 
     hm_listnode* del_node = list->head;
 
-    if (list->free) {
-        list->free(del_node->val);
+    if (list->free_val) {
+        list->free_val(del_node->val);
     }
 
     if (list->size == 1) {
@@ -213,8 +213,8 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
     }
 
     hm_listnode* del_node = list->tail;
-    if (list->free) {
-        list->free(del_node->val);
+    if (list->free_val) {
+        list->free_val(del_node->val);
     }
 
     if (list->size == 1) {
@@ -250,8 +250,8 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
     // the index is valid when run there
     hm_listnode* cur = hm_list_get_node(list, index);
 
-    if (list->free) {
-        list->free(cur->val);
+    if (list->free_val) {
+        list->free_val(cur->val);
     }
 
     cur->prev->next = cur->next;

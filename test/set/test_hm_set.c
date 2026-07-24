@@ -46,8 +46,8 @@ void test_set_init() {
 
     check_res(set_1.buckets == NULL, "the buckets isn't NULL", &fail_cnt, tag++);
     check_res(set_1.buckets_status == NULL, "the buckets_status isn't NULL", &fail_cnt, tag++);
-    check_res(set_1.cmp == cmp_int_up, "pass `cmp_int_up` but set.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
-    check_res(set_1.hash == hash_int_1, "pass `hash_int_1` but set.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(set_1.cmp_key == cmp_int_up, "pass `cmp_int_up` but set.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(set_1.hash_key == hash_int_1, "pass `hash_int_1` but set.hash isn't `hash_int_1`", &fail_cnt, tag++);
     check_res(set_1.free_key == free, "pass `free` for set.free_key but set.free_key isn't `free`", &fail_cnt, tag++);     
     check_res(set_1.len == 0, "set.len isn't 0", &fail_cnt, tag++);
     check_res(set_1.size == 0, "set.size isn't 0", &fail_cnt, tag++);
@@ -72,8 +72,8 @@ void test_set_init_reserve() {
     
     check_res(set.buckets, "the buckets shouldn't be NULL", &fail_cnt, tag++);
     check_res(set.buckets_status, "the buckets_status shouldn't be NULL", &fail_cnt, tag++);
-    check_res(set.cmp == cmp_int_up, "pass `cmp_int_up` but set.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
-    check_res(set.hash == hash_int_1, "pass `hash_int_1` but set.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(set.cmp_key == cmp_int_up, "pass `cmp_int_up` but set.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(set.hash_key == hash_int_1, "pass `hash_int_1` but set.hash isn't `hash_int_1`", &fail_cnt, tag++);
     check_res(set.free_key == free, "pass `free` for set.free_key but set.free_key isn't `free`", &fail_cnt, tag++);   
     check_res(set.len == len, "set.len should be len", &fail_cnt, tag++);
     check_res(set.size == 0, "set.size isn't 0", &fail_cnt, tag++);

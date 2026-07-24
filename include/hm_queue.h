@@ -37,7 +37,7 @@ typedef struct hm_queue {
     size_t rear;
     size_t capacity;
     size_t size;
-    hm_free free;
+    hm_free free_val;
     bool dynamic_grow;
 } hm_queue;
 
@@ -56,8 +56,8 @@ extern size_t hm_queue_capacity(hm_queue* queue);
  * Initialize
  */
 
-extern hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
-extern hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
+extern hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val);
+extern hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free_val);
 
 
 /**

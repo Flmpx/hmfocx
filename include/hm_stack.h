@@ -35,7 +35,7 @@ typedef struct hm_stack {
     void** vals;
     size_t top;
     size_t capacity;
-    hm_free free;
+    hm_free free_val;
     bool dynamic_grow;
 } hm_stack;
 
@@ -53,8 +53,8 @@ extern size_t hm_stack_capacity(hm_stack* stack);
  * Initialize
  */
 
-extern hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
-extern hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
+extern hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val);
+extern hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free_val);
 
 
 

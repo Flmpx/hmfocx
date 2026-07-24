@@ -24,7 +24,7 @@ size_t hm_heap_capacity(hm_heap* heap) {
  * set the `hm_free` function pointer to `NULL`
  * @note - The `hm_cmp` function pointer `must not be NULL`
  */
-hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cmp) {
+hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cmp cmp_val) {
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -41,8 +41,8 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cm
     heap->dynamic_grow = false;
     heap->capacity = capacity;
     
-    heap->free = free;
-    heap->cmp = cmp;
+    heap->free_val = free_val;
+    heap->cmp_val = cmp_val;
 
     heap->size = 0;
     
@@ -59,8 +59,8 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free, hm_cmp cm
  * set the `hm_free` function pointer to `NULL`
  * @note - The `hm_cmp` function pointer `must not be NULL`
  */
-hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free, hm_cmp cmp) {
-    hm_heap_ret ret = hm_heap_init(heap, start_capacity, free, cmp);
+hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free_val, hm_cmp cmp_val) {
+    hm_heap_ret ret = hm_heap_init(heap, start_capacity, free_val, cmp_val);
     if (ret == hm_heap_ret_suc) {
         heap->dynamic_grow = true;
     }
@@ -104,7 +104,7 @@ static hm_heap_ret hm_heap_sift_up(hm_heap* heap, size_t kid) {
     void** vals = heap->vals;
     while (kid > 0) {
         size_t parent = (kid - 1) / 2;
-        if (heap->cmp(vals[parent], vals[kid]) <= 0) {
+        if (heap->cmp_val(vals[parent], vals[kid]) <= 0) {
             break;
         } else {
             hm_swap(&vals[parent], &vals[kid]);
@@ -132,11 +132,11 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
         size_t r = l + 1;
         size_t min;
         if (r < s) {
-            min = heap->cmp(vals[l], vals[r]) < 0 ? l : r;
+            min = heap->cmp_val(vals[l], vals[r]) < 0 ? l : r;
         } else {
             min = l;
         }
-        if (heap->cmp(vals[parent], vals[min]) <= 0) {
+        if (heap->cmp_val(vals[parent], vals[min]) <= 0) {
             break;
         } else {
             hm_swap(&vals[parent], &vals[min]);
@@ -240,7 +240,7 @@ void* hm_heap_extract(hm_heap* heap) {
  * @warning - vals should be located in `heap memory` of system
  * @note - Return `hm_heap_ret_warn` when `size > capacity`
  */
-hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp) {
+hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val) {
     if (size > capacity) {
         return hm_heap_ret_warn;
     }
@@ -250,8 +250,8 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
     heap->capacity = capacity;
     heap->size = size;
 
-    heap->cmp = cmp;
-    heap->free = free;
+    heap->cmp_val = cmp_val;
+    heap->free_val = free_val;
 
     heap->vals = vals;
     
@@ -273,9 +273,9 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
  * @warning - vals should be located in `heap memory` of system
  * @note - Return `hm_heap_ret_warn` when `size > capacity`
  */
-hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free, hm_cmp cmp) {
+hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val) {
     
-    hm_heap_ret ret = hm_heap_build(heap, vals, size, capacity, free, cmp);
+    hm_heap_ret ret = hm_heap_build(heap, vals, size, capacity, free_val, cmp_val);
     if (ret == hm_heap_ret_suc) {
         heap->dynamic_grow = true;
     }
@@ -287,8 +287,8 @@ hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, 
 /**
  * Rebuild heap by the new cmp function
  */
-void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp) {
-    heap->cmp = new_cmp;
+void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp_val) {
+    heap->cmp_val = new_cmp_val;
     if (heap->size > 1) {
         for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
             size_t parent = ((heap->size - 1) - 1) / 2 - i;
@@ -317,12 +317,12 @@ hm_heap_ret hm_heap_shrink(hm_heap* heap) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_heap_clear(hm_heap* heap) {
-    hm_free free = heap->free;
-    if (free) {
+    hm_free free_val = heap->free_val;
+    if (free_val) {
         size_t total = heap->size;
         void** vals = heap->vals;
         for (size_t i = 0; i < total; i++) {
-            free(vals[i]);
+            free_val(vals[i]);
         }
     }
     heap->size = 0;

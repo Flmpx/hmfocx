@@ -19,7 +19,7 @@ int all_failure_num = 0;
 
 // every test function ...
 
-void test_queue_integrity(hm_queue* queue, int* fail_cnt, int tag, size_t size, bool dynamic_grow, size_t capacity, hm_free free) {
+void test_queue_integrity(hm_queue* queue, int* fail_cnt, int tag, size_t size, bool dynamic_grow, size_t capacity, hm_free free_val) {
     // because the limitation of queue, the integrity test only test these
 
     check_res(queue->size == size, "TEST OF INTEGRITY: the queue's size(queue.size) is wrong", fail_cnt, tag);
@@ -47,7 +47,7 @@ void test_queue_integrity(hm_queue* queue, int* fail_cnt, int tag, size_t size, 
     check_res(!(queue->capacity == 0 && queue->vals != NULL), "TEST OF INTEGRITY: queue's capacity is 0, but vals have memory", fail_cnt, tag);
     check_res(!(queue->capacity != 0 && queue->vals == NULL), "TEST OF INTEGRITY: queue's capacity isn't 0, but vals is NULL", fail_cnt, tag);
 
-    check_res(queue->free == free, "TEST OF INTEGRITY: queue's free function is wrong", fail_cnt, tag);
+    check_res(queue->free_val == free_val, "TEST OF INTEGRITY: queue's free function is wrong", fail_cnt, tag);
 
 }
 
@@ -65,7 +65,7 @@ void test_queue_fixed_init() {
     
     check_res(queue.capacity == capacity, "the queue's capacity isn't equal to expected capacity", &fail_cnt, tag++);
     check_res(queue.dynamic_grow == false, "the queue's dynamic-gorwth should is `false`", &fail_cnt, tag++);
-    check_res(queue.free == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
+    check_res(queue.free_val == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
     check_res(queue.front == 0, "the queue's front should be 0", &fail_cnt, tag++);
     check_res(queue.rear == 0, "the queue's rear should be 0", &fail_cnt, tag++);
     
@@ -73,7 +73,7 @@ void test_queue_fixed_init() {
     
     // pass in NULL for queue
     hm_queue_init(&queue, capacity, NULL);
-    check_res(queue.free == NULL, "the queue's free should be `NULL` when pass in `NULL` to queue", &fail_cnt, tag++);
+    check_res(queue.free_val == NULL, "the queue's free should be `NULL` when pass in `NULL` to queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
 
     hm_queue_free(&queue);
@@ -93,7 +93,7 @@ void test_queue_dynamic_init() {
     
     check_res(queue.capacity == start_capacity, "the queue's capacity isn't equal to expected capacity", &fail_cnt, tag++);
     check_res(queue.dynamic_grow == true, "the queue's dynamic-gorwth should is `false`", &fail_cnt, tag++);
-    check_res(queue.free == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
+    check_res(queue.free_val == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
     check_res(queue.front == 0, "the queue's front should be 0", &fail_cnt, tag++);
     check_res(queue.rear == 0, "the queue's rear should be 0", &fail_cnt, tag++);
     
@@ -101,7 +101,7 @@ void test_queue_dynamic_init() {
     
     // pass in NULL for queue
     hm_queue_init_dynamic_grow(&queue, start_capacity, NULL);
-    check_res(queue.free == NULL, "the queue's free should be `NULL` when pass in `NULL` to queue", &fail_cnt, tag++);
+    check_res(queue.free_val == NULL, "the queue's free should be `NULL` when pass in `NULL` to queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, start_capacity, NULL);
 
     hm_queue_free(&queue);

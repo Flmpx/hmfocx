@@ -24,7 +24,7 @@ size_t hm_queue_capacity(hm_queue* queue) {
  * @note - If you do `NOT` want the queue to free its values,
  * set the `hm_free` function pointer to `NULL`
  */
-hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free) {
+hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -40,7 +40,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free) {
 
     queue->dynamic_grow = false;
     queue->capacity = capacity;
-    queue->free = free;
+    queue->free_val = free_val;
 
     queue->front = queue->rear = 0;
     queue->size = 0;
@@ -57,8 +57,8 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free) {
  * @note - If you do `NOT` want the queue to free its values,
  * set the `hm_free` function pointer to `NULL`
  */
-hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free) {
-    hm_queue_ret ret = hm_queue_init(queue, start_capacity, free);
+hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free_val) {
+    hm_queue_ret ret = hm_queue_init(queue, start_capacity, free_val);
     if (ret == hm_queue_ret_suc) {
         queue->dynamic_grow = true;
     }
@@ -209,12 +209,12 @@ hm_queue_ret hm_queue_shrink(hm_queue* queue) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_queue_clear(hm_queue* queue) {
-    if (queue->free) {
+    if (queue->free_val) {
         size_t size = queue->size;
         void** vals = queue->vals;
         for (size_t i = 0; i < size; i++) {
             size_t pos = (queue->front + i) % queue->capacity;
-            queue->free(vals[pos]);
+            queue->free_val(vals[pos]);
         }
     }
     queue->front = queue->rear = 0;

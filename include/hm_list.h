@@ -43,7 +43,7 @@ typedef struct hm_list {
     hm_listnode* head;
     hm_listnode* tail;
     size_t size;
-    hm_free free;
+    hm_free free_val;
 } hm_list;
 
 
@@ -67,7 +67,7 @@ extern size_t hm_list_size(hm_list* list);
  * Initialize and free function
  */
 
-extern void hm_list_init(hm_list* list, hm_free free);
+extern void hm_list_init(hm_list* list, hm_free free_val);
 extern void hm_list_free(hm_list* list);
 
 /**

@@ -26,6 +26,7 @@
     - `hm_queue`    >= `0x4000`
     - `hm_heap`     >= `0x5000`
     - `hm_set`      >= `0x6000`
+- Change the fields' name in some container, such as `hash` --> `hash_key` in `hm_map`
 
 
 ## [0.10.0] - 2026-07-22

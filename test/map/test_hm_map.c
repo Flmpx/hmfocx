@@ -46,8 +46,8 @@ void test_map_init() {
 
     check_res(map_1.buckets == NULL, "the buckets isn't NULL", &fail_cnt, tag++);
     check_res(map_1.buckets_status == NULL, "the buckets_status isn't NULL", &fail_cnt, tag++);
-    check_res(map_1.cmp == cmp_int_up, "pass `cmp_int_up` but map.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
-    check_res(map_1.hash == hash_int_1, "pass `hash_int_1` but map.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(map_1.cmp_key == cmp_int_up, "pass `cmp_int_up` but map.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(map_1.hash_key == hash_int_1, "pass `hash_int_1` but map.hash isn't `hash_int_1`", &fail_cnt, tag++);
     check_res(map_1.free_key == free, "pass `free` for map.free_key but map.free_key isn't `free`", &fail_cnt, tag++);   
     check_res(map_1.free_val == free, "pass `free` for map.free_val but map.free_val isn't `free`", &fail_cnt, tag++);   
     check_res(map_1.len == 0, "map.len isn't 0", &fail_cnt, tag++);
@@ -74,8 +74,8 @@ void test_map_init_reserve() {
     
     check_res(map.buckets, "the buckets shouldn't be NULL", &fail_cnt, tag++);
     check_res(map.buckets_status, "the buckets_status shouldn't be NULL", &fail_cnt, tag++);
-    check_res(map.cmp == cmp_int_up, "pass `cmp_int_up` but map.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
-    check_res(map.hash == hash_int_1, "pass `hash_int_1` but map.hash isn't `hash_int_1`", &fail_cnt, tag++);
+    check_res(map.cmp_key == cmp_int_up, "pass `cmp_int_up` but map.cmp isn't `cmp_int_up`", &fail_cnt, tag++);
+    check_res(map.hash_key == hash_int_1, "pass `hash_int_1` but map.hash isn't `hash_int_1`", &fail_cnt, tag++);
     check_res(map.free_key == free, "pass `free` for map.free_key but map.free_key isn't `free`", &fail_cnt, tag++);   
     check_res(map.free_val == free, "pass `free` for map.free_val but map.free_val isn't `free`", &fail_cnt, tag++);   
     check_res(map.len == len, "map.len should be len", &fail_cnt, tag++);
