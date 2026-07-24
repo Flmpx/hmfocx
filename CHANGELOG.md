@@ -18,6 +18,15 @@
 - Add new function `hm_queue_shrink` for `hm_queue`
     - It can decrease the capacity of queue if possible
 
+### Changed
+- Change the real value of return code of ervery container
+    - `hm_list`     >= `0x0000`
+    - `hm_map`      >= `0x1000`
+    - `hm_stack`    >= `0x3000`
+    - `hm_queue`    >= `0x4000`
+    - `hm_heap`     >= `0x5000`
+    - `hm_set`      >= `0x6000`
+
 
 ## [0.10.0] - 2026-07-22
 

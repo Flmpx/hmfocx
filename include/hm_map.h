@@ -18,7 +18,7 @@
  * The return signal of function in map
  */
 typedef enum hm_map_ret {
-    hm_map_ret_error = 0x4,     // Malloc failed
+    hm_map_ret_error = 0x1000,     // Malloc failed
     hm_map_ret_warn,            // The pass parameter is incorrect
     hm_map_ret_none,            // Operation invalid, like del entry by key , but key is not existed in map
     hm_map_ret_existed,         // Insert entry in map, but key is existed , you should free the key if the key that you given is alloced

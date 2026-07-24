@@ -19,7 +19,7 @@
  * The return signal of function in list
  */
 typedef enum hm_list_ret {
-    hm_list_ret_error = 0x0,    // Malloc failed
+    hm_list_ret_error = 0x0000,    // Malloc failed
     hm_list_ret_warn,           // The passed parameter is incorret
     hm_list_ret_none,           // Operation invalid, like del start node when list is empty
     hm_list_ret_suc             // Operation successful
