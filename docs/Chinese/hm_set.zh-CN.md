@@ -44,7 +44,8 @@ size_t hm_set_len(hm_set* set);
 
 /**
  * 获取集合的负载因子
- * @note - 如果集合的容量为0, 那将返回一个负数
+ * 
+ * @return 如果集合的容量为 **0** , 返回一个 **负数**
  */
 double hm_set_get_load_factor(hm_set* set)
 ```
@@ -57,16 +58,21 @@ double hm_set_get_load_factor(hm_set* set)
 ```c
 /**
  * 初始化 hm_set
- * @note - 该函数不仅需要键的`释放`函数，还需要`哈希`和`比较`键的函数
- * @note - 与链表类似，`free_key` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
+ * 
+ * @note 该函数不仅需要键的 **释放** 函数，还需要 **哈希** 和 **比较** 键的函数
+ * @note 与链表类似，**free_key** 是可选的(可为 **NULL**)，但 **hash_key** 和 **cmp_key** 不能为 **NULL**
  */
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
 
 /**
  * 预分配容量并初始化 set
- * @note - 该函数不仅需要键的`释放`函数，还需要`哈希`和`比较`键的函数
- * @note - 与链表类似，`free_key` 是可选的(可为 `NULL`)，但 `hash_key` 和 `cmp_key` 不能为 `NULL`
- * @note - 参数 `len` 代表这个集合的初始长度, 最小长度为 17, 如果 `len` < `min_len`, 那长度就等于 `min_len`
+ * 
+ * @note 该函数不仅需要键的 **释放** 函数，还需要 **哈希** 和 **比较** 键的函数
+ * @note 与链表类似，**free_key** 是可选的(可为 **NULL**)，但 **hash_key** 和 **cmp_key** 不能为 **NULL**
+ * @note 参数 **len** 代表这个集合的初始长度, 最小长度为 17, 如果 **len** < **min_len**, 那长度就等于 **min_len**
+ * 
+ * @return 初始化失败时返回 **hm_set_ret_error**
+ * @return 初始化成功时返回 **hm_set_ret_suc**
  */
 hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len);
 ```
@@ -135,10 +141,12 @@ size: 0, length: 1314
 ```c
 /**
  * 向集合中插入一个键
- * @note - 插入失败时返回 `hm_set_ret_error`
- * @note - 插入成功时返回 `hm_set_ret_suc`
- * @note - 如果键已存在，旧条目(键)仍保留在集合中，函数返回 `hm_set_ret_existed`
- * 因此，你需要处理这种特殊情况
+ * 
+ * @note 如果键已存在，旧条目(键)仍保留在集合中，因此，你需要处理这种特殊情况
+ * 
+ * @return 插入失败时返回 **hm_set_ret_error**
+ * @return 插入成功时返回 **hm_set_ret_suc**
+ * @return 当键已经存在于集合中时返回 **hm_set_ret_existed**
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
 ```
@@ -150,7 +158,8 @@ hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
 ```c
 /**
  * 获取集合中条目的指针
- * @note - 如果键不存在，返回 `NULL`
+ * 
+ * @return 如果键不存在，返回 **NULL**
  */
 hm_set_entry* hm_set_get(hm_set* set, void* key);
 ```
@@ -250,7 +259,9 @@ int main()
 ```c
 /**
  * 根据键删除集合中的条目
- * @note - 如果键不存在，返回 `hm_set_ret_none`
+ * 
+ * @return 如果删除成功返回 **hm_set_ret_suc**
+ * @return 如果键不存在，返回 **hm_set_ret_none**
  */
 hm_set_ret hm_set_del(hm_set* set, void* key);
 ```
@@ -349,7 +360,10 @@ int main()
 ```c
 /**
  * 如果可以, 对集合进行缩容
- * @note - 如果无法缩容，返回 `hm_set_ret_none`
+ * 
+ * @return 如果缩容成功, 返回 **hm_set_ret_suc**
+ * @return 如果无法缩容，返回 **hm_set_ret_none**
+ * @return 如果缩容失败, 返回 **hm_set_ret_error**
  */
 hm_set_ret hm_set_shrink(hm_set* set);
 ```
@@ -441,13 +455,17 @@ void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 
 /**
  * 检查迭代器是否有下一个条目
- * @note - 有下一个条目时返回 `true`
+ * 
+ * @return 有下一个条目时返回 **true**
  */
 bool hm_set_iter_has_next(hm_set_iter* iter);
 
 /**
  * 通过迭代器获取下一个条目的指针
- * @note - 请先调用 `hm_set_iter_has_next()` 检查是否存在下一个条目
+ * 
+ * @note 调用 **hm_set_iter_next()** 之前, 先使用 **hm_set_iter_has_next()** 进行检查
+ * 
+ * @return 没有下一个时就返回 **NULL**
  */
 hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
 ```
