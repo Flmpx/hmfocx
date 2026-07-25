@@ -19,7 +19,7 @@
     - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
-- [提示](#tip)
+- [注意事项](#tip)
 - [其他容器](#othercontainer)
 
 
@@ -27,9 +27,9 @@
 <a id = "intro"></a>
 
 ## 介绍
-- 你可以向此栈传递任意值的指针。
-- 它提供基本的栈操作。
-- 支持动态增长和固定大小两种模式。
+- 你可以向此栈传递任意值的指针
+- 它提供基本的栈操作
+- 支持动态增长和固定大小两种模式
 
 
 
@@ -53,22 +53,26 @@ size_t hm_stack_capacity(hm_stack* stack);
 > **初始化**
 ```c
 /**
- * 初始化栈（固定大小模式）
- * @note - 使用参数 `capacity` 设置栈的大小
- * @note - 初始化失败时返回 `hm_stack_ret_error`
- * @note - 初始化成功时返回 `hm_stack_ret_suc`
- * @note - 如果不想让栈释放其值，请将 `hm_free` 函数指针设为 `NULL`
+ * 初始化栈 (固定大小模式)
+ * 
+ * @note 使用参数 **capacity** 设置栈的容量
+ * @note 如果不想让栈释放其值, 将 **free_val** 函数指针设为 **NULL**
+ * 
+ * @return 初始化失败时返回 **hm_stack_ret_error**
+ * @return 初始化成功时返回 **hm_stack_ret_suc**
  */
-hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
+hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val);
 
 /**
- * 初始化栈（动态增长模式）
- * @note - 使用参数 `start_capacity` 设置栈的初始大小
- * @note - 初始化失败时返回 `hm_stack_ret_error`
- * @note - 初始化成功时返回 `hm_stack_ret_suc`
- * @note - 如果不想让栈释放其值，请将 `hm_free` 函数指针设为 `NULL`
+ * 初始化栈 (动态增长模式)
+ * 
+ * @note 使用参数 **start_capacity** 设置栈的初始容量
+ * @note 如果不想让栈释放其值, 将 **free_val** 函数指针设为 **NULL**
+ * 
+ * @return 初始化失败时返回 **hm_stack_ret_error**
+ * @return 初始化成功时返回 **hm_stack_ret_suc**
  */
-hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
+hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free_val);
 ```
 <details>
 <summary>try: 初始化</summary>
@@ -104,9 +108,10 @@ int main()
 ```c
 /**
  * 将一个值压入栈
- * @note - 栈满时返回 `hm_stack_ret_full`
- * @note - 入栈成功时返回 `hm_stack_ret_suc`
- * @note - 若栈为动态增长模式且扩容失败，返回 `hm_stack_ret_error`
+ * 
+ * @return 栈满时返回 **hm_stack_ret_full**
+ * @return 入栈成功时返回 **hm_stack_ret_suc**
+ * @return 若栈为动态增长模式并且扩容失败, 返回 **hm_stack_ret_error**
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
@@ -118,7 +123,8 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```c
 /**
  * 从栈中弹出一个值
- * @note - 栈为空时返回 `NULL`
+ * 
+ * @return 栈为空时返回 **NULL**
  */
 void* hm_stack_pop(hm_stack* stack);
 ```
@@ -130,7 +136,8 @@ void* hm_stack_pop(hm_stack* stack);
 ```c
 /**
  * 查看栈顶的值
- * @note - 栈为空时返回 `NULL`
+ * 
+ * @return 栈为空时返回 **NULL**
  */
 void* hm_stack_peek(hm_stack* stack);
 ```
@@ -259,8 +266,12 @@ stack is full
 ```c
 /**
  * 如果可以, 对栈进行缩容
- * @note - 只用动态增长的栈有机会缩容
- * @note - 如果栈不可以被缩容, 返回 `hm_stack_ret_none`
+ * 
+ * @note 只用动态增长的栈有机会缩容
+ * 
+ * @return 如果缩容成功, 返回 **hm_stack_ret_suc**
+ * @return 如果栈无法缩容, 返回 **hm_stack_ret_none**
+ * @return 如果缩容失败, 返回 **hm_stack_ret_error**
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack);
 ```
@@ -325,7 +336,8 @@ size: 0, capacity: 1
 ```c
 /**
  * 清空栈
- * @note - 仅释放值（如果可以），内部数组仍然保留
+ * 
+ * @note 仅释放值 (如果可以), 内部数组仍然保留
  */
 void hm_stack_clear(hm_stack* stack);
 ```
@@ -385,7 +397,8 @@ size: 0  , capacity: 20
 ```c
 /**
  * 释放栈的所有内容
- * @note - 动态增长模式的栈可重复使用，但固定大小模式的栈不可以
+ * 
+ * @note 动态增长模式的栈可重复使用, 但固定大小模式的栈不可以
  */
 void hm_stack_free(hm_stack* stack);
 ```
@@ -424,7 +437,7 @@ int main()
 
 <a id = "tip"></a>
 
-## 提示
+## 注意事项
 
 
 

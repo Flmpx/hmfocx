@@ -46,6 +46,8 @@ static const double min_load_factor = 0.25;
 
 /**
  * Determine whether a number is a prime number
+ * 
+ * @return - Return `true` when pass-in number is prime number
  */
 static bool is_prime(size_t n) {
     if (n < 2) return false;
@@ -61,7 +63,8 @@ static bool is_prime(size_t n) {
 
 /**
  * Get the smallest prime number greater than the given number
- * @note - SIZE_MAX is an invalid number 
+ * 
+ * @return - Return `SIZE_MAX` when failure 
  */
 static size_t max_prime(size_t n) {
     size_t i;
@@ -74,11 +77,10 @@ static size_t max_prime(size_t n) {
 }
 
 /**
- * Initialize hm_map
- * @note - This function requires not only `free` function for key and value, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
+ * Initialize map
+ * 
+ * @note - This function requires not only `free` function for key and value, but also `hash` and `cmp` functions for keys
+ * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), but `hash_key` and `cmp_key` must not be NULL
  */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val) {
     *map = (hm_map){.buckets = NULL,
@@ -92,13 +94,15 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
 }
 
 /**
- * Add and entry to the map
+ * Add an entry to the map
+ * 
+ * @note - If the key already exists, the old entry (include key and val) remains in the map. Therefore, you should handle this special situation
+ * 
+ * @return - Return `hm_map_ret_suc` when add success
+ * @return - Return `hm_map_ret_existed` when the key has existed in map
+ * 
  * @warning - This function is used by `hm_map_insert()`
- * 
  * @warning - Ensure there is enough space to insert before calling this function
- * 
- * @note - If the key already exists, the old entry(include key and val) remains in the map. 
- * Therefore, you should handle this special situation
  */
 static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
     size_t l = map->len;
@@ -143,6 +147,9 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
 
 /**
  * Add an entry in map
+ * 
+ * @return - Return `hm_map_ret_suc` when add success
+ * 
  * @warning - This function is used by `hm_map_fresh()`, because the buckets are empty when the map is freshly created, so this function handles fewer cases
  */
 static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
@@ -162,7 +169,11 @@ static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
 /**
  * Fresh map with the new length
  * 
- * @note - This function returns `hm_map_ret_warn` when the size of map is greater than the `new_len` 
+ * @note - This function is used to change the length of map
+ * 
+ * @return - Return `hm_map_ret_warn` when `size of map` > `new_len` 
+ * @return - Return `hm_map_ret_error` when fresh map failure
+ * @return - Return `hm_map_ret_suc` when fresh map success
  */
 static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     size_t old_l = map->len, old_s = map->size;
@@ -216,11 +227,13 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
 
 /**
  * Insert a key-value pair into the map
- * @note - Return `hm_map_ret_error` on failure
- * @note - Return `hm_map_ret_suc` on success
- * @note - If the key already exists, the old entry(include key and val) remains in the map. And return `hm_map_ret_existed`.
- * Therefore, you should handle this special situation
+ * 
+ * @note - If the key already exists, the old entry (include key and val) remains in the map. Therefore, you should handle this special situation
  * @note - Use `hm_map_get()` to change val if you want to change the val or it's pointer
+ * 
+ * @return - Return `hm_map_ret_suc` when insert success
+ * @return - Return `hm_map_ret_error` when insert failure 
+ * @return - Return `hm_map_ret_existed` when the key has existed in map
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
     size_t l = map->len, s = map->size;
@@ -257,11 +270,13 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
 
 /**
  * Reserve capacity and initialize map
- * @note - This function requires not only `free` function for key and value, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
- * @note - parameter `len` represents the start length of this map, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ * 
+ * @note - This function requires not only `free` function for key and value, but also `hash` and `cmp` functions for keys
+ * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), but `hash_key` and `cmp_key` must not be NULL
+ * @note - Use the parameter `len` to set the start length of this map, the `min_len` is 17, `len` will be `min_len` if `len` < `min_len`
+ * 
+ * @return - Return `hm_map_ret_error` when initialize failure
+ * @return - Return `hm_map_ret_suc` when initialize success
  */
 hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len) {
     hm_map_init(map, hash_key, cmp_key, free_key, free_val);
@@ -272,7 +287,8 @@ hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm
 
 /**
  * Get the index of the key in the map
- * @note - If the key does not exist in the map, this function returns `invalid_index(SIZE_MAX)`
+ * 
+ * @return - Return `invalid_index(SIZE_MAX)` when key is not existed in map
  */
 static size_t hm_map_get_index(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
@@ -298,7 +314,8 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
 }
 /**
  * Get a pointer to the  entry in the map
- * @note - If the key does not exist, return `NULL`
+ * 
+ * @return - Return `NULL` when key is not existed in map
  */
 hm_map_entry* hm_map_get(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
@@ -315,7 +332,9 @@ hm_map_entry* hm_map_get(hm_map* map, void* key) {
 }
 /**
  * Delete the entry associated with the given key
- * @note - If the key does not exist, returns `hm_map_ret_none`
+ * 
+ * @return - Return `hm_map_ret_suc` when delete success
+ * @return - Return `hm_map_ret_none` when key is not existed in map
  */
 hm_map_ret hm_map_del(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
@@ -339,7 +358,10 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
 }
 /**
  * Shrink the length of map if possible
- * @note - Returns `hm_map_ret_none` if the map can't be shrunk
+ * 
+ * @return - Return `hm_map_ret_suc` when shrink success
+ * @return - Return `hm_map_ret_none` when the map can't be shrunk
+ * @return - Return `hm_map_ret_error` when shrink failure
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
     size_t l = map->len, s = map->size;
@@ -411,7 +433,8 @@ void hm_map_iter_init(hm_map_iter* iter, hm_map* map) {
 }
 /**
  * Check if the iterator has a next entry
- * @note - Return true if the iterator has next
+ * 
+ * @return - Return `true` when the iterator has next
  */
 bool hm_map_iter_has_next(hm_map_iter* iter) {
     size_t l = iter->len;
@@ -431,7 +454,10 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
 }
 /**
  * Get next entry of map
+ * 
  * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
+ * 
+ * @return - Return `NULL` when iterator doesn't has next 
  */
 hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
     size_t l = iter->len;
@@ -455,7 +481,8 @@ hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
 
 /**
  * Get the load factor of the map 
- * @note - Return a negative number when the length of the map is 0
+ * 
+ * @return - Return a `negative number` when the length of the map is `0`
  */
 double hm_map_get_load_factor(hm_map* map) {
     if (map->len) {

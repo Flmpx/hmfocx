@@ -46,11 +46,11 @@ size_t hm_list_size(hm_list* list);
 ```c
 /**
  * Initialize a list
- * @note - Use `hm_list_free()` to free the list
- * @note - If you do `NOT` want the list to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * 
+ * @note Use **hm_list_free()** to free the list
+ * @note If you do **NOT** want the list to free its values, set the **free_val** function pointer to **NULL**
  */
-void hm_list_init(hm_list* list, hm_free free);
+void hm_list_init(hm_list* list, hm_free free_val);
 ```
 <details>
 <summary>try: init </summary>
@@ -79,23 +79,28 @@ int main()
 ```c
 /**
  * Insert a value at the head of the list
- * @note - This function will return `hm_list_ret_error` when insertion fails
+ * 
+ * @return Return **hm_list_ret_error** when insert failure
+ * @return Return **hm_list_ret_suc** when insert success
  */
 hm_list_ret hm_list_insert_head(hm_list* list, void* val);
 
 /**
  * Insert a value at the tail of the list
- * @note - This function will return `hm_list_ret_error` when insertion fails
+ * 
+ * @return Return **hm_list_ret_error** when insert failure
+ * @return Return **hm_list_ret_suc** when insert success
  */
 hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
 
 /**
- * Insert a value at the given `index`
- * @note - `Index` must be >= `0`, and <= `the size of list`
+ * Insert a value at the given **index**
  * 
- * @note - This function will return `hm_list_ret_warn` when the `index` is out of bounds
+ * @note **Index** must be >= **0**, and <= **the size of list**
  * 
- * @note - Also, this function will return `hm_list_ret_error` when insertion fails
+ * @return Return **hm_list_ret_warn** when the **index** is out of bounds
+ * @return Return **hm_list_ret_error** when insert failure
+ * @return Return **hm_list_ret_suc** when insert success
  */
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 ```
@@ -105,17 +110,22 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 > **Get**
 ```c
 /**
- * Get a pointer to the value at the given `index`
- * @note - `Index` must be >= `0`, and < `the size of list`
- * @note - This function will return nullptr when the `index ` is out of bounds
+ * Get a pointer to the value at the given **index**
+ * 
+ * @note **Index** must be >= **0**, and < **the size of list**
+ * 
+ * @return Return **NULL** when the **index** is out of bounds
  */
 void* hm_list_get(hm_list* list, size_t index);
 
 /**
- * Get a pointer to the Node at the given `index`
- * @note - `Index` must be >= `0`, and < `the size of list`
- * @note - This function will return nullptr when the `index ` is out of bounds
- * @warning - Prohibit to change the `prev` and `next` of Node
+ * Get a pointer to the Node at the given **index**
+ * 
+ * @note **Index** must be >= **0**, and < **the size of list**
+ * 
+ * @return Return **NULL** when the **index** is out of bounds
+ * 
+ * @warning Prohibit to change the **prev** and **next** of Node
  */
 hm_listnode* hm_list_get_node(hm_list* list, size_t index);
 ```
@@ -197,22 +207,27 @@ int main()
 ```c
 /**
  * Delete the Node at the head of the list
- * @note - This function will return `hm_list_ret_none` when list is empty
+ * 
+ * @return Return **hm_list_ret_none** when list is empty
+ * @return Return **hm_list_ret_suc** when delete success
  */
 hm_list_ret hm_list_del_head(hm_list* list);
 
 /**
  * Delete the Node at the tail of the list
- * @note - This function will return `hm_list_ret_none` when list is empty
+ * 
+ * @return Return **hm_list_ret_none** when list is empty
+ * @return Return **hm_list_ret_suc** when delete success
  */
 hm_list_ret hm_list_del_tail(hm_list* list);
 
 /**
- * Delete the Node at the specified `index`
- * @note - `Index` must be >= `0`, and < `the size of list`
+ * Delete the Node at the specified **index**
  * 
- * @note - This function will return `hm_list_ret_none` when the `index` is out of bounds
+ * @note **Index** must be >= **0**, and < **the size of list**
  * 
+ * @return Return **hm_list_ret_none** when the **index** is out of bounds
+ * @return Return **hm_list_ret_suc** when delete success
  */
 hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 ```
@@ -296,19 +311,22 @@ int main()
 
 /**
  * Initialize iterator of list
- * 
  */
 void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
 
 /**
  * Check if the iterator has a next element
- * @note - Return true if iterator has next
+ * 
+ * @return Return **true** when iterator has next
  */
 bool hm_list_iter_has_next(hm_list_iter* iter);
 
 /**
  * Get next value of list
- * @note - Use `hm_list_iter_has_next()` to check before calling `hm_list_iter_next()`
+ * 
+ * @note Use **hm_list_iter_has_next()** to check before calling **hm_list_iter_next()**
+ * 
+ * @return Return **NULL** when iterator doesn't has next
  */
 void* hm_list_iter_next(hm_list_iter* iter);
 
@@ -317,31 +335,39 @@ void* hm_list_iter_next(hm_list_iter* iter);
 
 /**
  * Initialize iterator of list
- * @note - Let the iterator point to the head of the list
+ * 
+ * @note Let the iterator point to the head of the list
  */
 void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
 
 /**
  * Initialize iterator of list
- * @note - Let the iterator point to the tail of the list
+ * 
+ * @note Let the iterator point to the tail of the list
  */
 void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
 
 /**
  * Initialize iterator of list
- * @note - Let the iterator point to the specified `index` of the list
- * @note - Iterator will point to `NULL` if `index` is out of bounds
+ * 
+ * @note Let the iterator point to the specified **index** of the list
+ * @note Iterator will point to **NULL** when **index** is out of bounds
  */
 void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
 
 /**
  * Check if the iterator's current pointer is valid
+ * 
+ * @return Return **true** when iterator's current pointer is valid
  */
 bool hm_list_iter_has_cur(hm_list_iter* iter);
 
 /**
  * Get the current value of the iterator
- * Use `hm_list_iter_has_cur()` to check before calling `hm_list_iter_cur()`
+ * 
+ * @note Use **hm_list_iter_has_cur()** to check before calling **hm_list_iter_cur()**
+ * 
+ * @return Return **NULL** when iterator current pointer is invalid
  */
 void* hm_list_iter_cur(hm_list_iter* iter);
 
@@ -482,8 +508,8 @@ int main()
 ```c
 /**
  * Free a list
- * @note - If the list was initialized without freeing capacity, 
- * this function can't free the values stored in the Nodes
+ * 
+ * @note If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
  */
 void hm_list_free(hm_list* list);
 ```
@@ -526,7 +552,8 @@ int main()
 ```c
 /**
  * Sort list
- * @note - Pass a comparison function to this function
+ * 
+ * @note Pass a comparison function to this function
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```

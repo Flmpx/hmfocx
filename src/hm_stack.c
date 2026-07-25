@@ -20,11 +20,12 @@ size_t hm_stack_capacity(hm_stack* stack) {
 
 /**
  * Initialize the stack(fixed-size stack)
- * @note - Use the parameter `capacity` to set the size for this stack
- * @note - Return `hm_stack_ret_error` when initialization fails
- * @note - Return `hm_stack_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the stack to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * 
+ * @note - Use the parameter `capacity` to set the capacity for this stack
+ * @note - If you do `NOT` want the stack to free its values, set the `free_val` function pointer to `NULL`
+ * 
+ * @return - Return `hm_stack_ret_error` when initialize failure
+ * @return - Return `hm_stack_ret_suc` when initialize success
  */
 hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
     if (capacity) {
@@ -50,12 +51,13 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
 
 
 /**
- * Initialize the stack(dynamic-growth stack)
- * @note - Use the parameter `start_capacity` to set the start size for this stack
- * @note - Return `hm_stack_ret_error` when initialization fails
- * @note - Return `hm_stack_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the stack to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * Initialize the stack(dynamic-grow stack)
+ * 
+ * @note - Use the parameter `start_capacity` to set the start capacity for this stack
+ * @note - If you do `NOT` want the stack to free its values, set the `free_val` function pointer to `NULL`
+ * 
+ * @return - Return `hm_stack_ret_error` when initialize failure
+ * @return - Return `hm_stack_ret_suc` when initialize success
  */
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free_val) {
     hm_stack_ret ret = hm_stack_init(stack, start_capacity, free_val);
@@ -82,7 +84,12 @@ bool hm_stack_is_empty(hm_stack* stack) {
 
 /**
  * Fresh stack with the new capapcity
- * @note - This function return `hm_stack_ret_warn` when size of stack is greater than the `new_capacity`
+ * 
+ * @note - This function is used to change the capacity of stack
+ * 
+ * @return - Return `hm_stack_ret_warn` when `size of stack` > `new_capacity`
+ * @return - Return `hm_stack_ret_error` when malloc failure
+ * @return - Return `hm_stack_ret_suc` when fresh stack success
  */
 static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
     if (stack->top > new_capacity) {
@@ -106,9 +113,10 @@ static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
 
 /**
  * Push a value to the stack
- * @note - Return `hm_stack_ret_full` when stack is full
- * @note - Return `hm_stack_ret_suc` when push succeeds
- * @note - Return `hm_stack_ret_error` when stack is `dynamic-growth` and expansion fails
+ * 
+ * @return - Return `hm_stack_ret_full` when stack is full
+ * @return - Return `hm_stack_ret_suc` when push success
+ * @return - Return `hm_stack_ret_error` when stack is `dynamic-grow` and expand failure
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
     if (hm_stack_is_full(stack)) {
@@ -146,7 +154,8 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
 
 /**
  * Peek a value from the stack
- * @note - Return `NULL` when the stack is empty 
+ * 
+ * @return - Return `NULL` when the stack is empty 
  */
 void* hm_stack_peek(hm_stack* stack) {
     if (hm_stack_is_empty(stack)) {
@@ -157,6 +166,7 @@ void* hm_stack_peek(hm_stack* stack) {
 
 /**
  * Pop a value from the stack
+ * 
  * @note - Return `NULL` when the stack is empty
  */
 void* hm_stack_pop(hm_stack* stack) {
@@ -169,8 +179,12 @@ void* hm_stack_pop(hm_stack* stack) {
 
 /**
  * Shrink the capacity of stack if possible
+ * 
  * @note - Only dynamic-grow stack have a chance to shrink
- * @note - Returns `hm_stack_ret_none` if the stack can't be shrunk
+ * 
+ * @return - Return `hm_stack_ret_suc` when shrink success
+ * @return - Return `hm_stack_ret_none` when the stack can't be shrunk
+ * @return - Return `hm_stack_ret_error` when shrink failure
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack) {
     if (!stack->dynamic_grow || stack->top >= stack->capacity / 2) {
@@ -185,6 +199,7 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
 
 /**
  * Clear the stack 
+ * 
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack) {
@@ -200,7 +215,8 @@ void hm_stack_clear(hm_stack* stack) {
 
 /**
  * Free all contents of the stack
- * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * 
+ * @note - The stack can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_stack_free(hm_stack* stack) {
     hm_stack_clear(stack);

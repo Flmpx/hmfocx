@@ -9,6 +9,8 @@
 
 /**
  * Align the memory to the variable `align`
+ * 
+ * @return - Return a number >= `n` && is a multiple of `align`
  */
 static size_t align_up(size_t n, size_t align) {
     return (n + (align - 1) & ~(align - 1));
@@ -18,7 +20,8 @@ static size_t align_up(size_t n, size_t align) {
 
 /**
  * Initialize the memory pool 
- * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
+ * 
+ * @note - `hm_pool_block_allocate()` will return `NULL` when `blocks_per_page` == `0` || `block_size` == `0`
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
     pool->head_page = NULL;
@@ -41,8 +44,9 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
 
 /**
  * Get pointer of to block
- * @note - It will return `NULL` when allocation fails
- * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
+ * 
+ * @return - Return `NULL` when allocate failure
+ * @return - Return `NULL` when `blocks_per_page` or `block_size` of `pool` is `0`
  */
 void* hm_pool_block_allocate(hm_pool* pool) {
 
@@ -100,7 +104,10 @@ void* hm_pool_block_allocate(hm_pool* pool) {
 
 /**
  * Free a block
- * @note - The pointer of block must match the memory pool
+ * 
+ * @note - Pass `NULL`(block pointer) is allowed
+ * 
+ * @warning - The pointer of block must match the memory pool
  */
 void hm_pool_block_free(hm_pool* pool, void* block) {
     if (block == NULL) return;
@@ -112,6 +119,7 @@ void hm_pool_block_free(hm_pool* pool, void* block) {
 
 /**
  * Free all content of the memory pool
+ * 
  * @note Do not use blocks from a freed memory pool
  */
 void hm_pool_free(hm_pool* pool) {
@@ -127,7 +135,6 @@ void hm_pool_free(hm_pool* pool) {
 
 /**
  * Get the number of pages in the given memory pool
- * 
  */
 size_t hm_pool_get_pages(hm_pool* pool) {
     size_t cnt = 0;
@@ -142,7 +149,6 @@ size_t hm_pool_get_pages(hm_pool* pool) {
 
 /**
  * Get the theoretical number of bytes per page in the memory pool
- * 
  */
 size_t hm_pool_get_bytes_per_page(hm_pool* pool) {
     return sizeof(hm_pool_page_node) + pool->block_size * pool->blocks_per_page;

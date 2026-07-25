@@ -29,7 +29,7 @@
 ## Introduction
 - You can pass a pointer to any value into this queue
 - It provides basic queue operations
-- It supports `dynamic-growth` and `fixed-size` modes
+- It supports **dynamic-grow** and **fixed-size** modes
 
 
 <a id = "func"></a>
@@ -53,23 +53,25 @@ size_t hm_queue_capacity(hm_queue* queue);
 ```c
 /**
  * Initialize the queue(fixed-size queue)
- * @note - Use the parameter `capacity` to set the size for this queue
- * @note - Return `hm_queue_ret_error` when initialization fails
- * @note - Return `hm_queue_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the queue to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * 
+ * @note Use the parameter **capacity** to set the capacity for this queue
+ * @note If you do **NOT** want the queue to free its values, set the **free_val** function pointer to **NULL**
+ * 
+ * @return Return **hm_queue_ret_error** when initialize failure
+ * @return Return **hm_queue_ret_suc** when initialize success
  */
-hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free);
+hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val);
 
 /**
- * Initialize the queue(dynamic-growth queue)
- * @note - Use the parameter `start_capacity` to set the start size for this queue
- * @note - Return `hm_queue_ret_error` when initialization fails
- * @note - Return `hm_queue_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the queue to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * Initialize the queue(dynamic-grow queue)
+ * 
+ * @note Use the parameter **start_capacity** to set the start capacity for this queue
+ * @note If you do **NOT** want the queue to free its values, set the **free_val** function pointer to **NULL**
+ * 
+ * @return Return **hm_queue_ret_error** when initialize failure
+ * @return Return **hm_queue_ret_suc** when initialize success
  */
-hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free);
+hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free_val);
 ```
 <details>
 <summary>try: init</summary>
@@ -107,10 +109,11 @@ int main()
 > **Enqueue**
 ```c
 /**
- * Enqueue a value
- * @note - Return `hm_queue_ret_full` when queue is full
- * @note - Return `hm_queue_ret_suc` when enqueue succeeds
- * @note - Return `hm_queue_ret_error` when queue is `dynamic-growth` and expansion fails
+ * Enqueue a value to the queue
+ * 
+ * @return Return **hm_queue_ret_full** when queue is full
+ * @return Return **hm_queue_ret_suc** when enqueue succee
+ * @return Return **hm_queue_ret_error** when queue is **dynamic-grow** and expand failure
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
@@ -121,8 +124,9 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 > **Dequeue**
 ```c
 /**
- * Dequeue a value
- * @note - Return `NULL` when the queue is empty
+ * Dequeue a value from the queue
+ * 
+ * @return Return **NULL** when the queue is empty
  */
 void* hm_queue_deq(hm_queue* queue);
 ```
@@ -132,8 +136,9 @@ void* hm_queue_deq(hm_queue* queue);
 > **Peek**
 ```c
 /**
- * Peek a value
- * @note - Return `NULL` when the queue is empty 
+ * Peek a value from the queue
+ * 
+ * @return Return **NULL** when the queue is empty 
  */
 void* hm_queue_peek(hm_queue* queue);
 ```
@@ -264,8 +269,12 @@ queue is full
 ```c
 /**
  * Shrink the capacity of queue if possible
- * @note - Only dynamic-grow queue have a chance to shrink
- * @note - Returns `hm_queue_ret_none` if the queue can't be shrunk
+ * 
+ * @note Only dynamic-grow queue have a chance to shrink
+ * 
+ * @return Return **hm_queue_ret_suc** when shrink success
+ * @return Return **hm_queue_ret_none** when the queue can't be shrunk
+ * @return Return **hm_queue_ret_error** when shrink failure
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue);
 ```
@@ -331,7 +340,8 @@ size: 0, capacity: 1
 ```c
 /**
  * Clear the queue 
- * @note - Only free the values(if possible),  but keep the vals array existed
+ * 
+ * @note Only free the values(if possible),  but keep the vals array existed
  */
 void hm_queue_clear(hm_queue* queue);
 ```
@@ -391,7 +401,8 @@ size: 0  , capacity: 20
 ```c
 /**
  * Free all contents of the queue
- * @note - The queue can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * 
+ * @note The queue can be reused when it is **dynamic-grow** but **fixed-size** cannot
  */
 void hm_queue_free(hm_queue* queue);
 ```

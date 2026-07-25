@@ -42,7 +42,8 @@ size_t hm_set_len(hm_set* set);
 
 /**
  * Get the load factor of the set 
- * @note - Return a negative number when the length of the set is 0
+ * 
+ * @return Return a **negative number** when the length of the set is **0**
  */
 double hm_set_get_load_factor(hm_set* set);
 ```
@@ -54,21 +55,22 @@ double hm_set_get_load_factor(hm_set* set);
 > **Initialize**
 ```c
 /**
- * Initialize hm_set
- * @note - This function requires not only `free` function for keys, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` parameters is optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
+ * Initialize set
+ * 
+ * @note This function requires not only **free** function for keys, but also **hash** and **cmp** functions for keys
+ * @note Like **list**, the **free_key** parameters is optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
  */
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
 
 /**
  * Reserve capacity and initialize set
- * @note - This function requires not only `free` function for keys, 
- * but also `hash` and `cmp` functions for keys
- * @note - Like `list`, the `free_key` parameters is optional (can be NULL), 
- * but `hash_key` and `cmp_key` must not be NULL
- * @note - parameter `len` represents the start length of this set, the `min_len` is 17, len will be `min_len` if `len` < `min_len`
+ * 
+ * @note This function requires not only **free** function for keys, but also **hash** and **cmp** functions for keys
+ * @note Like **list**, the **free_key** parameters is optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
+ * @note Use the parameter **len** to set the start length of this set, the **min_len** is 17, **len** will be **min_len** if **len** < **min_len**
+ * 
+ * @return Return **hm_set_ret_error** when initialize failure
+ * @return Return **hm_set_ret_suc** when initialize success
  */
 hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len);
 ```
@@ -138,10 +140,12 @@ size: 0, length: 1314
 ```c
 /**
  * Insert a key into the set
- * @note - Return `hm_set_ret_error` on failure
- * @note - Return `hm_set_ret_suc` on success
- * @note - If the key already exists, the old entry(key) remains in the set. And return `hm_set_ret_existed`.
- * Therefore, you should handle this special situation
+ * 
+ * @note If the key already exists, the old entry(key) remains in the set. And return **hm_set_ret_existed**. Therefore, you should handle this special situation
+ * 
+ * @return Return **hm_set_ret_suc** when insert success
+ * @return Return **hm_set_ret_error** when insert failure 
+ * @return Return **hm_set_ret_existed** when the key has existed in set
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key);
 ```
@@ -154,7 +158,8 @@ hm_set_ret hm_set_insert(hm_set* set, void* key);
 ```c
 /**
  * Get a pointer to the entry in the set
- * @note - If the key does not exist, return `NULL`
+ * 
+ * @return Return **NULL** when key is not existed in set
  */
 hm_set_entry* hm_set_get(hm_set* set, void* key);
 ```
@@ -254,7 +259,9 @@ int main()
 ```c
 /**
  * Delete the entry associated with the given key
- * @note - If the key does not exist, returns `hm_set_ret_none`
+ * 
+ * @return Return **hm_set_ret_suc** when delete success
+ * @return Return **hm_set_ret_none** when key is not existed in set
  */
 hm_set_ret hm_set_del(hm_set* set, void* key);
 ```
@@ -355,7 +362,10 @@ int main()
 ```c
 /**
  * Shrink the length of set if possible
- * @note - Returns `hm_set_ret_none` if the set can't be shrunk
+ * 
+ * @return Return **hm_set_ret_suc** when shrink success
+ * @return Return **hm_set_ret_none** when the set can't be shrunk
+ * @return Return **hm_set_ret_error** when shrink failure
  */
 hm_set_ret hm_set_shrink(hm_set* set);
 ```
@@ -450,13 +460,17 @@ void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 
 /**
  * Check if the iterator has a next entry
- * @note - Return true if the iterator has next
+ * 
+ * @return Return **true** when the iterator has next
  */
 bool hm_set_iter_has_next(hm_set_iter* iter);
 
 /**
  * Get next entry of set
- * @note - Use `hm_set_iter_has_next()` to check before calling `hm_set_iter_next()`
+ * 
+ * @note Use **hm_set_iter_has_next()** to check before calling **hm_set_iter_next()**
+ * 
+ * @return Return **NULL** when iterator doesn't has next 
  */
 hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
 ```

@@ -43,7 +43,7 @@ void test_stack_fixed_init() {
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity);
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(stack.dynamic_grow == false, "the stack's dynamic-gorwth should is `false`", &fail_cnt, tag++);
+    check_res(stack.dynamic_grow == false, "the stack's dynamic-grow should is `false`", &fail_cnt, tag++);
     check_res(stack.free_val == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
     check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
     check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
@@ -65,7 +65,7 @@ void test_stack_fixed_init() {
 }
 
 void test_stack_dynamic_init() {
-    // dynamic-growth
+    // dynamic-grow
     int fail_cnt = 0;
     int tag = 0;
     print_run("STACK(DYNAMIC) | FUNC | INIT | CAPACITY: 64");
@@ -76,7 +76,7 @@ void test_stack_dynamic_init() {
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
 
     check_res(stack.capacity == capacity, "the stack's capacity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(stack.dynamic_grow == true, "the stack's dynamic-gorwth should is `true`", &fail_cnt, tag++);
+    check_res(stack.dynamic_grow == true, "the stack's dynamic-grow should is `true`", &fail_cnt, tag++);
     check_res(stack.free_val == free, "the stack's free should be `free` when pass in `free` to stack", &fail_cnt, tag++);
     check_res(stack.top == 0, "the stack's top should be 0", &fail_cnt, tag++);
     check_res(stack.vals != NULL, "the stack's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
@@ -798,16 +798,16 @@ void test_no_capacity_dynamic_stack() {
     hm_stack_ret ret = hm_stack_push(&stack, val);
     test_stack_integrity(&stack, &fail_cnt, tag++, 1, true, capacity);
     
-    check_res(ret == hm_stack_ret_suc, "it should return suc when push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    check_res(ret == hm_stack_ret_suc, "it should return suc when push a val in 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
     
     // peek
     int* pointer = hm_stack_peek(&stack);
-    check_res(pointer == val, "the peek val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    check_res(pointer == val, "the peek val is wrong after push a val in 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 1, true, capacity);
     
     // pop
     pointer = hm_stack_pop(&stack);
-    check_res(pointer == val, "the pop val is wrong after push a val in 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    check_res(pointer == val, "the pop val is wrong after push a val in 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     if (pointer == val) {
         free(val);
@@ -821,7 +821,7 @@ void test_no_capacity_dynamic_stack() {
     hm_stack_free(&stack);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
     
-    check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none in a 0-capacity and dynamic-growth stack", &fail_cnt, tag++);
+    check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity);
 
     hm_stack_free(&stack);

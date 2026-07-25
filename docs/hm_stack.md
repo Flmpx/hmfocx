@@ -29,7 +29,7 @@
 ## Introduction
 - You can pass a pointer to any value into this stack
 - It provides basic stack operations
-- It supports `dynamic-growth` and `fixed-size` modes
+- It supports **dynamic-grow** and **fixed-size** modes
 
 
 <a id = "func"></a>
@@ -53,21 +53,23 @@ size_t hm_stack_capacity(hm_stack* stack);
 ```c
 /**
  * Initialize the stack(fixed-size stack)
- * @note - Use the parameter `capacity` to set the size for this stack
- * @note - Return `hm_stack_ret_error` when initialization fails
- * @note - Return `hm_stack_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the stack to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * 
+ * @note Use the parameter **capacity** to set the capacity for this stack
+ * @note If you do **NOT** want the stack to free its values, set the **free_val** function pointer to **NULL**
+ * 
+ * @return Return **hm_stack_ret_error** when initialize failure
+ * @return Return **hm_stack_ret_suc** when initialize success
  */
-hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free);
+hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val);
 
 /**
- * Initialize the stack(dynamic-growth stack)
- * @note - Use the parameter `start_capacity` to set the start size for this stack
- * @note - Return `hm_stack_ret_error` when initialization fails
- * @note - Return `hm_stack_ret_suc` when initialization succeeds
- * @note - If you do `NOT` want the stack to free its values,
- * set the `hm_free` function pointer to `NULL`
+ * Initialize the stack(dynamic-grow stack)
+ * 
+ * @note Use the parameter **start_capacity** to set the start capacity for this stack
+ * @note If you do **NOT** want the stack to free its values, set the **free_val** function pointer to **NULL**
+ * 
+ * @return Return **hm_stack_ret_error** when initialize failure
+ * @return Return **hm_stack_ret_suc** when initialize success
  */
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free);
 ```
@@ -106,9 +108,10 @@ int main()
 ```c
 /**
  * Push a value to the stack
- * @note - Return `hm_stack_ret_full` when stack is full
- * @note - Return `hm_stack_ret_suc` when push succeeds
- * @note - Return `hm_stack_ret_error` when stack is `dynamic-growth` and expansion fails
+ * 
+ * @return Return **hm_stack_ret_full** when stack is full
+ * @return Return **hm_stack_ret_suc** when push success
+ * @return Return **hm_stack_ret_error** when stack is **dynamic-grow** and expand failure
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```
@@ -120,7 +123,8 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 ```c
 /**
  * Pop a value from the stack
- * @note - Return `NULL` when the stack is empty
+ * 
+ * @note Return **NULL** when the stack is empty
  */
 void* hm_stack_pop(hm_stack* stack);
 ```
@@ -133,7 +137,8 @@ void* hm_stack_pop(hm_stack* stack);
 ```c
 /**
  * Peek a value from the stack
- * @note - Return `NULL` when the stack is empty 
+ * 
+ * @return Return **NULL** when the stack is empty 
  */
 void* hm_stack_peek(hm_stack* stack);
 ```
@@ -265,8 +270,12 @@ stack is full
 ```c
 /**
  * Shrink the capacity of stack if possible
- * @note - Only dynamic-grow stack have a chance to shrink
- * @note - Returns `hm_stack_ret_none` if the stack can't be shrunk
+ * 
+ * @note Only dynamic-grow stack have a chance to shrink
+ * 
+ * @return Return **hm_stack_ret_suc** when shrink success
+ * @return Return **hm_stack_ret_none** when the stack can't be shrunk
+ * @return Return **hm_stack_ret_error** when shrink failure
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack);
 ```
@@ -330,7 +339,8 @@ size: 0, capacity: 1
 ```c
 /**
  * Clear the stack 
- * @note - Only free the values(if possible),  but keep the vals array existed
+ * 
+ * @note Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack);
 ```
@@ -390,7 +400,8 @@ size: 0  , capacity: 20
 ```c
 /**
  * Free all contents of the stack
- * @note - The stack can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * 
+ * @note The stack can be reused when it is **dynamic-grow** but **fixed-size** cannot
  */
 void hm_stack_free(hm_stack* stack);
 ```

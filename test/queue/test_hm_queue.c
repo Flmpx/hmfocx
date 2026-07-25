@@ -64,7 +64,7 @@ void test_queue_fixed_init() {
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
     
     check_res(queue.capacity == capacity, "the queue's capacity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(queue.dynamic_grow == false, "the queue's dynamic-gorwth should is `false`", &fail_cnt, tag++);
+    check_res(queue.dynamic_grow == false, "the queue's dynamic-grow should is `false`", &fail_cnt, tag++);
     check_res(queue.free_val == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
     check_res(queue.front == 0, "the queue's front should be 0", &fail_cnt, tag++);
     check_res(queue.rear == 0, "the queue's rear should be 0", &fail_cnt, tag++);
@@ -92,7 +92,7 @@ void test_queue_dynamic_init() {
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, start_capacity, free);
     
     check_res(queue.capacity == start_capacity, "the queue's capacity isn't equal to expected capacity", &fail_cnt, tag++);
-    check_res(queue.dynamic_grow == true, "the queue's dynamic-gorwth should is `false`", &fail_cnt, tag++);
+    check_res(queue.dynamic_grow == true, "the queue's dynamic-grow should is `false`", &fail_cnt, tag++);
     check_res(queue.free_val == free, "the queue's free should be `free` when pass in `free` to queue", &fail_cnt, tag++);
     check_res(queue.front == 0, "the queue's front should be 0", &fail_cnt, tag++);
     check_res(queue.rear == 0, "the queue's rear should be 0", &fail_cnt, tag++);

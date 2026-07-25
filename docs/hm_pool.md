@@ -37,13 +37,11 @@
 ```c
 /**
  * Get the number of pages in the given memory pool
- * 
  */
 size_t hm_pool_get_pages(hm_pool* pool);
 
 /**
  * Get the theoretical number of bytes per page in the memory pool
- * 
  */
 size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```
@@ -57,7 +55,8 @@ size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 ```c
 /**
  * Initialize the memory pool 
- * @note - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
+ * 
+ * @note **hm_pool_block_allocate()** will return **NULL** when **blocks_per_page** == **0** || **block_size** == **0**
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
@@ -93,8 +92,9 @@ int main()
 ```c
 /**
  * Get pointer of to block
- * @note - It will return `NULL` when allocation fails
- * @note - It will return `NULL` if `blocks_per_page` is `zero` or `block_size` is `zero`
+ * 
+ * @return Return **NULL** when allocate failure
+ * @return Return **NULL** when **blocks_per_page** or **block_size** of **pool** is **0**
  */
 void* hm_pool_block_allocate(hm_pool* pool);
 ```
@@ -149,7 +149,10 @@ int main()
 ```c
 /**
  * Free a block
- * @note - The pointer of block must match the memory pool
+ * 
+ * @note Pass **NULL**(block pointer) is allowed
+ * 
+ * @warning The pointer of block must match the memory pool
  */
 void hm_pool_block_free(hm_pool* pool, void* block);
 ```
@@ -194,6 +197,7 @@ int main()
 ```c
 /**
  * Free all content of the memory pool
+ * 
  * @note Do not use blocks from a freed memory pool
  */
 void hm_pool_free(hm_pool* pool);
