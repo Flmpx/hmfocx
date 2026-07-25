@@ -6,17 +6,15 @@
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-07-25
+
 ### Added
-- Add new function `hm_map_init_reserve` for `hm_map`
-    - It can reserve a start capacity for map when initizlize map
-- Add new function `hm_set_init_reserve` for `hm_set`
-    - It can reserve a start capacity for set when initizlize set
-- Add new function `hm_stack_shrink` for `hm_stack`
-    - It can decrease the capacity of stack if possible
-- Add new function `hm_heap_shrink` for `hm_heap`
-    - It can decrease the capacity of heap if possible
-- Add new function `hm_queue_shrink` for `hm_queue`
-    - It can decrease the capacity of queue if possible
+- Add init with reserve function for `hm_map` and `hm_set`
+    - `hm_map_init_reserve` and `hm_set_init_reserve`
+    - It can reserve a start capacity for map when initizlize map or set
+- Add shrink function for `hm_stack`, `hm_queue` and `hm_heap`
+    - `hm_stack_shrink`, `hm_queue_shrink` and `hm_heap_shrink`
+    - It can decrease the capacity of stack(queue or heap) if possible
 
 ### Changed
 - Change the real value of return code of ervery container
@@ -27,6 +25,7 @@
     - `hm_heap`     >= `0x5000`
     - `hm_set`      >= `0x6000`
 - Change the fields' name in some container, such as `hash` --> `hash_key` in `hm_map`
+- Document update to the new format
 
 
 ## [0.10.0] - 2026-07-22
@@ -109,7 +108,7 @@
 
 - Fix the wrong free logic in function `hm_pool_free`
 
-## Changed
+### Changed
 - `hm_pool_block_allocate` will return `NULL` if `blocks_per_page` or `block_size` is `zero`
 
 - **Breaking** Change `hm_cmp` and `hm_hash` signatures from `void*` to use `const void*`
