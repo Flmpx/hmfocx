@@ -306,7 +306,7 @@ void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
 /**
  * Check if the iterator has a next element
  * 
- * @return - Return `true` if iterator has next
+ * @return - Return `true` when iterator has next
  */
 bool hm_list_iter_has_next(hm_list_iter* iter) {
     return iter->cur != NULL;
@@ -357,7 +357,7 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
  * Initialize iterator of list
  * 
  * @note - Let the iterator point to the specified `index` of the list
- * @note - Iterator will point to `NULL` if `index` is out of bounds
+ * @note - Iterator will point to `NULL` when `index` is out of bounds
  */
 void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
     if (index >= list->size) {

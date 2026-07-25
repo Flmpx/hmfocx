@@ -29,7 +29,7 @@
 ## Introduction
 - You can pass a pointer to any value into this stack
 - It provides basic stack operations
-- It supports **dynamic-growth** and **fixed-size** modes
+- It supports **dynamic-grow** and **fixed-size** modes
 
 
 <a id = "func"></a>
@@ -54,7 +54,7 @@ size_t hm_stack_capacity(hm_stack* stack);
 /**
  * Initialize the stack(fixed-size stack)
  * 
- * @note Use the parameter **capacity** to set the size for this stack
+ * @note Use the parameter **capacity** to set the capacity for this stack
  * @note If you do **NOT** want the stack to free its values, set the **free_val** function pointer to **NULL**
  * 
  * @return Return **hm_stack_ret_error** when initialize failure
@@ -63,9 +63,9 @@ size_t hm_stack_capacity(hm_stack* stack);
 hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val);
 
 /**
- * Initialize the stack(dynamic-growth stack)
+ * Initialize the stack(dynamic-grow stack)
  * 
- * @note Use the parameter **start_capacity** to set the start size for this stack
+ * @note Use the parameter **start_capacity** to set the start capacity for this stack
  * @note If you do **NOT** want the stack to free its values, set the **free_val** function pointer to **NULL**
  * 
  * @return Return **hm_stack_ret_error** when initialize failure
@@ -110,7 +110,7 @@ int main()
  * Push a value to the stack
  * 
  * @return Return **hm_stack_ret_full** when stack is full
- * @return Return **hm_stack_ret_suc** when push succeeds
+ * @return Return **hm_stack_ret_suc** when push success
  * @return Return **hm_stack_ret_error** when stack is **dynamic-grow** and expand failure
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val);

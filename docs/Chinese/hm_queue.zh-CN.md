@@ -20,16 +20,16 @@
     - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
-- [提示](#tip)
+- [注意事项](#tip)
 - [其他容器](#othercontainer)
 
 
 <a id = "intro"></a>
 
 ## 介绍
-- 你可以向此队列传递任意值的指针。
-- 它提供基本的队列操作。
-- 支持动态增长和固定大小两种模式。
+- 你可以向此队列传递任意值的指针
+- 它提供基本的队列操作
+- 支持动态增长和固定大小两种模式
 
 
 <a id = "func"></a>
@@ -53,10 +53,10 @@ size_t hm_queue_capacity(hm_queue* queue);
 > **初始化**
 ```c
 /**
- * 初始化队列（固定大小模式）
+ * 初始化队列 (固定大小模式)
  * 
- * @note 使用参数 **capacity** 设置队列的大小
- * @note 如果不想让队列释放其值，将 **hm_free** 函数指针设为 **NULL**
+ * @note 使用参数 **capacity** 设置队列的容量
+ * @note 如果不想让队列释放其值, 将 **free_val** 函数指针设为 **NULL**
  * 
  * @return 初始化失败时返回 **hm_queue_ret_error**
  * @return 初始化成功时返回 **hm_queue_ret_suc**
@@ -64,10 +64,10 @@ size_t hm_queue_capacity(hm_queue* queue);
 hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val);
 
 /**
- * 初始化队列（动态增长模式）
+ * 初始化队列 (动态增长模式)
  * 
- * @note 使用参数 **start_capacity** 设置队列的初始大小
- * @note 如果不想让队列释放其值，将 **hm_free** 函数指针设为 **NULL**
+ * @note 使用参数 **start_capacity** 设置队列的初始容量
+ * @note 如果不想让队列释放其值, 将 **free_val** 函数指针设为 **NULL**
  * 
  * @return 初始化失败时返回 **hm_queue_ret_error**
  * @return 初始化成功时返回 **hm_queue_ret_suc**
@@ -114,7 +114,7 @@ int main()
  * 
  * @return 队列满时返回 **hm_queue_ret_full**
  * @return 入队成功时返回 **hm_queue_ret_suc**
- * @return 若队列为动态增长模式且扩容失败，返回 **hm_queue_ret_error**
+ * @return 若队列为动态增长模式并且扩容失败, 返回 **hm_queue_ret_error**
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 ```
@@ -272,7 +272,7 @@ queue is full
  * @note 只用动态增长的队列有机会缩容
  * 
  * @return 如果缩容成功, 返回 **hm_queue_ret_suc**
- * @return 如果队列无法缩容，返回 **hm_queue_ret_none**
+ * @return 如果队列无法缩容, 返回 **hm_queue_ret_none**
  * @return 如果缩容失败, 返回 **hm_queue_ret_error**
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue);
@@ -341,7 +341,7 @@ size: 0, capacity: 1
 /**
  * 清空队列
  * 
- * @note 仅释放值（如果可以），内部数组仍然保留
+ * @note 仅释放值 (如果可以), 内部数组仍然保留
  */
 void hm_queue_clear(hm_queue* queue);
 ```
@@ -403,7 +403,7 @@ size: 0  , capacity: 20
 /**
  * 释放队列的所有内容
  * 
- * @note 动态增长模式的队列可重复使用，而固定大小模式的队列不可以
+ * @note 动态增长模式的队列可重复使用, 而固定大小模式的队列不可以
  */
 void hm_queue_free(hm_queue* queue);
 ```
@@ -446,7 +446,7 @@ int main()
 
 <a id = "tip"></a>
 
-## 提示
+## 注意事项
 
 
 

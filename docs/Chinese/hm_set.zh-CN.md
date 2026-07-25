@@ -19,15 +19,15 @@
     - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
-- [提示](#tip)
+- [注意事项](#tip)
 - [其他容器](#othercontainer)
 
 <a id = "intro"></a>
 
 ## 介绍
 
-- 你可以向此集合传递任意键的指针。
-- 它提供基本的集合操作。
+- 你可以向此集合传递任意键的指针
+- 它提供基本的集合操作
 
 
 <a id = "func"></a>
@@ -57,19 +57,19 @@ double hm_set_get_load_factor(hm_set* set)
 > **初始化**
 ```c
 /**
- * 初始化 hm_set
+ * 初始化集合
  * 
- * @note 该函数不仅需要键的 **释放** 函数，还需要 **哈希** 和 **比较** 键的函数
- * @note 与链表类似，**free_key** 是可选的(可为 **NULL**)，但 **hash_key** 和 **cmp_key** 不能为 **NULL**
+ * @note 该函数不仅需要键的 **释放** 函数, 还需要 **哈希** 和 **比较** 键的函数
+ * @note 与链表类似, **free_key** 是可选的(可为 **NULL**), 但 **hash_key** 和 **cmp_key** 不能为 **NULL**
  */
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
 
 /**
- * 预分配容量并初始化 set
+ * 预分配容量并初始化集合
  * 
- * @note 该函数不仅需要键的 **释放** 函数，还需要 **哈希** 和 **比较** 键的函数
- * @note 与链表类似，**free_key** 是可选的(可为 **NULL**)，但 **hash_key** 和 **cmp_key** 不能为 **NULL**
- * @note 参数 **len** 代表这个集合的初始长度, 最小长度为 17, 如果 **len** < **min_len**, 那长度就等于 **min_len**
+ * @note 该函数不仅需要键的 **释放** 函数, 还需要 **哈希** 和 **比较** 键的函数
+ * @note 与链表类似, **free_key** 是可选的(可为 **NULL**), 但 **hash_key** 和 **cmp_key** 不能为 **NULL**
+ * @note 使用参数 **len** 来设置集合的初始长度, 最小长度为 17, 如果 **len** < **min_len**, 那长度就等于 **min_len**
  * 
  * @return 初始化失败时返回 **hm_set_ret_error**
  * @return 初始化成功时返回 **hm_set_ret_suc**
@@ -142,7 +142,7 @@ size: 0, length: 1314
 /**
  * 向集合中插入一个键
  * 
- * @note 如果键已存在，旧条目(键)仍保留在集合中，因此，你需要处理这种特殊情况
+ * @note 如果键已存在, 旧条目(键)仍保留在集合中, 因此, 你需要处理这种特殊情况
  * 
  * @return 插入失败时返回 **hm_set_ret_error**
  * @return 插入成功时返回 **hm_set_ret_suc**
@@ -159,7 +159,7 @@ hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
 /**
  * 获取集合中条目的指针
  * 
- * @return 如果键不存在，返回 **NULL**
+ * @return 如果键不存在, 返回 **NULL**
  */
 hm_set_entry* hm_set_get(hm_set* set, void* key);
 ```
@@ -261,7 +261,7 @@ int main()
  * 根据键删除集合中的条目
  * 
  * @return 如果删除成功返回 **hm_set_ret_suc**
- * @return 如果键不存在，返回 **hm_set_ret_none**
+ * @return 如果键不存在, 返回 **hm_set_ret_none**
  */
 hm_set_ret hm_set_del(hm_set* set, void* key);
 ```
@@ -362,7 +362,7 @@ int main()
  * 如果可以, 对集合进行缩容
  * 
  * @return 如果缩容成功, 返回 **hm_set_ret_suc**
- * @return 如果无法缩容，返回 **hm_set_ret_none**
+ * @return 如果无法缩容, 返回 **hm_set_ret_none**
  * @return 如果缩容失败, 返回 **hm_set_ret_error**
  */
 hm_set_ret hm_set_shrink(hm_set* set);
@@ -567,7 +567,7 @@ int main()
 > **清空**
 ```c
 /**
- * 释放集合中的键，但保留桶和状态标志数组
+ * 释放集合中的键, 但保留桶和状态标志数组
  */
 void hm_set_clear(hm_set* set);
 ```
@@ -716,9 +716,9 @@ int main()
 
 <a id = "tip"></a>
 
-## 提示
+## 注意事项
 
-- **遍历集合时，请勿修改集合结构(如删除、插入、清空或释放)。**
+- **遍历集合时, 禁止修改集合结构(如删除、插入、清空或释放)**
 
 
 

@@ -5,7 +5,7 @@
 </p>
 
 ## 介绍
-- 本 `README.md` 说明如何为每个容器编写测试。
+- 本 `README.md` 说明如何为每个容器编写测试
 
 ## **`CMakeLists.txt` 内容**
 
@@ -42,7 +42,7 @@ add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
 
 ```
 
-- 还需在根目录的 `CMakeLists.txt` 中添加一行，参见以下代码：
+- 还需在根目录的 `CMakeLists.txt` 中添加一行, 参见以下代码：
 
 ```cmake
 # 需要在 `.github/workflows/cmake-single-platform.yml` 中添加 `-DBUILD_TESTS=ON` 才能正确运行测试
@@ -64,7 +64,7 @@ endif()
 
 ### 文件结构
 
-- 测试包含：`功能测试`、`压力测试`、`边界测试`。
+- 测试包含：`功能测试`、`压力测试`、`边界测试`
 
 | 部分 | 命名格式 |
 | --- | --- |
@@ -76,7 +76,7 @@ endif()
 #include "../../include/hm_list.h"
 #include "../hm_test.h"
 
-// 该变量记录总失败次数，可作为返回值判断测试是否通过
+// 该变量记录总失败次数, 可作为返回值判断测试是否通过
 int all_failure_num = 0;
 
 // 使用宏替换重复代码
@@ -160,6 +160,6 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 | `print_run_time` | 根据传入参数打印`耗时`和`速度` |
 | `print_speed_vs` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |
 
-## 提示
+## 注意事项
 - 如果你觉得有些测试组并不需要, 那你可以删掉这个测试组, 比如 `hm_stack` 并不需要压力测试
 - 如果你觉得有些测试组是必须的, 那就加上

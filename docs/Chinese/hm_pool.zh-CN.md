@@ -13,7 +13,7 @@
     - [分配](#allocate)
     - [释放块内存](#freeblock)
     - [释放内存池](#freepool)
-- [提示](#tip)
+- [注意事项](#tip)
 - [其他容器](#othercontainer)
 
 
@@ -22,8 +22,8 @@
 
 ## 介绍
 
-- 你可以从该内存池中获取固定大小的内存块。
-- 它提供基本的固定大小块内存池操作。
+- 你可以从该内存池中获取固定大小的内存块
+- 它提供基本的固定大小块内存池操作
 
 
 <a id = "func"></a>
@@ -55,7 +55,7 @@ size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 /**
  * 初始化内存池
  * 
- * @note 如果 **blocks_per_page** 或者 **block_size** 为零，**hm_pool_block_allocate()** 将返回 **NULL**
+ * @note 如果 **blocks_per_page** 或者 **block_size** 为零, **hm_pool_block_allocate()** 将返回 **NULL**
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page);
 ```
@@ -197,7 +197,7 @@ int main()
 /**
  * 释放内存池的所有内容
  * 
- * @note 释放后请勿使用该内存池的块内存
+ * @note 释放后不可使用该内存池的块内存
  */
 void hm_pool_free(hm_pool* pool);
 ```
@@ -242,7 +242,7 @@ int main()
 
 <a id = "tip"></a>
 
-## 提示
+## 注意事项
 
 
 

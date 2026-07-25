@@ -55,7 +55,7 @@ double hm_set_get_load_factor(hm_set* set);
 > **Initialize**
 ```c
 /**
- * Initialize hm_set
+ * Initialize set
  * 
  * @note This function requires not only **free** function for keys, but also **hash** and **cmp** functions for keys
  * @note Like **list**, the **free_key** parameters is optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
@@ -67,7 +67,7 @@ void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * 
  * @note This function requires not only **free** function for keys, but also **hash** and **cmp** functions for keys
  * @note Like **list**, the **free_key** parameters is optional (can be NULL), but **hash_key** and **cmp_key** must not be NULL
- * @note parameter **len** represents the start length of this set, the **min_len** is 17, len will be **min_len** if **len** < **min_len**
+ * @note Use the parameter **len** to set the start length of this set, the **min_len** is 17, **len** will be **min_len** if **len** < **min_len**
  * 
  * @return Return **hm_set_ret_error** when initialize failure
  * @return Return **hm_set_ret_suc** when initialize success
@@ -461,7 +461,7 @@ void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 /**
  * Check if the iterator has a next entry
  * 
- * @return Return **true** if the iterator has next
+ * @return Return **true** when the iterator has next
  */
 bool hm_set_iter_has_next(hm_set_iter* iter);
 

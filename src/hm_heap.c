@@ -188,7 +188,7 @@ static hm_heap_ret hm_heap_fresh(hm_heap* heap, size_t new_capacity) {
  * 
  * @return - Return `hm_heap_ret_full` when heap is full
  * @return - Return `hm_heap_ret_suc` when insert success
- * @return - Return `hm_heap_ret_error` when heap is `dynamic-growth` and expand failure
+ * @return - Return `hm_heap_ret_error` when heap is `dynamic-grow` and expand failure
  */
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val) {
     if (hm_heap_is_full(heap)) {
@@ -356,7 +356,7 @@ void hm_heap_clear(hm_heap* heap) {
 /**
  * Free all contents of the heap
  * 
- * @note - The heap can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * @note - The heap can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_heap_free(hm_heap* heap) {
     hm_heap_clear(heap);

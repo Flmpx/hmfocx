@@ -30,8 +30,8 @@
 
 - You can pass a pointer to any value into this heap
 - It provides basic heap operations
-- It supports `dynamic-growth` and `fixed-size` modes
-- It supports sort by your `cmp` function
+- It supports **dynamic-grow** and **fixed-size** modes
+- It supports sort by your **cmp** function
 - It supports build by your vals array
 
 <a id = "func"></a>
@@ -57,24 +57,24 @@ size_t hm_heap_capacity(hm_heap* heap);
 /**
  * Initialize the heap(fixed-size heap)
  * 
- * @note - Use the parameter `capacity` to set the capacity for this heap
- * @note - If you do `NOT` want the heap to free its values, set the `free_val` function pointer to `NULL`
- * @note - The `cmp_val` function pointer `must not be NULL`
+ * @note Use the parameter **capacity** to set the capacity for this heap
+ * @note If you do **NOT** want the heap to free its values, set the **free_val** function pointer to **NULL**
+ * @note The **cmp_val** function pointer **must not be NULL**
  * 
- * @return - Return `hm_heap_ret_error` when initialize failure
- * @return - Return `hm_heap_ret_suc` when initialize success
+ * @return Return **hm_heap_ret_error** when initialize failure
+ * @return Return **hm_heap_ret_suc** when initialize success
  */
 hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 
 /**
  * Initialize the heap(dynamic-grow heap)
  * 
- * @note - Use the parameter `start_capacity` to set the start capacity for this heap
- * @note - If you do `NOT` want the heap to free its values, set the `free_val` function pointer to `NULL`
- * @note - The `cmp_val` function pointer `must not be NULL`
+ * @note Use the parameter **start_capacity** to set the start capacity for this heap
+ * @note If you do **NOT** want the heap to free its values, set the **free_val** function pointer to **NULL**
+ * @note The **cmp_val** function pointer **must not be NULL**
  * 
- * @return - Return `hm_heap_ret_error` when initialize failure
- * @return - Return `hm_heap_ret_suc` when initialize success
+ * @return Return **hm_heap_ret_error** when initialize failure
+ * @return Return **hm_heap_ret_suc** when initialize success
  */
 hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_free free_val, hm_cmp cmp_val);
 ```
@@ -121,9 +121,9 @@ int main()
 /**
  * Insert a value to the heap
  * 
- * @return - Return `hm_heap_ret_full` when heap is full
- * @return - Return `hm_heap_ret_suc` when insert success
- * @return - Return `hm_heap_ret_error` when heap is `dynamic-growth` and expand failure
+ * @return Return **hm_heap_ret_full** when heap is full
+ * @return Return **hm_heap_ret_suc** when insert success
+ * @return Return **hm_heap_ret_error** when heap is **dynamic-grow** and expand failure
  */
 hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 ```
@@ -136,7 +136,7 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 /**
  * Extract a value from the heap
  * 
- * @return - Return `NULL` when the heap is empty
+ * @return Return **NULL** when the heap is empty
  */
 void* hm_heap_extract(hm_heap* heap);
 ```
@@ -149,7 +149,7 @@ void* hm_heap_extract(hm_heap* heap);
 /**
  * Peek a value from the heap
  * 
- * @return - Return `NULL` when the heap is empty 
+ * @return Return **NULL** when the heap is empty 
  */
 void* hm_heap_peek(hm_heap* heap);
 ```
@@ -301,11 +301,11 @@ heap is full
 /**
  * Shrink the capacity of heap if possible
  * 
- * @note - Only dynamic-grow heap have a chance to shrink
+ * @note Only dynamic-grow heap have a chance to shrink
  * 
- * @return - Return `hm_heap_ret_suc` when shrink success
- * @return - Return `hm_heap_ret_none` when the heap can't be shrunk
- * @return - Return `hm_heap_ret_error` when shrink failure
+ * @return Return **hm_heap_ret_suc** when shrink success
+ * @return Return **hm_heap_ret_none** when the heap can't be shrunk
+ * @return Return **hm_heap_ret_error** when shrink failure
  */
 hm_heap_ret hm_heap_shrink(hm_heap* heap);
 ```
@@ -376,20 +376,20 @@ size: 0, capacity: 1
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
  * 
- * @return - Return `hm_heap_ret_warn` when `size` > `capacity`
- * @return - Return `hm_heap_ret_suc` when build success
+ * @return Return **hm_heap_ret_warn** when **size** > **capacity**
+ * @return Return **hm_heap_ret_suc** when build success
  * 
- * @warning - `vals` should be located in `heap memory` of system
+ * @warning **vals** should be located in **heap memory** of system
  */
 hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 
 /**
  * Build a heap(dynamic-grow heap) by the pass-in vals and some parameter
  * 
- * @return - Return `hm_heap_ret_warn` when `size` > `capacity`
- * @return - Return `hm_heap_ret_suc` when build success
+ * @return Return **hm_heap_ret_warn** when **size** > **capacity**
+ * @return Return **hm_heap_ret_suc** when build success
  * 
- * @warning - `vals` should be located in `heap memory` of system
+ * @warning **vals** should be located in **heap memory** of system
  */
 hm_heap_ret hm_heap_build_dynamic_grow(hm_heap* heap, void** vals, size_t size, size_t capacity, hm_free free_val, hm_cmp cmp_val);
 ```
@@ -559,7 +559,7 @@ int main()
 /**
  * Clear the heap 
  * 
- * @note - Only free the values(if possible),  but keep the vals array existed
+ * @note Only free the values(if possible),  but keep the vals array existed
  */
 void hm_heap_clear(hm_heap* heap);
 ```
@@ -628,7 +628,7 @@ size: 0  , capacity: 20
 /**
  * Free all contents of the heap
  * 
- * @note - The heap can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * @note The heap can be reused when it is **dynamic-grow** but **fixed-size** cannot
  */
 void hm_heap_free(hm_heap* heap);
 ```

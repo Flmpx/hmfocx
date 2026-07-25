@@ -19,8 +19,8 @@ size_t hm_queue_capacity(hm_queue* queue) {
 /**
  * Initialize the queue(fixed-size queue)
  * 
- * @note - Use the parameter `capacity` to set the size for this queue
- * @note - If you do `NOT` want the queue to free its values, set the `hm_free` function pointer to `NULL`
+ * @note - Use the parameter `capacity` to set the capacity for this queue
+ * @note - If you do `NOT` want the queue to free its values, set the `free_val` function pointer to `NULL`
  * 
  * @return - Return `hm_queue_ret_error` when initialize failure
  * @return - Return `hm_queue_ret_suc` when initialize success
@@ -53,8 +53,8 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
 /**
  * Initialize the queue(dynamic-grow queue)
  * 
- * @note - Use the parameter `start_capacity` to set the start size for this queue
- * @note - If you do `NOT` want the queue to free its values, set the `hm_free` function pointer to `NULL`
+ * @note - Use the parameter `start_capacity` to set the start capacity for this queue
+ * @note - If you do `NOT` want the queue to free its values, set the `free_val` function pointer to `NULL`
  * 
  * @return - Return `hm_queue_ret_error` when initialize failure
  * @return - Return `hm_queue_ret_suc` when initialize success
@@ -132,7 +132,7 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
  * 
  * @return - Return `hm_queue_ret_full` when queue is full
  * @return - Return `hm_queue_ret_suc` when enqueue succee
- * @return - Return `hm_queue_ret_error` when queue is `dynamic-growth` and expand failure
+ * @return - Return `hm_queue_ret_error` when queue is `dynamic-grow` and expand failure
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
     if (hm_queue_is_full(queue)) {
@@ -241,7 +241,7 @@ void hm_queue_clear(hm_queue* queue) {
 /**
  * Free all contents of the queue
  * 
- * @note - The queue can be reused when it is `dynamic-growth` but `fixed-size` cannot
+ * @note - The queue can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_queue_free(hm_queue* queue) {
     hm_queue_clear(queue);
