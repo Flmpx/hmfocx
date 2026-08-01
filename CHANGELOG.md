@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added
+- Add new container for this library -- `hm_arr`, it including some basic operations, such as `insert`, `get` and `del`, other detailed information see [hm_arr](docs/hm_arr.md)
+
 ## [0.11.0] - 2026-07-25
 
 ### Added
