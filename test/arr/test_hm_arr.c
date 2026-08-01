@@ -6,6 +6,7 @@
 
 #include "../../include/hm_arr.h"
 #include "../hm_test_tool.h"
+#include <stdlib.h>
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
@@ -17,8 +18,104 @@ int all_failure_num = 0;
 
 // every test function ...
 
-void function_test() {
+
+void test_arr_integrity(hm_arr* arr, int* fail_cnt, int tag, size_t size, bool dynamic_grow, size_t capacity, hm_free free_val) {
+    check_res(arr->size == size, "TEST OF INTEGRITY: arr's size isn't the expected size", fail_cnt, tag);
+    check_res(arr->dynamic_grow == dynamic_grow, "TEST OF INTEGRITY: arr's dynamic signal is unexpected", fail_cnt, tag);
+    check_res(arr->free_val == free_val, "TEST OF INTEGRITY: arr's free_val is unexpected", fail_cnt, tag);
+    if (!dynamic_grow) {
+        check_res(arr->capacity == capacity, "TEST OF INTEGRITY: arr's capacity isn't the expected size", fail_cnt, tag);
+    }
+    check_res(arr->capacity >= arr->size, "TEST OF INTEGRITY: `capacity` should greater than `size`", fail_cnt, tag);
+    check_res(!(arr->capacity == 0 && arr->vals != NULL), "TEST OF INTEGRITY: arr's capacity is 0, but vals have memory", fail_cnt, tag);
+    check_res(!(arr->capacity != 0 && arr->vals == NULL), "TEST OF INTEGRITY: arr's capacity isn't 0, but vals is NULL", fail_cnt, tag);
     
+}
+
+void test_arr_fixed_init() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | INIT | CAPACITY: 64");
+    
+    hm_arr arr;
+    size_t capacity = 64;
+    
+    // pass in `free` for arr
+    hm_arr_init(&arr, capacity, free);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
+
+    check_res(arr.capacity == capacity, "the arr's capacity isn't to expected capacity", &fail_cnt, tag++);
+    check_res(arr.dynamic_grow == false, "the arr's dynamic-grow signal is false", &fail_cnt, tag++);
+    check_res(arr.free_val == free, "the arr's free_val should be `free` when pass in `free` to arr", &fail_cnt, tag++);
+    check_res(arr.size == 0, "the arr's size should be 0", &fail_cnt, tag++);
+    check_res(arr.vals != NULL, "the arr's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    // pass in NULL for arr
+
+    hm_arr_init(&arr, capacity, NULL);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    check_res(arr.free_val == NULL, "the arr's free_val should be `NULL` when pass in `NULL` to arr", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | INIT | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_arr_dynamic_init() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | INIT | CAPACITY: 64");
+    
+    hm_arr arr;
+    size_t capacity = 64;
+    
+    // pass in `free` for arr
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, free);
+    
+    check_res(arr.capacity == capacity, "the arr's capacity isn't to expected capacity", &fail_cnt, tag++);
+    check_res(arr.dynamic_grow == true, "the arr's dynamic-grow signal is true", &fail_cnt, tag++);
+    check_res(arr.free_val == free, "the arr's free_val should be `free` when pass in `free` to arr", &fail_cnt, tag++);
+    check_res(arr.size == 0, "the arr's size should be 0", &fail_cnt, tag++);
+    check_res(arr.vals != NULL, "the arr's vals shouldn't be NULL with a small capacity", &fail_cnt, tag++);
+    
+    hm_arr_free(&arr);
+    
+    // pass in NULL for arr
+    
+    hm_arr_init_dynamic_grow(&arr, capacity, NULL);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    check_res(arr.free_val == NULL, "the arr's free_val should be `NULL` when pass in `NULL` to arr", &fail_cnt, tag++);
+    
+    hm_arr_free(&arr);
+    
+    print_end("ARR(DYNAMIC) | FUNC | INIT | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
+
+
+void test_arr_fixed_func() {
+    test_arr_fixed_init();                                                              printf("\n");
+
+}
+
+
+void test_arr_dynamic_func() {
+    test_arr_dynamic_init();                                                            printf("\n");
+
+}
+
+void function_test() {
+    test_arr_fixed_func();
+
+    test_arr_dynamic_func();    
 }
 
 void boundary_test() {
