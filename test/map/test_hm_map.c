@@ -231,7 +231,76 @@ void test_map_get() {
     int fail_diff_v = 0;
     int fail_invalid_k = 0;
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
+        hm_map_entry e = hm_map_get(&map, &i);
+        int* k = e.key;
+        int* v = e.val;
+        if (k && v) {
+            
+            if (*k != i) {
+                fail_invalid_k++;
+            } else {
+                if (*v != flag[i]) {
+                    fail_diff_v++;
+                }
+            }
+        } else {
+            fail_no_existed++;
+        }
+
+    }
+
+    check_res(fail_no_existed == 0, "the function of `hm_map_get` return NULL when get entry of valid key", &fail_cnt, tag++);
+    check_res(fail_invalid_k == 0, "the key of entry got by `hm_map_get` is different from key that needs to be request", &fail_cnt, tag++);
+    check_res(fail_diff_v == 0, "val got by `hm_map_get` is wrong", &fail_cnt, tag++);
+    test_map_integrity(&map, &fail_cnt, tag++);
+    // verify invalid key
+
+    int fail_exist = 0;
+    for (int i = num; i < 2 * num; i++) {
+        hm_map_entry e = hm_map_get(&map, &i);
+        if (e.key || e.val) {
+            fail_exist++;
+        }
+    }
+
+    check_res(fail_exist == 0, "the entry return by `hm_map_get` is NULL when key is invalid, but is not", &fail_cnt, tag++);
+
+    hm_map_free(&map);
+
+    print_end("MAP | FUNC | GET | TYPE K:[INT] V:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+
+    
+
+
+}
+
+void test_map_get_entry() {
+    int num = 100;
+    int flag[num];
+    int fail_cnt = 0;
+    int tag = 0;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        flag[i] = i * 10;
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; *v = flag[i];
+        hm_map_insert(&map, k, v);
+    }
+
+
+    print_run("MAP | FUNC | GET ENTRY | TYPE K:[INT] V:[INT]");
+    // verify valid k
+
+    int fail_no_existed = 0;
+    int fail_diff_v = 0;
+    int fail_invalid_k = 0;
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
         if (e) {
             int* k = e->key;
             int* v = e->val;
@@ -257,7 +326,7 @@ void test_map_get() {
 
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
         if (e) {
             fail_exist++;
         }
@@ -267,13 +336,11 @@ void test_map_get() {
 
     hm_map_free(&map);
 
-    print_end("MAP | FUNC | GET | TYPE K:[INT] V:[INT]", fail_cnt);
+    print_end("MAP | FUNC | GET ENTRY| TYPE K:[INT] V:[INT]", fail_cnt);
     HM_TEST_COUNTER
 
-    
-
-
 }
+
 
 void test_map_change() {
     int num = 100;
@@ -282,6 +349,8 @@ void test_map_change() {
     int tag = 0;
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // change with get
 
     // insert
     for (int i = 0; i < num; i++) {
@@ -293,23 +362,24 @@ void test_map_change() {
     }
 
 
-    print_run("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT]");
+    print_run("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT] / K:[INT] V:[STR]");
 
     // change
     int diff = 99;
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
+        hm_map_entry e = hm_map_get(&map, &i);
         flag[i] += diff;
-        *(int*)(e->val) += diff;
+        *(int*)(e.val) += diff;
     }
 
     // verify 
     int fail_diff = 0;
     int fail_no_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
-        if (e) {
-            int* v = e->val;
+        hm_map_entry e = hm_map_get(&map, &i);
+        int* k = e.key;
+        int* v = e.val;
+        if (k && v) {
             if (*v != flag[i]) {
                 fail_diff++;
             }
@@ -318,12 +388,52 @@ void test_map_change() {
         }
     }
 
-    check_res(fail_diff == 0, "the val is wrong after change all vals", &fail_cnt, tag++);
-    check_res(fail_no_exist == 0, "the entry is not found after change", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val is wrong after change all vals with `get`", &fail_cnt, tag++);
+    check_res(fail_no_exist == 0, "the entry is not found after change with `get`", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++);
     hm_map_free(&map);
 
-    print_end("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT]", fail_cnt);
+
+    // change with get_entry
+
+    char* start_str[] = {"a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh"};
+    char* end_str[] = {"hahahahaha", "lalalalala", "mamamamama", "mimimimimi", "xixixixixi", "sososososo", "fufufufufu", "kikikikiki"};
+
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, NULL);
+
+    num = sizeof(end_str) / sizeof(end_str);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        hm_map_insert(&map, k, start_str[i]);
+    }
+
+    // change 
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
+        e->val = end_str[i];
+    }
+
+    // verify
+    fail_diff = fail_no_exist = 0;
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
+        if (e == NULL) {
+            fail_no_exist++;
+        } else if (strcmp(e->val, end_str[i])) {
+            fail_diff++;
+        }
+    }
+
+    check_res(fail_diff == 0, "the val is wrong after change all vals with `get_pointer`", &fail_cnt, tag++);
+    check_res(fail_no_exist == 0, "the entry is not found after change with `get_pointer`", &fail_cnt, tag++);
+
+    test_map_integrity(&map, &fail_cnt, tag++);
+    hm_map_free(&map);
+
+    print_end("MAP | FUNC | CHANGE | TYPE K:[INT] V:[INT] / K:[INT] V:[STR]", fail_cnt);
     HM_TEST_COUNTER
 
 
@@ -365,8 +475,8 @@ void test_map_del() {
     int fail_no_exist = 0;
 
     for (int i = 0; i < num / 2; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
-        if (e) {
+        hm_map_entry e = hm_map_get(&map, &i);
+        if (e.key || e.val) {
             fail_no_exist++;
         }
     }
@@ -377,10 +487,10 @@ void test_map_del() {
     int fail_exist = 0;
     int fail_diff_v = 0;
     for (int i = num / 2; i < num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
+        hm_map_entry e = hm_map_get(&map, &i);
 
-        if (e) {
-            int* v = e->val;
+        if (e.key && e.val) {
+            int* v = e.val;
             if (*v != flag[i]) {
                 fail_diff_v++;
             }
@@ -509,7 +619,7 @@ void test_map_clear() {
 
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(&map, &i);
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
         if (e) {
             fail_exist++;
         }
@@ -717,7 +827,7 @@ void test_map_get_stress() {
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
-            hm_map_entry* e = hm_map_get(&map, &j);
+            hm_map_entry* e = hm_map_get_entry(&map, &j);
             if (e == NULL) {
                 fail_existed++;
             }
@@ -732,7 +842,7 @@ void test_map_get_stress() {
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
-            hm_map_entry* e = hm_map_get(&map, &j);
+            hm_map_entry* e = hm_map_get_entry(&map, &j);
             if (e) {
                 fail_no_existed++;
             }
@@ -1027,7 +1137,7 @@ void test_empty_map_oper() {
 
     int k = 0;
     // get
-    check_res(hm_map_get(&map, &k) == NULL, "get on empty map should return `NULL`", &fail_cnt, tag++);
+    check_res(hm_map_get_entry(&map, &k) == NULL, "get on empty map should return `NULL`", &fail_cnt, tag++);
 
     // del
     k = 10;
@@ -1062,7 +1172,7 @@ void test_single_entry_oper() {
     // insert single entry and get
 
     hm_map_insert(&map, &k, &v);
-    hm_map_entry* e = hm_map_get(&map, &k);
+    hm_map_entry* e = hm_map_get_entry(&map, &k);
     check_res(*(int*)(e->key) == k, "the key is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     check_res(*(int*)(e->val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);
@@ -1080,7 +1190,7 @@ void test_single_entry_oper() {
     hm_map_insert(&map, &k, &v);
     int new_v = 100;
     hm_map_insert(&map, &k, &new_v);
-    e = hm_map_get(&map, &k);
+    e = hm_map_get_entry(&map, &k);
     check_res(*(int*)(e->key) == k, "the key is wrong when insert two indetical keys", &fail_cnt, tag++);
     check_res(*(int*)(e->val) == v, "the val isn't old val when insert two indetical keys", &fail_cnt, tag++);
 
@@ -1103,6 +1213,8 @@ void function_test() {
     test_iter_map();                                printf("\n");
     
     test_map_get();                                 printf("\n");
+
+    test_map_get_entry();                           printf("\n");
     
     test_map_change();                              printf("\n");
     

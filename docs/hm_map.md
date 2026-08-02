@@ -143,7 +143,7 @@ size: 0, length: 520
  * Insert a key-value pair into the map
  * 
  * @note If the key already exists, the old entry (include key and val) remains in the map. Therefore, you should handle this special situation
- * @note Use **hm_map_get()** to change val if you want to change the val or it's pointer
+ * @note Use **hm_map_get()** or **hm_map_get_entry()** to change val if you want to change the val or it's pointer
  * 
  * @return Return **hm_map_ret_suc** when insert success
  * @return Return **hm_map_ret_error** when insert failure 
@@ -159,12 +159,32 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 > **Get**
 ```c
 /**
- * Get a pointer to the  entry in the map
+ * Get a entry in the map
+ * 
+ * @note Entry contains pointers to key and val
+ * @note Use this function can change val
+ * 
+ * @return Return **(hm_map_entry){NULL, NULL}** when key is not existed in map
+ * 
+ * @warning Change key is prohibited
+ */
+hm_map_entry hm_map_get(hm_map* map, void* key);
+
+/**
+ * Get a pointer to the entry in the map
+ * 
+ * @note Entry contains pointers to key and val
+ * @note Use this function can change entry(the pointer to val)
+ * @note The ownership of old val's memory will loss when you change the pointer to val
  * 
  * @return Return **NULL** when key is not existed in map
+ * 
+ * @warning Change the pointer of key or itself is prohibited
  */
-hm_map_entry* hm_map_get(hm_map* map, void* key);
+hm_map_entry* hm_map_get_entry(hm_map* map, void* key);
 ```
+
+
 <details>
 <summary>try: insert & get</summary>
 
@@ -189,17 +209,17 @@ size_t hash(const void* key) {
     return (size_t)k;
 }
 
-char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+char val[][101] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
-int num = sizeof(val) / sizeof(char*);
+int num = sizeof(val) / sizeof(val[0]);
 
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
+        hm_map_entry e = hm_map_get(map, &i);
+        int* k = e.key;
+        char* v = e.val;
+        if (k && v) {
             printf("| k: %d, v: %s\n", *k, v);
         }
     }
@@ -232,12 +252,126 @@ int main()
     // use get function if you want to change it
 
     k = (int*)malloc(sizeof(int));
+    *k = 3;
+    hm_map_entry e = hm_map_get(&map, k);
+    ((char*)e.val)[3] = '\0';
+
+    print_map(&map, num);
+    
+    free(k);
+    hm_map_free(&map);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hat
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+```
+</details>
+
+</details>
+
+
+<details>
+<summary>try: insert & get entry</summary>
+
+```c
+#include <hm_map.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+int num = sizeof(val) / sizeof(char*);
+
+void print_map(hm_map* map, int num) {
+    // get and print
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(map, &i);
+        if (e) {
+            int* k = e->key;
+            char* v = e->val;
+            printf("| k: %d, v: %s\n", *k, v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_map map;
+    hm_map_init(&map, hash, cmp, free, NULL);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        char* v = val[i];
+        hm_map_insert(&map, k, v);
+    }
+    print_map(&map, num);
+
+    // insert same key;
+    char* v = "so, why?";
+    int* k = (int*)malloc(sizeof(int));
     *k = 5;
-    hm_map_entry* e = hm_map_get(&map, k);
+    if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
+        // handle this special situation -- free key
+        free(k);
+    }
+    print_map(&map, num);
+
+    // use get entry function if you want to change it
+
+    k = (int*)malloc(sizeof(int));
+    *k = 5;
+    hm_map_entry* e = hm_map_get_entry(&map, k);
     e->val = v;
 
     print_map(&map, num);
-
+    
+    free(k);
     hm_map_free(&map);
     return 0;
 }
@@ -321,7 +455,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -427,7 +561,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -549,7 +683,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;

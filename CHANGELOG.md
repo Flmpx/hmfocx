@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### Changed
+- **refactor:** Change the return content of function `hm_map_get`, using the new function `hm_map_get_entry` to replace it
+    - Turn `hm_map_get` into `hm_map_get_entry` to handle this refactor in old version
+
 ## [0.11.0] - 2026-07-25
 
 ### Added
