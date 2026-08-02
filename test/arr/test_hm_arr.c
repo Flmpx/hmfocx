@@ -99,16 +99,109 @@ void test_arr_dynamic_init() {
 }
 
 
+void test_arr_fixed_insert_head() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | INSERT HEAD | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert head
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        if (hm_arr_insert_head(&arr, v) != hm_arr_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "insert function should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+
+    // verify
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    int** vals = (int**)arr.vals;
+    for (int i = 0; i < capacity; i++) {
+        int* v = vals[i];
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != (capacity - i - 1) * 100) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_NULL == 0, "the pointer of val in arr shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | INSERT HEAD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+void test_arr_dynamic_insert_head() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | INSERT HEAD | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert head
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        if (hm_arr_insert_head(&arr, v) != hm_arr_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "insert function should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+
+    // verify
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    int** vals = (int**)arr.vals;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = vals[i];
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != (start_capacity * 2 - i - 1) * 100) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_NULL == 0, "the pointer of val in arr shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | INSERT HEAD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+
 
 
 void test_arr_fixed_func() {
     test_arr_fixed_init();                                                              printf("\n");
+
+    test_arr_fixed_insert_head();                                                       printf("\n");
+
 
 }
 
 
 void test_arr_dynamic_func() {
     test_arr_dynamic_init();                                                            printf("\n");
+
+    test_arr_dynamic_insert_head();                                                     printf("\n");
 
 }
 

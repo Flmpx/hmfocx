@@ -154,7 +154,7 @@ hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
     }
 
     for (size_t i = arr->size; i > index; i--) {
-        arr[i] = arr[i - 1];
+        arr->vals[i] = arr->vals[i - 1];
     }
     arr->vals[index] = val;
     arr->size++;
