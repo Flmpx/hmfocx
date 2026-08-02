@@ -188,12 +188,437 @@ void test_arr_dynamic_insert_head() {
 
 
 
+void test_arr_fixed_insert_tail() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | INSERT TAIL | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert tail
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        if (hm_arr_insert_tail(&arr, v) != hm_arr_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "insert function should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+
+    // verify
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    int** vals = (int**)arr.vals;
+    for (int i = 0; i < capacity; i++) {
+        int* v = vals[i];
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != i * 100) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_NULL == 0, "the pointer of val in arr shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | INSERT TAIL | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+void test_arr_dynamic_insert_tail() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | INSERT TAIL | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert tail
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i * 100;
+        if (hm_arr_insert_tail(&arr, v) != hm_arr_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "insert function should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+
+    // verify
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    int** vals = (int**)arr.vals;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = vals[i];
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != i * 100) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_NULL == 0, "the pointer of val in arr shouldn't be NULL", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | INSERT TAIL | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_fixed_insert_index() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | INSERT INDEX | CAPACITY: 8");
+
+    int capacity = 8;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    size_t indexs[] = {2, 3, 1, 0, 1, 2, 3, 4, 5, 5, 6, 6, 6, 7, 12, 12, 24};
+    int cnt = sizeof(indexs) / sizeof(size_t);
+
+    int fail_full = 0;
+    int fail_invalid_index = 0;
+    int fail_diff = 0;
+    int fail_normal = 0;
+
+    int real_size = 0;
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        // this can prevent arr existed same number
+        *v = i;
+        
+        size_t prev_s = hm_arr_size(&arr);
+
+        hm_arr_ret ret = hm_arr_insert_index(&arr, v, indexs[i]);
+
+    
+        
+        if (indexs[i] <= prev_s) {
+
+            if (prev_s < capacity) {
+                // normal situation but return tag wrong
+                if (ret != hm_arr_ret_suc) {
+                    fail_normal++;
+                }
+                int** vals = (int**)arr.vals;
+                int* val = vals[indexs[i]];
+                if (val != v) {
+                    fail_diff++;
+                }
+                real_size++;
+                test_arr_integrity(&arr, &fail_cnt, tag++, real_size, false, capacity, free);
+
+            } else {
+                // arr full
+                if (ret != hm_arr_ret_full) {
+                    fail_full++;
+                } else {
+                    free(v);
+                }
+                test_arr_integrity(&arr, &fail_cnt, tag++, real_size, false, capacity, free);
+            }
+            
+        } else {
+            // index invalid
+            if (ret != hm_arr_ret_warn) {
+                fail_invalid_index++;
+            } else {
+                free(v);
+            }
+            test_arr_integrity(&arr, &fail_cnt, tag++, real_size, false, capacity, free);
+        }
+
+    }
+    
+
+    check_res(fail_invalid_index == 0, "the function should return warn when index is out of bound", &fail_cnt, tag++);
+    check_res(fail_full == 0, "the function should return full when arr is full and index is right", &fail_cnt, tag++);
+    check_res(fail_normal == 0, "the function shoudld return suc when insert suc", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | INSERT INDEX | CAPACITY: 8", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_dynamic_insert_index() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | INSERT INDEX | CAPACITY: 8");
+
+    int start_capacity = 8;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    size_t indexs[] = {2, 3, 1, 0, 1, 2, 3, 4, 1111, 520,  5, 5, 6, 6, 1314, 3, 3, 3, 3, 3, 3, 3, 3, 5, 2, 0, 1, 3, 1, 4, 6, 7, 12, 12, 24};
+    int cnt = sizeof(indexs) / sizeof(size_t);
+
+    int fail_invalid_index = 0;
+    int fail_diff = 0;
+    int fail_normal = 0;
+
+    int real_size = 0;
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        // this can prevent arr existed same number
+        *v = i;
+        
+        size_t prev_s = hm_arr_size(&arr);
+
+        hm_arr_ret ret = hm_arr_insert_index(&arr, v, indexs[i]);
+
+        if (indexs[i] <= prev_s) {
+
+            // normal situation but return tag wrong
+            if (ret != hm_arr_ret_suc) {
+                fail_normal++;
+            }
+            int** vals = (int**)arr.vals;
+            int* val = vals[indexs[i]];
+            if (val != v) {
+                fail_diff++;
+            }
+            real_size++;
+            test_arr_integrity(&arr, &fail_cnt, tag++, real_size, true, start_capacity, free);
+            
+        } else {
+            // index invalid
+            if (ret != hm_arr_ret_warn) {
+                fail_invalid_index++;
+            } else {
+                free(v);
+            }
+            test_arr_integrity(&arr, &fail_cnt, tag++, real_size, true, start_capacity, free);
+        }
+
+    }
+
+    check_res(fail_invalid_index == 0, "the function should return warn when index is out of bound", &fail_cnt, tag++);
+    check_res(fail_normal == 0, "the function shoudld return suc when insert suc", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "the val in arr is wrong", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | INSERT INDEX | CAPACITY: 8", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_fixed_get() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | GET | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    // get and verify[valid]
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != i) {
+            fail_diff++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+    check_res(fail_NULL == 0, "val got by `get` shouldn't be NULL when index is right", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val got by `get` is wrong", &fail_cnt, tag++);
+    
+    // get and verfiy[invalid]
+    int fail_exist = 0;
+    for (int i = capacity; i < capacity * 2; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (v) {
+            fail_exist++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+    check_res(fail_exist == 0, "val got by `get` should be NULL when index is out of booud", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | GET | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+void test_arr_dynamic_get() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | GET | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    // get and verify[valid]
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != i) {
+            fail_diff++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+    check_res(fail_NULL == 0, "val's pointer got by `get` shouldn't be NULL when index is right", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val got by `get` is wrong", &fail_cnt, tag++);
+    
+    // get and verfiy[invalid]
+    int fail_exist = 0;
+    for (int i = start_capacity * 2; i < start_capacity * 4; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (v) {
+            fail_exist++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+    check_res(fail_exist == 0, "val't pointer got by `get` should be NULL when index is out of booud", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | GET | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+void test_arr_fixed_get_pointer() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | GET POINTER | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+    // insert
+    int* flag[capacity];    // store the pointer to the val
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        flag[i] = v;
+        hm_arr_insert_tail(&arr, v);
+    }
+    // get and verify[valid]
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    for (int i = 0; i < capacity; i++) {
+        int** v = (int**)hm_arr_get_pointer(&arr, i);
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != flag[i]) {
+            fail_diff++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+    check_res(fail_NULL == 0, "the pointer to val's pointer got by `get_pointer` shouldn't be NULL when index is right", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val's pointer got by `get_pointer` is wrong", &fail_cnt, tag++);
+    
+    // get and verfiy[invalid]
+    int fail_exist = 0;
+    for (int i = capacity; i < capacity * 2; i++) {
+        int** v = (int**)hm_arr_get_pointer(&arr, i);
+        if (v) {
+            fail_exist++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+    check_res(fail_exist == 0, "the pointer to val's pointer got by `get` should be NULL when index is out of booud", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | GET POINTER | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+void test_arr_dynamic_get_pointer() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | GET POINTER| CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+    // insert
+    int* flag[start_capacity * 2];    // store the pointer to the val
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        flag[i] = v;
+        hm_arr_insert_tail(&arr, v);
+    }
+    // get and verify[valid]
+    int fail_NULL = 0;
+    int fail_diff = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int** v = (int**)hm_arr_get_pointer(&arr, i);
+        if (v == NULL) {
+            fail_NULL++;
+        } else if (*v != flag[i]) {
+            fail_diff++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+    check_res(fail_NULL == 0, "the pointer to val's pointer got by `get_pointer` shouldn't be NULL when index is right", &fail_cnt, tag++);
+    check_res(fail_diff == 0, "val's pointer got by `get_pointer` is wrong", &fail_cnt, tag++);
+    
+    // get and verfiy[invalid]
+    int fail_exist = 0;
+    for (int i = start_capacity * 2; i < start_capacity * 4; i++) {
+        int** v = (int**)hm_arr_get_pointer(&arr, i);
+        if (v) {
+            fail_exist++;
+        }
+    }
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+    check_res(fail_exist == 0, "the pointer to val's pointer got by `get` should be NULL when index is out of booud", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | GET POINTER | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
 
 void test_arr_fixed_func() {
     test_arr_fixed_init();                                                              printf("\n");
 
     test_arr_fixed_insert_head();                                                       printf("\n");
+    test_arr_fixed_insert_tail();                                                       printf("\n");
+    test_arr_fixed_insert_index();                                                      printf("\n");
 
+    test_arr_fixed_get();                                                               printf("\n");
+    test_arr_fixed_get_pointer();                                                       printf("\n");
 
 }
 
@@ -202,6 +627,11 @@ void test_arr_dynamic_func() {
     test_arr_dynamic_init();                                                            printf("\n");
 
     test_arr_dynamic_insert_head();                                                     printf("\n");
+    test_arr_dynamic_insert_tail();                                                     printf("\n");
+    test_arr_dynamic_insert_index();                                                    printf("\n");
+
+    test_arr_dynamic_get();                                                             printf("\n");
+    test_arr_dynamic_get_pointer();                                                     printf("\n");
 
 }
 
