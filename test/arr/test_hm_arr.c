@@ -881,6 +881,416 @@ void test_arr_dynamic_pop() {
 }
 
 
+void test_arr_fixed_del_head() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | DEL HEAD | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del some vals
+    int fail_del = 0;
+    for (int i = 0; i < capacity / 2; i++) {
+        if (hm_arr_del_head(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del head should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity - capacity / 2, false, capacity, free);
+
+    // verify deleted val
+    int fail_exist = 0;
+    for (int i = 0; i < capacity / 2; i++) {
+        int s = hm_arr_size(&arr);
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (*v == i) {
+                fail_exist++;
+            }
+        }
+    }
+    check_res(fail_exist == 0, "the deleted vals still existed in arr", &fail_cnt, tag++);
+
+    // verify existed val
+    int fail_diff = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != capacity / 2 + i) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_diff == 0, "the existed val in arr is wrong when del some vals", &fail_cnt, tag++);
+
+    // del all vals
+    fail_del = 0;
+    for (int i = capacity / 2; i < capacity; i++) {
+        if (hm_arr_del_head(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del head should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
+    
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | DEL HEAD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_dynamic_del_head() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | DEL HEAD | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del some vals
+    int fail_del = 0;
+    for (int i = 0; i < start_capacity; i++) {
+        if (hm_arr_del_head(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del head should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity, true, start_capacity, free);
+
+    // verify deleted val
+    int fail_exist = 0;
+    for (int i = 0; i < start_capacity; i++) {
+        int s = hm_arr_size(&arr);
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (*v == i) {
+                fail_exist++;
+            }
+        }
+    }
+    check_res(fail_exist == 0, "the deleted vals still existed in arr", &fail_cnt, tag++);
+
+    // verify existed val
+    int fail_diff = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != start_capacity + i) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_diff == 0, "the existed val in arr is wrong when del some vals", &fail_cnt, tag++);
+
+    // del all vals
+    fail_del = 0;
+    for (int i = start_capacity; i < start_capacity * 2; i++) {
+        if (hm_arr_del_head(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del head should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+    
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | DEL HEAD | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_fixed_del_tail() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | DEL TAIL | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del some vals
+    int fail_del = 0;
+    for (int i = 0; i < capacity / 2; i++) {
+        if (hm_arr_del_tail(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del tail should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity - capacity / 2, false, capacity, free);
+
+    // verify deleted val
+    int fail_exist = 0;
+    for (int i = 0; i < capacity / 2; i++) {
+        int s = hm_arr_size(&arr);
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (*v == capacity - capacity / 2 + i) {
+                fail_exist++;
+            }
+        }
+    }
+    check_res(fail_exist == 0, "the deleted vals still existed in arr", &fail_cnt, tag++);
+
+    // verify existed val
+    int fail_diff = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != i) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_diff == 0, "the existed val in arr is wrong when del some vals", &fail_cnt, tag++);
+
+    // del all vals
+    fail_del = 0;
+    for (int i = capacity / 2; i < capacity; i++) {
+        if (hm_arr_del_tail(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del tail should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
+    
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | DEL TAIL | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_dynamic_del_tail() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | DEL TAIL | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del some vals
+    int fail_del = 0;
+    for (int i = 0; i < start_capacity; i++) {
+        if (hm_arr_del_tail(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del tail should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity, true, start_capacity, free);
+
+    // verify deleted val
+    int fail_exist = 0;
+    for (int i = 0; i < start_capacity; i++) {
+        int s = hm_arr_size(&arr);
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (*v == start_capacity + i) {
+                fail_exist++;
+            }
+        }
+    }
+    check_res(fail_exist == 0, "the deleted vals still existed in arr", &fail_cnt, tag++);
+
+    // verify existed val
+    int fail_diff = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != i) {
+            fail_diff++;
+        }
+    }
+    check_res(fail_diff == 0, "the existed val in arr is wrong when del some vals", &fail_cnt, tag++);
+
+    // del all vals
+    fail_del = 0;
+    for (int i = start_capacity; i < start_capacity * 2; i++) {
+        if (hm_arr_del_tail(&arr) != hm_arr_ret_suc) {
+            fail_del++;
+        }
+    }
+    check_res(fail_del == 0, "del tail should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+    
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | DEL TAIL | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_fixed_del_index() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | DEL INDEX | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del
+    size_t del_indexs[] = {2, 0, 2, 87, 12, 0, 45, 2, 4 * capacity, 4, 10 * capacity, 4, 23, 200, 420, 520, 9, 1314};
+    int num = sizeof(del_indexs) / sizeof(size_t);
+    int* del_p[num];
+
+    int del_cnt = 0;
+
+    int fail_none = 0;
+    int fail_normal = 0;
+    for (int i = 0; i < num; i++) {
+        size_t s = hm_arr_size(&arr);
+        // record pointer
+        int* v = hm_arr_get(&arr, del_indexs[i]);
+        hm_arr_ret ret = hm_arr_del_index(&arr, del_indexs[i]);
+
+        if (del_indexs[i] < s) {
+            if (ret != hm_arr_ret_suc) {
+                // normal del but return wrong
+                fail_normal++;
+            }
+            del_p[del_cnt++] = v;
+
+        } else {
+            if (ret != hm_arr_ret_none) {
+                // invalid index or empty arr    
+                fail_none++;
+            }
+        }
+        test_arr_integrity(&arr, &fail_cnt, tag++, capacity - del_cnt, false, capacity, free);
+    }
+    
+    check_res(fail_none == 0, "del should return none when index is out of bound or arr is empty", &fail_cnt, tag++);
+    check_res(fail_normal == 0, "del should return suc when index is valid", &fail_cnt, tag++);
+
+    // verify
+    int fail_existed = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < del_cnt; i++) {
+        // verify deleted pointer 
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (v == del_p[i]) {
+                fail_existed++;
+            }
+        }
+    }
+    check_res(fail_existed == 0, "the deleted val shouldn't be existed in arr", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | DEL INDEX | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+void test_arr_dynamic_del_index() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | DEL INDEX | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // del
+    size_t del_indexs[] = {2, 0, 2, 87, 12, 0, 45, 2, 4 * start_capacity, 4, 10 * start_capacity, 4, 23, 200, 420, 520, 9, 1314};
+    int num = sizeof(del_indexs) / sizeof(size_t);
+    int* del_p[num];
+
+    int del_cnt = 0;
+
+    int fail_none = 0;
+    int fail_normal = 0;
+    for (int i = 0; i < num; i++) {
+        size_t s = hm_arr_size(&arr);
+        // record pointer
+        int* v = hm_arr_get(&arr, del_indexs[i]);
+        hm_arr_ret ret = hm_arr_del_index(&arr, del_indexs[i]);
+
+        if (del_indexs[i] < s) {
+            if (ret != hm_arr_ret_suc) {
+                // normal del but return wrong
+                fail_normal++;
+            }
+            del_p[del_cnt++] = v;
+
+        } else {
+            if (ret != hm_arr_ret_none) {
+                // invalid index or empty arr    
+                fail_none++;
+            }
+        }
+        test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2 - del_cnt, true, start_capacity, free);
+    }
+    
+    check_res(fail_none == 0, "del should return none when index is out of bound or arr is empty", &fail_cnt, tag++);
+    check_res(fail_normal == 0, "del should return suc when index is valid", &fail_cnt, tag++);
+
+    // verify
+    int fail_existed = 0;
+    int s = hm_arr_size(&arr);
+    for (int i = 0; i < del_cnt; i++) {
+        // verify deleted pointer 
+        for (int j = 0; j < s; j++) {
+            int* v = hm_arr_get(&arr, j);
+            if (v == del_p[i]) {
+                fail_existed++;
+            }
+        }
+    }
+    check_res(fail_existed == 0, "the deleted val shouldn't be existed in arr", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | DEL INDEX | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
 void test_arr_fixed_func() {
     test_arr_fixed_init();                                                              printf("\n");
 
@@ -894,6 +1304,10 @@ void test_arr_fixed_func() {
     test_arr_fixed_change();                                                            printf("\n");
 
     test_arr_fixed_pop();                                                               printf("\n");
+
+    test_arr_fixed_del_head();                                                          printf("\n");
+    test_arr_fixed_del_tail();                                                          printf("\n");
+    test_arr_fixed_del_index();                                                         printf("\n");
 
 }
 
@@ -911,6 +1325,10 @@ void test_arr_dynamic_func() {
     test_arr_dynamic_change();                                                          printf("\n");
 
     test_arr_dynamic_pop();                                                             printf("\n");
+
+    test_arr_dynamic_del_head();                                                        printf("\n");
+    test_arr_dynamic_del_tail();                                                        printf("\n");
+    test_arr_dynamic_del_index();                                                       printf("\n");
 
 }
 
