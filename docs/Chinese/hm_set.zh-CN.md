@@ -157,9 +157,13 @@ hm_set_ret hm_set_insert(hm_set* set, void* key, void* val);
 > **获取**
 ```c
 /**
- * 获取集合中条目的指针
+ * 获取集合中条目
  * 
- * @return 如果键不存在, 返回 **NULL**
+ * @note 条目包括集合的键的指针
+ * 
+ * @return 如果键不存在, 返回 **(hm_set_entry){NULL}**
+ * 
+ * @warning 键是不可以改变的
  */
 hm_set_entry* hm_set_get(hm_set* set, void* key);
 ```
@@ -191,9 +195,9 @@ size_t hash(const void* key) {
 void print_set(hm_set* set, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }
@@ -296,9 +300,9 @@ int num = sizeof(val) / sizeof(char*);
 void print_set(hm_set* set, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }
@@ -496,9 +500,9 @@ size_t hash(const void* key) {
 void print_set(hm_set* set, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }

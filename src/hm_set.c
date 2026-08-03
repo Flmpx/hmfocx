@@ -309,21 +309,25 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
     return invalid_index;
 }
 /**
- * Get a pointer to the entry in the set
+ * Get a entry in the set
  * 
- * @return - Return `NULL` when key is not existed in set
+ * @note - Entry contains pointer to key
+ * 
+ * @return - Return `(hm_set_entry){NULL}` when key is not existed in set
+ * 
+ * @warning - Change key is prohibited
  */
-hm_set_entry* hm_set_get(hm_set* set, void* key) {
+hm_set_entry hm_set_get(hm_set* set, void* key) {
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
-        return NULL;
+        return (hm_set_entry){NULL};
     }
     size_t index = hm_set_get_index(set, key);
 
     if (index == invalid_index) {
-        return NULL;
+        return (hm_set_entry){NULL};
     } else {
-        return &(set->buckets[index]);
+        return set->buckets[index];
     }
 }
 /**

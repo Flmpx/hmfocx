@@ -9,6 +9,7 @@
 ### Changed
 - **refactor:** Change the return content of function `hm_map_get`, using the new function `hm_map_get_entry` to replace it
     - Turn `hm_map_get` into `hm_map_get_entry` to handle this refactor in old version
+- **refactor:** Change the return content of function `hm_set_get` -- from `hm_set_entry*` to `hm_set_entry`
 
 ## [0.11.0] - 2026-07-25
 

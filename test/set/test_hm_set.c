@@ -245,9 +245,9 @@ void test_set_get() {
     int fail_no_exist_e = 0;
     memset(counters, 0, sizeof(counters));
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k < 0 || *k >= num) {
@@ -274,8 +274,8 @@ void test_set_get() {
 
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_exist++;
         }
     }
@@ -327,8 +327,8 @@ void test_set_del() {
     int fail_no_exist = 0;
 
     for (int i = 0; i < num / 2; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_no_exist++;
         }
     }
@@ -342,10 +342,10 @@ void test_set_del() {
     int fail_no_exist_e = 0;
     memset(counters, 0, sizeof(counters));
     for (int i = num / 2; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
+        hm_set_entry e = hm_set_get(&set, &i);
 
-        if (e) {
-            int* k = e->key;
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k > num || *k < num / 2) {
@@ -479,8 +479,8 @@ void test_set_clear() {
 
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_exist++;
         }
     }
@@ -681,8 +681,8 @@ void test_set_get_stress() {
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
-            hm_set_entry* e = hm_set_get(&set, &j);
-            if (e == NULL) {
+            hm_set_entry e = hm_set_get(&set, &j);
+            if (e.key == NULL) {
                 fail_existed++;
             }
         }
@@ -696,8 +696,8 @@ void test_set_get_stress() {
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
-            hm_set_entry* e = hm_set_get(&set, &j);
-            if (e) {
+            hm_set_entry e = hm_set_get(&set, &j);
+            if (e.key) {
                 fail_no_existed++;
             }
         }
@@ -930,7 +930,7 @@ void test_empty_set_oper() {
 
     int k = 0;
     // get
-    check_res(hm_set_get(&set, &k) == NULL, "get on empty set should return `NULL`", &fail_cnt, tag++);
+    check_res(hm_set_get(&set, &k).key == NULL, "get on empty set should return `NULL`", &fail_cnt, tag++);
 
     // del
     k = 10;
@@ -965,8 +965,8 @@ void test_single_entry_oper() {
     // insert single entry and get
 
     hm_set_insert(&set, &k);
-    hm_set_entry* e = hm_set_get(&set, &k);
-    check_res(*(int*)(e->key) == k, "the key is wrong when run `set_get` on single entry's set", &fail_cnt, tag++);
+    hm_set_entry e = hm_set_get(&set, &k);
+    check_res(*(int*)(e.key) == k, "the key is wrong when run `set_get` on single entry's set", &fail_cnt, tag++);
     hm_set_free(&set);
 
     // insert single entry and delete it 
@@ -983,7 +983,7 @@ void test_single_entry_oper() {
     int new_k = k;
     hm_set_insert(&set, &new_k);
     e = hm_set_get(&set, &new_k);
-    check_res(e->key == &k, "the key should be old key when insert two indetical keys", &fail_cnt, tag++);
+    check_res(e.key == &k, "the key should be old key when insert two indetical keys", &fail_cnt, tag++);
 
     check_res(set.size == 1, "the set.size should be 1 when insert two indetical keys", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++);

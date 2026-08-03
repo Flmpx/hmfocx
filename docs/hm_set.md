@@ -157,11 +157,15 @@ hm_set_ret hm_set_insert(hm_set* set, void* key);
 > **Get**
 ```c
 /**
- * Get a pointer to the entry in the set
+ * Get a entry in the set
  * 
- * @return Return **NULL** when key is not existed in set
+ * @note Entry contains pointer to key
+ * 
+ * @return Return **(hm_set_entry){NULL}** when key is not existed in set
+ * 
+ * @warning Change key is prohibited
  */
-hm_set_entry* hm_set_get(hm_set* set, void* key);
+hm_set_entry hm_set_get(hm_set* set, void* key);
 ```
 <details>
 <summary>try: insert & get</summary>
@@ -191,9 +195,9 @@ size_t hash(const void* key) {
 void print_set(hm_set* set, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }
@@ -296,9 +300,9 @@ int num = sizeof(val) / sizeof(char*);
 void print_set(hm_set* set, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }
@@ -501,9 +505,9 @@ size_t hash(const void* key) {
 void print_set(hm_set* set, int num) {
     // get and print
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
             printf("| k: %d\n", *k);
         }
     }
