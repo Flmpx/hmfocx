@@ -1291,6 +1291,188 @@ void test_arr_dynamic_del_index() {
 }
 
 
+void test_arr_fixed_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | SHRINK | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_arr_shrink(&arr) != hm_arr_ret_none) {
+            fail++;
+        }
+        test_arr_integrity(&arr, &fail_cnt, tag++, capacity - i, false, capacity, free);
+        hm_arr_del_tail(&arr);
+    }
+    check_res(fail == 0, "shrink should return none when arr is fixed-size", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | SHRINK | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_dynamic_shrink() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | SHRINK | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    int fail_not_shrink = 0;
+    int fail_shrink = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        size_t s = hm_arr_size(&arr), c = hm_arr_capacity(&arr);
+        hm_arr_ret ret = hm_arr_shrink(&arr);
+        if (s >= c / 2 && ret != hm_arr_ret_none) {
+            fail_not_shrink++;
+        }
+
+        if (s < c / 2 && ret != hm_arr_ret_suc) {
+            fail_shrink++;
+        }
+
+        test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2 - i, true, start_capacity, free);
+        hm_arr_del_tail(&arr);
+    }
+    check_res(fail_not_shrink == 0, "shrink function should return none when `s >= c / 2`", &fail_cnt, tag++);
+    check_res(fail_shrink == 0, "shrink function should return suc when `s < c / 2`", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | SHRINK | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_fixed_clear() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | CLEAR | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
+    
+    hm_arr_free(&arr);
+
+    print_end("ARR(FIXED) | FUNC | CLEAR | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_dynamic_clear() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    hm_arr_free(&arr);
+
+    print_end("ARR(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_fixed_free() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | FREE | CAPACITY: 64");
+
+    int capacity = 64;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, 0, free);
+    
+    // use valgrind to check leak memory
+
+    print_end("ARR(FIXED) | FUNC | FREE | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_arr_dynamic_free() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | FREE | CAPACITY: 64");
+
+    int start_capacity = 64;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    // insert
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // shrink
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    // use valgrind to check leak memory
+
+    print_end("ARR(DYNAMIC) | FUNC | FREE | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
 void test_arr_fixed_func() {
     test_arr_fixed_init();                                                              printf("\n");
 
@@ -1308,6 +1490,12 @@ void test_arr_fixed_func() {
     test_arr_fixed_del_head();                                                          printf("\n");
     test_arr_fixed_del_tail();                                                          printf("\n");
     test_arr_fixed_del_index();                                                         printf("\n");
+
+    test_arr_fixed_shrink();                                                            printf("\n");
+
+    test_arr_fixed_clear();                                                             printf("\n");
+
+    test_arr_fixed_free();                                                              printf("\n");
 
 }
 
@@ -1329,6 +1517,12 @@ void test_arr_dynamic_func() {
     test_arr_dynamic_del_head();                                                        printf("\n");
     test_arr_dynamic_del_tail();                                                        printf("\n");
     test_arr_dynamic_del_index();                                                       printf("\n");
+
+    test_arr_dynamic_shrink();                                                          printf("\n");
+
+    test_arr_dynamic_clear();                                                           printf("\n");
+
+    test_arr_dynamic_free();                                                            printf("\n");
 
 }
 
