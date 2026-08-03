@@ -474,9 +474,9 @@ bool hm_set_iter_has_next(hm_set_iter* iter);
  * 
  * @note Use **hm_set_iter_has_next()** to check before calling **hm_set_iter_next()**
  * 
- * @return Return **NULL** when iterator doesn't has next 
+ * @return Return **(hm_set_entry){NULL}** when iterator doesn't has next 
  */
-hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
+hm_set_entry hm_set_iter_next(hm_set_iter* iter);
 ```
 <details>
 <summary>try: iter</summary>
@@ -530,8 +530,8 @@ int main()
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        int* k = e.key;
         printf("| k: %d\n", *k);
     }
     printf("\n");
@@ -612,8 +612,8 @@ void print_set(hm_set* set) {
     hm_set_iter iter;
     hm_set_iter_init(&iter, set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        int* k = e.key;
         printf("| k: %d\n", *k);
     }
     printf("\n");

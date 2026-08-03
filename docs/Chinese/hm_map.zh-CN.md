@@ -643,9 +643,9 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * 
  * @note 再调用 **hm_map_iter_next()** 之前, 先使用 **hm_map_iter_has_next()** 进行检查
  * 
- * @return 没有下一个时就返回 **NULL**
+ * @return 没有下一个时就返回 **(hm_map_entry){NULL, NULL}**
  */
-hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -704,9 +704,9 @@ int main()
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");
@@ -787,9 +787,9 @@ void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");

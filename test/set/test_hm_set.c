@@ -187,9 +187,9 @@ void test_iter_set() {
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k < 0 || *k >= num) {

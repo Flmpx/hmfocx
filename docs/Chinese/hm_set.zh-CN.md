@@ -469,9 +469,9 @@ bool hm_set_iter_has_next(hm_set_iter* iter);
  * 
  * @note 调用 **hm_set_iter_next()** 之前, 先使用 **hm_set_iter_has_next()** 进行检查
  * 
- * @return 没有下一个时就返回 **NULL**
+ * @return 没有下一个时就返回 **(hm_set_entry){NULL}**
  */
-hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
+hm_set_entry hm_set_iter_next(hm_set_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -525,8 +525,8 @@ int main()
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        int* k = e.key;
         printf("| k: %d\n", *k);
     }
     printf("\n");
@@ -603,8 +603,8 @@ void print_set(hm_set* set) {
     hm_set_iter iter;
     hm_set_iter_init(&iter, set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        int* k = e.key;
         printf("| k: %d\n", *k);
     }
     printf("\n");

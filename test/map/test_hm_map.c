@@ -182,9 +182,9 @@ void test_iter_map() {
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        int* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        int* v = e.val;
         if (*k >= num || *k < 0) {
             fail_invalid_k++;
         } else {
@@ -1109,9 +1109,9 @@ void test_map_iter_stress() {
         clock_t start = clock();
 
         while (hm_map_iter_has_next(&iter)) {
-            hm_map_entry* e = hm_map_iter_next(&iter);
-            int k = *(int*)(e->key);
-            int v = *(int*)(e->val);
+            hm_map_entry e = hm_map_iter_next(&iter);
+            int k = *(int*)(e.key);
+            int v = *(int*)(e.val);
             if (v != 2 * k) {
                 fail_iter++;
             }

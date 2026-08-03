@@ -439,9 +439,9 @@ bool hm_set_iter_has_next(hm_set_iter* iter) {
  * 
  * @note - Use `hm_set_iter_has_next()` to check before calling `hm_set_iter_next()`
  * 
- * @return - Return `NULL` when iterator doesn't has next 
+ * @return - Return `(hm_set_entry){NULL}` when iterator doesn't has next 
  */
-hm_set_entry* hm_set_iter_next(hm_set_iter* iter) {
+hm_set_entry hm_set_iter_next(hm_set_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -451,12 +451,12 @@ hm_set_entry* hm_set_iter_next(hm_set_iter* iter) {
         if (status == hm_exist_in_set) {
             /*next index is start of next entry*/
             iter->index = index + 1;
-            return &(iter->buckets[index]);
+            return iter->buckets[index];
         }
         index++;
     }
     iter->index = index;
-    return NULL;
+    return (hm_set_entry){NULL};
 
 }
 

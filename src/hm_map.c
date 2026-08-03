@@ -485,9 +485,9 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
  * 
  * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
  * 
- * @return - Return `NULL` when iterator doesn't has next 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when iterator doesn't has next 
  */
-hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
+hm_map_entry hm_map_iter_next(hm_map_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -497,12 +497,12 @@ hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
         if (status == hm_exist_in_map) {
             /*next index is start of next entry*/
             iter->index = index + 1;
-            return &(iter->buckets[index]);
+            return iter->buckets[index];
         }
         index++;
     }
     iter->index = index;
-    return NULL;
+    return (hm_map_entry){NULL, NULL};
 
 }
 

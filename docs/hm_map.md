@@ -648,9 +648,9 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * 
  * @note Use **hm_map_iter_has_next()** to check before calling **hm_map_iter_next()**
  * 
- * @return Return **NULL** when iterator doesn't has next 
+ * @return Return **(hm_map_entry){NULL, NULL}** when iterator doesn't has next 
  */
-hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: iter</summary>
@@ -709,9 +709,9 @@ int main()
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");
@@ -796,9 +796,9 @@ void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");

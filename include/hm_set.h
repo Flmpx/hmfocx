@@ -101,7 +101,7 @@ extern void hm_set_free(hm_set* set);
 
 extern void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 extern bool hm_set_iter_has_next(hm_set_iter* iter);
-extern hm_set_entry* hm_set_iter_next(hm_set_iter* iter);
+extern hm_set_entry hm_set_iter_next(hm_set_iter* iter);
 
 
 

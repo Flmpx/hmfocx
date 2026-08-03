@@ -103,6 +103,6 @@ extern void hm_map_free(hm_map* map);
 
 extern void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 extern bool hm_map_iter_has_next(hm_map_iter* iter);
-extern hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
+extern hm_map_entry hm_map_iter_next(hm_map_iter* iter);
 
 #endif
