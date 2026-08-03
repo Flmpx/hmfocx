@@ -14,6 +14,7 @@
     - [初始化](#init)
     - [插入](#insert)
     - [获取](#get)
+    - [弹出](#pop)
     - [迭代器](#iter)
     - [删除](#del)
     - [释放](#free)
@@ -206,6 +207,80 @@ int main()
 
 </details>
 <br><br><br>
+
+
+<a id = "pop"></a>
+
+> **弹出**
+
+```c
+/**
+ * 在指定索引处弹出一个值
+ * 
+ * @note 值会被移除但不会释放它所占的内存(内存权转移)
+ * @note 索引必须 >= **0** 并且 <= **链表大小**
+ * 
+ * @return 当索引无效时返回 **NULL**
+ */
+void* hm_list_pop(hm_list* list, size_t index)
+```
+
+<details>
+<summary>try: 弹出</summary>
+
+```c
+#include <hm_list.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_list(hm_list* list) {
+    int s = list->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_list_get(list, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    hm_list list;
+    // 初始化
+    hm_list_init(&list, free);
+
+    int cnt = 20;
+    // 插入
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_list_insert_tail(&list, v);
+    }
+    print_list(&list);
+
+    // 弹出下标为 4 的元素
+    int* pop_v = hm_list_pop(&list, 4);
+    print_list(&list);
+
+    free(pop_v); // 发生了内存权的交换, 所以你应该释放掉这块内存
+    hm_list_free(&list);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+```
+
+</details>
+
+</details>
+<br><br><br>
+
 
 
 <a id = "del"></a>
