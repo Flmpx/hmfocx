@@ -7,6 +7,7 @@
 #include "../../include/hm_arr.h"
 #include "../hm_test_tool.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 // This variable can record the total number of failures and it can be used as a return value to check whether the test passed
 int all_failure_num = 0;
@@ -1861,6 +1862,216 @@ void test_full_dynamic_arr_oper() {
 }
 
 
+void test_no_capacity_fixed_arr_oper() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | BOUNDARY | OPER NO CAPACITY ARR | CAPACITY: 64");
+
+   
+    int capacity = 0;
+    hm_arr arr;
+    hm_arr_init(&arr, capacity, NULL);
+    
+    // get
+    check_res(hm_arr_get(&arr, 0) == NULL, "get on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    check_res(hm_arr_get(&arr, 100) == NULL, "get with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // get pointer
+    check_res(hm_arr_get_pointer(&arr, 0) == NULL, "get_pointer on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    check_res(hm_arr_get_pointer(&arr, 100) == NULL, "get_pointer with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // del head
+    check_res(hm_arr_del_head(&arr) == hm_arr_ret_none, "del head on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // del tail
+    check_res(hm_arr_del_tail(&arr) == hm_arr_ret_none, "del tail on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // del index
+    check_res(hm_arr_del_index(&arr, 0) == hm_arr_ret_none, "del index on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    check_res(hm_arr_del_index(&arr, 100) == hm_arr_ret_none, "del with a large index on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // pop
+    check_res(hm_arr_pop(&arr, 0) == NULL, "pop on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    check_res(hm_arr_pop(&arr, 100) == NULL, "pop with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // shrink
+    check_res(hm_arr_shrink(&arr) == hm_arr_ret_none, "shrink on 0-capacity and fixed-size arr should return none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // clear
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // free
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, 0, NULL);
+    
+    
+    
+    int v = -1;
+    hm_arr_init(&arr, capacity, NULL);
+    
+    // insert head
+    check_res(hm_arr_insert_head(&arr, &v) == hm_arr_ret_full, "insert head on 0-capacity arr should return full", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    
+    // insert head
+    check_res(hm_arr_insert_tail(&arr, &v) == hm_arr_ret_full, "insert tail on 0-capacity arr should return full", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    // insert index
+    check_res(hm_arr_insert_index(&arr, &v, 100) == hm_arr_ret_warn, "insert with a big index on 0-capacity arr should return warn", &fail_cnt, tag++);
+    check_res(hm_arr_insert_index(&arr, &v, 0) == hm_arr_ret_full, "insert at 0 index on 0-capacity arr should return full", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    hm_arr_free(&arr);
+    print_end("ARR(FIXED) | BOUNDARY | OPER NO CAPACITY ARR | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_no_capacity_dynamic_arr_oper() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | BOUNDARY | OPER NO CAPACITY ARR | CAPACITY: 64");
+
+   
+    int capacity = 0;
+    hm_arr arr;
+    hm_arr_init_dynamic_grow(&arr, capacity, NULL);
+    
+    // get
+    check_res(hm_arr_get(&arr, 0) == NULL, "get on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    check_res(hm_arr_get(&arr, 100) == NULL, "get with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // get pointer
+    check_res(hm_arr_get_pointer(&arr, 0) == NULL, "get_pointer on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    check_res(hm_arr_get_pointer(&arr, 100) == NULL, "get_pointer with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // del head
+    check_res(hm_arr_del_head(&arr) == hm_arr_ret_none, "del head on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // del tail
+    check_res(hm_arr_del_tail(&arr) == hm_arr_ret_none, "del tail on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // del index
+    check_res(hm_arr_del_index(&arr, 0) == hm_arr_ret_none, "del index on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    check_res(hm_arr_del_index(&arr, 100) == hm_arr_ret_none, "del with a large index on 0-capacity arr should reutrn none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // pop
+    check_res(hm_arr_pop(&arr, 0) == NULL, "pop on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    check_res(hm_arr_pop(&arr, 100) == NULL, "pop with a large index on 0-capacity arr should return NULL", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // shrink
+    check_res(hm_arr_shrink(&arr) == hm_arr_ret_none, "shrink on 0-capacity and dynamic-grow arr should return none", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // clear
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    
+    // free
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, 0, NULL);
+    
+    
+    
+    int v = -1;
+    
+    // insert head
+    check_res(hm_arr_insert_head(&arr, &v) == hm_arr_ret_suc, "insert head on 0-capacity and dynamic-grow arr should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 1, true, capacity, NULL);
+    check_res(hm_arr_get(&arr, 0) == &v, "val is wrong when inset head in 0-capacity and dynamic-grow arr", &fail_cnt, tag++);
+    hm_arr_free(&arr);
+    
+    
+    // insert head
+    check_res(hm_arr_insert_tail(&arr, &v) == hm_arr_ret_suc, "insert tail on 0-capacity and dynamic-grow arr should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 1, true, capacity, NULL);
+    check_res(hm_arr_get(&arr, 0) == &v, "val is wrong when inset tail in 0-capacity and dynamic-grow arr", &fail_cnt, tag++);
+    hm_arr_clear(&arr);
+    
+    // insert index
+    check_res(hm_arr_insert_index(&arr, &v, 100) == hm_arr_ret_warn, "insert with a big index on 0-capacity and dynamic-grow arr should return warn", &fail_cnt, tag++);
+    check_res(hm_arr_insert_index(&arr, &v, 0) == hm_arr_ret_suc, "insert at 0 index on 0-capacity and dynamic-grow arr should return suc", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 1, true, capacity, NULL);
+    check_res(hm_arr_get(&arr, 0) == &v, "val is wrong when inset index in 0-capacity and dynamic-grow arr", &fail_cnt, tag++);
+    hm_arr_clear(&arr);
+    
+    hm_arr_free(&arr);
+    print_end("ARR(DYNAMIC) | BOUNDARY | OPER NO CAPACITY ARR | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_init_big_capacity_fixed_arr() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | BOUNDARY | INIT BIG CAPACITY ARR");
+
+    hm_arr arr;
+    hm_arr_ret ret;
+    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity arr should return error", capacity);
+        ret = hm_arr_init(&arr, capacity, free);
+        check_res(ret == hm_arr_ret_error, info, &fail_cnt, tag++);
+    }
+    
+
+    print_end("ARR(FIXED) | BOUNDARY | INIT BIG CAPACITY ARR", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_init_big_capacity_dynamic_arr() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY ARR");
+    
+    hm_arr arr;
+    hm_arr_ret ret;
+    
+    int cnt = 10;
+    char info[1001];
+    for (size_t i = 1; i <= cnt; i++) {
+        size_t capacity = SIZE_MAX / i;
+        sprintf(info, "init %zu-capacity arr should return error", capacity);
+        ret = hm_arr_init_dynamic_grow(&arr, capacity, free);
+        check_res(ret == hm_arr_ret_error, info, &fail_cnt, tag++);
+    }
+    
+    
+    print_end("ARR(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY ARR", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+
 
 
 
@@ -1921,6 +2132,10 @@ void test_arr_fixed_boundary() {
     test_empty_fixed_arr_oper();                                                        printf("\n");
 
     test_full_fixed_arr_oper();                                                         printf("\n");
+
+    test_no_capacity_fixed_arr_oper();                                                  printf("\n");
+
+    test_init_big_capacity_fixed_arr();                                                 printf("\n");
 }
 
 
@@ -1928,6 +2143,10 @@ void test_arr_dynamic_boundary() {
     test_empty_dynamic_arr_oper();                                                      printf("\n");
 
     test_full_dynamic_arr_oper();                                                       printf("\n");
+
+    test_no_capacity_dynamic_arr_oper();                                                printf("\n");
+
+    test_init_big_capacity_dynamic_arr();                                               printf("\n");
 }
 
 
