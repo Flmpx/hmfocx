@@ -181,9 +181,7 @@ void print_arr(hm_arr* arr) {
     // get and print
     for (int i = 0; i < s; i++) {
         int* v = hm_arr_get(arr, i);
-        if (v) {
-            printf("%d ", *v);
-        }
+        printf("%d ", *v);
     }
     printf("\n");
 }
@@ -258,12 +256,10 @@ char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
 void print_arr(hm_arr* arr) {
     int s = hm_arr_size(arr);
-    // get and print
+    // get_pointer and print
     for (int i = 0; i < s; i++) {
-        char* v = hm_arr_get(arr, i);
-        if (v) {
-            printf("| %d. %s\n", i, v);
-        }
+        char** v = (char**)hm_arr_get_pointer(arr, i);
+        printf("| %d. %s\n", i, *v);
     }
     printf("\n");
 }
@@ -485,9 +481,7 @@ int main()
     print_arr(&arr);
 
     // print poped val
-    if (pop_v) {
-        printf("pop val: %d\n", *pop_v);
-    }
+    printf("pop val: %d\n", *pop_v);
 
     free(pop_v); // memory ownership swap is happend, so, you should free it
     hm_arr_free(&arr);
