@@ -13,6 +13,7 @@
     - [Initialize](#init)
     - [Insert](#insert)
     - [Get](#get)
+    - [Pop](#pop)
     - [Iterator](#iter)
     - [Del](#del)
     - [Shrink](#shrink)
@@ -410,6 +411,127 @@ int main()
 
 </details>
 <br><br><br>
+
+
+
+
+<a id = "pop"></a>
+
+> **Pop**
+
+```c
+/**
+ * Pops the entry associated with the given key
+ * 
+ * @note The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return Return **(hm_map_entry){NULL, NULL}** when key is not existed in map
+ */
+hm_map_entry hm_map_pop(hm_map* map, void* key);
+```
+
+<details>
+<summary>try: pop</summary>
+
+```c
+#include <hm_map.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+int num = sizeof(val) / sizeof(char*);
+
+void print_map(hm_map* map, int num) {
+    // get and print
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(map, &i);
+        if (e) {
+            int* k = e->key;
+            char* v = e->val;
+            printf("| k: %d, v: %s\n", *k, v);
+        }
+    }
+    printf("\n");
+}
+
+
+int main() 
+{
+    hm_map map;
+    hm_map_init(&map, hash, cmp, free, NULL);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        char* v = val[i];
+        hm_map_insert(&map, k, v);
+    }
+    print_map(&map, num);
+
+    // pop | key: 2
+    int key = 2;
+    hm_map_entry e = hm_map_pop(&map, &key);
+    print_map(&map, num);
+    
+    // print poped entry
+    int* k = e.key;
+    char* v = e.val;
+    if (k && v) {
+        printf("pop entry:\n| k: %d, v: %s\n", *k, v);
+    }
+
+    free(k); // memory ownership swap is happend, so, you should free it
+
+    hm_map_free(&map);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+pop entry:
+| k: 2, v: i
+```
+
+</details>
+
+</details>
+<br><br><br>
+
 
 
 <a id = "del"></a>

@@ -1136,8 +1136,17 @@ void test_empty_map_oper() {
     print_run("MAP | BOUNDARY | OPER EMPTY MAP | TYPE K:[INT] V:[INT]");
 
     int k = 0;
+
     // get
-    check_res(hm_map_get_entry(&map, &k) == NULL, "get on empty map should return `NULL`", &fail_cnt, tag++);
+    hm_map_entry e = hm_map_get(&map, &k);
+    check_res(e.key == NULL && e.val == NULL, "get on empty map should return invalid entry", &fail_cnt, tag++);
+
+    // get entry
+    check_res(hm_map_get_entry(&map, &k) == NULL, "get_entry on empty map should return `NULL`", &fail_cnt, tag++);
+
+    // pop
+    e = hm_map_pop(&map, &k);
+    check_res(e.key == NULL && e.val == NULL, "pop on empty map should return invalid entry", &fail_cnt, tag++);
 
     // del
     k = 10;
@@ -1172,10 +1181,26 @@ void test_single_entry_oper() {
     // insert single entry and get
 
     hm_map_insert(&map, &k, &v);
-    hm_map_entry* e = hm_map_get_entry(&map, &k);
-    check_res(*(int*)(e->key) == k, "the key is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
-    check_res(*(int*)(e->val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
+    hm_map_entry e = hm_map_get(&map, &k);
+    check_res(*(int*)(e.key) == k, "the key is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
+    check_res(*(int*)(e.val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);
+
+    // insert single entry and get entry
+
+    hm_map_insert(&map, &k, &v);
+    hm_map_entry* e_p = hm_map_get_entry(&map, &k);
+    check_res(*(int*)(e_p->key) == k, "the key is wrong when run `map_get_entry` on single entry's map", &fail_cnt, tag++);
+    check_res(*(int*)(e_p->val) == v, "the val is wrong when run `map_get_entry` on single entry's map", &fail_cnt, tag++);
+    hm_map_free(&map);
+    
+    // insert single entry and pop
+    hm_map_insert(&map, &k, &v);
+    e = hm_map_pop(&map, &k);
+    check_res(*(int*)(e.key) == k, "the key is wrong when run `map_pop` on single entry's map", &fail_cnt, tag++);
+    check_res(*(int*)(e.val) == v, "the val is wrong when run `map_pop` on single entry's map", &fail_cnt, tag++);
+    hm_map_free(&map);
+    
 
     // insert single entry and delete it 
 
@@ -1190,9 +1215,9 @@ void test_single_entry_oper() {
     hm_map_insert(&map, &k, &v);
     int new_v = 100;
     hm_map_insert(&map, &k, &new_v);
-    e = hm_map_get_entry(&map, &k);
-    check_res(*(int*)(e->key) == k, "the key is wrong when insert two indetical keys", &fail_cnt, tag++);
-    check_res(*(int*)(e->val) == v, "the val isn't old val when insert two indetical keys", &fail_cnt, tag++);
+    e_p = hm_map_get_entry(&map, &k);
+    check_res(*(int*)(e_p->key) == k, "the key is wrong when insert two indetical keys", &fail_cnt, tag++);
+    check_res(*(int*)(e_p->val) == v, "the val isn't old val when insert two indetical keys", &fail_cnt, tag++);
 
     check_res(map.size == 1, "the map.size should be 1 when insert two indetical keys", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++);
@@ -1200,6 +1225,92 @@ void test_single_entry_oper() {
 
 
     print_end("MAP | BOUNDARY | OPER SINGLE ENTRY'S MAP | TYPE K:[INT] V:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_map_pop() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("MAP | FUNC | POP | TYPE K:[INT] V:[INT]");
+    
+    srand(666);
+    int num = 64;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i; 
+        *v = rand();
+        hm_map_insert(&map, k, v);
+    }
+
+
+    int flag[num];  // record some key has poped
+    memset(flag, 0, sizeof(flag));
+
+    int pop_keys[] = {2, 3, -1, 9, 4 * num, 2 * num, 98, 34, 5201314, 77};
+    int cnt = sizeof(pop_keys) / sizeof(int);
+    int* pop_k[cnt];    // store poped pointer of key
+    int* pop_v[cnt];    // store poped pointer of val
+
+    int pop_cnt = 0;
+    int fail_valid_key = 0;
+    int fail_invalid_key = 0;
+    
+    for (int i = 0; i < cnt; i++) {
+
+        hm_map_entry e = hm_map_pop(&map, &pop_keys[i]);
+
+        int* k = e.key;
+        int* v = e.val;
+        
+        if (pop_keys[i] >= 0 && pop_keys[i] < num && flag[pop_keys[i]] == 0) {
+            if (k && v) {
+                pop_k[pop_cnt] = k;
+                pop_v[pop_cnt] = v;
+                pop_cnt++;
+        
+                flag[pop_keys[i]] = 1;
+            } else {
+                // valid key but invald entry
+                fail_valid_key++;
+            }
+        } else {
+            if (k || v) {
+                // invalid key but valid entry
+                fail_invalid_key++;
+            }
+        }
+        test_map_integrity(&map, &fail_cnt, tag++);
+    }
+    check_res(fail_valid_key == 0, "pop with valid key should return valid entry", &fail_cnt, tag++);
+    check_res(fail_invalid_key == 0, "pop with invalid key should return invalid entry", &fail_cnt, tag++);
+    
+
+    // verify
+    int fail = 0;
+    for (int i = 0; i < pop_cnt; i++) {
+        hm_map_iter iter;
+        hm_map_iter_init(&iter, &map);
+        while (hm_map_iter_has_next(&iter)) {
+            hm_map_entry e = hm_map_iter_next(&iter);
+            if (e.key == pop_k[i] || e.val == pop_v[i]) {
+                fail++;
+            }
+        }
+    }
+    check_res(fail == 0, "the pop entry shouldn't be existed in map", &fail_cnt, tag++);
+
+    hm_map_free(&map);
+    for (int i = 0; i < pop_cnt; i++) {
+        free(pop_k[i]);
+        free(pop_v[i]);
+    }
+
+    print_end("MAP | FUNC | POP | TYPE K:[INT] V:[INT]", fail_cnt);
     HM_TEST_COUNTER
 }
 
@@ -1215,6 +1326,8 @@ void function_test() {
     test_map_get();                                 printf("\n");
 
     test_map_get_entry();                           printf("\n");
+
+    test_map_pop();                                 printf("\n");
     
     test_map_change();                              printf("\n");
     

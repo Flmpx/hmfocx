@@ -359,6 +359,31 @@ hm_map_entry hm_map_get(hm_map* map, void* key) {
 
 
 /**
+ * Pop the entry associated with the given key
+ * 
+ * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when key is not existed in map
+ */
+hm_map_entry hm_map_pop(hm_map* map, void* key) {
+    size_t s = map->size, l = map->len;
+    if (s == 0 || l == 0) {
+        return (hm_map_entry){NULL, NULL};
+    }
+    size_t index = hm_map_get_index(map, key);
+
+    if (index == invalid_index) {
+        return (hm_map_entry){NULL, NULL};
+    } else {
+
+        map->buckets_status[index] = hm_del_in_map;
+        map->size--;
+
+        return map->buckets[index];
+    }
+}
+
+/**
  * Delete the entry associated with the given key
  * 
  * @return - Return `hm_map_ret_suc` when delete success

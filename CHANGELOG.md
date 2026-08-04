@@ -9,6 +9,8 @@
 ### Added
 - Add new function for `hm_list` -- `hm_list_pop()`
     - Use this function can pop val from the list
+- Add new function for `hm_map` -- `hm_map_pop()`
+    - Use this function can pop entry from the list
 
 ### Changed
 - **refactor:** Change the return content of function `hm_map_get()`, using the new function `hm_map_get_entry()` to replace it
