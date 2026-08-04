@@ -78,7 +78,25 @@ hm_arr_ret hm_arr_init_dynamic_grow(hm_arr* arr, size_t start_capacity, hm_free 
 <summary>try: 初始化</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_arr arr;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+    hm_arr_free(&arr);
+    
+    // 动态增长模式
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    hm_arr_free(&arr);
+
+    return 0;
+}
 ```
 
 </details>
@@ -152,13 +170,148 @@ void** hm_arr_get_pointer(hm_arr* arr, size_t index);
 <summary>try: 插入 & 获取</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = hm_arr_size(arr);
+    // 获取和打印
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        if (v) {
+            printf("%d ", *v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // 初始化
+    int capacity = 30;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+
+    int cnt = 10;
+    // 头插
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_head(&arr, v);
+    }
+    print_arr(&arr);    
+
+    // 尾插
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    int* val = (int*)malloc(sizeof(int));
+    *val = -1;
+    // 将值插入下标为 2 的位置
+    hm_arr_insert_index(&arr, val, 2);
+    print_arr(&arr);
+
+
+    // 使用get去改变下标为2的值
+    int* v = hm_arr_get(&arr, 3);
+    *v = 66666666;
+    print_arr(&arr);
+    
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
+9 8 7 6 5 4 3 2 1 0 
+9 8 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
+9 8 -1 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
+9 8 -1 66666666 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9
+```
+
+</details>
+
+</details>
+
+
+<details>
+<summary>try: 插入 & 获取指针</summary>
+
+```c
+#include <hm_arr.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+void print_arr(hm_arr* arr) {
+    int s = hm_arr_size(arr);
+    // 获取和打印
+    for (int i = 0; i < s; i++) {
+        char* v = hm_arr_get(arr, i);
+        if (v) {
+            printf("| %d. %s\n", i, v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // 初始化
+    int capacity = 30;
+    hm_arr_init(&arr, capacity, NULL);
+
+    // 插入
+    int cnt = sizeof(vals) / sizeof(char*);
+    for (int i = 0; i < cnt; i++) {
+        hm_arr_insert_tail(&arr, vals[i]);
+    }
+    print_arr(&arr);
+
+
+    char* tmp_str = "Hello, I'm Flmpx";
+    // 使用 get_pointer 去改变下标为 3 的值的指针
+    char** v = (char**)hm_arr_get_pointer(&arr, 3);
+    *v = tmp_str;
+    print_arr(&arr);
+    
+    hm_arr_free(&arr);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+| 0. xl
+| 1. oi
+| 2. i
+| 3. hate
+| 4. love
+| 5. so
+| 6. family
+
+| 0. xl
+| 1. oi
+| 2. i
+| 3. Hello, I'm Flmpx
+| 4. love
+| 5. so
+| 6. family
 
 ```
 
@@ -205,14 +358,67 @@ hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index);
 <summary>try: 删除</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = arr->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // 初始化
+    int capacity = 20;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+
+    // 插满
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    // 删除下标为 4 的节点
+    hm_arr_del_index(&arr, 4);
+    print_arr(&arr);
+
+    int num_h = 3;
+    // 三次删除起始位置
+    for (int i = 0; i < num_h; i++) {
+        hm_arr_del_head(&arr);
+    }
+    print_arr(&arr);
+
+    int num_t = 2;
+    // 两次删除末位置
+    for (int i = 0; i < num_t; i++) {
+        hm_arr_del_tail(&arr);
+    }
+    print_arr(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
-
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+3 5 6 7 8 9 10 11 12 13 14 15 16 17 
 ```
 
 </details>
@@ -243,14 +449,58 @@ void* hm_arr_pop(hm_arr* arr, size_t index);
 <summary>try: 弹出</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = arr->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    hm_arr arr;
+    // 初始化
+    int capacity = 20;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+
+    // 插满
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    // 弹出下标为 4 的元素
+    int* pop_v = hm_arr_pop(&arr, 4);
+    print_arr(&arr);
+
+    // 打印被弹出的值
+    if (pop_v) {
+        printf("pop val: %d\n", *pop_v);
+    }
+
+    free(pop_v); // 发生了内存权的交换, 所以你应该释放掉这块内存
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
-
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+pop val: 4
 ```
 
 </details>
@@ -281,14 +531,46 @@ bool hm_arr_is_empty(hm_arr* arr);
 <summary>try: 判断</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+    
+    if (hm_arr_is_empty(&arr)) {
+        printf("arr is empty\n");
+    }
+
+    // 插入
+    int i = 0;
+    while (!hm_arr_is_full(&arr)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+        i++;
+    }
+
+    if (hm_arr_is_full(&arr)) {
+        printf("arr is full\n");
+    }
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
-
+arr is empty
+arr is full
 ```
 
 </details>
@@ -320,14 +602,46 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr);
 <summary>try: 缩容</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr_status(hm_arr* arr) {
+    printf("size: %zu, capacity: %zu\n", hm_arr_size(arr), hm_arr_capacity(arr));
+}
+
+int main()
+{
+    hm_arr arr;
+    int capacity = 520;
+    // 只用动态增长的数组才可以做到
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    print_arr_status(&arr);
+
+    while (hm_arr_shrink(&arr) == hm_arr_ret_suc) {
+        print_arr_status(&arr);
+    }
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
-
+size: 0, capacity: 520
+size: 0, capacity: 260
+size: 0, capacity: 130
+size: 0, capacity: 65
+size: 0, capacity: 32
+size: 0, capacity: 16
+size: 0, capacity: 8
+size: 0, capacity: 4
+size: 0, capacity: 2
+size: 0, capacity: 1
 ```
 
 </details>
@@ -354,14 +668,46 @@ void hm_arr_clear(hm_arr* arr);
 <summary>try: 清空</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_arr_status(hm_arr* arr) {
+    // 打印数组的 size 和 capacity
+    printf("size: %-3zu, capacity: %-3zu\n", hm_arr_size(arr), hm_arr_capacity(arr));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr_status(&arr);
+    
+    // 清空
+    hm_arr_clear(&arr);
+    
+    print_arr_status(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>运行结果</summary>
 
 ```txt
-
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
 ```
 
 </details>
@@ -389,7 +735,28 @@ void hm_arr_free(hm_arr* arr);
 <summary>try: 释放</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // 固定大小模式
+    hm_arr_init(&arr, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // 在使用完数组后必须释放掉
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 </details>

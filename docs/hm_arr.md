@@ -78,7 +78,25 @@ hm_arr_ret hm_arr_init_dynamic_grow(hm_arr* arr, size_t start_capacity, hm_free 
 <summary>try: init</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 50;
+    hm_arr arr;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+    hm_arr_free(&arr);
+    
+    // dynamic-grow
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    hm_arr_free(&arr);
+
+    return 0;
+}
 ```
 
 </details>
@@ -153,13 +171,148 @@ void** hm_arr_get_pointer(hm_arr* arr, size_t index);
 <summary>try: insert & get</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = hm_arr_size(arr);
+    // get and print
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        if (v) {
+            printf("%d ", *v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // init
+    int capacity = 30;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+
+    int cnt = 10;
+    // insert head
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_head(&arr, v);
+    }
+    print_arr(&arr);    
+
+    // insert tail
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    int* val = (int*)malloc(sizeof(int));
+    *val = -1;
+    // insert val at index 2
+    hm_arr_insert_index(&arr, val, 2);
+    print_arr(&arr);
+
+
+    // use get to change val at index 3
+    int* v = hm_arr_get(&arr, 3);
+    *v = 66666666;
+    print_arr(&arr);
+    
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
+9 8 7 6 5 4 3 2 1 0 
+9 8 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
+9 8 -1 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
+9 8 -1 66666666 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9
+```
+
+</details>
+
+</details>
+
+
+<details>
+<summary>try: insert & get pointer</summary>
+
+```c
+#include <hm_arr.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+void print_arr(hm_arr* arr) {
+    int s = hm_arr_size(arr);
+    // get and print
+    for (int i = 0; i < s; i++) {
+        char* v = hm_arr_get(arr, i);
+        if (v) {
+            printf("| %d. %s\n", i, v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // init
+    int capacity = 30;
+    hm_arr_init(&arr, capacity, NULL);
+
+    // insert
+    int cnt = sizeof(vals) / sizeof(char*);
+    for (int i = 0; i < cnt; i++) {
+        hm_arr_insert_tail(&arr, vals[i]);
+    }
+    print_arr(&arr);
+
+
+    char* tmp_str = "Hello, I'm Flmpx";
+    // use get_pointer to change the pointer of val at index 3
+    char** v = (char**)hm_arr_get_pointer(&arr, 3);
+    *v = tmp_str;
+    print_arr(&arr);
+    
+    hm_arr_free(&arr);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+| 0. xl
+| 1. oi
+| 2. i
+| 3. hate
+| 4. love
+| 5. so
+| 6. family
+
+| 0. xl
+| 1. oi
+| 2. i
+| 3. Hello, I'm Flmpx
+| 4. love
+| 5. so
+| 6. family
 
 ```
 
@@ -206,14 +359,67 @@ hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index);
 <summary>try: del</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = arr->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_arr arr;
+    // init
+    int capacity = 20;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+
+    // insert tail
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    // del index | index: 4
+    hm_arr_del_index(&arr, 4);
+    print_arr(&arr);
+
+    int num_h = 3;
+    // del head | num: 3
+    for (int i = 0; i < num_h; i++) {
+        hm_arr_del_head(&arr);
+    }
+    print_arr(&arr);
+
+    int num_t = 2;
+    // del tail | num: 2
+    for (int i = 0; i < num_t; i++) {
+        hm_arr_del_tail(&arr);
+    }
+    print_arr(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+3 5 6 7 8 9 10 11 12 13 14 15 16 17 
 ```
 
 </details>
@@ -244,14 +450,58 @@ void* hm_arr_pop(hm_arr* arr, size_t index);
 <summary>try: pop</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = arr->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    hm_arr arr;
+    // init
+    int capacity = 20;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+
+    // insert
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    // pop | index: 4
+    int* pop_v = hm_arr_pop(&arr, 4);
+    print_arr(&arr);
+
+    // print poped val
+    if (pop_v) {
+        printf("pop val: %d\n", *pop_v);
+    }
+
+    free(pop_v); // memory ownership swap is happend, so, you should free it
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+pop val: 4
 ```
 
 </details>
@@ -282,14 +532,46 @@ bool hm_arr_is_empty(hm_arr* arr);
 <summary>try: judge</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+    
+    if (hm_arr_is_empty(&arr)) {
+        printf("arr is empty\n");
+    }
+
+    // insert
+    int i = 0;
+    while (!hm_arr_is_full(&arr)) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+        i++;
+    }
+
+    if (hm_arr_is_full(&arr)) {
+        printf("arr is full\n");
+    }
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+arr is empty
+arr is full
 ```
 
 </details>
@@ -321,14 +603,46 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr);
 <summary>try: shrink</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr_status(hm_arr* arr) {
+    printf("size: %zu, capacity: %zu\n", hm_arr_size(arr), hm_arr_capacity(arr));
+}
+
+int main()
+{
+    hm_arr arr;
+    int capacity = 520;
+    // only dynamic-grow arr can do
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    print_arr_status(&arr);
+
+    while (hm_arr_shrink(&arr) == hm_arr_ret_suc) {
+        print_arr_status(&arr);
+    }
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+size: 0, capacity: 520
+size: 0, capacity: 260
+size: 0, capacity: 130
+size: 0, capacity: 65
+size: 0, capacity: 32
+size: 0, capacity: 16
+size: 0, capacity: 8
+size: 0, capacity: 4
+size: 0, capacity: 2
+size: 0, capacity: 1
 ```
 
 </details>
@@ -355,14 +669,46 @@ void hm_arr_clear(hm_arr* arr);
 <summary>try: clear</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_arr_status(hm_arr* arr) {
+    // print size and capacity of arr
+    printf("size: %-3zu, capacity: %-3zu\n", hm_arr_size(arr), hm_arr_capacity(arr));
+}
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr_status(&arr);
+    
+    // clear
+    hm_arr_clear(&arr);
+    
+    print_arr_status(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+size: 20 , capacity: 20 
+size: 0  , capacity: 20 
 ```
 
 </details>
@@ -390,17 +736,29 @@ void hm_arr_free(hm_arr* arr);
 <summary>try: free</summary>
 
 ```c
+#include <hm_arr.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int capacity = 20;
+    hm_arr arr;
+    // fixed-size
+    hm_arr_init(&arr, capacity, free);
+    
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    // arr must be freed after use
+    hm_arr_free(&arr);
+    return 0;
+}
 ```
-
-<details>
-<summary>run result</summary>
-
-```txt
-
-```
-
-</details>
 
 </details>
 <br><br><br>
