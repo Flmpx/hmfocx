@@ -14,6 +14,7 @@
     - [初始化](#init)
     - [插入](#insert)
     - [获取](#get)
+    - [弹出](#pop)
     - [迭代器](#iter)
     - [删除](#del)
     - [缩容](#shrink)
@@ -255,6 +256,124 @@ int main()
 
 </details>
 <br><br><br>
+
+
+
+<a id = "pop"></a>
+
+> **Pop**
+
+```c
+/**
+ * 根据键弹出集合中的条目
+ * 
+ * @note 条目会被移除但不会释放它所占的内存(内存权转移)
+ * 
+ * @return 如果键不存在, 返回 **(hm_set_entry){NULL}**
+ */
+hm_set_entry hm_set_pop(hm_set* set, void* key);
+```
+
+<details>
+<summary>try: 弹出</summary>
+
+```c
+#include <hm_set.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+
+void print_set(hm_set* set, int num) {
+    // 获取和打印
+    for (int i = 0; i < num; i++) {
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
+            printf("| k: %d\n", *k);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    int num = 6;
+
+    hm_set set;
+    hm_set_init(&set, hash, cmp, free);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        hm_set_insert(&set, k);
+    }
+    print_set(&set, num);
+
+    // 弹出键为 2 的条目
+    int key = 2;
+    hm_set_entry e = hm_set_pop(&set, &key);
+    print_set(&set, num);
+
+    // 打印被弹出的条目
+    int* k = e.key;
+    if (k) {
+        printf("pop entry:\n| k: %d\n", *k);
+    }
+
+    free(k);    // 发生了内存权的交换, 所以你应该释放掉这块内存
+    hm_set_free(&set);
+    return 0;
+}
+
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+| k: 0
+| k: 1
+| k: 2
+| k: 3
+| k: 4
+| k: 5
+
+| k: 0
+| k: 1
+| k: 3
+| k: 4
+| k: 5
+
+pop entry:
+| k: 2
+```
+
+</details>
+
+</details>
+<br><br><br>
+
+
+
+
+
+
 
 
 <a id = "del"></a>

@@ -12,6 +12,7 @@
     - [Initialize](#init)
     - [Insert](#insert)
     - [Get](#get)
+    - [Pop](#pop)
     - [Iterator](#iter)
     - [Del](#del)
     - [Shrink](#shrink)
@@ -255,6 +256,124 @@ int main()
 
 </details>
 <br><br><br>
+
+
+
+
+<a id = "pop"></a>
+
+> **Pop**
+
+```c
+/**
+ * Pop the entry associated with the given key
+ * 
+ * @note The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return Return **(hm_set_entry){NULL}** when key is not existed in map
+ */
+hm_set_entry hm_set_pop(hm_set* set, void* key);
+```
+
+<details>
+<summary>try: pop</summary>
+
+```c
+#include <hm_set.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+
+void print_set(hm_set* set, int num) {
+    // get and print
+    for (int i = 0; i < num; i++) {
+        hm_set_entry e = hm_set_get(set, &i);
+        int* k = e.key;
+        if (k) {
+            printf("| k: %d\n", *k);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    int num = 6;
+
+    hm_set set;
+    hm_set_init(&set, hash, cmp, free);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        hm_set_insert(&set, k);
+    }
+    print_set(&set, num);
+
+    // pop | key: 2
+    int key = 2;
+    hm_set_entry e = hm_set_pop(&set, &key);
+    print_set(&set, num);
+
+    // print poped entry
+    int* k = e.key;
+    if (k) {
+        printf("pop entry:\n| k: %d\n", *k);
+    }
+
+    free(k);    // memory ownership swap is happend, so, you should free it
+    hm_set_free(&set);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+| k: 0
+| k: 1
+| k: 2
+| k: 3
+| k: 4
+| k: 5
+
+| k: 0
+| k: 1
+| k: 3
+| k: 4
+| k: 5
+
+pop entry:
+| k: 2
+```
+
+</details>
+
+</details>
+<br><br><br>
+
+
+
+
+
+
 
 
 <a id = "del"></a>

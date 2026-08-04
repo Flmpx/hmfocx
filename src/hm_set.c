@@ -330,6 +330,34 @@ hm_set_entry hm_set_get(hm_set* set, void* key) {
         return set->buckets[index];
     }
 }
+
+/**
+ * Pop the entry associated with the given key
+ * 
+ * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `(hm_set_entry){NULL}` when key is not existed in map
+ */
+hm_set_entry hm_set_pop(hm_set* set, void* key) {
+    size_t s = set->size, l = set->len;
+    if (s == 0 || l == 0) {
+        return (hm_set_entry){NULL};
+    }
+    size_t index = hm_set_get_index(set, key);
+
+    if (index == invalid_index) {
+        return (hm_set_entry){NULL};
+    } else {
+
+        set->buckets_status[index] = hm_del_in_set;
+
+        set->size--;
+
+        return set->buckets[index];
+    }
+}
+
+
 /**
  * Delete the entry associated with the given key
  * 

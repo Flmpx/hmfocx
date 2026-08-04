@@ -82,15 +82,50 @@ extern double hm_set_get_load_factor(hm_set* set);
 
 
 /**
- * Some functin of set , like `insert`, `get` , `del` and `free`
+ * Init
  */
 
 extern void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key);
 extern hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len);
+
+/**
+ * Insert
+ */
+
 extern hm_set_ret hm_set_insert(hm_set* set, void* key);
+
+/**
+ * Get
+ */
+
 extern hm_set_entry hm_set_get(hm_set* set, void* key);
+
+
+/**
+ * Pop
+ */
+
+extern hm_set_entry hm_set_pop(hm_set* set, void* key);
+
+
+/**
+ * Del
+ */
+
 extern hm_set_ret hm_set_del(hm_set* set, void* key);
+
+
+/**
+ * Shrink
+ */
+
 extern hm_set_ret hm_set_shrink(hm_set* set);
+
+
+/**
+ * Clear And Free
+ */
+
 extern void hm_set_clear(hm_set* set);
 extern void hm_set_free(hm_set* set);
 
