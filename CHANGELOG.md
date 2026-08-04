@@ -6,6 +6,8 @@
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-04
+
 ### Added
 - Add new container for this library -- `hm_arr`, it including some basic operations, such as `insert`, `get` and `del`, other detailed information see [hm_arr](docs/hm_arr.md)
 - Add new function `pop` for `hm_list`, `hm_map` and `hm_set` -- `hm_list_pop()`, `hm_map_pop()` and `hm_set_pop()`
