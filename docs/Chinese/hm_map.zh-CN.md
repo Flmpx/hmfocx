@@ -247,8 +247,7 @@ int main()
     }
     print_map(&map, num);
 
-    // 如果你想要改值, 那就使用get函数
-
+    // 使用get去改变值
     k = (int*)malloc(sizeof(int));
     *k = 3;
     hm_map_entry e = hm_map_get(&map, k);
@@ -326,7 +325,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map, int num) {
-    // 获取 和 打印
+    // 获取条目 和 打印
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
@@ -361,8 +360,7 @@ int main()
     }
     print_map(&map, num);
 
-    // 如果你想要改值, 那就使用get entry函数
-
+    // 使用get_entry去改变值的指针
     k = (int*)malloc(sizeof(int));
     *k = 5;
     hm_map_entry* e = hm_map_get_entry(&map, k);
@@ -460,10 +458,10 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get_entry(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
+        hm_map_entry e = hm_map_get(map, &i);
+        int* k = e.key;
+        char* v = e.val;
+        if (k && v) {
             printf("| k: %d, v: %s\n", *k, v);
         }
     }
@@ -576,10 +574,10 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get_entry(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
+        hm_map_entry e = hm_map_get(map, &i);
+        int* k = e.key;
+        char* v = e.val;
+        if (k && v) {
             printf("| k: %d, v: %s\n", *k, v);
         }
     }
@@ -676,19 +674,6 @@ size_t hash(const void* key) {
 char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
 int num = sizeof(val) / sizeof(char*);
-
-void print_map(hm_map* map, int num) {
-    // 获取和打印
-    for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get_entry(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
-            printf("| k: %d, v: %s\n", *k, v);
-        }
-    }
-    printf("\n");
-}
 
 void print_load_factor(hm_map* map) {
     printf("| size: %-5zu len: %5zu, load factor: %lf\n", hm_map_size(map), hm_map_len(map), hm_map_get_load_factor(map));
@@ -799,10 +784,10 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get_entry(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
+        hm_map_entry e = hm_map_get(map, &i);
+        int* k = e.key;
+        char* v = e.val;
+        if (k && v) {
             printf("| k: %d, v: %s\n", *k, v);
         }
     }

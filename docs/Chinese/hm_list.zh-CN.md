@@ -221,12 +221,11 @@ char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
 void print_list(hm_list* list) {
     int s = hm_list_size(list);
-    // 获取和打印
+    // 获取节点和打印
     for (int i = 0; i < s; i++) {
-        char* v = hm_list_get(list, i);
-        if (v) {
-            printf("| %d. %s\n", i, v);
-        }
+        hm_listnode* n = hm_list_get_node(list, i);
+        char* v = n->val;
+        printf("| %d. %s\n", i, v);
     }
     printf("\n");
 }
@@ -338,9 +337,7 @@ int main()
     print_list(&list);
 
     // 打印被弹出的值
-    if (pop_v) {
-        printf("pop val: %d\n", *pop_v);
-    }
+    printf("pop val: %d\n", *pop_v);
 
     free(pop_v); // 发生了内存权的交换, 所以你应该释放掉这块内存
     hm_list_free(&list);
