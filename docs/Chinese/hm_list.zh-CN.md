@@ -151,12 +151,7 @@ void print_list(hm_list* list) {
     // 获取和打印
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
-        hm_listnode* n = hm_list_get_node(list, i);
-        if (n->val == v) {
-            printf("%d ", *v);
-        } else {
-            printf("[%d|%d] ", *v, *(int*)n->val);
-        }
+        printf("%d ", *v);
     }
     printf("\n");
 }
@@ -189,6 +184,11 @@ int main()
     // 在下标为 2 的位置插入值
     hm_list_insert_index(&list, val, 2);
     print_list(&list);
+
+    // 使用get去改变下标为2的值
+    int* v = hm_list_get(&list, 3);
+    *v = 66666666;
+    print_list(&list);
     
     hm_list_free(&list);
     return 0;
@@ -202,11 +202,86 @@ int main()
 9 8 7 6 5 4 3 2 1 0 
 9 8 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
 9 8 -1 7 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
+9 8 -1 66666666 6 5 4 3 2 1 0 0 1 2 3 4 5 6 7 8 9 
 ```
 </details>
 
 </details>
+
+<details>
+<summary>try: 插入 & 获取节点</summary>
+
+```c
+#include <hm_list.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+void print_list(hm_list* list) {
+    int s = hm_list_size(list);
+    // 获取和打印
+    for (int i = 0; i < s; i++) {
+        char* v = hm_list_get(list, i);
+        if (v) {
+            printf("| %d. %s\n", i, v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_list list;
+    // 初始化
+    hm_list_init(&list, NULL);
+
+    // 尾插
+    int cnt = sizeof(vals) / sizeof(char*);
+    for (int i = 0; i < cnt; i++) {
+        hm_list_insert_tail(&list, vals[i]);
+    }
+    print_list(&list);
+
+    char* tmp_str = "Hello, I'm Flmpx";
+    // 使用 get_node 去改变下标为 3 的值的指针
+    hm_listnode* v = hm_list_get_node(&list, 3);
+    v->val = tmp_str;
+    print_list(&list);
+    
+    hm_list_free(&list);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+| 0. xl
+| 1. oi
+| 2. i
+| 3. hate
+| 4. love
+| 5. so
+| 6. family
+
+| 0. xl
+| 1. oi
+| 2. i
+| 3. Hello, I'm Flmpx
+| 4. love
+| 5. so
+| 6. family
+
+```
+
+</details>
+
+</details>
 <br><br><br>
+
 
 
 <a id = "pop"></a>
@@ -262,6 +337,11 @@ int main()
     int* pop_v = hm_list_pop(&list, 4);
     print_list(&list);
 
+    // 打印被弹出的值
+    if (pop_v) {
+        printf("pop val: %d\n", *pop_v);
+    }
+
     free(pop_v); // 发生了内存权的交换, 所以你应该释放掉这块内存
     hm_list_free(&list);
     return 0;
@@ -274,6 +354,7 @@ int main()
 ```txt
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
 0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+pop val: 4 
 ```
 
 </details>
