@@ -1625,7 +1625,7 @@ void test_heap_dynamic_func() {
 
     test_heap_dynamic_clear();                                                                  printf("\n");
 
-    test_heap_dynamic_clear();                                                                  printf("\n");
+    test_heap_dynamic_free();                                                                  printf("\n");
 
     test_heap_dynamic_build();                                                                  printf("\n");
 

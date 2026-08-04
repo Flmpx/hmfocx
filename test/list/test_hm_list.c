@@ -2002,7 +2002,7 @@ int main()
     
     boundary_test();
 
-    // stress_test();
+    stress_test();
 
     
     return all_failure_num;
