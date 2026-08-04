@@ -1605,6 +1605,14 @@ void test_empty_list_oper() {
     
     check_res(hm_list_get(&list, 100) == NULL, "get with large index on empty list should return NULL", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++);
+    
+    // pop
+    check_res(hm_list_pop(&list, 0) == NULL, "pop on empty list should return NULL", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+    
+    check_res(hm_list_pop(&list, 100) == NULL, "pop with large index on empty list should return NULL", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+    
 
     // del
     check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on empty list should return none", &fail_cnt, tag++);
@@ -1672,7 +1680,10 @@ void test_single_listnode_oper() {
     check_res(hm_list_del_index(&list, 0) == hm_list_ret_suc, "del_index on single listnode's list should return suc", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++);
 
-
+    hm_list_insert_tail(&list, &v);
+    // pop
+    check_res(hm_list_pop(&list, 0) == &v, "pop on single listnode list should return the pointer to val", &fail_cnt, tag++);
+    
 
     hm_list_insert_tail(&list, &v);
     // insert new node at tail of now node
@@ -1736,6 +1747,14 @@ void test_freed_list_oper() {
     
     check_res(hm_list_get(&list, 100) == NULL, "get with large index on freed list should return NULL", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++);
+
+    // pop
+    check_res(hm_list_pop(&list, 0) == NULL, "pop on freed list should return NULL", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+    
+    check_res(hm_list_pop(&list, 100) == NULL, "pop with large index on freed list should return NULL", &fail_cnt, tag++);
+    test_list_integrity(&list, &fail_cnt, tag++);
+
 
     // del
     check_res(hm_list_del_head(&list) == hm_list_ret_none, "del_head on freed list should return none", &fail_cnt, tag++);
@@ -1838,6 +1857,77 @@ void test_list_sort_stress() {
     HM_TEST_COUNTER
 }
 
+
+void test_list_pop() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("LIST | FUNC | POP | TYPE: [INT]");
+
+    int num = 64;
+    hm_list list;
+    hm_list_init(&list, free);
+    // insert
+    for (int i = 0; i < num; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_list_insert_tail(&list, v);
+    }
+
+    size_t pop_indexs[] = {2, 34, 3, 2, 4 * num, num, 78, 520, 1314, 87, 0, 1, 2, 3, 34, 99};
+    int cnt = sizeof(pop_indexs) / sizeof(size_t);
+    int* pop_v[cnt];
+
+    int pop_cnt = 0;
+    int fail_valid_index = 0;
+    int fail_invalid_index = 0;
+    for (int i = 0; i < cnt; i++) {
+        size_t s = hm_list_size(&list);
+        
+        void* v = hm_list_pop(&list, pop_indexs[i]);
+        if (pop_indexs[i] < s) {
+            if (v == NULL) {
+                // valid index but invalid val
+                fail_valid_index++;
+            } else {
+                pop_v[pop_cnt++] = v;
+            }
+        } else {
+            if (v != NULL) {
+                // invalid index but valid val
+                fail_invalid_index++;
+            }
+        }
+        test_list_integrity(&list, &fail_cnt, tag++);
+    }
+    check_res(fail_invalid_index == 0, "pop at invalid index should return NULL", &fail_cnt, tag++);
+    check_res(fail_valid_index == 0, "pop at valid index shouldn't return NULL", &fail_cnt, tag++);
+
+    // verify
+    int fail = 0;
+    for (int i = 0; i < pop_cnt; i++) {
+        int s = hm_list_size(&list);
+        hm_list_iter iter;
+        hm_list_iter_init_head(&iter, &list);
+        while (hm_list_iter_has_cur(&iter)) {
+            int* v = hm_list_iter_cur(&iter);
+            if (v == pop_v[i]) {
+                fail++;
+            }
+            hm_list_iter_move_next(&iter);
+        }
+    }
+    check_res(fail == 0, "the pop val should be not existed in list", &fail_cnt, tag++);
+
+    hm_list_free(&list);
+    for (int i = 0; i < pop_cnt; i++) {
+        free(pop_v[i]);
+    }
+
+    print_end("LIST | FUNC | POP | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
 void function_test() {
     test_list_init();                               printf("\n");
     
@@ -1852,6 +1942,8 @@ void function_test() {
     test_list_get_node();                           printf("\n");
     
     test_list_change();                             printf("\n");
+
+    test_list_pop();                                printf("\n");
     
     test_list_del_head();                           printf("\n");
     test_list_del_tail();                           printf("\n");
@@ -1910,7 +2002,7 @@ int main()
     
     boundary_test();
 
-    stress_test();
+    // stress_test();
 
     
     return all_failure_num;

@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+### Added
+- Add new function `pop` for `hm_list`, `hm_map` and `hm_set` -- `hm_list_pop()`, `hm_map_pop()` and `hm_set_pop()`
+    - Use this function can pop val or entry from the list, map or set
+
+### Changed
+- **refactor:** Change the return content of function `hm_map_get()`, using the new function `hm_map_get_entry()` to replace it
+    - Turn `hm_map_get()` into `hm_map_get_entry()` to handle this refactor in old version
+- **refactor:** Change the return content of function `hm_set_get()` -- from `hm_set_entry*` to `hm_set_entry`
+- **refactor:** Change the return content of iterator function in `hm_map` and `hm_set` -- `hm_map_iter_next()` and `hm_set_iter_next()`
+    - `hm_map`: from `hm_map_entry*` to `hm_map_entry`
+    - `hm_set`: from `hm_set_entry*` to `hm_set_entry`
+
 ## [0.11.0] - 2026-07-25
 
 ### Added

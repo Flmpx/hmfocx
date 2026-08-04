@@ -12,6 +12,7 @@
     - [Initialize](#init)
     - [Insert](#insert)
     - [Get](#get)
+    - [Pop](#pop)
     - [Iterator](#iter)
     - [Del](#del)
     - [Free](#free)
@@ -199,6 +200,80 @@ int main()
 
 </details>
 <br><br><br>
+
+
+<a id = "pop"></a>
+
+> **Pop**
+
+```c
+/**
+ * Pop a val at the specified **index**
+ * 
+ * @note The val will be removed but not free its memory(Memory Ownership Transfer)
+ * @note **Index** must be >= **0**, and < **the size of list**
+ * 
+ * @return Return **NULL** when the **index** is out of bounds
+ */
+void* hm_list_pop(hm_list* list, size_t index)
+```
+
+<details>
+<summary>try: pop</summary>
+
+```c
+#include <hm_list.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_list(hm_list* list) {
+    int s = list->size;
+    for (int i = 0; i < s; i++) {
+        int* v = hm_list_get(list, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    hm_list list;
+    // init
+    hm_list_init(&list, free);
+
+    int cnt = 20;
+    // insert
+    for (int i = 0; i < cnt; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_list_insert_tail(&list, v);
+    }
+    print_list(&list);
+
+    // pop | index: 4
+    int* pop_v = hm_list_pop(&list, 4);
+    print_list(&list);
+
+    free(pop_v); // memory ownership swap is happend, so, you should free it
+    hm_list_free(&list);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+0 1 2 3 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
+```
+
+</details>
+
+</details>
+<br><br><br>
+
 
 
 <a id = "del"></a>

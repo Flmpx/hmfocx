@@ -13,6 +13,7 @@
     - [初始化](#init)
     - [插入](#insert)
     - [获取](#get)
+    - [弹出](#pop)
     - [迭代器](#iter)
     - [删除](#del)
     - [缩容](#shrink)
@@ -143,7 +144,7 @@ size: 0, length: 520
  * 向散列表中插入一个键值对
  * 
  * @note 如果键已存在, 旧条目(包括键和值)仍保留在散列表中, 因此, 你需要处理这种特殊情况
- * @note 如果想改变 值 或者 它的指针 使用函数 **hm_map_get()**
+ * @note 如果想改变 值 或者 它的指针 使用函数 **hm_map_get()** 或者 **hm_map_get_entry()**
  * 
  * @return 插入失败时返回 **hm_map_ret_error**
  * @return 插入成功时返回 **hm_map_ret_suc**
@@ -158,11 +159,29 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
 > **获取**
 ```c
 /**
- * 获取散列表中条目的指针
+ * 获取散列表中的条目
+ * 
+ * @note 条目包括指向键和值的指针
+ * @note 使用这个函数可以改变值
+ * 
+ * @return 如果键不存在, 返回 **(hm_map_entry){NULL, NULL}**
+ * 
+ * @warning 键是不可以改变的
+ */
+hm_map_entry hm_map_get(hm_map* map, void* key);
+
+/**
+ * 获取散列表中的条目的指针
+ * 
+ * @note 条目包括指向键和值的指针
+ * @note 使用这个函数可以改变条目(值的指针)
+ * @note 如果你改变了值的指针, 那么旧的值的内存权将会丢失
  * 
  * @return 如果键不存在, 返回 **NULL**
+ * 
+ * @warning 键的指针以及它自己是不可以改变的
  */
-hm_map_entry* hm_map_get(hm_map* map, void* key);
+hm_map_entry* hm_map_get_entry(hm_map* map, void* key);
 ```
 <details>
 <summary>try: 插入 & 获取</summary>
@@ -188,17 +207,17 @@ size_t hash(const void* key) {
     return (size_t)k;
 }
 
-char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+char val[][101] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
-int num = sizeof(val) / sizeof(char*);
+int num = sizeof(val) / sizeof(val[0]);
 
 void print_map(hm_map* map, int num) {
     // 获取 和 打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
-        if (e) {
-            int* k = e->key;
-            char* v = e->val;
+        hm_map_entry e = hm_map_get(map, &i);
+        int* k = e.key;
+        char* v = e.val;
+        if (k && v) {
             printf("| k: %d, v: %s\n", *k, v);
         }
     }
@@ -231,12 +250,127 @@ int main()
     // 如果你想要改值, 那就使用get函数
 
     k = (int*)malloc(sizeof(int));
+    *k = 3;
+    hm_map_entry e = hm_map_get(&map, k);
+    ((char*)e.val)[3] = '\0';
+
+    print_map(&map, num);
+    
+    free(k);
+    hm_map_free(&map);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hat
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+```
+</details>
+
+</details>
+
+
+
+<details>
+<summary>try: 插入 & 获取条目</summary>
+
+```c
+#include <hm_map.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+int num = sizeof(val) / sizeof(char*);
+
+void print_map(hm_map* map, int num) {
+    // 获取 和 打印
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(map, &i);
+        if (e) {
+            int* k = e->key;
+            char* v = e->val;
+            printf("| k: %d, v: %s\n", *k, v);
+        }
+    }
+    printf("\n");
+}
+
+int main() 
+{
+    hm_map map;
+    hm_map_init(&map, hash, cmp, free, NULL);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        char* v = val[i];
+        hm_map_insert(&map, k, v);
+    }
+    print_map(&map, num);
+
+    // 插入相同的 key
+    char* v = "so, why?";
+    int* k = (int*)malloc(sizeof(int));
     *k = 5;
-    hm_map_entry* e = hm_map_get(&map, k);
+    if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
+        // 处理这个特殊情况, 释放掉key
+        free(k);
+    }
+    print_map(&map, num);
+
+    // 如果你想要改值, 那就使用get entry函数
+
+    k = (int*)malloc(sizeof(int));
+    *k = 5;
+    hm_map_entry* e = hm_map_get_entry(&map, k);
     e->val = v;
 
     print_map(&map, num);
 
+    free(k);
     hm_map_free(&map);
     return 0;
 }
@@ -274,7 +408,129 @@ int main()
 </details>
 
 </details>
+
+
 <br><br><br>
+
+
+
+<a id = "pop"></a>
+
+> **弹出**
+
+```c
+/**
+ * 根据键弹出散列表中的条目
+ * 
+ * @note 条目会被移除但不会释放它所占的内存(内存权转移)
+ * 
+ * @return 如果键不存在, 返回 **(hm_map_entry){NULL, NULL}**
+ */
+hm_map_entry hm_map_pop(hm_map* map, void* key);
+```
+
+<details>
+<summary>try: 弹出</summary>
+
+```c
+#include <hm_map.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int cmp(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+size_t hash(const void* key) {
+    unsigned int k = *(int*)key;
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = ((k >> 16) ^ k) * 0x45d9f3b; 
+    k = (k >> 16) ^ k;
+    return (size_t)k;
+}
+
+char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
+
+int num = sizeof(val) / sizeof(char*);
+
+void print_map(hm_map* map, int num) {
+    // 获取和打印
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(map, &i);
+        if (e) {
+            int* k = e->key;
+            char* v = e->val;
+            printf("| k: %d, v: %s\n", *k, v);
+        }
+    }
+    printf("\n");
+}
+
+
+int main() 
+{
+    hm_map map;
+    hm_map_init(&map, hash, cmp, free, NULL);
+
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i;
+        char* v = val[i];
+        hm_map_insert(&map, k, v);
+    }
+    print_map(&map, num);
+
+    // 弹出键为 2 的条目
+    int key = 2;
+    hm_map_entry e = hm_map_pop(&map, &key);
+    print_map(&map, num);
+    
+    // 打印被弹出的条目
+    int* k = e.key;
+    char* v = e.val;
+    if (k && v) {
+        printf("pop entry:\n| k: %d, v: %s\n", *k, v);
+    }
+
+    free(k); // 发生了内存权的交换, 所以你应该释放掉这块内存
+
+    hm_map_free(&map);
+    return 0;
+}
+```
+
+<details>
+<summary>运行结果</summary>
+
+```txt
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 2, v: i
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+| k: 0, v: xl
+| k: 1, v: oi
+| k: 3, v: hate
+| k: 4, v: love
+| k: 5, v: so
+| k: 6, v: family
+
+pop entry:
+| k: 2, v: i
+```
+
+</details>
+
+</details>
+<br><br><br>
+
 
 
 <a id = "del"></a>
@@ -320,7 +576,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -424,7 +680,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -508,9 +764,9 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * 
  * @note 再调用 **hm_map_iter_next()** 之前, 先使用 **hm_map_iter_has_next()** 进行检查
  * 
- * @return 没有下一个时就返回 **NULL**
+ * @return 没有下一个时就返回 **(hm_map_entry){NULL, NULL}**
  */
-hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry hm_map_iter_next(hm_map_iter* iter);
 ```
 <details>
 <summary>try: 迭代</summary>
@@ -543,7 +799,7 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map, int num) {
     // 获取和打印
     for (int i = 0; i < num; i++) {
-        hm_map_entry* e = hm_map_get(map, &i);
+        hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
             int* k = e->key;
             char* v = e->val;
@@ -569,9 +825,9 @@ int main()
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");
@@ -652,9 +908,9 @@ void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
     while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry* e = hm_map_iter_next(&iter);
-        int* k = e->key;
-        char* v = e->val;
+        hm_map_entry e = hm_map_iter_next(&iter);
+        int* k = e.key;
+        char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
     }
     printf("\n");

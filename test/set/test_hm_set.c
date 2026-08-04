@@ -187,9 +187,9 @@ void test_iter_set() {
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry* e = hm_set_iter_next(&iter);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_iter_next(&iter);
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k < 0 || *k >= num) {
@@ -245,9 +245,9 @@ void test_set_get() {
     int fail_no_exist_e = 0;
     memset(counters, 0, sizeof(counters));
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
-            int* k = e->key;
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k < 0 || *k >= num) {
@@ -274,8 +274,8 @@ void test_set_get() {
 
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_exist++;
         }
     }
@@ -327,8 +327,8 @@ void test_set_del() {
     int fail_no_exist = 0;
 
     for (int i = 0; i < num / 2; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_no_exist++;
         }
     }
@@ -342,10 +342,10 @@ void test_set_del() {
     int fail_no_exist_e = 0;
     memset(counters, 0, sizeof(counters));
     for (int i = num / 2; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
+        hm_set_entry e = hm_set_get(&set, &i);
 
-        if (e) {
-            int* k = e->key;
+        if (e.key) {
+            int* k = e.key;
                 if (k == NULL) {
                     fail_no_exist_k++;
                 } else if (*k > num || *k < num / 2) {
@@ -479,8 +479,8 @@ void test_set_clear() {
 
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
-        hm_set_entry* e = hm_set_get(&set, &i);
-        if (e) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
             fail_exist++;
         }
     }
@@ -681,8 +681,8 @@ void test_set_get_stress() {
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
-            hm_set_entry* e = hm_set_get(&set, &j);
-            if (e == NULL) {
+            hm_set_entry e = hm_set_get(&set, &j);
+            if (e.key == NULL) {
                 fail_existed++;
             }
         }
@@ -696,8 +696,8 @@ void test_set_get_stress() {
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
-            hm_set_entry* e = hm_set_get(&set, &j);
-            if (e) {
+            hm_set_entry e = hm_set_get(&set, &j);
+            if (e.key) {
                 fail_no_existed++;
             }
         }
@@ -930,11 +930,14 @@ void test_empty_set_oper() {
 
     int k = 0;
     // get
-    check_res(hm_set_get(&set, &k) == NULL, "get on empty set should return `NULL`", &fail_cnt, tag++);
+    check_res(hm_set_get(&set, &k).key == NULL, "get on empty set should return invalid entry", &fail_cnt, tag++);
+
+    // pop
+    check_res(hm_set_pop(&set, &k).key == NULL, "pop on empty set should return invalid entry", &fail_cnt, tag++);
 
     // del
     k = 10;
-    check_res(hm_set_del(&set, &k) == hm_set_ret_none, "del on empty set should return `NULL`", &fail_cnt, tag++);
+    check_res(hm_set_del(&set, &k) == hm_set_ret_none, "del on empty set should return none", &fail_cnt, tag++);
 
     // iter
 
@@ -965,8 +968,15 @@ void test_single_entry_oper() {
     // insert single entry and get
 
     hm_set_insert(&set, &k);
-    hm_set_entry* e = hm_set_get(&set, &k);
-    check_res(*(int*)(e->key) == k, "the key is wrong when run `set_get` on single entry's set", &fail_cnt, tag++);
+    hm_set_entry e = hm_set_get(&set, &k);
+    check_res(*(int*)(e.key) == k, "the key is wrong when run `set_get` on single entry's set", &fail_cnt, tag++);
+    hm_set_free(&set);
+
+    // insert single entry and pop
+
+    hm_set_insert(&set, &k);
+    e = hm_set_pop(&set, &k);
+    check_res(*(int*)(e.key) == k, "the key is wrong when run `set_pop` on single entry's set", &fail_cnt, tag++);
     hm_set_free(&set);
 
     // insert single entry and delete it 
@@ -983,7 +993,7 @@ void test_single_entry_oper() {
     int new_k = k;
     hm_set_insert(&set, &new_k);
     e = hm_set_get(&set, &new_k);
-    check_res(e->key == &k, "the key should be old key when insert two indetical keys", &fail_cnt, tag++);
+    check_res(e.key == &k, "the key should be old key when insert two indetical keys", &fail_cnt, tag++);
 
     check_res(set.size == 1, "the set.size should be 1 when insert two indetical keys", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++);
@@ -991,6 +1001,86 @@ void test_single_entry_oper() {
 
 
     print_end("SET | BOUNDARY | OPER SINGLE ENTRY'S SET | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_set_pop() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("SET | FUNC | POP | TYPE K:[INT]");
+    
+    srand(666);
+    int num = 64;
+    hm_set set;
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
+    // insert
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        *k = i; 
+        hm_set_insert(&set, k);
+    }
+
+
+    int flag[num];  // record some key has poped
+    memset(flag, 0, sizeof(flag));
+
+    int pop_keys[] = {2, 3, -1, 9, 4 * num, 2 * num, 98, 34, 5201314, 77};
+    int cnt = sizeof(pop_keys) / sizeof(int);
+    int* pop_k[cnt];    // store poped pointer of key
+
+    int pop_cnt = 0;
+    int fail_valid_key = 0;
+    int fail_invalid_key = 0;
+    
+    for (int i = 0; i < cnt; i++) {
+
+        hm_set_entry e = hm_set_pop(&set, &pop_keys[i]);
+
+        int* k = e.key;
+        
+        if (pop_keys[i] >= 0 && pop_keys[i] < num && flag[pop_keys[i]] == 0) {
+            if (k) {
+                pop_k[pop_cnt] = k;
+                pop_cnt++;
+        
+                flag[pop_keys[i]] = 1;
+            } else {
+                // valid key but invald entry
+                fail_valid_key++;
+            }
+        } else {
+            if (k) {
+                // invalid key but valid entry
+                fail_invalid_key++;
+            }
+        }
+        test_set_integrity(&set, &fail_cnt, tag++);
+    }
+    check_res(fail_valid_key == 0, "pop with valid key should return valid entry", &fail_cnt, tag++);
+    check_res(fail_invalid_key == 0, "pop with invalid key should return invalid entry", &fail_cnt, tag++);
+    
+
+    // verify
+    int fail = 0;
+    for (int i = 0; i < pop_cnt; i++) {
+        hm_set_iter iter;
+        hm_set_iter_init(&iter, &set);
+        while (hm_set_iter_has_next(&iter)) {
+            hm_set_entry e = hm_set_iter_next(&iter);
+            if (e.key == pop_k[i]) {
+                fail++;
+            }
+        }
+    }
+    check_res(fail == 0, "the pop entry shouldn't be existed in set", &fail_cnt, tag++);
+
+    hm_set_free(&set);
+    for (int i = 0; i < pop_cnt; i++) {
+        free(pop_k[i]);
+    }
+
+    print_end("SET | FUNC | POP | TYPE K:[INT]", fail_cnt);
     HM_TEST_COUNTER
 }
 
@@ -1004,6 +1094,8 @@ void function_test() {
     test_iter_set();                                printf("\n");
     
     test_set_get();                                 printf("\n");
+
+    test_set_pop();                                 printf("\n");
     
     test_set_del();                                 printf("\n");
     

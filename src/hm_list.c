@@ -181,6 +181,100 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     return hm_list_ret_suc;
 }
 
+/**
+ * Pop a val at the head of list
+ * 
+ * @note - The val will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `NULL` when list is empty
+ */
+static void* hm_list_pop_head(hm_list* list) {
+    if (list->size == 0) {
+        return NULL;
+    }
+
+    hm_listnode* pop_node = list->head;
+
+
+    if (list->size == 1) {
+        list->head = list->tail = NULL;
+    } else {
+        list->head = list->head->next;
+        list->head->prev = NULL;
+    }
+
+    void* ret_val = pop_node->val;
+
+    free(pop_node);
+
+    list->size--;
+
+    return ret_val;
+}
+
+
+/**
+ * Pop a val at the tail of list
+ * 
+ * @note - The val will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `NULL` when list is empty
+ */
+static void* hm_list_pop_tail(hm_list* list) {
+    if (list->size == 0) {
+        return NULL;
+    }
+
+    hm_listnode* pop_node = list->tail;
+
+    if (list->size == 1) {
+        list->head = list->tail = NULL;
+    } else {
+        list->tail = list->tail->prev;
+        list->tail->next = NULL;
+    }
+
+    void* ret_val = pop_node->val;
+
+    free(pop_node);
+
+    list->size--;
+    
+    return ret_val;
+}
+
+/**
+ * Pop a val at the specified `index`
+ * 
+ * @note - The val will be removed but not free its memory(Memory Ownership Transfer)
+ * @note - `Index` must be >= `0`, and < `the size of list`
+ * 
+ * @return - Return `NULL` when the `index` is out of bounds
+ */
+void* hm_list_pop(hm_list* list, size_t index) {
+    if (index >= list->size) {
+        return NULL;
+    }
+
+    if (index == 0) return hm_list_pop_head(list);
+    if (index == list->size - 1) return hm_list_pop_tail(list);
+
+    // the index is valid when run there
+    hm_listnode* cur = hm_list_get_node(list, index);
+
+
+    cur->prev->next = cur->next;
+    cur->next->prev = cur->prev;
+
+    void* ret_val = cur->val;
+
+    free(cur);
+    
+    list->size--;
+
+    return ret_val;
+
+}
 
 /**
  * Delete the Node at the head of the list
@@ -193,22 +287,11 @@ hm_list_ret hm_list_del_head(hm_list* list) {
         return hm_list_ret_none;
     }
 
-    hm_listnode* del_node = list->head;
+    void* val = hm_list_pop_head(list);
 
     if (list->free_val) {
-        list->free_val(del_node->val);
+        list->free_val(val);
     }
-
-    if (list->size == 1) {
-        list->head = list->tail = NULL;
-    } else {
-        list->head = list->head->next;
-        list->head->prev = NULL;
-    }
-
-    free(del_node);
-
-    list->size--;
 
     return hm_list_ret_suc;
 }
@@ -224,21 +307,11 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
         return hm_list_ret_none;
     }
 
-    hm_listnode* del_node = list->tail;
+    void* val = hm_list_pop_tail(list);
+
     if (list->free_val) {
-        list->free_val(del_node->val);
+        list->free_val(val);
     }
-
-    if (list->size == 1) {
-        list->head = list->tail = NULL;
-    } else {
-        list->tail = list->tail->prev;
-        list->tail->next = NULL;
-    }
-
-    free(del_node);
-
-    list->size--;
     
     return hm_list_ret_suc;
 }
@@ -257,22 +330,11 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
         return hm_list_ret_none;
     }
 
-    if (index == 0) return hm_list_del_head(list);
-    if (index == list->size - 1) return hm_list_del_tail(list);
-
-    // the index is valid when run there
-    hm_listnode* cur = hm_list_get_node(list, index);
+    void* val = hm_list_pop(list, index);
 
     if (list->free_val) {
-        list->free_val(cur->val);
+        list->free_val(val);
     }
-
-    cur->prev->next = cur->next;
-    cur->next->prev = cur->prev;
-
-    free(cur);
-    
-    list->size--;
 
     return hm_list_ret_suc;
 

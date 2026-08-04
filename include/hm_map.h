@@ -82,16 +82,52 @@ extern size_t hm_map_size(hm_map* map);
 extern size_t hm_map_len(hm_map* map);
 extern double hm_map_get_load_factor(hm_map* map);
 
+
 /**
- * Some functin of map , like `insert`, `get` , `del` and `free`
+ * Init
  */
 
 extern void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val);
 extern hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len);
+
+
+/**
+ * Insert
+ */
+
 extern hm_map_ret hm_map_insert(hm_map* map, void* key, void* val);
-extern hm_map_entry* hm_map_get(hm_map* map, void* key);
+
+
+/**
+ * Get
+ */
+
+extern hm_map_entry hm_map_get(hm_map* map, void* key);
+extern hm_map_entry* hm_map_get_entry(hm_map* map, void* key);
+
+
+/**
+ * Pop
+ */
+
+extern hm_map_entry hm_map_pop(hm_map* map, void* key);
+
+
+/**
+ * Del
+ */
 extern hm_map_ret hm_map_del(hm_map* map, void* key);
+
+
+/**
+ * Shrink
+ */
 extern hm_map_ret hm_map_shrink(hm_map* map);
+
+
+/**
+ * Clear And Free
+ */
 extern void hm_map_clear(hm_map* map);
 extern void hm_map_free(hm_map* map);
 
@@ -102,6 +138,6 @@ extern void hm_map_free(hm_map* map);
 
 extern void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 extern bool hm_map_iter_has_next(hm_map_iter* iter);
-extern hm_map_entry* hm_map_iter_next(hm_map_iter* iter);
+extern hm_map_entry hm_map_iter_next(hm_map_iter* iter);
 
 #endif

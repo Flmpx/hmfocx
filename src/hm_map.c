@@ -229,7 +229,7 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
  * Insert a key-value pair into the map
  * 
  * @note - If the key already exists, the old entry (include key and val) remains in the map. Therefore, you should handle this special situation
- * @note - Use `hm_map_get()` to change val if you want to change the val or it's pointer
+ * @note - Use `hm_map_get()` or `hm_map_get_entry` to change val if you want to change the val or it's pointer
  * 
  * @return - Return `hm_map_ret_suc` when insert success
  * @return - Return `hm_map_ret_error` when insert failure 
@@ -313,11 +313,17 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
     return invalid_index;
 }
 /**
- * Get a pointer to the  entry in the map
+ * Get a pointer to the entry in the map
+ * 
+ * @note - Entry contains pointers to key and val
+ * @note - Use this function can change entry(the pointer to val)
+ * @note - The ownership of old val's memory will loss when you change the pointer to val
  * 
  * @return - Return `NULL` when key is not existed in map
+ * 
+ * @warning - Change the pointer of key or itself is prohibited
  */
-hm_map_entry* hm_map_get(hm_map* map, void* key) {
+hm_map_entry* hm_map_get_entry(hm_map* map, void* key) {
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return NULL;
@@ -330,6 +336,53 @@ hm_map_entry* hm_map_get(hm_map* map, void* key) {
         return &(map->buckets[index]);
     }
 }
+
+
+/**
+ * Get a entry in the map
+ * 
+ * @note - Entry contains pointers to key and val
+ * @note - Use this function can change val
+ * 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when key is not existed in map
+ * 
+ * @warning - Change key is prohibited
+ */
+hm_map_entry hm_map_get(hm_map* map, void* key) {
+    hm_map_entry* e = hm_map_get_entry(map, key);
+    if (e) {
+        return *e;
+    } else {
+        return (hm_map_entry){NULL, NULL};
+    }
+}
+
+
+/**
+ * Pop the entry associated with the given key
+ * 
+ * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when key is not existed in map
+ */
+hm_map_entry hm_map_pop(hm_map* map, void* key) {
+    size_t s = map->size, l = map->len;
+    if (s == 0 || l == 0) {
+        return (hm_map_entry){NULL, NULL};
+    }
+    size_t index = hm_map_get_index(map, key);
+
+    if (index == invalid_index) {
+        return (hm_map_entry){NULL, NULL};
+    } else {
+
+        map->buckets_status[index] = hm_del_in_map;
+        map->size--;
+
+        return map->buckets[index];
+    }
+}
+
 /**
  * Delete the entry associated with the given key
  * 
@@ -457,9 +510,9 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
  * 
  * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
  * 
- * @return - Return `NULL` when iterator doesn't has next 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when iterator doesn't has next 
  */
-hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
+hm_map_entry hm_map_iter_next(hm_map_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -469,12 +522,12 @@ hm_map_entry* hm_map_iter_next(hm_map_iter* iter) {
         if (status == hm_exist_in_map) {
             /*next index is start of next entry*/
             iter->index = index + 1;
-            return &(iter->buckets[index]);
+            return iter->buckets[index];
         }
         index++;
     }
     iter->index = index;
-    return NULL;
+    return (hm_map_entry){NULL, NULL};
 
 }
 

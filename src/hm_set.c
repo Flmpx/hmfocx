@@ -309,23 +309,55 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
     return invalid_index;
 }
 /**
- * Get a pointer to the entry in the set
+ * Get a entry in the set
  * 
- * @return - Return `NULL` when key is not existed in set
+ * @note - Entry contains pointer to key
+ * 
+ * @return - Return `(hm_set_entry){NULL}` when key is not existed in set
+ * 
+ * @warning - Change key is prohibited
  */
-hm_set_entry* hm_set_get(hm_set* set, void* key) {
+hm_set_entry hm_set_get(hm_set* set, void* key) {
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
-        return NULL;
+        return (hm_set_entry){NULL};
     }
     size_t index = hm_set_get_index(set, key);
 
     if (index == invalid_index) {
-        return NULL;
+        return (hm_set_entry){NULL};
     } else {
-        return &(set->buckets[index]);
+        return set->buckets[index];
     }
 }
+
+/**
+ * Pop the entry associated with the given key
+ * 
+ * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * 
+ * @return - Return `(hm_set_entry){NULL}` when key is not existed in map
+ */
+hm_set_entry hm_set_pop(hm_set* set, void* key) {
+    size_t s = set->size, l = set->len;
+    if (s == 0 || l == 0) {
+        return (hm_set_entry){NULL};
+    }
+    size_t index = hm_set_get_index(set, key);
+
+    if (index == invalid_index) {
+        return (hm_set_entry){NULL};
+    } else {
+
+        set->buckets_status[index] = hm_del_in_set;
+
+        set->size--;
+
+        return set->buckets[index];
+    }
+}
+
+
 /**
  * Delete the entry associated with the given key
  * 
@@ -435,9 +467,9 @@ bool hm_set_iter_has_next(hm_set_iter* iter) {
  * 
  * @note - Use `hm_set_iter_has_next()` to check before calling `hm_set_iter_next()`
  * 
- * @return - Return `NULL` when iterator doesn't has next 
+ * @return - Return `(hm_set_entry){NULL}` when iterator doesn't has next 
  */
-hm_set_entry* hm_set_iter_next(hm_set_iter* iter) {
+hm_set_entry hm_set_iter_next(hm_set_iter* iter) {
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -447,12 +479,12 @@ hm_set_entry* hm_set_iter_next(hm_set_iter* iter) {
         if (status == hm_exist_in_set) {
             /*next index is start of next entry*/
             iter->index = index + 1;
-            return &(iter->buckets[index]);
+            return iter->buckets[index];
         }
         index++;
     }
     iter->index = index;
-    return NULL;
+    return (hm_set_entry){NULL};
 
 }
 
