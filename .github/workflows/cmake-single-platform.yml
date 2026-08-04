@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main"]
+    branches: [ "main" ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [hm_list, hm_map, hm_pool, hm_stack, hm_queue, hm_heap, hm_set]
+        target: [hm_list, hm_map, hm_pool, hm_stack, hm_queue, hm_heap, hm_set, hm_arr]
 
     steps:
     - uses: actions/checkout@v4

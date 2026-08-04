@@ -49,3 +49,5 @@ mingw32-make
 6. [hm_heap](docs/Chinese/hm_heap.zh-CN.md)
 
 7. [hm_set](docs/Chinese/hm_set.zh-CN.md)
+
+8. [hm_arr](docs/Chinese/hm_arr.zh-CN.md)

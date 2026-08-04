@@ -692,6 +692,8 @@ int main()
 
 7. [hm_set](hm_set.zh-CN.md)
 
+8. [hm_arr](hm_arr.zh-CN.md)
+
 
 <br><br><br>
 <div align = "right">
