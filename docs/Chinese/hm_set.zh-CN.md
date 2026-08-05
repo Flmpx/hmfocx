@@ -585,7 +585,7 @@ void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 bool hm_set_iter_has_next(hm_set_iter* iter);
 
 /**
- * 通过迭代器获取下一个条目的指针
+ * 通过迭代器获取下一个条目
  * 
  * @note 调用 **hm_set_iter_next()** 之前, 先使用 **hm_set_iter_has_next()** 进行检查
  * @note 条目包括集合的键的指针

@@ -746,7 +746,7 @@ void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 bool hm_map_iter_has_next(hm_map_iter* iter);
 
 /**
- * 通过迭代器获取下一个条目的指针
+ * 通过迭代器获取下一个条目
  * 
  * @note 再调用 **hm_map_iter_next()** 之前, 先使用 **hm_map_iter_has_next()** 进行检查
  * @note 条目包括指向键和值的指针
