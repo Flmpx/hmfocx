@@ -18,11 +18,11 @@
  * The return signal of function in map
  */
 typedef enum hm_map_ret {
-    hm_map_ret_error = 0x1000,     // Malloc failed
-    hm_map_ret_warn,            // The pass parameter is incorrect
-    hm_map_ret_none,            // Operation invalid, like del entry by key , but key is not existed in map
-    hm_map_ret_existed,         // Insert entry in map, but key is existed , you should free the key if the key that you given is alloced
-    hm_map_ret_suc              // Operation successful
+    hm_map_ret_error = 0x1000,      // Malloc failed
+    hm_map_ret_warn,                // The pass parameter is incorrect
+    hm_map_ret_none,                // Operation invalid, like del entry by key , but key is not existed in map
+    hm_map_ret_existed,             // Insert entry in map, but key is existed , you should free the key if the key that you given is alloced
+    hm_map_ret_suc                  // Operation successful
 } hm_map_ret;
 
 
@@ -116,18 +116,21 @@ extern hm_map_entry hm_map_pop(hm_map* map, void* key);
 /**
  * Del
  */
+
 extern hm_map_ret hm_map_del(hm_map* map, void* key);
 
 
 /**
  * Shrink
  */
+
 extern hm_map_ret hm_map_shrink(hm_map* map);
 
 
 /**
  * Clear And Free
  */
+
 extern void hm_map_clear(hm_map* map);
 extern void hm_map_free(hm_map* map);
 

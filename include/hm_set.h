@@ -17,11 +17,11 @@
  * The return signal of function in set
  */
 typedef enum hm_set_ret {
-    hm_set_ret_error = 0x6000,     // Malloc failed
-    hm_set_ret_warn,            // The pass parameter is incorrect
-    hm_set_ret_none,            // Operation invalid, like del entry by key , but key is not existed in set
-    hm_set_ret_existed,         // Insert entry in set, but key is existed , you should free the key if the key that you given is alloced
-    hm_set_ret_suc              // Operation successful
+    hm_set_ret_error = 0x6000,      // Malloc failed
+    hm_set_ret_warn,                // The pass parameter is incorrect
+    hm_set_ret_none,                // Operation invalid, like del entry by key , but key is not existed in set
+    hm_set_ret_existed,             // Insert entry in set, but key is existed , you should free the key if the key that you given is alloced
+    hm_set_ret_suc                  // Operation successful
 } hm_set_ret;
 
 

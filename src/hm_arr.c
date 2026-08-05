@@ -119,7 +119,6 @@ static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
  * @return - Return `hm_arr_ret_full` when arr is full
  * @return - Return `hm_arr_ret_suc` when insert success
  * @return - Return `hm_arr_ret_error` when arr is `dynamic-grow` and expand failure
- * 
  */
 hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
 

@@ -19,12 +19,12 @@
  * The return signal of function in queue
  */
 typedef enum hm_queue_ret {
-    hm_queue_ret_error = 0x4000,       // Malloc fail when expand the capacity of queue or init the queue
-    hm_queue_ret_full,              // Queue is full now
-    hm_queue_ret_empty,             // Queue is empty now
-    hm_queue_ret_suc,               // Operation successful, like push and init successful
-    hm_queue_ret_none,              // Operation invalid, like shrink capacity of a fixed-size queue
-    hm_queue_ret_warn               // The pass parameter is incorrect
+    hm_queue_ret_error = 0x4000,        // Malloc fail when expand the capacity of queue or init the queue
+    hm_queue_ret_full,                  // Queue is full now
+    hm_queue_ret_empty,                 // Queue is empty now
+    hm_queue_ret_suc,                   // Operation successful, like push and init successful
+    hm_queue_ret_none,                  // Operation invalid, like shrink capacity of a fixed-size queue
+    hm_queue_ret_warn                   // The pass parameter is incorrect
 } hm_queue_ret;
 
 

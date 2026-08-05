@@ -19,12 +19,12 @@
  * The return signal of function in arr
  */
 typedef enum hm_arr_ret {
-    hm_arr_ret_error = 0x7000,       // Malloc fail when expand the capacity of arr or init the arr
-    hm_arr_ret_full,              // arr is full now
-    hm_arr_ret_empty,             // arr is empty now
-    hm_arr_ret_suc,               // Operation successful, like push and init successful
-    hm_arr_ret_none,              // Operation invalid, like shrink capacity of a fixed-size arr
-    hm_arr_ret_warn               // The pass parameter is incorrect
+    hm_arr_ret_error = 0x7000,      // Malloc fail when expand the capacity of arr or init the arr
+    hm_arr_ret_full,                // arr is full now
+    hm_arr_ret_empty,               // arr is empty now
+    hm_arr_ret_suc,                 // Operation successful, like push and init successful
+    hm_arr_ret_none,                // Operation invalid, like shrink capacity of a fixed-size arr
+    hm_arr_ret_warn                 // The pass parameter is incorrect
 } hm_arr_ret;
 
 

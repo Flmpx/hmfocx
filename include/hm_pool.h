@@ -53,6 +53,7 @@ extern void hm_pool_free(hm_pool* pool);
 /**
  * Simple function
  */
+
 extern size_t hm_pool_get_pages(hm_pool* pool);
 extern size_t hm_pool_get_bytes_per_page(hm_pool* pool);
 
