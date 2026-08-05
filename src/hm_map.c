@@ -362,6 +362,7 @@ hm_map_entry hm_map_get(hm_map* map, void* key) {
  * Pop the entry associated with the given key
  * 
  * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * @note - Entry contains pointers to key and val
  * 
  * @return - Return `(hm_map_entry){NULL, NULL}` when key is not existed in map
  */
@@ -509,6 +510,7 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
  * Get next entry of map
  * 
  * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
+ * @note - Entry contains pointers to key and val
  * 
  * @return - Return `(hm_map_entry){NULL, NULL}` when iterator doesn't has next 
  */

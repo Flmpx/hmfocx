@@ -421,6 +421,7 @@ int main()
  * 根据键弹出散列表中的条目
  * 
  * @note 条目会被移除但不会释放它所占的内存(内存权转移)
+ * @note 条目包括指向键和值的指针
  * 
  * @return 如果键不存在, 返回 **(hm_map_entry){NULL, NULL}**
  */
@@ -748,6 +749,7 @@ bool hm_map_iter_has_next(hm_map_iter* iter);
  * 通过迭代器获取下一个条目的指针
  * 
  * @note 再调用 **hm_map_iter_next()** 之前, 先使用 **hm_map_iter_has_next()** 进行检查
+ * @note 条目包括指向键和值的指针
  * 
  * @return 没有下一个时就返回 **(hm_map_entry){NULL, NULL}**
  */

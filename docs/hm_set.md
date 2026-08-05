@@ -269,6 +269,7 @@ int main()
  * Pop the entry associated with the given key
  * 
  * @note The entry will be removed but not free its memory(Memory Ownership Transfer)
+ * @note Entry contains pointer to key
  * 
  * @return Return **(hm_set_entry){NULL}** when key is not existed in map
  */
@@ -592,6 +593,7 @@ bool hm_set_iter_has_next(hm_set_iter* iter);
  * Get next entry of set
  * 
  * @note Use **hm_set_iter_has_next()** to check before calling **hm_set_iter_next()**
+ * @note Entry contains pointer to key
  * 
  * @return Return **(hm_set_entry){NULL}** when iterator doesn't has next 
  */
