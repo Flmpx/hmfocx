@@ -5,7 +5,7 @@
 </p>
 
 ## 介绍
-- 本 `README.md` 说明如何为每个容器编写测试
+- 本 `README.md` 说明如何给每个容器编写测试
 
 ## **`CMakeLists.txt` 内容**
 
@@ -15,7 +15,7 @@
 
 cmake_minimum_required(VERSION 3.28.3)
 
-# 设置目标容器名, 格式: hm_{容器名}
+# 设置待测试的容器名, 格式: hm_{容器名}
 # 使用该变量来省去代码中的重复的容器名
 set(HM_TARGET hm_list)                  
 
@@ -32,7 +32,7 @@ set(hm_test_tool ../hm_test_tool.c)              # 通用测试辅助工具函�
 # 远程和本地测试的可执行文件都输出到 `bin/`
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-# 以下是常规构建流程
+# 以下是常规的构建流程
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -42,10 +42,10 @@ add_test(NAME test_${HM_TARGET} COMMAND test_${HM_TARGET})
 
 ```
 
-- 还需在根目录的 `CMakeLists.txt` 中添加一行, 参见以下代码：
+- 还需在根目录的 `CMakeLists.txt` 中添加一行, 见以下代码：
 
 ```cmake
-# 需要在 `.github/workflows/cmake-single-platform.yml` 中添加 `-DBUILD_TESTS=ON` 才能正确运行测试
+# 需要在 `.github/workflows/cmake-single-platform.yml` 中添加 `-DBUILD_TESTS=ON` 才可以正确运行测试
 if (BUILD_TESTS)
     enable_testing()
     # 新增的测试
@@ -62,7 +62,7 @@ endif()
 
 - **以下以 `hm_list` 为例**
 
-### 文件结构
+### 测试分类
 
 - 测试包含：`功能测试`、`压力测试`、`边界测试`
 
@@ -112,7 +112,7 @@ int main()
 }
 ```
 
-### 每个测试函数(在 `test.c` 中)
+### 每个测试函数的内容(在 `test.c` 中)
 
 - `头部信息`格式：`{容器} | {测试类型} | {测试内容} | {其他信息}`
 
@@ -120,13 +120,9 @@ int main()
 
 ```c
 void test_list_insert_head() {
-    
     int fail_cnt = 0;   // 记录本部分的失败次数
-    
     int tag = 0;
-    
-    // **开始**
-    print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");
+    print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");                       // **Start块**
     
     int fail = 0;
     
@@ -136,30 +132,35 @@ void test_list_insert_head() {
     check_res(fail == 0, "失败详情", &fail_cnt, tag++);
     
     
-    // **结束**
-    print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);
-    // 记录总失败次数
-    HM_TEST_COUNTER
+    
+    print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);             // **End块**
+    HM_TEST_COUNTER     // 记录总失败次数
     
 }
 ```
 
-- 压力测试中使用 `print_run_time` 打印耗时信息：
+- 压力测试中要使用使用 `print_run_time()` 打印耗时信息, 或者使用 `print_speed_vs()` 来打印与其他容器在同规模下的测试速度的比较
 
 ```c
-print_run_time("INSERT", start, end, nums[i], nums[i]);
+void print_run_time("INSERT", start, end, nums[i], nums[i]);
+void print_speed_vs(const char* info_a, clock_t start_a, clock_t end_a,
+                    const char* info_b, clock_t start_b, clock_t end_b,
+                    size_t scale, size_t oper_cnt);
 ```
 
-- 重要的辅助函数简介(详细参数见 [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c))
+- 重要的辅助函数的简介(详细参数见 [test/hm_test_tool.h](hm_test_tool.h) and [test/hm_test_tool.c](hm_test_tool.c))
 
 | 函数 | 作用 |
 | --- | --- |
-| `print_run` | 测试开始时打印信息 |
-| `check_res` | 检查结果是否正确；若失败则 `打印信息加上标签` 并增加 `fail_cnt` |
-| `print_end` | 根据 `fail_cnt` 在结束时打印测试结果 |
-| `print_run_time` | 根据传入参数打印`耗时`和`速度` |
-| `print_speed_vs` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |
+| `print_run()` | 测试开始时打印信息 |
+| `check_res()` | 检查结果是否正确；若失败则 `打印信息加上标签` 并增加 `fail_cnt` |
+| `print_end()` | 根据 `fail_cnt` 在结束时打印测试结果 |
+| `print_run_time()` | 根据传入参数打印`耗时`和`速度` |
+| `print_speed_vs()` | 根据传入的每组参数打印`耗时`和`速度`, 同时将它们进行对比 |
 
 ## 注意事项
-- 如果你觉得有些测试组并不需要, 那你可以删掉这个测试组, 比如 `hm_stack` 并不需要压力测试
-- 如果你觉得有些测试组是必须的, 那就加上
+
+>  [!Tip]
+>  - 如果你觉得有些测试组并不需要, 那你可以删掉这个测试组, 比如 `hm_stack` 并不需要压力测试
+>  - 如果你觉得有些测试组是必须的, 那就加上
+>  - End块( `print_end()` & `HM_TEST_COUNTER` )的上面和 Start块(`int fail_cnt = 0;` & `int tag = 0;` & `print_run()` )的下面的空行数必须大于 `0`

@@ -61,7 +61,7 @@ endif()
 
 - **This is an example** using the `hm_list` test
 
-### File Structure
+### Test Category
 
 - Tests include `functional`, `stress` and `boundary` tests. 
 
@@ -114,7 +114,7 @@ int main()
 
 ```
 
-### Every Test Function(`test_${container}.c`)
+### The Content Of Every Test Function(`test_${container}.c`)
 
 - The format of `HEAD INFO` -- `{Container} | {TYPE OF TEST} | {TEST CONTENT} | {OTHER INFO}
 `
@@ -122,11 +122,10 @@ int main()
 - The following code is an example
 ```c
 void test_list_insert_head() {
-    
     int fail_cnt = 0;   // record the total number of failures of this part
     int tag = 0;
-    // **START**
-    print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");
+    print_run("LIST | FUNC | INSERT HEAD | TYPE: [INT]");           // **START Block**
+    
     
     int fail = 0;
     
@@ -136,18 +135,19 @@ void test_list_insert_head() {
     check_res(fail == 0, "some deail information of faillure", &fail_cnt, tag++);
     
     
-    // **END**
-    print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);
-    // recode the all failure number
-    HM_TEST_COUNTER
+    
+    print_end("LIST | FUNC | INSERT HEAD | TYPE: [INT]", fail_cnt);     // **END Block**
+    HM_TEST_COUNTER         // recode the all failure number
     
 }
 ```
-- You should use `print_run_time` to print information in `stress test`
+- You should use `print_run_time()` to print information in `stress test`, or use `print_speed_vs()` to print the speed comparsion result with other container in the equal scale
 ```c
 
-print_run_time("INSERT", start, end, nums[i], nums[i]);
-
+void print_run_time("INSERT", start, end, nums[i], nums[i]);
+void print_speed_vs(const char* info_a, clock_t start_a, clock_t end_a,
+                    const char* info_b, clock_t start_b, clock_t end_b,
+                    size_t scale, size_t oper_cnt);
 ```
 
 
@@ -156,12 +156,15 @@ print_run_time("INSERT", start, end, nums[i], nums[i]);
 
 | Function | Brief Desctiption|
 | --------- | ------- |
-| `print_run` | Print information at the start of a test part|  
-| `check_res`| Check if the result is true <br> It will `print information with tag` and `change the value of fail_cnt` if `res == false` | 
-| `print_end` | Print information of this test  according to the number of `fail_cnt` at end | 
-| `print_run_time` | prints `cost time` and `speed` according to the passed-in parameters |
-| `print_speed_vs` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |
+| `print_run()` | Print information at the start of a test part|  
+| `check_res()`| Check if the result is true <br> It will `print information with tag` and `change the value of fail_cnt` if `res == false` | 
+| `print_end()` | Print information of this test  according to the number of `fail_cnt` at end | 
+| `print_run_time()` | prints `cost time` and `speed` according to the passed-in parameters |
+| `print_speed_vs()` | prints `cost time` and `speed`  for each set of passed-in parameters <br> Also, `compare them` |
 
 ## Tips
-- You can delete some test group if you think some test is unnecessary, such as `hm_stack` doesn't rellay need stress test
-- You can add some test group if you think some test is needed
+
+>  [!Tip]
+>  - You can delete some test group if you think some test is unnecessary, such as `hm_stack` doesn't rellay need stress test
+>  - You can add some test group if you think some test is needed
+>  - The number of blank lines below of **End Block** (`int fail_cnt = 0;` & `int tag = 0;` & `print_run()` ) and above of **Start Block** ( `print_end()` & `HM_TEST_COUNTER` ) must be greater than `0`
