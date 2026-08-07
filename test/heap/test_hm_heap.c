@@ -28,7 +28,7 @@ void test_heap_integrity(hm_heap* heap, int* fail_cnt, int tag, size_t size, boo
     }
     check_res(heap->size <= heap->capacity, "TEST OF INTEGRITY: `capacity` should greater than `size`", fail_cnt, tag);
 
-    check_res(!(heap->capacity == 0 && heap->vals != NULL), "TEST OF INTEGRITY: heap's capacity is 0, but vals have memory", fail_cnt, tag);
+    check_res(!(heap->capacity == 0 && heap->vals != NULL), "TEST OF INTEGRITY: heap's capacity is 0, but vals isn't NULL", fail_cnt, tag);
     check_res(!(heap->capacity != 0 && heap->vals == NULL), "TEST OF INTEGRITY: heap's capacity isn't 0, but vals is NULL", fail_cnt, tag);
 
     check_res(heap->free_val == free_val, "TEST OF INTEGRITY: heap's free function is wrong", fail_cnt, tag);
@@ -64,6 +64,7 @@ void test_heap_fixed_init() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("HEAP(FIXED) | FUNC | INIT | CAPAITY: 64");
+
     hm_heap heap;
     int capacity = 64;
     // pass in `free` for heap
@@ -84,6 +85,8 @@ void test_heap_fixed_init() {
     check_res(heap.free_val == NULL, "the heap's free function should be NULL", &fail_cnt, tag++);
 
     hm_heap_free(&heap);
+
+
     print_end("HEAP(FIXED) | FUNC | INIT | CAPAITY: 64", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -92,6 +95,7 @@ void test_heap_dynamic_init() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("HEAP(DYNAMIC) | FUNC | INIT | CAPAITY: 64");
+
     hm_heap heap;
     int capacity = 64;
     // pass in `free` for heap
@@ -113,6 +117,8 @@ void test_heap_dynamic_init() {
     
     hm_heap_free(&heap);
     
+
+
     print_end("HEAP(DYNAMIC) | FUNC | INIT | CAPAITY: 64", fail_cnt);
     
 }
@@ -194,6 +200,7 @@ void test_heap_dynamic_insert() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("HEAP(DYNAMIC) | FUNC | INSERT | CAPAITY: 64");
+    
     hm_heap heap;
     int start_capacity = 64;
     // mod shouldn't too big
@@ -911,6 +918,7 @@ void test_empty_dynamic_heap_oper() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("HEAP(DYNAMIC) | BOUNDARY | OPER EMPTY HEAP | CAPACITY: 64");
+
     hm_heap heap;
     int capacity = 64;
     hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
@@ -1306,6 +1314,7 @@ void test_no_capacity_fixed_heap_oper() {
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and fixed-size heap", &fail_cnt, tag++);;
 
     hm_heap_free(&heap);
+
     print_end("HEAP(FIXED) | BOUNDARY | NO CAPACITY HEAP OPER | CAPACITY: 0", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -1545,6 +1554,7 @@ void test_heap_fixed_shrink() {
     check_res(fail == 0, "shrink function shouldn return `none` when shrink fixed-size heap", &fail_cnt, tag++);
     
     hm_heap_free(&heap);
+
     print_end("HEAP(FIXED) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -1585,6 +1595,7 @@ void test_heap_dynamic_shrink() {
     check_res(fail_shrink == 0, "shrink function should return suc when `s < c / 2`", &fail_cnt, tag++);
     
     hm_heap_free(&heap);
+
     print_end("HEAP(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     

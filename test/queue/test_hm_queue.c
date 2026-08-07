@@ -44,7 +44,7 @@ void test_queue_integrity(hm_queue* queue, int* fail_cnt, int tag, size_t size, 
         check_res(queue->rear == 0, "TEST OF INTEGRITY: `rear` should be 0 when `capacity` is 0", fail_cnt, tag);
     }
 
-    check_res(!(queue->capacity == 0 && queue->vals != NULL), "TEST OF INTEGRITY: queue's capacity is 0, but vals have memory", fail_cnt, tag);
+    check_res(!(queue->capacity == 0 && queue->vals != NULL), "TEST OF INTEGRITY: queue's capacity is 0, but vals isn't NULL", fail_cnt, tag);
     check_res(!(queue->capacity != 0 && queue->vals == NULL), "TEST OF INTEGRITY: queue's capacity isn't 0, but vals is NULL", fail_cnt, tag);
 
     check_res(queue->free_val == free_val, "TEST OF INTEGRITY: queue's free function is wrong", fail_cnt, tag);
@@ -57,6 +57,7 @@ void test_queue_fixed_init() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | INIT | CAPACITY: 64");
+
     hm_queue queue;
     int capacity = 64;    
     // pass in `free` for queue
@@ -77,14 +78,17 @@ void test_queue_fixed_init() {
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
 
     hm_queue_free(&queue);
+
     print_end("QUEUE(FIXED) | FUNC | INIT | CAPACITY: 64", fail_cnt);
     HM_TEST_COUNTER
+
 }
 
 void test_queue_dynamic_init() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(DYNMAIC) | FUNC | INIT | CAPACITY: 64");
+
     hm_queue queue;
     int start_capacity = 64;    
     // pass in `free` for queue
@@ -115,6 +119,8 @@ void test_queue_fixed_enq() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | ENQUEUE | CAPACITY: 64 TYPE: [INT]");
+
+
     hm_queue queue;
     int capacity = 64;    
     hm_queue_init(&queue, capacity, free);
@@ -184,6 +190,7 @@ void test_queue_dynamic_enq() {
     int tag = 0;
     print_run("QUEUE(DYNMAIC) | FUNC | ENQUEUE | CAPACITY: 64 TYPE: [INT]");
     
+
     hm_queue queue;
     int start_capacity = 64;    
     hm_queue_init_dynamic_grow(&queue, start_capacity, free);
@@ -240,6 +247,7 @@ void test_queue_dynamic_enq() {
     
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(DYNAMIC) | FUNC | ENQUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -310,6 +318,7 @@ void test_queue_fixed_deq() {
     
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(FIXED) | FUNC | DEQUEUE | CAPACITY: 8 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -351,6 +360,7 @@ void test_queue_dynamic_deq() {
     
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(DYNAMIC) | FUNC | DEQUEUE | CAPACITY: 8 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -362,6 +372,7 @@ void test_queue_fixed_peek() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | PEEK | CAPACITY: 64 TYPE: [INT]");
+
     hm_queue queue;
     int capacity = 64;    
     int diff = 10;
@@ -394,6 +405,7 @@ void test_queue_fixed_peek() {
     
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(FIXED) | FUNC | PEEK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -434,6 +446,7 @@ void test_queue_dynamic_peek() {
     
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(DYNAMIC) | FUNC | PEEK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -447,6 +460,7 @@ void test_queue_fixed_clear() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]");
+
     
     hm_queue queue;
     int capacity = 64;    
@@ -473,6 +487,8 @@ void test_queue_fixed_clear() {
     check_res(val == NULL, "the peek front val should be NULL after clear the queue", &fail_cnt, tag++);
 
     hm_queue_free(&queue);
+
+
     print_end("QUEUE(FIXED) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -482,6 +498,7 @@ void test_queue_dynamic_clear() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(DYNMAIC) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]");
+
     
     hm_queue queue;
     int start_capacity = 64;    
@@ -508,6 +525,7 @@ void test_queue_dynamic_clear() {
 
     hm_queue_free(&queue);
     
+
     print_end("QUEUE(DYNAMIC) | FUNC | CLEAR | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -518,6 +536,7 @@ void test_queue_fixed_free() {
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]");
     
+
     hm_queue queue;
     int capacity = 64;    
     hm_queue_init(&queue, capacity, free);
@@ -544,6 +563,8 @@ void test_queue_fixed_free() {
 
     hm_queue_free(&queue);
     
+
+
     print_end("QUEUE(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -555,6 +576,8 @@ void test_queue_dynamic_free() {
     int tag = 0;
     print_run("QUEUE(DYNMAIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]");
     
+
+
     hm_queue queue;
     int start_capacity = 64;    
     hm_queue_init_dynamic_grow(&queue, start_capacity, free);
@@ -580,6 +603,8 @@ void test_queue_dynamic_free() {
 
     hm_queue_free(&queue);
     
+
+
     print_end("QUEUE(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -589,6 +614,8 @@ void test_empty_fixed_queue_oper() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | BOUNDARY | OPER EMPTY QUEUE | CAPACITY: 64 TYPE: [INT]");
+
+
 
     hm_queue queue;
     int val = 10;
@@ -646,6 +673,8 @@ void test_empty_dynamic_queue_oper() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | BOUNDARY | OPER EMPTY QUEUE | CAPACITY: 64 TYPE: [INT]");
     
+
+
     hm_queue queue;
     int val = 10;
 
@@ -734,6 +763,9 @@ void test_full_fixed_queue_oper() {
     test_queue_integrity(&queue, &fail_cnt, tag++, capacity, false, capacity, free);
 
     hm_queue_free(&queue);
+
+
+
     print_end("QUEUE(FIXED) | BOUNDARY | OPER FULL QUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -744,6 +776,8 @@ void test_full_dynamic_queue_oper() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | BOUNDARY | OPER FULL QUEUE | CAPACITY: 64 TYPE: [INT]");
     
+
+
     hm_queue queue;
     int capacity = 64;
     hm_queue_init_dynamic_grow(&queue, capacity, free);
@@ -772,6 +806,8 @@ void test_full_dynamic_queue_oper() {
 
     hm_queue_free(&queue);
     
+
+
     print_end("QUEUE(DYNAMIC) | BOUNDARY | OPER FULL QUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -797,7 +833,6 @@ void test_no_capacity_fixed_queue() {
     }
 
     
-
     // peek
     check_res(hm_queue_peek(&queue) == NULL, "the peek val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
@@ -831,6 +866,7 @@ void test_no_capacity_dynamic_queue() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]");
     
+
     hm_queue queue;
     int capacity = 0;
     hm_queue_init_dynamic_grow(&queue, capacity, free);
@@ -871,6 +907,8 @@ void test_no_capacity_dynamic_queue() {
 
     hm_queue_free(&queue);
 
+
+
     print_end("QUEUE(DYNAMIC) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -881,6 +919,8 @@ void test_init_big_capacity_fixed_queue() {
     int tag = 0;
     print_run("QUEUE(FIXED) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]");
     
+
+
     hm_queue queue;
     hm_queue_ret ret;
     
@@ -893,6 +933,7 @@ void test_init_big_capacity_fixed_queue() {
         check_res(ret == hm_queue_ret_error, info, &fail_cnt, tag++);
     } 
 
+
     print_end("QUEUE(FIXED) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -903,6 +944,8 @@ void test_init_big_capacity_dynamic_queue() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]");
     
+
+
     hm_queue queue;
     hm_queue_ret ret;
     
@@ -914,6 +957,9 @@ void test_init_big_capacity_dynamic_queue() {
         ret = hm_queue_init_dynamic_grow(&queue, capacity, free);
         check_res(ret == hm_queue_ret_error, info, &fail_cnt, tag++);
     }
+
+
+
     print_end("QUEUE(DYNAMIC) | BOUNDARY | INIT BIG CAPACITY QUEUE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -924,6 +970,8 @@ void test_queue_fixed_judge() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | JUDGE | TYPE: [INT]");
+
+
 
     int capacity = 64;
     hm_queue queue;
@@ -952,6 +1000,8 @@ void test_queue_fixed_judge() {
 
     hm_queue_free(&queue);
 
+
+
     print_end("QUEUE(FIXED) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -962,6 +1012,8 @@ void test_queue_dynamic_judge() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]");
 
+
+    
     int capacity = 64;
     hm_queue queue;
     
@@ -987,6 +1039,8 @@ void test_queue_dynamic_judge() {
 
     hm_queue_free(&queue);
 
+
+
     print_end("QUEUE(DYNAMIC) | FUNC | JUDGE | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -997,6 +1051,8 @@ void test_queue_fixed_shrink() {
     int tag = 0;
     print_run("QUEUE(FIXED) | FUNC | SHRINK | TYPE: [INT]");
     
+
+
     int capacity = 64;
     hm_queue queue;
     hm_queue_init(&queue, capacity, free);
@@ -1020,6 +1076,8 @@ void test_queue_fixed_shrink() {
     check_res(fail == 0, "shrink function shouldn return `none` when shrink fixed-size queue", &fail_cnt, tag++);
     
     hm_queue_free(&queue);
+
+
     print_end("QUEUE(FIXED) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
@@ -1030,6 +1088,8 @@ void test_queue_dynamic_shrink() {
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]");
     
+
+
     int capacity = 64;
     hm_queue queue;
     hm_queue_init_dynamic_grow(&queue, capacity, free);
@@ -1060,6 +1120,9 @@ void test_queue_dynamic_shrink() {
     check_res(fail_shrink == 0, "shrink function should return suc when `s < c / 2`", &fail_cnt, tag++);
     
     hm_queue_free(&queue);
+
+
+
     print_end("QUEUE(DYNAMIC) | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     

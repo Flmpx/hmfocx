@@ -28,7 +28,7 @@ void test_arr_integrity(hm_arr* arr, int* fail_cnt, int tag, size_t size, bool d
         check_res(arr->capacity == capacity, "TEST OF INTEGRITY: arr's capacity isn't the expected size", fail_cnt, tag);
     }
     check_res(arr->capacity >= arr->size, "TEST OF INTEGRITY: `capacity` should greater than `size`", fail_cnt, tag);
-    check_res(!(arr->capacity == 0 && arr->vals != NULL), "TEST OF INTEGRITY: arr's capacity is 0, but vals have memory", fail_cnt, tag);
+    check_res(!(arr->capacity == 0 && arr->vals != NULL), "TEST OF INTEGRITY: arr's capacity is 0, but vals isn't NULL", fail_cnt, tag);
     check_res(!(arr->capacity != 0 && arr->vals == NULL), "TEST OF INTEGRITY: arr's capacity isn't 0, but vals is NULL", fail_cnt, tag);
     
 }
@@ -1555,6 +1555,7 @@ void test_empty_fixed_arr_oper() {
     hm_arr_clear(&arr);
     
     hm_arr_free(&arr);
+
     print_end("ARR(FIXED) | BOUNDARY | OPER EMPTY ARR | CAPACITY: 64", fail_cnt);
     HM_TEST_COUNTER
 }
@@ -1639,6 +1640,7 @@ void test_empty_dynamic_arr_oper() {
     hm_arr_clear(&arr);
     
     hm_arr_free(&arr);
+    
     print_end("ARR(DYNAMIC) | BOUNDARY | OPER EMPTY ARR | CAPACITY: 64", fail_cnt);
     HM_TEST_COUNTER
 }

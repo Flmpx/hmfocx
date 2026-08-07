@@ -22,8 +22,8 @@ int all_failure_num = 0;
 void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt, int tag) {
     size_t pages = 0;
     size_t free_block_num = 0;
+    
     // get pages
-
     hm_pool_page_node* page_node = pool->head_page;
     while (page_node) {
         page_node = page_node->next;
@@ -36,7 +36,6 @@ void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt, in
     }
     check_res((free_block_num + used_block_num) == pages * pool->blocks_per_page , "TEST OF INTEGRITY: used + freed != pages * blocks_per_page ", fail_cnt, tag);
 
-
 } 
 
 
@@ -48,12 +47,14 @@ enum location_block {
 
 /**
  * Judge the location of block that pass in
- * @return 
+ * 
+ * @return - Return `used_block_in_pool` when block is used in pool
+ * @return - Return `freed_block_in_pool` when block is freed in pool
+ * @return - Return `other_block_in_pool` when block isn't in block
  */
 int judge_memory_location(hm_pool* pool, void* block) {
 
     // Is freed block ?
-
     hm_pool_block_node* b_node = pool->head_block;
     while (b_node) {
         if (b_node == block) {
@@ -64,9 +65,7 @@ int judge_memory_location(hm_pool* pool, void* block) {
 
 
     // Is used block ?
-
     hm_pool_page_node* p_node = pool->head_page;
-
     while (p_node) {
         void* min = p_node + 1;
         void* max = (char*)(p_node + 1) + pool->blocks_per_page * pool->block_size;
@@ -83,11 +82,13 @@ int judge_memory_location(hm_pool* pool, void* block) {
 
 
 void test_pool_init() {
-
-    print_run("POOL | FUNC | INIT | BLOCK SIZE: sizeof(int) BLOCKS: 1024");
-    hm_pool pool;
     int fail_cnt = 0;
     int tag = 0;
+    print_run("POOL | FUNC | INIT | BLOCK SIZE: sizeof(int) BLOCKS: 1024");
+
+
+
+    hm_pool pool;
     int blocks_per_page = 1024;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
     test_pool_integrity(&pool, 0, &fail_cnt, tag++);
@@ -96,26 +97,26 @@ void test_pool_init() {
     check_res(pool.head_block == NULL, "head_block should be `NULL` after init", &fail_cnt, tag++);
     check_res(pool.head_page == NULL, "head_block should be `NULL` after init", &fail_cnt, tag++);
 
-    print_end("POOL | FUNC | INIT | BLOCK SIZE: sizeof(int) BLOCKS: 1024", fail_cnt);
     
+    print_end("POOL | FUNC | INIT | BLOCK SIZE: sizeof(int) BLOCKS: 1024", fail_cnt);
     HM_TEST_COUNTER
 
 }
 
 void test_pool_allocate() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("POOL | FUNC | ALLOCATE | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
 
     hm_pool pool;
     int blocks_per_page = 2048;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-    int fail_cnt = 0;
-    int tag = 0;
-
-    print_run("POOL | FUNC | ALLOCATE | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
 
     int* val = hm_pool_block_allocate(&pool);
     test_pool_integrity(&pool, 1, &fail_cnt, tag++);
     check_res(judge_memory_location(&pool, val) == used_block_in_pool, "the val should be the used block in memory pool", &fail_cnt, tag++);
-
     check_res(val != NULL, "the allocated block shouldn't be NULL when allocate one block", &fail_cnt, tag++);
     // because this test exclude free test and `hm_pool_free` should destroy all the memory, so, cancel the free the block
 
@@ -157,11 +158,10 @@ void test_pool_allocate() {
     }
     check_res(fail_NULL == 0, "the pointer shoudn't have NULL", &fail_cnt, tag++);
     check_res(fail_diff == 0, "stored value should match the  value in `flag` array", &fail_cnt, tag++);
-
     check_res(fail_wrong_location == 0, "the val should be the used block in memory pool", &fail_cnt, tag++);
 
+    
     // verify the pages 
-
     int pages = 0;
     hm_pool_page_node* node = pool.head_page;
     while (node) {
@@ -170,8 +170,9 @@ void test_pool_allocate() {
     }
     check_res(pages == 2, "the number of pages should be 2 when get over the number of blocks per page", &fail_cnt, tag++);
 
-
     hm_pool_free(&pool);
+
+
     print_end("POOL | FUNC | ALLOCATE | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
     HM_TEST_COUNTER
 
@@ -179,15 +180,17 @@ void test_pool_allocate() {
 
 
 void test_pool_get_pages() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("POOL | FUNC | GET PAGES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
     hm_pool pool;
     int blocks_per_page = 2048;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-    int fail_cnt = 0;
-    int tag = 0;
     
     int allocate_blocks = 10000;
     int expected_pages = (allocate_blocks + blocks_per_page - 1) / blocks_per_page;
-    print_run("POOL | FUNC | GET PAGES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
     
     // allocate
     for (int i = 0; i < allocate_blocks; i++) {
@@ -202,10 +205,11 @@ void test_pool_get_pages() {
     }
     int get_pages = hm_pool_get_pages(&pool);
     test_pool_integrity(&pool, allocate_blocks, &fail_cnt, tag++);
-
     check_res(get_pages == real_pages, "the number of page got by get_pages function should be the same the real pages", &fail_cnt, tag++);
     
     hm_pool_free(&pool);
+    
+    
     print_end("POOL | FUNC | GET PAGES | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
     HM_TEST_COUNTER
     
@@ -213,14 +217,16 @@ void test_pool_get_pages() {
 
 
 void test_pool_get_bytes() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
     hm_pool pool;
     int blocks_per_page = 2048;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-    int fail_cnt = 0;
-    int tag = 0;
     
     int allocate_blocks = 10000;
-    print_run("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
     size_t expected_bytes_per_page = sizeof(hm_pool_page_node) + pool.blocks_per_page * pool.block_size;
     
     // start 
@@ -234,8 +240,9 @@ void test_pool_get_bytes() {
     
     check_res(expected_bytes_per_page == hm_pool_get_bytes_per_page(&pool), "the bytes of every page got by `get_bytes_func` is wrong after allocate some memory from pool", &fail_cnt, tag++);
 
-
     hm_pool_free(&pool);
+
+
     print_end("POOL | FUNC | GET BYTES | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
     HM_TEST_COUNTER
 
@@ -243,13 +250,15 @@ void test_pool_get_bytes() {
 
 
 void test_pool_block_free() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("POOL | FUNC | FREE BLOCK | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
     hm_pool pool;
     int blocks_per_page = 2048;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-    int fail_cnt = 0;
-    int tag = 0;
 
-    print_run("POOL | FUNC | FREE BLOCK | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
     
     // the val should be same as the new_val because the pool is use the method of `head_insert list` 
     int* val = hm_pool_block_allocate(&pool);
@@ -275,8 +284,8 @@ void test_pool_block_free() {
     }
     test_pool_integrity(&pool, nums - nums / 2, &fail_cnt, tag++);
 
+    
     // verify
-
     int fail_freed = 0;
     for (int i = 0; i < nums / 2; i++) {
         if (judge_memory_location(&pool, pointers[i]) != freed_block_in_pool) {
@@ -314,19 +323,23 @@ void test_pool_block_free() {
 
     hm_pool_free(&pool);
     
+
     print_end("POOL | FUNC | FREE BLOCK | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
     HM_TEST_COUNTER
+
 }
 
 
 void test_pool_free() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("POOL | FUNC | FREE CONTAILER | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
     hm_pool pool;
     int blocks_per_page = 2048;
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
-    int fail_cnt = 0;
-    int tag = 0;
     
-    print_run("POOL | FUNC | FREE CONTAILER | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
     
     int nums = 1000;
     for (int i = 0; i < nums; i++) {
@@ -337,16 +350,19 @@ void test_pool_free() {
     //  **Use valgrind or other tool that can check `leak-memory` to check if there existed memory leak**
     hm_pool_free(&pool);
     
+    
     print_end("POOL | FUNC | FREE CONTAILER | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
     HM_TEST_COUNTER
     
 }
 
 void test_minmax_pageblock_oper() {
-    hm_pool pool;
     int fail_cnt = 0;
     int tag = 0;
     print_run("POOL | BOUNDARY | MIN_MAX__PAGE_BLOCK");
+
+
+    hm_pool pool;
     size_t blocks_per_page;
     size_t block_size;
 
@@ -392,32 +408,41 @@ void test_minmax_pageblock_oper() {
 
 
     print_end("POOL | BOUNDARY | MIN_MAX__PAGE_BLOCK", fail_cnt);
+    HM_TEST_COUNTER
 
 }
 
 
 void test_free_NULL() {
-    // free a nullptr
-    hm_pool pool;
     int fail_cnt = 0;
     int tag = 0;
     print_run("POOL | BOUNDARY | FREE NULLPTR | BLOCK SIZE: sizeof(int) BLOCKS: 2048");
+
+
+
+    // free a nullptr
+    hm_pool pool;
     hm_pool_init(&pool, sizeof(int), 2048);
 
     void* v = NULL;
     hm_pool_block_free(&pool, v);
 
+
     print_end("POOL | BOUNDARY | FREE NULLPTR | BLOCK SIZE: sizeof(int) BLOCKS: 2048", fail_cnt);
+    HM_TEST_COUNTER
+
 }
 
 
 void test_pool_allocate_stress() {
-    hm_pool pool;
     int fail_cnt = 0;
     int tag = 0;
+    print_run("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*");
+
+
+    hm_pool pool;
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(int);
-    print_run("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*");
     hm_pool_init(&pool, sizeof(int), 2048);
 
     for (int i = 0; i < cnt; i++) {
@@ -449,21 +474,24 @@ void test_pool_allocate_stress() {
         print_speed_vs("Pool", start_a, end_a, "Malloc", start_b, end_b, nums[i], nums[i]);
     }
 
-    print_end("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*", fail_cnt);
 
+    print_end("POOL | STRESS | ALLOCATE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *MALLOC*", fail_cnt);
+    HM_TEST_COUNTER
 
 }
 
 
 void test_pool_free_stress() {
-    hm_pool pool;
     int fail_cnt = 0;
     int tag = 0;
+    print_run("POOL | STRESS | FREE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *FREE*");
+
+
+
+    hm_pool pool;
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(int);
-    print_run("POOL | STRESS | FREE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *FREE*");
     hm_pool_init(&pool, sizeof(int), 2048);
-
 
     for (int i = 0; i < cnt; i++) {
 
@@ -504,7 +532,7 @@ void test_pool_free_stress() {
     
 
     print_end("POOL | STRESS | FREE | *BLOCK SIZE: sizeof(int) BLOCKS: 2048* VS *FREE*", fail_cnt);
-
+    HM_TEST_COUNTER
 
 }
 
