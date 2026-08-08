@@ -17,7 +17,7 @@
     - [Del](#del)
     - [Free](#free)
     - [Sort](#sort)
-- [Tips](#tip)
+- [Other Things](#otherthings)
 - [Other Containers](#othercontainer)
 
 
@@ -31,6 +31,14 @@
 <a id = "func"></a>
 
 ## Functions
+
+>  [!Note]  
+>  - None of the functions related to `hm_list` will check if `NULL` is passed in, so, you have to make sure the pointer is valid
+>   
+
+<br><br><br>
+
+
 
 <a id = "smallfunc"></a>
 
@@ -779,11 +787,13 @@ int main()
 <br><br><br>
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## Tips
+## Other Things
 
-- **Do not modify the list (del, insert, free, or sort) while iterating over it**
+>  [!Tip]
+>  - **Do not modify the list (del, insert, free, or sort) while iterating over it**
+>  
 
 
 

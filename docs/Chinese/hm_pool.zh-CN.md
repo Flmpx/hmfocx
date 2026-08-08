@@ -13,7 +13,7 @@
     - [分配](#allocate)
     - [释放块内存](#freeblock)
     - [释放内存池](#freepool)
-- [注意事项](#tip)
+- [一点小事](#otherthings)
 - [其他容器](#othercontainer)
 
 
@@ -30,6 +30,12 @@
 
 ## 函数
 
+
+>  [!Note]  
+>  - 大多数关于 `hm_pool` 的函数都不会检查 `空指针` 是否被传入函数(除了块内存), 所有你必须保证指针是有效的
+>  
+
+<br><br><br>
 
 <a id = "smallfunc"></a>
 
@@ -240,9 +246,9 @@ int main()
 
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## 注意事项
+## 一点小事
 
 
 

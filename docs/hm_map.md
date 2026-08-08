@@ -19,7 +19,7 @@
     - [Shrink](#shrink)
     - [Clear](#clear)
     - [Free](#free)
-- [Tips](#tip)
+- [Other Things](#otherthings)
 - [Other Containers](#othercontainer)
 
 
@@ -33,6 +33,14 @@
 <a id = "func"></a>
 
 ## Functions
+
+
+>  [!Note]  
+>  - None of the functions related to `hm_map` will check if `NULL` is passed in, so, you have to make sure the pointer is valid
+>   
+
+<br><br><br>
+
 
 
 <a id = "smallfunc"></a>
@@ -1027,11 +1035,14 @@ int main()
 
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## Tips
+## Other Things
 
-- **Do not modify the map(del, insert, clear, or free) while iterating over it**
+>  [!Tip]
+>  - **Do not modify the map(del, insert, clear, or free) while iterating over it**
+>  
+
 
 
 

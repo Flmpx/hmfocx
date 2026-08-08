@@ -20,7 +20,7 @@
     - [重建](#rebuild)
     - [清空](#clear)
     - [释放](#free)
-- [注意事项](#tip)
+- [一点小事](#otherthings)
 - [其他容器](#othercontainer)
 
 
@@ -37,6 +37,13 @@
 <a id = "func"></a>
 
 ## 函数
+
+
+>  [!Note]  
+>  - 所有关于 `hm_heap` 的函数都不会检查 `空指针` 是否被传入函数, 所有你必须保证指针是有效的
+>  
+
+<br><br><br>
 
 
 <a id = "smallfunc"></a>
@@ -663,9 +670,9 @@ int main()
 <br><br><br>
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## 注意事项
+## 一点小事
 
 
 

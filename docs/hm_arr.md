@@ -18,7 +18,7 @@
     - [Shrink](#shrink)
     - [Clear](#clear)
     - [Free](#free)
-- [Tips](#tip)
+- [Other Things](#otherthings)
 - [Other Containers](#othercontainer)
 
 
@@ -33,6 +33,13 @@
 <a id = "func"></a>
 
 ## Functions
+
+>  [!Note]  
+>  - None of the functions related to `hm_arr` will check if `NULL` is passed in, so, you have to make sure the pointer is valid
+>   
+
+<br><br><br>
+
 
 <a id = "smallfunc"></a>
 
@@ -760,10 +767,13 @@ int main()
 
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## Tips
-- **Return a pointer to the pointer of value**: What you pass in is a pointer (a pointer to the value), the internal container will have a space to store this pointer, and what’s returned is a pointer to this space. You can use it to change what it points to, but be careful to manage the memory yourself.
+## Other Things
+
+>  [!Tip]
+>  **Return a pointer to the pointer of value**: What you pass in is a pointer (a pointer to the value), the internal container will have a space to store this pointer, and what’s returned is a pointer to this space. You can use it to change what it points to, but be careful to manage the memory yourself.
+>  
 
 
 
