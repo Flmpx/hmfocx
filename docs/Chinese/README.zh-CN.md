@@ -40,7 +40,7 @@
 - [介绍](#intro)
 - [函数](#func)
     - [功能](#afunc)
-- [注意事项](#tip)
+- [一点小事](#otherthings)
 - [其他容器](#othercontainer)
 
 
@@ -105,9 +105,9 @@ hello, world
 
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-#### 注意事项
+## 一点小事
 
 - 一些需要注意的事情
 

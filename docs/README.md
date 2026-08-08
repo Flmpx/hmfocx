@@ -41,7 +41,7 @@
 - [Introduction](#intro)
 - [Functions](#func)
     - [Func](#afunc)
-- [Tips](#tip)
+- [Other Things](#otherthings)
 - [Other Containers](#othercontainer)
 
 
@@ -100,11 +100,11 @@ hello, world
 <br><br><br>
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-#### Tips
+## Other Things
 
-- some tips
+- some little things
 
 
 

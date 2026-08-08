@@ -15,7 +15,7 @@
     - [Allocate](#allocate)
     - [Free Block](#freeblock)
     - [Free Pool](#freepool)
-- [Tips](#tip)
+- [Other Things](#otherthings)
 - [Other Containers](#othercontainer)
 
 
@@ -29,6 +29,14 @@
 <a id = "func"></a>
 
 ## Functions
+
+
+>  [!Note]  
+>  - None of the functions will check if `hm_pool*` is `NULL`, so, you have to make sure the pointer is valid
+>  - Whether other pointer parameters can be `NULL` depends on the function comments below
+
+<br><br><br>
+
 
 
 <a id = "smallfunc"></a>
@@ -239,9 +247,9 @@ int main()
 
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## Tips
+## Other Things
 
 
 

@@ -19,7 +19,7 @@
     - [缩容](#shrink)
     - [清空](#clear)
     - [释放](#free)
-- [注意事项](#tip)
+- [一点小事](#otherthings)
 - [其他容器](#othercontainer)
 
 
@@ -36,6 +36,12 @@
 <a id = "func"></a>
 
 ## 函数
+
+>  [!Note]  
+>  - 所有的函数都不会检查 `hm_stack*` 是否为空指针, 所以你要确保这个指针是有效的
+>  - 其他关于指针的参数是否可以为空指针, 具体看下面的函数注释
+
+<br><br><br>
 
 
 <a id = "smallfunc"></a>
@@ -435,9 +441,9 @@ int main()
 <br><br><br>
 
 
-<a id = "tip"></a>
+<a id = "otherthings"></a>
 
-## 注意事项
+## 一点小事
 
 
 
