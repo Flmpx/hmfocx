@@ -51,3 +51,5 @@ mingw32-make
 7. [hm_set](docs/Chinese/hm_set.zh-CN.md)
 
 8. [hm_arr](docs/Chinese/hm_arr.zh-CN.md)
+
+8. [hm_str](docs/Chinese/hm_str.zh-CN.md)

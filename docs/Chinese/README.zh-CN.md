@@ -22,6 +22,8 @@
 
 8. [hm_arr](hm_arr.zh-CN.md)
 
+9. [hm_str](hm_str.zh-CN.md)
+
 <br><br><br><br><br><br><br><br>
 
 

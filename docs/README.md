@@ -23,6 +23,8 @@
 
 8. [hm_arr](hm_arr.md)
 
+9. [hm_str](hm_str.md)
+
 <br><br><br><br><br><br><br><br>
 
 

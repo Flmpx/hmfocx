@@ -51,3 +51,5 @@ mingw32-make
 7. [hm_set](docs/hm_set.md)
 
 8. [hm_arr](docs/hm_arr.md)
+
+8. [hm_str](docs/hm_str.md)
