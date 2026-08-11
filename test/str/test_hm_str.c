@@ -185,7 +185,7 @@ void test_str_get() {
     // valid index
     int fail_null = 0;
     int fail_diff = 0;
-    for (int i = 0; i < l; i++) {
+    for (int i = 0; i <= l; i++) {
         const char* index_s = hm_str_get(&str, i);
         if (index_s == NULL) {
             fail_null++;
@@ -200,7 +200,7 @@ void test_str_get() {
     
     // invalid index
     int fail_no_null = 0;
-    for (int i = l; i < l * 2; i++) {
+    for (int i = l + 1; i < l * 2; i++) {
         const char* index_s = hm_str_get(&str, i);
         if (index_s != NULL) {
             fail_no_null++;

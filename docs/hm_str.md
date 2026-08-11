@@ -34,7 +34,8 @@
 
 >  [!Tip]
 >  - The capacity of str is equal to the real memory size of string - 1(Because `\0` is existed in string)
->  
+>  - For this container, the capacity only have two situation -- `capacity == 0` or `capacity >= 17(min_capacity)`, and the val(string) in str is `NULL` when `capacity == 0`
+> 
 
 
 >  [!Note]  
@@ -122,8 +123,9 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
 /**
  * Get the str at the specified index
  * 
- * @note **Index**  must be >= **0**, and < **the len of str**
+ * @note **Index**  must be >= **0**, and <= **the len of str**
  * 
+ * @return Return **NULL** when the **capacity** of str is **0**
  * @return Return **NULL** when **index** is out of bounds
  * 
  * @warning Change the string is prohibited

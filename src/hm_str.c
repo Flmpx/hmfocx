@@ -125,14 +125,16 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str) {
 /**
  * Get the str at the specified index
  * 
- * @note - `Index`  must be >= `0`, and < `the len of str`
+ * @note - `Index`  must be >= `0`, and <= `the len of str`
  * 
+ * @return - Return `NULL` when the `capacity` of str is `0`
  * @return - Return `NULL` when `index` is out of bounds
  * 
  * @warning - Change the string is prohibited
  */
 const char* hm_str_get(hm_str* str, size_t index) {
-    if (index >= str->len) {
+    if (index > str->len || str->val == NULL) {
+        // index is invalid or capacity == 0(str->val == NULL)
         return NULL;
     }
     return (const char*)(str->val + index);

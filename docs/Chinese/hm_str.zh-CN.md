@@ -24,7 +24,7 @@
 <a id = "intro"></a>
 
 ## 介绍
-- 你可以使用这些还是来对一个字符串进行操作(比如 append功能)
+- 你可以使用这些函数来对一个字符串进行操作(比如 append功能)
 - 它提供基本的字符串操作
 
 <a id = "func"></a>
@@ -33,7 +33,7 @@
 
 >  [!Tip]
 >  - 字符串的 capacity 等于 字符串所占的真实内存大小-1(`\0` 还要占一个字节)
->  
+>  - 但是字符串中的 `capacity` 有且仅有两种情况 -- `capacity == 0` 或者 `capacity >= 17(min_capacity)`, 故当 capacity 为0的时候, 里面的字符串是 `NULL`
 
 
 >  [!Note]  
@@ -123,6 +123,7 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
  * 
  * @note 索引必须 >= **0** 并且 < **字符串长度**
  * 
+ * @return 字符串的容量为 **0** 时返回 **NULL**
  * @return 索引无效时返回 **NULL**
  * 
  * @warning 不可以修改字符串
