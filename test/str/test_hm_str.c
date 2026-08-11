@@ -610,6 +610,99 @@ void test_oper_freed_str() {
 
 
 
+void test_str_append_stress() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | STRESS | APPEND");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    const char* string = "abcdefghigklmnopqrstuvwxyz1234567890, Hello, I'm Flmpx, Could you give me a star. This a library about hm. HM is my flag";
+
+    size_t len_every = strlen(string);
+
+    size_t nums[] = {1000000, 2000000, 5000000, 10000000, 20000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    for (int i = 0; i < cnt; i++) {
+        hm_str str;
+        hm_str_init(&str);
+        int fail = 0;
+        clock_t start = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            if (hm_str_append(&str, string) != hm_str_ret_suc) {
+                fail++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("APPEND", start, end, nums[i] * len_every, nums[i]);
+        check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
+        test_str_integrity(&str, &fail_cnt, tag++, len_every * nums[i]);
+        // verify
+        fail = 0;
+        for (int j = 0; j < nums[i]; j++) {
+            const char* s = hm_str_get(&str, j * len_every);
+            if (strncmp(s, string, len_every)) {
+                fail++;
+            }
+        }
+        check_res(fail == 0, "the string in str is wrong after append stressful", &fail_cnt, tag++);
+        hm_str_free(&str);
+    }
+    
+
+    print_end("STR | STRESS | APPEND", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_str_append_with_reserve_stress() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | STRESS | APPEND WITH RESERVE");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    const char* string = "abcdefghigklmnopqrstuvwxyz1234567890, Hello, I'm Flmpx, Could you give me a star. This a library about hm. HM is my flag";
+
+    size_t len_every = strlen(string);
+
+    size_t nums[] = {1000000, 2000000, 5000000, 10000000, 20000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    for (int i = 0; i < cnt; i++) {
+        hm_str str;
+        hm_str_init_reserve(&str, nums[i] * len_every);
+        int fail = 0;
+        clock_t start = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            if (hm_str_append(&str, string) != hm_str_ret_suc) {
+                fail++;
+            }
+        }
+        clock_t end = clock();
+        print_run_time("APPEND", start, end, nums[i] * len_every, nums[i]);
+        check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
+        test_str_integrity(&str, &fail_cnt, tag++, len_every * nums[i]);
+        // verify
+        fail = 0;
+        for (int j = 0; j < nums[i]; j++) {
+            const char* s = hm_str_get(&str, j * len_every);
+            if (strncmp(s, string, len_every)) {
+                fail++;
+            }
+        }
+        check_res(fail == 0, "the string in str is wrong after append with reserve stressful", &fail_cnt, tag++);
+        hm_str_free(&str);
+    }
+    
+
+    print_end("STR | STRESS | APPEND WITH RESERVE", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+
 void function_test() {
     test_str_init();                                                                        printf("\n");
 
@@ -641,7 +734,9 @@ void boundary_test() {
 }
 
 void stress_test() {
-    
+    test_str_append_stress();                                                               printf("\n");   
+
+    test_str_append_with_reserve_stress();                                                  printf("\n");
 }
 
 int main()
