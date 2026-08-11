@@ -396,6 +396,219 @@ void test_str_shrink() {
     
 }
 
+void test_append_empty_string_in_str() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | BOUNDARY | APPEND EMPTY STRING");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    const char* string = "";
+    int cnt = 10000;
+
+    int fail = 0;
+    for (int i = 0; i < cnt; i++) {
+        if (hm_str_append(&str, string) != hm_str_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "append function should return suc when append many empty string", &fail_cnt, tag++);
+    check_res(str.capacity <= 17, "the str's capacity shouldn't be big when append many empty string", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+
+    const char* s = hm_str_get(&str, 0);
+    check_res(strcmp(s, string) == 0, "the string should be empty string when append many empty string", &fail_cnt, tag++);
+
+    hm_str_free(&str);
+    
+
+    print_end("STR | BOUNDARY | APPEND EMPTY STRING", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_oper_empty_str() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | BOUNDARY | OPER EMTPY STR");
+    
+    hm_str str;
+    
+    // get
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+
+    check_res(strcmp(hm_str_get(&str, 0), "") == 0, "get on empty str should return empty string", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // shrink
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+
+    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a empty str(capacity == 17) should return none", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    
+    // append
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+    
+    char* string = "abcdefg";
+    hm_str_append(&str, string);
+    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a empty str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
+    hm_str_free(&str);
+    
+    
+    // clear
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+
+    hm_str_clear(&str);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // pop
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+    
+    char* s = hm_str_pop(&str);
+    check_res(strcmp(s, "") == 0, "the pop on empty str should return empty string", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    free(s);
+    
+    
+    print_end("STR | BOUNDARY | OPER EMPTY STR", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+
+
+void test_oper_no_capacity_str() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | BOUNDARY | OPER NO CAPACIYT STR");
+    
+    hm_str str;
+    
+    // get
+    hm_str_init(&str);
+
+    check_res(hm_str_get(&str, 0) == NULL, "get on no-capacity str should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    check_res(hm_str_get(&str, 100) == NULL, "get on no-capacity str with large index should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    
+    // append
+    hm_str_init(&str);
+
+    char* string = "abcdefg";
+    hm_str_append(&str, string);
+    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a no-capacity str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
+    hm_str_free(&str);
+
+    
+    // shrink
+    hm_str_init(&str);
+
+    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a no-capacity str should return none", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // clear
+    hm_str_init(&str);
+
+    hm_str_clear(&str);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // pop
+    hm_str_init(&str);
+
+    check_res(hm_str_pop(&str) == NULL, "the pop on no-capacity str should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    
+    print_end("STR | BOUNDARY | OPER NO CAPACIYT STR", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
+void test_oper_freed_str() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | BOUNDARY | OPER FREED STR");
+    
+    hm_str str;
+    
+    // get
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+
+    check_res(hm_str_get(&str, 0) == NULL, "get on freed str should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    check_res(hm_str_get(&str, 100) == NULL, "get on freed str with large index should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    
+    // append
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+    
+    char* string = "abcdefg";
+    hm_str_append(&str, string);
+    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a freed str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
+    hm_str_free(&str);
+    
+    
+    // shrink
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+    
+    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a freed str should return none", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // clear
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+    
+    hm_str_clear(&str);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    // pop
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+    
+    check_res(hm_str_pop(&str) == NULL, "the pop on freed str should return NULL", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+
+    
+    print_end("STR | BOUNDARY | OPER FREED STR", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
+
+
 
 void function_test() {
     test_str_init();                                                                        printf("\n");
@@ -417,6 +630,13 @@ void function_test() {
 }
 
 void boundary_test() {
+    test_append_empty_string_in_str();                                                      printf("\n");
+
+    test_oper_empty_str();                                                                  printf("\n");    
+
+    test_oper_no_capacity_str();                                                            printf("\n");
+
+    test_oper_freed_str();                                                                  printf("\n");
     
 }
 
