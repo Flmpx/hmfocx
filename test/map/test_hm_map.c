@@ -639,10 +639,25 @@ void test_map_clear() {
         }
     }
     check_res(fail_exist == 0, "some entry still existed in map after clear this map", &fail_cnt, tag++);
-
+    
+    
+    // double clear
+    hm_map_clear(&map);
+    test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
+    
+    // verfiy
+    fail_exist = 0;
+    for (int i = 0; i < num; i++) {
+        hm_map_entry* e = hm_map_get_entry(&map, &i);
+        if (e) {
+            fail_exist++;
+        }
+    }
+    check_res(fail_exist == 0, "some entry still existed in map after double clear this map", &fail_cnt, tag++);
+    
     hm_map_free(&map);
-
-
+    
+    
     print_end("MAP | FUNC | CLEAR | TYPE K:[INT] V:[INT]", fail_cnt);
     HM_TEST_COUNTER
     

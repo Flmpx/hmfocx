@@ -1383,7 +1383,11 @@ void test_arr_fixed_clear() {
         hm_arr_insert_tail(&arr, v);
     }
 
-    // shrink
+    // clear
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
+
+    // double clear
     hm_arr_clear(&arr);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, free);
     
@@ -1409,7 +1413,11 @@ void test_arr_dynamic_clear() {
         hm_arr_insert_tail(&arr, v);
     }
 
-    // shrink
+    // clear
+    hm_arr_clear(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    // double clear
     hm_arr_clear(&arr);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
 
@@ -1436,7 +1444,11 @@ void test_arr_fixed_free() {
         hm_arr_insert_tail(&arr, v);
     }
 
-    // shrink
+    // free
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, 0, free);
+
+    // double free
     hm_arr_free(&arr);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, 0, free);
     
@@ -1463,7 +1475,11 @@ void test_arr_dynamic_free() {
         hm_arr_insert_tail(&arr, v);
     }
 
-    // shrink
+    // free
+    hm_arr_free(&arr);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    // double free
     hm_arr_free(&arr);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, start_capacity, free);
 

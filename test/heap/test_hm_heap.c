@@ -442,6 +442,11 @@ void test_heap_fixed_clear() {
         hm_heap_insert(&heap, v);
     }
 
+    // clear
+    hm_heap_clear(&heap);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, free, cmp_int_up);
+
+    // double clear
     hm_heap_clear(&heap);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, free, cmp_int_up);
 
@@ -471,6 +476,11 @@ void test_heap_dynamic_clear() {
         hm_heap_insert(&heap, v);
     }
     
+    // clear
+    hm_heap_clear(&heap);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, start_capacity, free, cmp_int_up);
+
+    // double clear
     hm_heap_clear(&heap);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, start_capacity, free, cmp_int_up);
     
@@ -500,6 +510,11 @@ void test_heap_fixed_free() {
         hm_heap_insert(&heap, v);
     }
 
+    // free
+    hm_heap_free(&heap);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, 0, free, cmp_int_up);
+
+    // double free
     hm_heap_free(&heap);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, 0, free, cmp_int_up);
 
@@ -528,9 +543,14 @@ void test_heap_dynamic_free() {
         hm_heap_insert(&heap, v);
     }
     
+    // free
     hm_heap_free(&heap);
-
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, free, cmp_int_up);
+
+    // double free
+    hm_heap_free(&heap);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, free, cmp_int_up);
+    
     // use valgrind to check leak memory
     
     print_end("HEAP(DYNAMIC) | FUNC | FREE | CAPAITY: 64", fail_cnt);

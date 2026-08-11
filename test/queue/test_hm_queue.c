@@ -476,6 +476,7 @@ void test_queue_fixed_clear() {
     }
     test_queue_integrity(&queue, &fail_cnt, tag++, capacity, false, capacity, free);
     
+    // clear
     hm_queue_clear(&queue);
     
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
@@ -485,6 +486,17 @@ void test_queue_fixed_clear() {
 
     val = hm_queue_peek(&queue);
     check_res(val == NULL, "the peek front val should be NULL after clear the queue", &fail_cnt, tag++);
+
+    // double clear
+    hm_queue_clear(&queue);
+    
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+
+    val = hm_queue_deq(&queue);
+    check_res(val == NULL, "the dequeue front val should be NULL after double clear the queue", &fail_cnt, tag++);
+
+    val = hm_queue_peek(&queue);
+    check_res(val == NULL, "the peek front val should be NULL after double clear the queue", &fail_cnt, tag++);
 
     hm_queue_free(&queue);
 
@@ -513,6 +525,7 @@ void test_queue_dynamic_clear() {
 
     test_queue_integrity(&queue, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
     
+    // clear
     hm_queue_clear(&queue);
     
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, start_capacity, free);
@@ -522,6 +535,17 @@ void test_queue_dynamic_clear() {
 
     val = hm_queue_peek(&queue);
     check_res(val == NULL, "the peek front val should be NULL after clear the queue", &fail_cnt, tag++);
+
+    // double clear
+    hm_queue_clear(&queue);
+    
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    val = hm_queue_deq(&queue);
+    check_res(val == NULL, "the dequeue front val should be NULL after double clear the queue", &fail_cnt, tag++);
+
+    val = hm_queue_peek(&queue);
+    check_res(val == NULL, "the peek front val should be NULL after double clear the queue", &fail_cnt, tag++);
 
     hm_queue_free(&queue);
     
@@ -551,6 +575,7 @@ void test_queue_fixed_free() {
     }
     test_queue_integrity(&queue, &fail_cnt, tag++, capacity, false, capacity, free);
     
+    // free
     hm_queue_free(&queue);
     
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, free);
@@ -560,6 +585,17 @@ void test_queue_fixed_free() {
 
     val = hm_queue_peek(&queue);
     check_res(val == NULL, "the peek front val should be NULL after free the queue", &fail_cnt, tag++);
+
+    // double free
+    hm_queue_free(&queue);
+    
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, free);
+
+    val = hm_queue_deq(&queue);
+    check_res(val == NULL, "the dequeue front val should be NULL after double free the queue", &fail_cnt, tag++);
+
+    val = hm_queue_peek(&queue);
+    check_res(val == NULL, "the peek front val should be NULL after double free the queue", &fail_cnt, tag++);
 
     hm_queue_free(&queue);
     
@@ -591,6 +627,7 @@ void test_queue_dynamic_free() {
 
     test_queue_integrity(&queue, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
     
+    // free
     hm_queue_free(&queue);
     
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, 0, free);
@@ -600,6 +637,17 @@ void test_queue_dynamic_free() {
 
     val = hm_queue_peek(&queue);
     check_res(val == NULL, "the peek front val should be NULL after free the queue", &fail_cnt, tag++);
+
+    // double free
+    hm_queue_free(&queue);
+    
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, 0, free);
+
+    val = hm_queue_deq(&queue);
+    check_res(val == NULL, "the dequeue front val should be NULL after double free the queue", &fail_cnt, tag++);
+
+    val = hm_queue_peek(&queue);
+    check_res(val == NULL, "the peek front val should be NULL after double free the queue", &fail_cnt, tag++);
 
     hm_queue_free(&queue);
     

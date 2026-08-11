@@ -515,8 +515,25 @@ void test_set_clear() {
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
     check_res(fail_exist == 0, "some entry still existed in set after clear this set", &fail_cnt, tag++);
 
-    hm_set_free(&set);
 
+    // double clear
+    hm_set_clear(&set);
+
+    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+
+    
+    // verfiy
+    fail_exist = 0;
+    for (int i = 0; i < num; i++) {
+        hm_set_entry e = hm_set_get(&set, &i);
+        if (e.key) {
+            fail_exist++;
+        }
+    }
+    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    check_res(fail_exist == 0, "some entry still existed in set after double clear this set", &fail_cnt, tag++);
+
+    hm_set_free(&set);
 
 
     print_end("SET | FUNC | CLEAR | TYPE: [INT]", fail_cnt);
@@ -1219,7 +1236,7 @@ int main()
 
     boundary_test();
 
-    // stress_test();
+    stress_test();
 
     return all_failure_num;
 }

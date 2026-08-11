@@ -479,6 +479,7 @@ void test_stack_fixed_clear() {
 
     test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity, free);
 
+    // clear
     hm_stack_clear(&stack);
 
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, free);
@@ -488,6 +489,17 @@ void test_stack_fixed_clear() {
     
     val = hm_stack_pop(&stack);
     check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag++);
+    
+    // double clear
+    hm_stack_clear(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, free);
+
+    val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after double clear the stack", &fail_cnt, tag++);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after double clear the stack", &fail_cnt, tag++);
     
     hm_stack_free(&stack);
     
@@ -516,6 +528,7 @@ void test_stack_dynamic_clear() {
 
     test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
 
+    // clear
     hm_stack_clear(&stack);
 
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity, free);
@@ -525,6 +538,17 @@ void test_stack_dynamic_clear() {
     
     val = hm_stack_pop(&stack);
     check_res(val == NULL, "the pop top should be NULL after clear the stack", &fail_cnt, tag++);
+
+    // double clear
+    hm_stack_clear(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity, free);
+
+    val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after double clear the stack", &fail_cnt, tag++);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after double clear the stack", &fail_cnt, tag++);
 
     hm_stack_free(&stack);
     
@@ -553,6 +577,8 @@ void test_stack_fixed_free() {
         }
     }
     test_stack_integrity(&stack, &fail_cnt, tag++, capacity, false, capacity, free);
+
+    // free
     hm_stack_free(&stack);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, 0, free);
 
@@ -561,6 +587,16 @@ void test_stack_fixed_free() {
     
     val = hm_stack_pop(&stack);
     check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag++);
+
+    // double free
+    hm_stack_free(&stack);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, 0, free);
+
+    val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after double free the stack", &fail_cnt, tag++);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after double free the stack", &fail_cnt, tag++);
 
     
     print_end("STACK(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -587,6 +623,7 @@ void test_stack_dynamic_free() {
 
     test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
 
+    // free
     hm_stack_free(&stack);
 
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, 0, free);
@@ -596,6 +633,17 @@ void test_stack_dynamic_free() {
     
     val = hm_stack_pop(&stack);
     check_res(val == NULL, "the pop top should be NULL after free the stack", &fail_cnt, tag++);
+
+    // double free
+    hm_stack_free(&stack);
+
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, 0, free);
+
+    val = hm_stack_peek(&stack);
+    check_res(val == NULL, "the peek top should be NULL after double free the stack", &fail_cnt, tag++);
+    
+    val = hm_stack_pop(&stack);
+    check_res(val == NULL, "the pop top should be NULL after double free the stack", &fail_cnt, tag++);
 
     
     print_end("STACK(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
