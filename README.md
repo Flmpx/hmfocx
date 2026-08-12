@@ -32,6 +32,28 @@ cmake .. -G "MinGW Makefiles"
 mingw32-make
 ```
 
+- But I strongly suggest you to use `cmake` to clone, build and use this library(In that case, you can see comments of a function when you use this function)
+
+1. Add some code in `CMakeLists.txt` of your project
+
+```cmake
+# ...
+include(FetchContent)
+
+FetchContent_Declare(
+    hmfocx
+    GIT_REPOSITORY https://github.com/Flmpx/hmfocx.git  # or git@github.com:Flmpx/hmfocx.git
+    GIT_TAG v0.12.0
+)
+
+FetchContent_MakeAvailable(hmfocx)
+
+# ...
+
+target_link_library(your_executable PRIVATE hmfocx)
+```
+
+2. Run common the build process of `cmake`
 
 
 - Some detailed information about container functions
@@ -52,4 +74,4 @@ mingw32-make
 
 8. [hm_arr](docs/hm_arr.md)
 
-8. [hm_str](docs/hm_str.md)
+9. [hm_str](docs/hm_str.md)
