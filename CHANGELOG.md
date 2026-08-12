@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+### Added
+- Add new container for this library -- `hm_str`, it including some basic operations, such as `append`, `get`, other detailed information see [hm_str](docs/hm_str.md)
+
 ## [0.12.0] - 2026-08-04
 
 ### Added

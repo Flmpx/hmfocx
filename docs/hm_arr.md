@@ -798,6 +798,8 @@ int main()
 
 8. hm_arr
 
+9. [hm_str](hm_str.md)
+
 
 
 <br><br><br>

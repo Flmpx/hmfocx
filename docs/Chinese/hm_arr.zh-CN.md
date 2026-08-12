@@ -803,6 +803,8 @@ int main()
 
 8. hm_arr
 
+9. [hm_str](hm_str.zh-CN.md)
+
 <br><br><br>
 <div align = "right">
     <a href="#head">↑ Top</a>

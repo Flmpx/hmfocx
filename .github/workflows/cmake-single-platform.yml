@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [hm_list, hm_map, hm_pool, hm_stack, hm_queue, hm_heap, hm_set, hm_arr]
+        target: [hm_list, hm_map, hm_pool, hm_stack, hm_queue, hm_heap, hm_set, hm_arr, hm_str]
 
     steps:
     - uses: actions/checkout@v4
