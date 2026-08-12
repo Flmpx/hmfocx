@@ -82,14 +82,39 @@ hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity);
 <summary>try: init</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_str_status(hm_str* str) {
+    printf("len: %zu, capacity: %zu\n", hm_str_len(str), hm_str_capacity(str));
+}
+
+int main() 
+{
+    hm_str str;
+    // init
+    hm_str_init(&str);
+    print_str_status(&str);
+    hm_str_free(&str);
+
+    // init with reserve
+    size_t capacity = 1314;
+    hm_str_init_reserve(&str, capacity);
+    print_str_status(&str);
+    hm_str_free(&str);
+    
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+len: 0, capacity: 0
+len: 0, capacity: 1314
 ```
 
 </details>
@@ -137,14 +162,53 @@ const char* hm_str_get(hm_str* str, size_t index);
 <summary>try: append & get</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+const char* strings[] = {"ABC", "DEF", "GHI"};
+int num = sizeof(strings) / sizeof(char*);
+
+void print_str(hm_str* str) {
+    size_t len = hm_str_len(str);
+    // get
+    for (int i = 0; i < len; i++) {
+        const char* s = hm_str_get(str, i);
+        printf("%s\n", s);
+    }
+}
+
+int main() {
+    hm_str str;
+    hm_str_init(&str);
+
+    // append
+    for (int i = 0; i < num; i++) {
+        hm_str_append(&str, strings[i]);
+    }
+
+    // print
+    print_str(&str);
+
+    hm_str_free(&str);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+ABCDEFGHI
+BCDEFGHI
+CDEFGHI
+DEFGHI
+EFGHI
+FGHI
+GHI
+HI
+I
 ```
 
 </details>
@@ -170,14 +234,38 @@ char* hm_str_pop(hm_str* str);
 <summary>try: pop</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
+int num = sizeof(strings) / sizeof(char*);
+
+int main() {
+    hm_str str;
+    hm_str_init(&str);
+
+    // append
+    for (int i = 0; i < num; i++) {
+        hm_str_append(&str, strings[i]);
+    }
+
+    // pop
+    char* s = hm_str_pop(&str);
+    printf("%s\n", s);
+
+    free(s);
+    hm_str_free(&str);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+Hi, I'm Flmpx
 ```
 
 </details>
@@ -205,14 +293,43 @@ hm_str_ret hm_str_shrink(hm_str* str);
 <summary>try: shrink</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_str_status(hm_str* str) {
+    printf("| len: %-5zu capacity: %5zu\n", hm_str_len(str), hm_str_capacity(str));
+}
+
+int main() {
+    hm_str str;
+
+    int capcity = 1314;
+    hm_str_init_reserve(&str, capcity);
+
+    // shrink and print status
+    print_str_status(&str);
+    while (hm_str_shrink(&str) == hm_str_ret_suc) {
+        print_str_status(&str);
+    }
+
+    hm_str_free(&str);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
-
+| len: 0     capacity:  1314
+| len: 0     capacity:   657
+| len: 0     capacity:   328
+| len: 0     capacity:   164
+| len: 0     capacity:    82
+| len: 0     capacity:    41
+| len: 0     capacity:    20
 ```
 
 </details>
@@ -235,14 +352,47 @@ void hm_str_clear(hm_str* str);
 <summary>try: clear</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
+int num = sizeof(strings) / sizeof(char*);
+
+void print_str_status(hm_str* str) {
+    printf("| len: %-5zu capacity: %5zu\n", hm_str_len(str), hm_str_capacity(str));
+}
+
+int main() {
+    hm_str str;
+    hm_str_init(&str);
+
+    // append
+    for (int i = 0; i < num; i++) {
+        hm_str_append(&str, strings[i]);
+    }
+    printf("%s\n", hm_str_get(&str, 0));
+    print_str_status(&str);
+    
+    // clear
+    hm_str_clear(&str);
+    printf("%s\n", hm_str_get(&str, 0));
+    print_str_status(&str);
+
+    hm_str_free(&str);
+    return 0;
+}
 ```
 
 <details>
 <summary>run result</summary>
 
 ```txt
+Hi, I'm Flmpx
+| len: 13    capacity:    17
 
+| len: 0     capacity:    17
 ```
 
 </details>
@@ -266,7 +416,27 @@ void hm_str_free(hm_str* str);
 <summary>try: free</summary>
 
 ```c
+#include <hm_str.h>
 
+#include <stdlib.h>
+#include <stdio.h>
+
+const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
+int num = sizeof(strings) / sizeof(char*);
+
+int main() {
+    hm_str str;
+    hm_str_init(&str);
+
+    // append
+    for (int i = 0; i < num; i++) {
+        hm_str_append(&str, strings[i]);
+    }
+
+    // str must be freed after use
+    hm_str_free(&str);
+    return 0;
+}
 ```
 
 </details>
