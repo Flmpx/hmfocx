@@ -1,130 +1,37 @@
 
 # Document
 
-<p align = "center">
-    English | <a href = "./Chinese/README.zh-CN.md">简体中文</a>
-</p>
+## The document include next part
+- Introduction of containers
+- The detained comment about functions of every containers
+- `Try` part to teach you how to calling this function
+- Some `Tip`,  `Note` or `Warning` in it
 
-## All Container's Document
+## Document Link
 
-1. [hm_list](hm_list.md)
+| **Struct Name** | **Fact** |
+| ---------------- | ----------- |
+| [hm_list](hm_list.md) | List | 
+| [hm_map](hm_map.md) | Hash Table(Map) | 
+| [hm_pool](hm_pool.md) | Memory Pool |
+| [hm_stack](hm_stack.md) | Stack |
+| [hm_queue](hm_queue.md) | Queue |
+| [hm_heap](hm_heap.md) | Heap |
+| [hm_set](hm_set.md) | Hash Set |
+| [hm_arr](hm_arr.md) | Array |
+| [hm_str](hm_str.md) | String |
 
-2. [hm_map](hm_map.md)
+## Some Tips About All Containers
 
-3. [hm_pool](hm_pool.md)
+>  [!Tip]  
+>  - None of the functions will check if the pointer of container is `NULL`, so, you have to make sure the pointer is valid
+>  - Whether other pointer parameters can be `NULL` depends on the function comments
 
-4. [hm_stack](hm_stack.md)
+>  [!Tip]
+>  - The `get` function will return `Level 1 Pointer`(map's entry include the Level 1 Pointer of key and val)
+>  - The `get_pointer/get_entry/get_node` function will return `Level 2 Pointer`
+>  
 
-5. [hm_queue](hm_queue.md)
-
-6. [hm_heap](hm_heap.md)
-
-7. [hm_set](hm_set.md)
-
-8. [hm_arr](hm_arr.md)
-
-9. [hm_str](hm_str.md)
-
-<br><br><br><br><br><br><br><br>
-
-
-
-<a id = "head"></a>
-
-## Document Formatting
-
-
-
-
-### The detailed information about `func`
-
-
-#### Navigation
-- [Introduction](#intro)
-- [Functions](#func)
-    - [Func](#afunc)
-- [Other Things](#otherthings)
-- [Other Containers](#othercontainer)
-
-
-<a id = "intro"></a>
-
-#### Introduction
-...
-
-
-<a id = "func"></a>
-
-#### Functions
-
-
-<a id = "afunc"></a>
-
-> **Func**
-```c
-/**
- * Brief ...
- * 
- * @note ...
- * 
- * @return Return **...** when ...
- * 
- * @warning ...
- */
-int func(int a, int b);
-```
-<details>
-<summary>try: func</summary>
-
-```c
-#include <func.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-
-int main() 
-{
-    printf("hello, world\n");
-    return 0;
-}
-```
-
-<details>
-<summary>run result</summary>
-
-```txt
-hello, world
-
-```
-</details>
-
-</details>
-<br><br><br>
-
-
-<a id = "otherthings"></a>
-
-## Other Things
-
-- some little things
-
-
-
-
-
-
-<a id = "othercontainer"></a>
-
-#### Other Containers
-
-1. func
-
-2. ...
-
-
-<br><br><br>
-<div align = "right">
-    <a href="#head">↑ Top</a>
-</div>
-
-<hr>
+>  [!Tip]
+>  - Use `get` function can change the data that you pass in container
+>  - Use `get_pointer/get_entry/get_node` function can change the pointer of the data, it can replace the whole data, so, you have the responsibility to manage the old memory data

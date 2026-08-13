@@ -1,29 +1,27 @@
-- **hmfocx**  
-- A library of some basic container  
+# hmfocx
+A library of some basic container   
 
-<p align = "center">
-    English | <a href = "./README.zh-CN.md">简体中文</a>
-</p>
+## Build Methods
 
-- Building in `Linux`
-1. Git clone
+### Building in `Linux`
+#### Git clone  
 ```shell
 git clone https://github.com/Flmpx/hmfocx.git
 ```
-2. Build with cmake(enter the `build` folder firstly)
+#### Build with cmake(enter the `build` folder firstly)  
 ```shell
 cmake ..
 ```
-3. Generate the static library(this operation is also done in the `build` folder)
+#### Generate the static library(this operation is also done in the `build` folder)  
 ```shell
 make
 ```
-4. Everything has been done  
+#### Everything has been done  
 you can find a file named `libhmfocx.a` in the `bin` folder, this is a static library about this project
 
 
-- Building in `Windows` (MinGW)
-- The steps are the same as above, just the command is different
+### Building in `Windows` (MinGW)
+#### The steps are the same as above, just the command is different
 ```shell
 git clone https://github.com/Flmpx/hmfocx.git
 
@@ -32,9 +30,11 @@ cmake .. -G "MinGW Makefiles"
 mingw32-make
 ```
 
-- But I strongly suggest you to use `cmake` to clone, build and use this library(In that case, you can see comments of a function when you use this function)
+### Use `CMake` Completely
 
-1. Add some code in `CMakeLists.txt` of your project
+I strongly suggest you to use `cmake` to clone, build and use this library(In that case, you can see comments of a function when you use this function)  
+
+#### Add some code in `CMakeLists.txt` of your project  
 
 ```cmake
 # ...
@@ -53,25 +53,49 @@ FetchContent_MakeAvailable(hmfocx)
 target_link_library(your_executable PRIVATE hmfocx)
 ```
 
-2. Run common the build process of `cmake`
+#### Run common the build process of `cmake`  
+```shell
+mkdir build 
+cd build
+cmake ..
+make
+```
 
+## Detail Information About Containers
 
-- Some detailed information about container functions
+### The document include next part
+- Introduction of containers
+- The detained comment about functions of every containers
+- `Try` part to will teach you how to calling this function
+- Some `Tip`,  `Note` or `Warning` in it
 
-1. [hm_list](docs/hm_list.md)
+### Document Link
 
-2. [hm_map](docs/hm_map.md)
+| **Struct Name** | **Fact** |
+| ---------------- | ----------- |
+| [hm_list](docs/hm_list.md) | List | 
+| [hm_map](docs/hm_map.md) | Hash Table(Map) | 
+| [hm_pool](docs/hm_pool.md) | Memory Pool |
+| [hm_stack](docs/hm_stack.md) | Stack |
+| [hm_queue](docs/hm_queue.md) | Queue |
+| [hm_heap](docs/hm_heap.md) | Heap |
+| [hm_set](docs/hm_set.md) | Hash Set |
+| [hm_arr](docs/hm_arr.md) | Array |
+| [hm_str](docs/hm_str.md) | String |
 
-3. [hm_pool](docs/hm_pool.md)
+## Design
 
-4. [hm_stack](docs/hm_stack.md)
+The Container include the main container and it's iterator  
 
-5. [hm_queue](docs/hm_queue.md)
+### The Name Of Containers Or Some Variable
 
-6. [hm_heap](docs/hm_heap.md)
+- main format -- `hm_{container}_{Other_1}_{Other_2}_ ...`
+- All containers' name start with `hm_`, like List's name -- `hm_list`, and this is a flag of this library
+- And there have some `enum` or `struct` in every container, like Map's entry name -- `hm_map_entry`, some enum's name see comment of every function
 
-7. [hm_set](docs/hm_set.md)
+### The Functions' Name Of Every Container
 
-8. [hm_arr](docs/hm_arr.md)
+- main format -- `hm_{container}_{action}_{more info}_ ...`
+- Like conatiner's name, it must start with `hm_`
+- The action include `init`, `insert`, `del`, `shrink`, `clear`, `free` and more...
 
-9. [hm_str](docs/hm_str.md)

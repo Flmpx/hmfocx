@@ -1,9 +1,7 @@
 <a id = "head"></a>
+
 # The detailed information about `hm_queue`
 
-<p align = "center">
-    English | <a href = "./Chinese/hm_queue.zh-CN.md">简体中文</a>
-</p>
 
 
 

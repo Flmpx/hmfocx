@@ -1,9 +1,6 @@
 <a id = "head"></a>
-# The detailed information about `hm_map`
 
-<p align = "center">
-    English | <a href = "./Chinese/hm_map.zh-CN.md">简体中文</a>
-</p>
+# The detailed information about `hm_map`
 
 
 ## Navigation

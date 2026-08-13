@@ -1,9 +1,7 @@
 <a id = "head"></a>
+
 # The detailed information about `hm_str`
 
-<p align = "center">
-    English | <a href = "./Chinese/hm_str.zh-CN.md">简体中文</a>
-</p>
 
 ## Navigation
 - [Introduction](#intro)

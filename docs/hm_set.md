@@ -1,9 +1,6 @@
 <a id = "head"></a>
-# The detailed information about `hm_set`
 
-<p align = "center">
-    English | <a href = "./Chinese/hm_set.zh-CN.md">简体中文</a>
-</p>
+# The detailed information about `hm_set`
 
 ## Navigation
 - [Introduction](#intro)

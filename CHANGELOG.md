@@ -1,8 +1,6 @@
 # Changelog
 
 - All the change of this library will write in this file. 
-- The format reference [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
-- The version number follows [Semantic Versioning](https://semver.org/)
 
 ## [Unreleased]
 
