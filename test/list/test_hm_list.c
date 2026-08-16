@@ -25,7 +25,7 @@ void test_list_integrity(hm_list* list, int* fail_cnt, int tag, size_t size, hm_
     check_res(!(list->size != 0 && list->tail == NULL), "TEST OF INTEGRITY: list's size isn't 0, but list's tail is NULL", fail_cnt, tag);
     
     // -->
-    hm_listnode* cur = list->head;
+    hm_list_node* cur = list->head;
     for (int i = 0; i < list->size; i++) {
         cur = cur->next;
     }
@@ -80,7 +80,7 @@ void test_list_insert_head() {
     int flag[num];
     int fail;
     int cnt;
-    hm_listnode* curr;
+    hm_list_node* curr;
     
     fail = 0;
     // insert head
@@ -130,7 +130,7 @@ void test_list_insert_tail() {
     int flag[num];
     int fail;
     int cnt;
-    hm_listnode* curr;
+    hm_list_node* curr;
     fail = 0;
 
     // insert tail
@@ -174,7 +174,7 @@ void test_list_insert_index() {
 
     hm_list list;
     hm_list_init(&list, free);
-    hm_listnode* curr;
+    hm_list_node* curr;
     
     // insert index
     int fail_diff = 0;
@@ -516,7 +516,7 @@ void test_list_get_node() {
     int fial_val_diff = 0;
     // get and verify[valid]
     for (int i = 0; i < num; i++) {
-        hm_listnode* n = hm_list_get_node(&list, i);
+        hm_list_node* n = hm_list_get_node(&list, i);
         if (n == NULL) {
             fail_node_nullptr++;
         } else {
@@ -537,7 +537,7 @@ void test_list_get_node() {
     // get and verify[invalid]
     int fail_exist = 0;
     for (int i = num; i < num * 2; i++) {
-        hm_listnode* n = hm_list_get_node(&list, i);
+        hm_list_node* n = hm_list_get_node(&list, i);
         if (n) {
             fail_exist++;
         }
@@ -599,7 +599,7 @@ void test_list_change() {
 
     // change pointer of node [use `hm_list_get_node`]
     for (int i = 0; i < num; i++) {
-        hm_listnode* n = hm_list_get_node(&list, i);
+        hm_list_node* n = hm_list_get_node(&list, i);
         n->val = &flag[i];
     }
 

@@ -28,11 +28,11 @@ typedef enum hm_list_ret {
 /**
  * The node of list
  */
-typedef struct hm_listnode {
-    struct hm_listnode* prev;
-    struct hm_listnode* next;
+typedef struct hm_list_node {
+    struct hm_list_node* prev;
+    struct hm_list_node* next;
     void* val;
-} hm_listnode;
+} hm_list_node;
 
 
 
@@ -40,8 +40,8 @@ typedef struct hm_listnode {
  * List with head and tail pointer
  */
 typedef struct hm_list {
-    hm_listnode* head;
-    hm_listnode* tail;
+    hm_list_node* head;
+    hm_list_node* tail;
     size_t size;
     hm_free free_val;
 } hm_list;
@@ -52,7 +52,7 @@ typedef struct hm_list {
  */
 
 typedef struct hm_list_iter {
-    hm_listnode* cur;
+    hm_list_node* cur;
 } hm_list_iter;
 
 
@@ -93,7 +93,7 @@ extern hm_list_ret hm_list_del_index(hm_list* list, size_t index);
  */
 
 extern void* hm_list_get(hm_list* list, size_t index);
-extern hm_listnode* hm_list_get_node(hm_list* list, size_t index);
+extern hm_list_node* hm_list_get_node(hm_list* list, size_t index);
 
 
 

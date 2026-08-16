@@ -134,7 +134,7 @@ void* hm_list_get(hm_list* list, size_t index);
  * 
  * @warning Prohibit to change the **prev** and **next** of Node
  */
-hm_listnode* hm_list_get_node(hm_list* list, size_t index);
+hm_list_node* hm_list_get_node(hm_list* list, size_t index);
 ```
 <details>
 <summary>try: insert & get</summary>
@@ -224,7 +224,7 @@ void print_list(hm_list* list) {
     int s = hm_list_size(list);
     // get_node and print
     for (int i = 0; i < s; i++) {
-        hm_listnode* n = hm_list_get_node(list, i);
+        hm_list_node* n = hm_list_get_node(list, i);
         char* v = n->val;
         printf("| %d. %s\n", i, v);
     }
@@ -246,7 +246,7 @@ int main()
 
     char* tmp_str = "Hello, I'm Flmpx";
     // use get_node to change the pointer of val at index 3
-    hm_listnode* v = hm_list_get_node(&list, 3);
+    hm_list_node* v = hm_list_get_node(&list, 3);
     v->val = tmp_str;
     print_list(&list);
     

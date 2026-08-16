@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Changed
+- **Refactor:** Change the name of list's node from `hm_listnode` to `hm_list_node`
+    - You can use **find and replace** function to change it in the old version
+
 ## [0.13.0] - 2026-08-13
 
 ### Added

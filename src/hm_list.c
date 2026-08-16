@@ -35,9 +35,9 @@ void hm_list_init(hm_list* list, hm_free free_val) {
  * @note - If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
  */
 void hm_list_free(hm_list* list) {
-    hm_listnode* cur = list->head;
+    hm_list_node* cur = list->head;
     while (cur) {
-        hm_listnode* tmp = cur;
+        hm_list_node* tmp = cur;
         cur = cur->next;
         if (list->free_val) {
             list->free_val(tmp->val);
@@ -56,10 +56,10 @@ void hm_list_free(hm_list* list) {
  * 
  * @warning - Prohibit to change the `prev` and `next` of Node
  */
-hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
+hm_list_node* hm_list_get_node(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
 
-    hm_listnode* cur = NULL;
+    hm_list_node* cur = NULL;
     size_t cnt = 0;
 
     // perf the logic about finding target Node
@@ -92,7 +92,7 @@ hm_listnode* hm_list_get_node(hm_list* list, size_t index) {
  */
 hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
 
-    hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
+    hm_list_node* new_node = (hm_list_node*)malloc(sizeof(hm_list_node));
     if (new_node == NULL) {
         return hm_list_ret_error;
     }
@@ -120,7 +120,7 @@ hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
  * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
-    hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
+    hm_list_node* new_node = (hm_list_node*)malloc(sizeof(hm_list_node));
     if (new_node == NULL) {
         return hm_list_ret_error;
     }
@@ -159,14 +159,14 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     if (index == 0) return hm_list_insert_head(list, val);
     if (index == list->size) return hm_list_insert_tail(list, val);
 
-    hm_listnode* new_node = (hm_listnode*)malloc(sizeof(hm_listnode));
+    hm_list_node* new_node = (hm_list_node*)malloc(sizeof(hm_list_node));
     if (new_node == NULL) {
         return hm_list_ret_error;
     }
     new_node->val = val;
 
     // the index is valid when run there
-    hm_listnode* cur = hm_list_get_node(list, index);
+    hm_list_node* cur = hm_list_get_node(list, index);
 
 
     new_node->next = cur;
@@ -193,7 +193,7 @@ static void* hm_list_pop_head(hm_list* list) {
         return NULL;
     }
 
-    hm_listnode* pop_node = list->head;
+    hm_list_node* pop_node = list->head;
 
 
     if (list->size == 1) {
@@ -225,7 +225,7 @@ static void* hm_list_pop_tail(hm_list* list) {
         return NULL;
     }
 
-    hm_listnode* pop_node = list->tail;
+    hm_list_node* pop_node = list->tail;
 
     if (list->size == 1) {
         list->head = list->tail = NULL;
@@ -260,7 +260,7 @@ void* hm_list_pop(hm_list* list, size_t index) {
     if (index == list->size - 1) return hm_list_pop_tail(list);
 
     // the index is valid when run there
-    hm_listnode* cur = hm_list_get_node(list, index);
+    hm_list_node* cur = hm_list_get_node(list, index);
 
 
     cur->prev->next = cur->next;
@@ -350,7 +350,7 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
 void* hm_list_get(hm_list* list, size_t index) {
     if (index >= list->size) return NULL;
 
-    hm_listnode* cur = hm_list_get_node(list, index);
+    hm_list_node* cur = hm_list_get_node(list, index);
 
     return cur->val;
 }
@@ -382,7 +382,7 @@ bool hm_list_iter_has_next(hm_list_iter* iter) {
  * @return - Return `NULL` when iterator doesn't has next
  */
 void* hm_list_iter_next(hm_list_iter* iter) {
-    hm_listnode* cur = iter->cur;
+    hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
         return NULL;
@@ -447,7 +447,7 @@ bool hm_list_iter_has_cur(hm_list_iter* iter) {
  * @return - Return `NULL` when iterator current pointer is invalid
  */
 void* hm_list_iter_cur(hm_list_iter* iter) {
-    hm_listnode* cur = iter->cur;
+    hm_list_node* cur = iter->cur;
     if (cur) {
         return cur->val;
     } else {
@@ -459,7 +459,7 @@ void* hm_list_iter_cur(hm_list_iter* iter) {
  * Move the iterator's pointer to next
  */
 void hm_list_iter_move_next(hm_list_iter* iter) {
-    hm_listnode* cur = iter->cur;
+    hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
         return;
@@ -472,7 +472,7 @@ void hm_list_iter_move_next(hm_list_iter* iter) {
  * Move the iterator's pointer to prev
  */
 void hm_list_iter_move_prev(hm_list_iter* iter) {
-    hm_listnode* cur = iter->cur;
+    hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
         return;
@@ -488,13 +488,13 @@ void hm_list_iter_move_prev(hm_list_iter* iter) {
  * @return - Return the pointer to head Node of the remaining part
  * @return - Return `NULL` when the list is less than `n` Node
  */
-static hm_listnode* split(hm_listnode* head, size_t n) {
+static hm_list_node* split(hm_list_node* head, size_t n) {
     if (!head) return NULL;
-    hm_listnode* cur = head;
+    hm_list_node* cur = head;
     for (size_t i = 1; i < n && cur->next; i++) {
         cur = cur->next;
     }
-    hm_listnode* right = cur->next;
+    hm_list_node* right = cur->next;
 
     if (right) {
         right->prev = NULL;
@@ -513,9 +513,9 @@ static hm_listnode* split(hm_listnode* head, size_t n) {
  * @return - Return the pointer to last Node of the merged list
  * @return - Return `NULL` when `left` and `right` are both `NULL`
  */
-static hm_listnode* merge(hm_listnode* left, hm_listnode* right, hm_listnode* tail, hm_cmp cmp) {
-    hm_listnode* l = left;
-    hm_listnode* r = right;
+static hm_list_node* merge(hm_list_node* left, hm_list_node* right, hm_list_node* tail, hm_cmp cmp) {
+    hm_list_node* l = left;
+    hm_list_node* r = right;
 
     while (l && r) {
         if (cmp(l->val, r->val) <= 0) {
@@ -550,27 +550,27 @@ static hm_listnode* merge(hm_listnode* left, hm_listnode* right, hm_listnode* ta
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp) {
     
-    hm_listnode* head = list->head;
+    hm_list_node* head = list->head;
 
     if (!head || !head->next) return;
 
     size_t s = list->size;
 
-    hm_listnode dummy;
+    hm_list_node dummy;
     dummy.next = head;
     dummy.prev = NULL;
 
     head->prev = &dummy;
 
-    hm_listnode* tail;
-    hm_listnode* cur;
+    hm_list_node* tail;
+    hm_list_node* cur;
     for (size_t step = 1; step < s; step <<= 1) {
         tail = &dummy;
         cur = dummy.next;
 
         while (cur) {
-            hm_listnode* left = cur;
-            hm_listnode* right = split(left, step);
+            hm_list_node* left = cur;
+            hm_list_node* right = split(left, step);
             cur = split(right, step);
 
             tail = merge(left, right, tail, cmp);
