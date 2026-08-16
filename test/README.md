@@ -1,7 +1,4 @@
 # Test Code Formatting
-<p align = "center">
-    English | <a href = "./README.zh-CN.md">简体中文</a>
-</p>
 
 ## Introduction 
 - This `README.md` will describe how to write tests for each container
