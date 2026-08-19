@@ -7,12 +7,17 @@
 #include "../include/hm_stack.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 
 size_t hm_stack_size(hm_stack* stack) {
+    assert(stack != NULL);
+
     return stack->top;
 }
 
 size_t hm_stack_capacity(hm_stack* stack) {
+    assert(stack != NULL);
+
     return stack->capacity;
 }
 
@@ -28,6 +33,8 @@ size_t hm_stack_capacity(hm_stack* stack) {
  * @return - Return `hm_stack_ret_suc` when initialize success
  */
 hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
+    assert(stack != NULL);
+
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -60,6 +67,8 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
  * @return - Return `hm_stack_ret_suc` when initialize success
  */
 hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, hm_free free_val) {
+    assert(stack != NULL);
+
     hm_stack_ret ret = hm_stack_init(stack, start_capacity, free_val);
     if (ret == hm_stack_ret_suc) {
         stack->dynamic_grow = true;
@@ -72,6 +81,8 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
  * Check if the stack is full
  */
 bool hm_stack_is_full(hm_stack* stack) {
+    assert(stack != NULL);
+
     return !(stack->dynamic_grow) && stack->top >= stack->capacity;
 }
 
@@ -79,6 +90,8 @@ bool hm_stack_is_full(hm_stack* stack) {
  * Check if the stack is empty
  */
 bool hm_stack_is_empty(hm_stack* stack) {
+    assert(stack != NULL);
+
     return stack->top == 0;
 }
 
@@ -92,6 +105,8 @@ bool hm_stack_is_empty(hm_stack* stack) {
  * @return - Return `hm_stack_ret_suc` when fresh stack success
  */
 static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
+    assert(stack != NULL);
+
     if (stack->top > new_capacity) {
         return hm_stack_ret_warn;
     }
@@ -119,6 +134,8 @@ static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
  * @return - Return `hm_stack_ret_error` when stack is `dynamic-grow` and expand failure
  */
 hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
+    assert(stack != NULL);
+
     if (hm_stack_is_full(stack)) {
         return hm_stack_ret_full;
     }
@@ -158,6 +175,8 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
  * @return - Return `NULL` when the stack is empty 
  */
 void* hm_stack_peek(hm_stack* stack) {
+    assert(stack != NULL);
+
     if (hm_stack_is_empty(stack)) {
         return NULL;
     }
@@ -170,6 +189,8 @@ void* hm_stack_peek(hm_stack* stack) {
  * @note - Return `NULL` when the stack is empty
  */
 void* hm_stack_pop(hm_stack* stack) {
+    assert(stack != NULL);
+
     if (hm_stack_is_empty(stack)) {
         return NULL;
     } 
@@ -187,6 +208,8 @@ void* hm_stack_pop(hm_stack* stack) {
  * @return - Return `hm_stack_ret_error` when shrink failure
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack) {
+    assert(stack != NULL);
+
     if (!stack->dynamic_grow || stack->top >= stack->capacity / 2) {
         return hm_stack_ret_none;
     }
@@ -203,6 +226,8 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_stack_clear(hm_stack* stack) {
+    assert(stack != NULL);
+
     if (stack->free_val) {
         size_t total = stack->top;
         void** vals = stack->vals;

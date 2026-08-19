@@ -31,7 +31,7 @@
 ## Functions
 
 >  [!Note]  
->  - Most of the functions **do not** check if `hm_list* & hm_list_iter*` is `NULL`, so, you have to make sure the pointer is valid
+>  - Most of the functions will **abort**(in debug build) when `hm_list* & hm_list_iter*` is `NULL`, so, you have to make sure the pointer is valid
 >  - **Exception:** Pass `NULL` in `hm_list_free()` is allowed
 >  - Whether other pointer parameters can be `NULL` depends on the function comments below
 
@@ -716,6 +716,7 @@ int main()
  * Sort list
  * 
  * @note Pass a comparison function to this function
+ * @note - The `cmp` function pointer `must not be NULL`
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```

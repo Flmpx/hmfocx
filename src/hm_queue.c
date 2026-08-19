@@ -6,12 +6,18 @@
 #include "../include/hm_queue.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
+
 
 size_t hm_queue_size(hm_queue* queue) {
+    assert(queue != NULL);
+
     return queue->size;
 }
 
 size_t hm_queue_capacity(hm_queue* queue) {
+    assert(queue != NULL);
+
     return queue->capacity;
 }
 
@@ -26,6 +32,8 @@ size_t hm_queue_capacity(hm_queue* queue) {
  * @return - Return `hm_queue_ret_suc` when initialize success
  */
 hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
+    assert(queue != NULL);
+
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -60,6 +68,8 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
  * @return - Return `hm_queue_ret_suc` when initialize success
  */
 hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, hm_free free_val) {
+    assert(queue != NULL);
+
     hm_queue_ret ret = hm_queue_init(queue, start_capacity, free_val);
     if (ret == hm_queue_ret_suc) {
         queue->dynamic_grow = true;
@@ -72,6 +82,8 @@ hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, 
  * Check if the queue is full
  */
 bool hm_queue_is_full(hm_queue* queue) {
+    assert(queue != NULL);
+
     return !(queue->dynamic_grow) && queue->size >= queue->capacity;
 }
 
@@ -81,6 +93,8 @@ bool hm_queue_is_full(hm_queue* queue) {
  * Check if the queue is empty
  */
 bool hm_queue_is_empty(hm_queue* queue) {
+    assert(queue != NULL);
+
     return queue->size == 0;
 }
 
@@ -94,6 +108,8 @@ bool hm_queue_is_empty(hm_queue* queue) {
  * @return - Return `hm_queue_ret_suc` when fresh queue success
  */
 static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
+    assert(queue != NULL);
+
     if (queue->size > new_capacity) {
         return hm_queue_ret_warn;
     }
@@ -135,6 +151,8 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
  * @return - Return `hm_queue_ret_error` when queue is `dynamic-grow` and expand failure
  */
 hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
+    assert(queue != NULL);
+
     if (hm_queue_is_full(queue)) {
         return hm_queue_ret_full;
     }
@@ -175,6 +193,8 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
  * @return - Return `NULL` when the queue is empty 
  */
 void* hm_queue_peek(hm_queue* queue) {
+    assert(queue != NULL);
+
     if (hm_queue_is_empty(queue)) {
         return NULL;
     }
@@ -187,6 +207,8 @@ void* hm_queue_peek(hm_queue* queue) {
  * @return - Return `NULL` when the queue is empty
  */
 void* hm_queue_deq(hm_queue* queue) {
+    assert(queue != NULL);
+
     if (hm_queue_is_empty(queue)) {
         return NULL;
     }
@@ -208,6 +230,8 @@ void* hm_queue_deq(hm_queue* queue) {
  * @return - Return `hm_queue_ret_error` when shrink failure
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue) {
+    assert(queue != NULL);
+
     if (!queue->dynamic_grow || queue->size >= queue->capacity / 2) {
         return hm_queue_ret_none;
     }
@@ -224,6 +248,8 @@ hm_queue_ret hm_queue_shrink(hm_queue* queue) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_queue_clear(hm_queue* queue) {
+    assert(queue != NULL);
+
     if (queue->free_val) {
         size_t size = queue->size;
         void** vals = queue->vals;

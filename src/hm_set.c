@@ -5,12 +5,18 @@
 #include "../include/hm_set.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
+
 
 size_t hm_set_size(hm_set* set) {
+    assert(set != NULL);
+
     return set->size;
 }
 
 size_t hm_set_len(hm_set* set) {
+    assert(set != NULL);
+
     return set->len;
 }
 
@@ -82,6 +88,10 @@ static size_t max_prime(size_t n) {
  * @note - Like `list`, the `free_key` parameters is optional (can be NULL), but `hash_key` and `cmp_key` must not be NULL
  */
 void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key) {
+    assert(set != NULL);
+    assert(hash_key != NULL);
+    assert(cmp_key != NULL);
+
     *set = (hm_set){.buckets = NULL,
                     .buckets_status = NULL,
                     .cmp_key = cmp_key,
@@ -102,6 +112,8 @@ void hm_set_init(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * @warning - Ensure there is enough space to insert before calling this function
  */
 static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t l = set->len;
 
     size_t index = set->hash_key(key) % l;
@@ -150,6 +162,8 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
  * @warning - This function is used by `hm_set_fresh()`, because the buckets are empty when the set is freshly created, so this function handles fewer cases
  */
 static hm_set_ret hm_set_addfunc_fresh(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t l = set->len;
     size_t index = set->hash_key(key) % l;
     while (set->buckets_status[index] != hm_none_in_set) {
@@ -173,6 +187,8 @@ static hm_set_ret hm_set_addfunc_fresh(hm_set* set, void* key) {
  * @return - Return `hm_set_ret_suc` when fresh set success
  */
 static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
+    assert(set != NULL);
+
     size_t old_l = set->len, old_s = set->size;
     if (old_s > new_len) {
         return hm_set_ret_warn;
@@ -232,6 +248,8 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
  * @return - Return `hm_set_ret_existed` when the key has existed in set
  */
 hm_set_ret hm_set_insert(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t l = set->len, s = set->size;
 
     bool flag_fresh = false;
@@ -275,6 +293,10 @@ hm_set_ret hm_set_insert(hm_set* set, void* key) {
  * @return - Return `hm_set_ret_suc` when initialize success
  */
 hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, size_t len) {
+    assert(set != NULL);
+    assert(hash_key != NULL);
+    assert(cmp_key != NULL);
+
     hm_set_init(set, hash_key, cmp_key, free_key);
 
     return hm_set_fresh(set, (len > min_len) ? len : min_len);
@@ -287,6 +309,8 @@ hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm
  * @return - Return `invalid_index(SIZE_MAX)` when key is not existed in set
  */
 static size_t hm_set_get_index(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
         return invalid_index;
@@ -318,6 +342,8 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
  * @warning - Change key is prohibited
  */
 hm_set_entry hm_set_get(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
         return (hm_set_entry){NULL};
@@ -340,6 +366,8 @@ hm_set_entry hm_set_get(hm_set* set, void* key) {
  * @return - Return `(hm_set_entry){NULL}` when key is not existed in map
  */
 hm_set_entry hm_set_pop(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
         return (hm_set_entry){NULL};
@@ -366,6 +394,8 @@ hm_set_entry hm_set_pop(hm_set* set, void* key) {
  * @return - Return `hm_set_ret_none` when key is not existed in set
  */
 hm_set_ret hm_set_del(hm_set* set, void* key) {
+    assert(set != NULL);
+
     size_t s = set->size, l = set->len;
     if (s == 0 || l == 0) {
         return hm_set_ret_none;
@@ -392,6 +422,8 @@ hm_set_ret hm_set_del(hm_set* set, void* key) {
  * @return - Return `hm_set_ret_error` when shrink failure
  */
 hm_set_ret hm_set_shrink(hm_set* set) {
+    assert(set != NULL);
+
     size_t l = set->len, s = set->size;
     if (l < min_len * 2 || ((double)s / l) > min_load_factor) {
         return hm_set_ret_none;
@@ -406,6 +438,8 @@ hm_set_ret hm_set_shrink(hm_set* set) {
  * Free the keys in set but keeps the buckets and buckets_status array existed
  */
 void hm_set_clear(hm_set* set) {
+    assert(set != NULL);
+
     size_t l = set->len;
     if (set->free_key) {
         for (size_t i = 0; i < l; i++) {
@@ -438,6 +472,9 @@ void hm_set_free(hm_set* set) {
  * Initialize the iterator of set
  */
 void hm_set_iter_init(hm_set_iter* iter, hm_set* set) {
+    assert(iter != NULL);
+    assert(set != NULL);
+
     iter->buckets = set->buckets;
     iter->buckets_status = set->buckets_status;
     iter->index = 0;
@@ -449,6 +486,8 @@ void hm_set_iter_init(hm_set_iter* iter, hm_set* set) {
  * @return - Return `true` if the iterator has next
  */
 bool hm_set_iter_has_next(hm_set_iter* iter) {
+    assert(iter != NULL);
+
     size_t l = iter->len;
     size_t index = iter->index;
     
@@ -473,6 +512,8 @@ bool hm_set_iter_has_next(hm_set_iter* iter) {
  * @return - Return `(hm_set_entry){NULL}` when iterator doesn't has next 
  */
 hm_set_entry hm_set_iter_next(hm_set_iter* iter) {
+    assert(iter != NULL);
+
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -498,6 +539,8 @@ hm_set_entry hm_set_iter_next(hm_set_iter* iter) {
  * @return - Return a `negative number` when the length of the set is `0`
  */
 double hm_set_get_load_factor(hm_set* set) {
+    assert(set != NULL);
+
     if (set->len) {
         return (double)set->size / set->len;
     } else {

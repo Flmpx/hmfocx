@@ -9,6 +9,9 @@
     - You can use **find and replace** function to change it in the old version
 - **Refactor:** Pass `NULL` in `hm_{container}_free()` is allowed
 
+### Others
+- Add `assert()` when some pointer is `NULL` 
+
 ## [0.13.0] - 2026-08-13
 
 ### Added

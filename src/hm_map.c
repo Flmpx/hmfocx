@@ -5,13 +5,17 @@
 #include "../include/hm_map.h"
 #include <stdlib.h>
 #include <stdint.h>
-
+#include <assert.h>
 
 size_t hm_map_size(hm_map* map) {
+    assert(map != NULL);
+
     return map->size;
 }
 
 size_t hm_map_len(hm_map* map) {
+    assert(map != NULL);
+
     return map->len;
 }
 
@@ -83,6 +87,10 @@ static size_t max_prime(size_t n) {
  * @note - Like `list`, the `free_key` and `free_val` parameters are optional (can be NULL), but `hash_key` and `cmp_key` must not be NULL
  */
 void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val) {
+    assert(map != NULL);
+    assert(cmp_key != NULL);
+    assert(hash_key != NULL);
+
     *map = (hm_map){.buckets = NULL,
                     .buckets_status = NULL,
                     .cmp_key = cmp_key,
@@ -105,6 +113,8 @@ void hm_map_init(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key
  * @warning - Ensure there is enough space to insert before calling this function
  */
 static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
+    assert(map != NULL);
+
     size_t l = map->len;
 
     size_t index = map->hash_key(key) % l;
@@ -153,6 +163,8 @@ static hm_map_ret hm_map_addfunc(hm_map* map, void* key, void* val) {
  * @warning - This function is used by `hm_map_fresh()`, because the buckets are empty when the map is freshly created, so this function handles fewer cases
  */
 static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
+    assert(map != NULL);
+
     size_t l = map->len;
     size_t index = map->hash_key(key) % l;
     while (map->buckets_status[index] != hm_none_in_map) {
@@ -176,6 +188,8 @@ static hm_map_ret hm_map_addfunc_fresh(hm_map* map, void* key, void* val) {
  * @return - Return `hm_map_ret_suc` when fresh map success
  */
 static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
+    assert(map != NULL);
+
     size_t old_l = map->len, old_s = map->size;
     if (old_s > new_len) {
         return hm_map_ret_warn;
@@ -236,6 +250,8 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
  * @return - Return `hm_map_ret_existed` when the key has existed in map
  */
 hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
+    assert(map != NULL);
+
     size_t l = map->len, s = map->size;
 
     bool flag_fresh = false;
@@ -279,6 +295,10 @@ hm_map_ret hm_map_insert(hm_map* map, void* key, void* val) {
  * @return - Return `hm_map_ret_suc` when initialize success
  */
 hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val, size_t len) {
+    assert(map != NULL);
+    assert(hash_key != NULL);
+    assert(cmp_key != NULL);
+
     hm_map_init(map, hash_key, cmp_key, free_key, free_val);
 
     return hm_map_fresh(map, (len > min_len) ? len : min_len);
@@ -291,6 +311,8 @@ hm_map_ret hm_map_init_reserve(hm_map* map, hm_hash hash_key, hm_cmp cmp_key, hm
  * @return - Return `invalid_index(SIZE_MAX)` when key is not existed in map
  */
 static size_t hm_map_get_index(hm_map* map, void* key) {
+    assert(map != NULL);
+
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return invalid_index;
@@ -324,6 +346,8 @@ static size_t hm_map_get_index(hm_map* map, void* key) {
  * @warning - Change the pointer of key or itself is prohibited
  */
 hm_map_entry* hm_map_get_entry(hm_map* map, void* key) {
+    assert(map != NULL);
+
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return NULL;
@@ -349,6 +373,8 @@ hm_map_entry* hm_map_get_entry(hm_map* map, void* key) {
  * @warning - Change key is prohibited
  */
 hm_map_entry hm_map_get(hm_map* map, void* key) {
+    assert(map != NULL);
+
     hm_map_entry* e = hm_map_get_entry(map, key);
     if (e) {
         return *e;
@@ -367,6 +393,8 @@ hm_map_entry hm_map_get(hm_map* map, void* key) {
  * @return - Return `(hm_map_entry){NULL, NULL}` when key is not existed in map
  */
 hm_map_entry hm_map_pop(hm_map* map, void* key) {
+    assert(map != NULL);
+
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return (hm_map_entry){NULL, NULL};
@@ -391,6 +419,8 @@ hm_map_entry hm_map_pop(hm_map* map, void* key) {
  * @return - Return `hm_map_ret_none` when key is not existed in map
  */
 hm_map_ret hm_map_del(hm_map* map, void* key) {
+    assert(map != NULL);
+
     size_t s = map->size, l = map->len;
     if (s == 0 || l == 0) {
         return hm_map_ret_none;
@@ -418,6 +448,8 @@ hm_map_ret hm_map_del(hm_map* map, void* key) {
  * @return - Return `hm_map_ret_error` when shrink failure
  */
 hm_map_ret hm_map_shrink(hm_map* map) {
+    assert(map != NULL);
+
     size_t l = map->len, s = map->size;
     if (l < min_len * 2 || ((double)s / l) > min_load_factor) {
         return hm_map_ret_none;
@@ -432,6 +464,8 @@ hm_map_ret hm_map_shrink(hm_map* map) {
  * Free the keys and values in map but keeps the buckets and buckets_status array existed
  */
 void hm_map_clear(hm_map* map) {
+    assert(map != NULL);
+
     size_t l = map->len;
     
     if (!map->free_key && !map->free_val) {
@@ -481,6 +515,9 @@ void hm_map_free(hm_map* map) {
  * Initialize the iterator of map
  */
 void hm_map_iter_init(hm_map_iter* iter, hm_map* map) {
+    assert(iter != NULL);
+    assert(map != NULL);
+
     iter->buckets = map->buckets;
     iter->buckets_status = map->buckets_status;
     iter->index = 0;
@@ -492,6 +529,8 @@ void hm_map_iter_init(hm_map_iter* iter, hm_map* map) {
  * @return - Return `true` when the iterator has next
  */
 bool hm_map_iter_has_next(hm_map_iter* iter) {
+    assert(iter != NULL);
+
     size_t l = iter->len;
     size_t index = iter->index;
     
@@ -516,6 +555,8 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
  * @return - Return `(hm_map_entry){NULL, NULL}` when iterator doesn't has next 
  */
 hm_map_entry hm_map_iter_next(hm_map_iter* iter) {
+    assert(iter != NULL);
+
     size_t l = iter->len;
     size_t index = iter->index;
 
@@ -541,6 +582,8 @@ hm_map_entry hm_map_iter_next(hm_map_iter* iter) {
  * @return - Return a `negative number` when the length of the map is `0`
  */
 double hm_map_get_load_factor(hm_map* map) {
+    assert(map != NULL);
+
     if (map->len) {
         return (double)map->size / map->len;
     } else {

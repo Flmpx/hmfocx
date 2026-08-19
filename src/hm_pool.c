@@ -6,6 +6,7 @@
 #include "../include/hm_pool.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 
 /**
  * Align the memory to the variable `align`
@@ -24,6 +25,8 @@ static size_t align_up(size_t n, size_t align) {
  * @note - `hm_pool_block_allocate()` will return `NULL` when `blocks_per_page` == `0` || `block_size` == `0`
  */
 void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
+    assert(pool != NULL);
+
     pool->head_page = NULL;
     pool->head_block = NULL;
 
@@ -49,6 +52,7 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
  * @return - Return `NULL` when `blocks_per_page` or `block_size` of `pool` is `0`
  */
 void* hm_pool_block_allocate(hm_pool* pool) {
+    assert(pool != NULL);
 
     // refactor: allocator reurn NULL when `block_size` or `blocks_per_page` == 0
     if (pool->block_size == 0 || pool->blocks_per_page == 0) {
@@ -110,6 +114,8 @@ void* hm_pool_block_allocate(hm_pool* pool) {
  * @warning - The pointer of block must match the memory pool
  */
 void hm_pool_block_free(hm_pool* pool, void* block) {
+    assert(pool != NULL);
+
     if (block == NULL) return;
     hm_pool_block_node* node = (hm_pool_block_node*)block;
     node->next = pool->head_block;
@@ -138,6 +144,8 @@ void hm_pool_free(hm_pool* pool) {
  * Get the number of pages in the given memory pool
  */
 size_t hm_pool_get_pages(hm_pool* pool) {
+    assert(pool != NULL);
+
     size_t cnt = 0;
     hm_pool_page_node* cur = pool->head_page;
     while (cur) {
@@ -152,5 +160,7 @@ size_t hm_pool_get_pages(hm_pool* pool) {
  * Get the theoretical number of bytes per page in the memory pool
  */
 size_t hm_pool_get_bytes_per_page(hm_pool* pool) {
+    assert(pool != NULL);
+
     return sizeof(hm_pool_page_node) + pool->block_size * pool->blocks_per_page;
 }

@@ -7,12 +7,17 @@
 #include "../include/hm_arr.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 
 size_t hm_arr_size(hm_arr* arr) {
+    assert(arr != NULL);
+
     return arr->size;
 }
 
 size_t hm_arr_capacity(hm_arr* arr) {
+    assert(arr != NULL);
+
     return arr->capacity;
 }
 
@@ -26,6 +31,8 @@ size_t hm_arr_capacity(hm_arr* arr) {
  * @return - Return `hm_arr_ret_suc` when initialize success
  */
 hm_arr_ret hm_arr_init(hm_arr* arr, size_t capacity, hm_free free_val) {
+    assert(arr != NULL);
+
     if (capacity) {
         // prevent overflow
         if (capacity > SIZE_MAX / sizeof(void*)) {
@@ -57,6 +64,8 @@ hm_arr_ret hm_arr_init(hm_arr* arr, size_t capacity, hm_free free_val) {
  * @return - Return `hm_arr_ret_suc` when initialize success
  */
 hm_arr_ret hm_arr_init_dynamic_grow(hm_arr* arr, size_t start_capacity, hm_free free_val) {
+    assert(arr != NULL);
+
     hm_arr_ret ret = hm_arr_init(arr, start_capacity, free_val);
     if (ret == hm_arr_ret_suc) {
         arr->dynamic_grow = true;
@@ -69,6 +78,8 @@ hm_arr_ret hm_arr_init_dynamic_grow(hm_arr* arr, size_t start_capacity, hm_free 
  * Check if the arr is full
  */
 bool hm_arr_is_full(hm_arr* arr) {
+    assert(arr != NULL);
+
     return !(arr->dynamic_grow) && arr->size >= arr->capacity;
 }
 
@@ -76,6 +87,8 @@ bool hm_arr_is_full(hm_arr* arr) {
  * Check if the arr is empty
  */
 bool hm_arr_is_empty(hm_arr* arr) {
+    assert(arr != NULL);
+
     return arr->size == 0;
 }
 
@@ -89,6 +102,8 @@ bool hm_arr_is_empty(hm_arr* arr) {
  * @return - Return `hm_arr_ret_suc` when fresh arr success
  */
 static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
+    assert(arr != NULL);
+
     if (arr->size > new_capacity) {
         return hm_arr_ret_warn;
     }
@@ -121,6 +136,7 @@ static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
  * @return - Return `hm_arr_ret_error` when arr is `dynamic-grow` and expand failure
  */
 hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
+    assert(arr != NULL);
 
     if (index > arr->size) {
         return hm_arr_ret_warn;
@@ -168,6 +184,8 @@ hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
  * @return - Return `hm_arr_ret_error` when arr is `dynamic-grow` and expand failure
  */
 hm_arr_ret hm_arr_insert_head(hm_arr* arr, void* val) {
+    assert(arr != NULL);
+
     if (hm_arr_is_full(arr)) {
         return hm_arr_ret_full;
     }
@@ -183,6 +201,8 @@ hm_arr_ret hm_arr_insert_head(hm_arr* arr, void* val) {
  * @return - Return `hm_arr_ret_error` when arr is `dynamic-grow` and expand failure
  */
 hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
+    assert(arr != NULL);
+
     if (hm_arr_is_full(arr)) {
         return hm_arr_ret_full;
     }
@@ -200,6 +220,8 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
  * @return - Return `hm_arr_ret_suc` when delete success
  */
 hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index) {
+    assert(arr != NULL);
+
     if (index >= arr->size || hm_arr_is_empty(arr)) {
         return hm_arr_ret_none;
     }
@@ -218,6 +240,8 @@ hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index) {
  * @return - Return `hm_arr_ret_suc` when delete success
  */
 hm_arr_ret hm_arr_del_head(hm_arr* arr) {
+    assert(arr != NULL);
+
     if (hm_arr_is_empty(arr)) {
         return hm_arr_ret_none;
     }
@@ -233,6 +257,8 @@ hm_arr_ret hm_arr_del_head(hm_arr* arr) {
  * @return - Return `hm_arr_ret_suc` when delete success
  */
 hm_arr_ret hm_arr_del_tail(hm_arr* arr) {
+    assert(arr != NULL);
+
     if (hm_arr_is_empty(arr)) {
         return hm_arr_ret_none;
     }
@@ -248,6 +274,8 @@ hm_arr_ret hm_arr_del_tail(hm_arr* arr) {
  * @return - Return `NULL` when the `index` is out of bounds
  */
 void** hm_arr_get_pointer(hm_arr* arr, size_t index) {
+    assert(arr != NULL);
+
     if (index >= arr->size || hm_arr_is_empty(arr)) {
         return NULL;
     }
@@ -262,6 +290,8 @@ void** hm_arr_get_pointer(hm_arr* arr, size_t index) {
  * @return - Return `NULL` when the `index` is out of bounds
  */
 void* hm_arr_get(hm_arr* arr, size_t index) {
+    assert(arr != NULL);
+
     if (index >= arr->size || hm_arr_is_empty(arr)) {
         return NULL;
     }
@@ -277,6 +307,8 @@ void* hm_arr_get(hm_arr* arr, size_t index) {
  * @return - Return `NULL` when the `index` is out of bounds
  */
 void* hm_arr_pop(hm_arr* arr, size_t index) {
+    assert(arr != NULL);
+
     if (index >= arr->size || hm_arr_is_empty(arr)) {
         return NULL;
     }
@@ -298,6 +330,8 @@ void* hm_arr_pop(hm_arr* arr, size_t index) {
  * @return - Return `hm_arr_ret_error` when shrink failure
  */
 hm_arr_ret hm_arr_shrink(hm_arr* arr) {
+    assert(arr != NULL);
+
     if (!arr->dynamic_grow || arr->size >= arr->capacity / 2) {
         return hm_arr_ret_none;
     }
@@ -314,6 +348,8 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr) {
  * @note - Only free the values(if possible),  but keep the vals array existed
  */
 void hm_arr_clear(hm_arr* arr) {
+    assert(arr != NULL);
+    
     if (arr->free_val) {
         size_t total = arr->size;
         void** vals = arr->vals;

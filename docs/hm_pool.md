@@ -29,7 +29,7 @@
 
 
 >  [!Note]  
->  - Most of the functions **do not** check if `hm_pool*` is `NULL`, so, you have to make sure the pointer is valid
+>  - Most of the functions will **abort**(in debug build) when `hm_pool*` is `NULL`, so, you have to make sure the pointer is valid
 >  - **Exception:** Pass `NULL` in `hm_pool_free()` is allowed
 >  - Whether other pointer parameters can be `NULL` depends on the function comments below
 

@@ -38,7 +38,7 @@
 
 
 >  [!Note]  
->  - Most of the functions **do not** check if `hm_heap*` is `NULL`, so, you have to make sure the pointer is valid
+>  - Most of the functions will **abort**(in debug build) when `hm_heap*` is `NULL`, so, you have to make sure the pointer is valid
 >  - **Exception:** Pass `NULL` in `hm_heap_free()` is allowed
 >  - Whether other pointer parameters can be `NULL` depends on the function comments below
 
@@ -384,6 +384,8 @@ size: 0, capacity: 1
 /**
  * Build a heap(fixed-size heap) by the pass-in vals and some parameter
  * 
+ * @note - The `cmp_val` function pointer `must not be NULL`
+ * 
  * @return Return **hm_heap_ret_warn** when **size** > **capacity**
  * @return Return **hm_heap_ret_suc** when build success
  * 
@@ -393,6 +395,8 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
 
 /**
  * Build a heap(dynamic-grow heap) by the pass-in vals and some parameter
+ * 
+ * @note - The `cmp_val` function pointer `must not be NULL`
  * 
  * @return Return **hm_heap_ret_warn** when **size** > **capacity**
  * @return Return **hm_heap_ret_suc** when build success
@@ -469,6 +473,8 @@ int main()
 ```c
 /**
  * Rebuild heap by the new cmp function
+ * 
+ * @note - The `new_cmp_val` function pointer `must not be NULL`
  */
 void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp_val);
 ```

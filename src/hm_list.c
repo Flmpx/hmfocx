@@ -6,9 +6,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 
 
 size_t hm_list_size(hm_list* list) {
+    assert(list != NULL);
+
     return list->size;
 }
 
@@ -20,6 +23,8 @@ size_t hm_list_size(hm_list* list) {
  * @note - If you do `NOT` want the list to free its values, set the `free_val` function pointer to `NULL`
  */
 void hm_list_init(hm_list* list, hm_free free_val) {
+    assert(list != NULL);
+
     list->head = list->tail = NULL;
     list->size = 0;
     list->free_val = free_val;
@@ -58,6 +63,8 @@ void hm_list_free(hm_list* list) {
  * @warning - Prohibit to change the `prev` and `next` of Node
  */
 hm_list_node* hm_list_get_node(hm_list* list, size_t index) {
+    assert(list != NULL);
+
     if (index >= list->size) return NULL;
 
     hm_list_node* cur = NULL;
@@ -92,6 +99,7 @@ hm_list_node* hm_list_get_node(hm_list* list, size_t index) {
  * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
+    assert(list != NULL);
 
     hm_list_node* new_node = (hm_list_node*)malloc(sizeof(hm_list_node));
     if (new_node == NULL) {
@@ -121,6 +129,8 @@ hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
  * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
+    assert(list != NULL);
+
     hm_list_node* new_node = (hm_list_node*)malloc(sizeof(hm_list_node));
     if (new_node == NULL) {
         return hm_list_ret_error;
@@ -152,6 +162,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
  * @return - Return `hm_list_ret_suc` when insert success
  */
 hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
+    assert(list != NULL);
 
     if (index > list->size) {
         return hm_list_ret_warn;
@@ -190,6 +201,8 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
  * @return - Return `NULL` when list is empty
  */
 static void* hm_list_pop_head(hm_list* list) {
+    assert(list != NULL);
+
     if (list->size == 0) {
         return NULL;
     }
@@ -222,6 +235,8 @@ static void* hm_list_pop_head(hm_list* list) {
  * @return - Return `NULL` when list is empty
  */
 static void* hm_list_pop_tail(hm_list* list) {
+    assert(list != NULL);
+
     if (list->size == 0) {
         return NULL;
     }
@@ -253,6 +268,8 @@ static void* hm_list_pop_tail(hm_list* list) {
  * @return - Return `NULL` when the `index` is out of bounds
  */
 void* hm_list_pop(hm_list* list, size_t index) {
+    assert(list != NULL);
+
     if (index >= list->size) {
         return NULL;
     }
@@ -284,6 +301,8 @@ void* hm_list_pop(hm_list* list, size_t index) {
  * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_head(hm_list* list) {
+    assert(list != NULL);
+    
     if (list->size == 0) {
         return hm_list_ret_none;
     }
@@ -304,6 +323,8 @@ hm_list_ret hm_list_del_head(hm_list* list) {
  * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_tail(hm_list* list) {
+    assert(list != NULL);
+
     if (list->size == 0) {
         return hm_list_ret_none;
     }
@@ -327,6 +348,8 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
  * @return - Return `hm_list_ret_suc` when delete success
  */
 hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
+    assert(list != NULL);
+
     if (index >= list->size) {
         return hm_list_ret_none;
     }
@@ -349,6 +372,8 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
  * @return - Return `NULL` when the `index` is out of bounds
  */
 void* hm_list_get(hm_list* list, size_t index) {
+    assert(list != NULL);
+
     if (index >= list->size) return NULL;
 
     hm_list_node* cur = hm_list_get_node(list, index);
@@ -361,6 +386,9 @@ void* hm_list_get(hm_list* list, size_t index) {
  * Initialize iterator of list
  */
 void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
+    assert(iter != NULL);
+    assert(list != NULL);
+
     iter->cur = list->head;
 }
 
@@ -372,6 +400,8 @@ void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
  * @return - Return `true` when iterator has next
  */
 bool hm_list_iter_has_next(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     return iter->cur != NULL;
 }
 
@@ -383,6 +413,8 @@ bool hm_list_iter_has_next(hm_list_iter* iter) {
  * @return - Return `NULL` when iterator doesn't has next
  */
 void* hm_list_iter_next(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
@@ -402,6 +434,9 @@ void* hm_list_iter_next(hm_list_iter* iter) {
  * @note - Let the iterator point to the head of the list
  */
 void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list) {
+    assert(iter != NULL);
+    assert(list != NULL);
+
     iter->cur = list->head;
 }
 
@@ -412,6 +447,9 @@ void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list) {
  * @note - Let the iterator point to the tail of the list
  */
 void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
+    assert(iter != NULL);
+    assert(list != NULL);
+
     iter->cur = list->tail;
 }
 
@@ -423,6 +461,9 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
  * @note - Iterator will point to `NULL` when `index` is out of bounds
  */
 void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
+    assert(iter != NULL);
+    assert(list != NULL);
+
     if (index >= list->size) {
         iter->cur = NULL;
     } else {
@@ -437,6 +478,8 @@ void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
  * @return - Return `true` when iterator's current pointer is valid
  */
 bool hm_list_iter_has_cur(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     return iter->cur != NULL;
 }
 
@@ -448,6 +491,8 @@ bool hm_list_iter_has_cur(hm_list_iter* iter) {
  * @return - Return `NULL` when iterator current pointer is invalid
  */
 void* hm_list_iter_cur(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     hm_list_node* cur = iter->cur;
     if (cur) {
         return cur->val;
@@ -460,6 +505,8 @@ void* hm_list_iter_cur(hm_list_iter* iter) {
  * Move the iterator's pointer to next
  */
 void hm_list_iter_move_next(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
@@ -473,6 +520,8 @@ void hm_list_iter_move_next(hm_list_iter* iter) {
  * Move the iterator's pointer to prev
  */
 void hm_list_iter_move_prev(hm_list_iter* iter) {
+    assert(iter != NULL);
+
     hm_list_node* cur = iter->cur;
 
     if (cur == NULL) {
@@ -548,8 +597,11 @@ static hm_list_node* merge(hm_list_node* left, hm_list_node* right, hm_list_node
  * Sort list
  * 
  * @note - Pass a comparison function to this function
+ * @note - The `cmp` function pointer `must not be NULL`
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp) {
+    assert(list != NULL);
+    assert(cmp != NULL);
     
     hm_list_node* head = list->head;
 
