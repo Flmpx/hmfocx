@@ -167,6 +167,7 @@ void hm_str_clear(hm_str* str) {
  * Free the str
  */
 void hm_str_free(hm_str* str) {
+    if (str == NULL) return;
     free(str->val);
     hm_str_init(str);
 }

@@ -24,7 +24,8 @@
 ## Some Tips About All Containers
 
 >  [!Tip]  
->  - None of the functions will check if the pointer of container is `NULL`, so, you have to make sure the pointer is valid
+>  - Most of the functions **do not** check if the pointer of container is `NULL`, so, you have to make sure the pointer is valid
+>  - **Exception:** Pass `NULL` in `hm_{containier}_free()` is allowed
 >  - Whether other pointer parameters can be `NULL` depends on the function comments
 
 >  [!Tip]

@@ -123,6 +123,7 @@ void hm_pool_block_free(hm_pool* pool, void* block) {
  * @note Do not use blocks from a freed memory pool
  */
 void hm_pool_free(hm_pool* pool) {
+    if (pool == NULL) return;
     hm_pool_page_node* node = pool->head_page;
     while (node) {
         hm_pool_page_node* cur = node;

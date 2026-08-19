@@ -244,6 +244,7 @@ void hm_queue_clear(hm_queue* queue) {
  * @note - The queue can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_queue_free(hm_queue* queue) {
+    if (queue == NULL) return;
     hm_queue_clear(queue);
     free(queue->vals);
     queue->vals = NULL;

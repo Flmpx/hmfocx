@@ -35,6 +35,7 @@ void hm_list_init(hm_list* list, hm_free free_val) {
  * @note - If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
  */
 void hm_list_free(hm_list* list) {
+    if (list == NULL) return;
     hm_list_node* cur = list->head;
     while (cur) {
         hm_list_node* tmp = cur;

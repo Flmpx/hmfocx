@@ -330,6 +330,7 @@ void hm_arr_clear(hm_arr* arr) {
  * @note - The arr can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_arr_free(hm_arr* arr) {
+    if (arr == NULL) return;
     hm_arr_clear(arr);
     free(arr->vals);
     arr->vals = NULL;

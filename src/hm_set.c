@@ -426,6 +426,7 @@ void hm_set_clear(hm_set* set) {
  * Free all contents of the set
  */
 void hm_set_free(hm_set* set) {
+    if (set == NULL) return;
     hm_set_clear(set);
     free(set->buckets);
     free(set->buckets_status);

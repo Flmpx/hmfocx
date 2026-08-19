@@ -359,6 +359,7 @@ void hm_heap_clear(hm_heap* heap) {
  * @note - The heap can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_heap_free(hm_heap* heap) {
+    if (heap == NULL) return;
     hm_heap_clear(heap);
     free(heap->vals);
     heap->vals = NULL;

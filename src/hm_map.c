@@ -469,6 +469,7 @@ void hm_map_clear(hm_map* map) {
  * Free all contents of the map
  */
 void hm_map_free(hm_map* map) {
+    if (map == NULL) return;
     hm_map_clear(map);
     free(map->buckets);
     free(map->buckets_status);

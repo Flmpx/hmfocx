@@ -219,6 +219,7 @@ void hm_stack_clear(hm_stack* stack) {
  * @note - The stack can be reused when it is `dynamic-grow` but `fixed-size` cannot
  */
 void hm_stack_free(hm_stack* stack) {
+    if (stack == NULL) return;
     hm_stack_clear(stack);
     free(stack->vals);
     stack->vals = NULL;
