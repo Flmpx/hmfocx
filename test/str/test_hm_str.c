@@ -427,6 +427,38 @@ void test_append_empty_string_in_str() {
     HM_TEST_COUNTER
 }
 
+void test_append_empty_ch_in_str() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | BOUNDARY | APPEND EMPTY CHARACTER");
+    
+    hm_str str;
+    hm_str_init(&str);
+    
+    char ch = '\0';
+    int cnt = 10000;
+    
+    int fail = 0;
+    for (int i = 0; i < cnt; i++) {
+        if (hm_str_append_ch(&str, ch) != hm_str_ret_suc) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "append function should return suc when append many empty characters", &fail_cnt, tag++);
+    check_res(str.capacity <= 17, "the str's capacity shouldn't be big when append many empty characters", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    
+    const char* s = hm_str_get(&str, 0);
+    check_res(strcmp(s, "") == 0, "the string should be empty string when append many empty characters", &fail_cnt, tag++);
+    
+    hm_str_free(&str);
+    
+    
+    print_end("STR | BOUNDARY | APPEND EMPTY CHARACTER", fail_cnt);
+    HM_TEST_COUNTER
+
+}
+
 void test_oper_empty_str() {
     int fail_cnt = 0;
     int tag = 0;
@@ -459,6 +491,17 @@ void test_oper_empty_str() {
     hm_str_append(&str, string);
     check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a empty str", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
+    hm_str_free(&str);
+
+
+    // append character
+    hm_str_init(&str);
+    hm_str_append(&str, "");        // let it to empty, not no-capacity
+    
+    char ch = 'A';
+    hm_str_append_ch(&str, ch);
+    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a empty str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 1);
     hm_str_free(&str);
     
     
@@ -514,6 +557,14 @@ void test_oper_no_capacity_str() {
     test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
     hm_str_free(&str);
 
+    // append character
+    hm_str_init(&str);
+    
+    char ch = 'A';
+    hm_str_append_ch(&str, ch);
+    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a no-capacity str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 1);
+    hm_str_free(&str);
     
     // shrink
     hm_str_init(&str);
@@ -572,6 +623,17 @@ void test_oper_freed_str() {
     test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
     hm_str_free(&str);
     
+
+    // append character
+    hm_str_init(&str);
+    hm_str_append(&str, "cccccccccccc");
+    hm_str_free(&str);
+    
+    char ch = 'A';
+    hm_str_append_ch(&str, ch);
+    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a freed str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 1);
+    hm_str_free(&str);
     
     // shrink
     hm_str_init(&str);
@@ -701,6 +763,152 @@ void test_str_append_with_reserve_stress() {
     HM_TEST_COUNTER
 }
 
+void test_str_append_ch_stress() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | STRESS | APPEND CHARACTER");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    char chs[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 
+                  'H', 'I', 'G', 'K', 'L', 'M', 'N', 
+                  'O', 'P', 'Q',      'R', 'S', 'T', 
+                  'U', 'V', 'W',      'X', 'Y', 'Z'};
+
+    size_t ch_num = sizeof(chs) / sizeof(char);
+
+    size_t nums[] = {1000000, 5000000, 10000000, 50000000, 100000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    for (int i = 0; i < cnt; i++) {
+        hm_str str;
+        hm_str_init(&str);
+        int fail = 0;
+        clock_t start = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            for (int k = 0; k < ch_num; k++) {
+                if (hm_str_append_ch(&str, chs[k]) != hm_str_ret_suc) {
+                    fail++;
+                }
+            }
+        }
+        clock_t end = clock();
+        print_run_time("APPEND", start, end, nums[i] * ch_num, nums[i] * ch_num);
+        check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
+        test_str_integrity(&str, &fail_cnt, tag++, ch_num * nums[i]);
+
+        // verify
+        fail = 0;
+        const char* val = hm_str_get(&str, 0);
+        for (size_t j = 0; j < nums[i] * ch_num; j++) {
+            if (val[j] != chs[j % ch_num]) {
+                fail++;
+            }
+        }
+        check_res(fail == 0, "the string in str is wrong after append characters stressful", &fail_cnt, tag++);
+        hm_str_free(&str);
+    }
+    
+
+    print_end("STR | STRESS | APPEND CHARACTER", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+
+void test_str_append_ch_with_reserve_stress() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | STRESS | APPEND CHARACTER WITH RESERVE");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    char chs[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 
+                  'H', 'I', 'G', 'K', 'L', 'M', 'N', 
+                  'O', 'P', 'Q',      'R', 'S', 'T', 
+                  'U', 'V', 'W',      'X', 'Y', 'Z'};
+
+    size_t ch_num = sizeof(chs) / sizeof(char);
+
+    size_t nums[] = {1000000, 5000000, 10000000, 50000000, 100000000};
+    int cnt = sizeof(nums) / sizeof(size_t);
+    for (int i = 0; i < cnt; i++) {
+        hm_str str;
+        hm_str_init_reserve(&str, nums[i] * cnt);
+        int fail = 0;
+        clock_t start = clock();
+        for (int j = 0; j < nums[i]; j++) {
+            for (int k = 0; k < ch_num; k++) {
+                if (hm_str_append_ch(&str, chs[k]) != hm_str_ret_suc) {
+                    fail++;
+                }
+            }
+        }
+        clock_t end = clock();
+        print_run_time("APPEND", start, end, nums[i] * ch_num, nums[i] * ch_num);
+        check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
+        test_str_integrity(&str, &fail_cnt, tag++, ch_num * nums[i]);
+
+        // verify
+        fail = 0;
+        const char* val = hm_str_get(&str, 0);
+        for (size_t j = 0; j < nums[i] * ch_num; j++) {
+            if (val[j] != chs[j % ch_num]) {
+                fail++;
+            }
+        }
+        check_res(fail == 0, "the string in str is wrong after append characters with reserve stressful", &fail_cnt, tag++);
+        hm_str_free(&str);
+    }
+    
+
+    print_end("STR | STRESS | APPEND CHARACTER WITH RESERVE", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_str_append_ch() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | FUNC | APPEND CHARACTER");
+
+    hm_str str;
+    hm_str_init(&str);
+
+    char chs[] = {'I', 'L', 'X', 'L', 'B', 'M', 'H', 'L', 'H', ','};
+    int num = sizeof(chs) / sizeof(char);
+
+    int repeat_cnt = 64;
+    
+    int fail = 0;
+    // append character
+    for (int i = 0; i <repeat_cnt; i++) {
+
+        for (int j = 0; j < num; j++) {
+            if (hm_str_append_ch(&str, chs[j]) != hm_str_ret_suc) {
+                fail++;
+            }
+        }
+    }
+    test_str_integrity(&str, &fail_cnt, tag++, num * repeat_cnt);
+    check_res(fail == 0, "append character function should return suc", &fail_cnt, tag++);
+
+    // verify
+    const char* val = hm_str_get(&str, 0);  // get the string
+    fail = 0;
+
+    for (int i = 0; i < repeat_cnt * num; i++) {
+        if (val[i] != chs[i % num]) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the string in str is wrong after append character", &fail_cnt, tag++);
+
+    hm_str_free(&str);
+
+
+    print_end("STR | FUNC | APPEND CHARACTER", fail_cnt);
+    HM_TEST_COUNTER
+}
 
 
 void function_test() {
@@ -720,10 +928,14 @@ void function_test() {
 
     test_str_shrink();                                                                      printf("\n");
 
+    test_str_append_ch();                                                                   printf("\n");
+
 }
 
 void boundary_test() {
     test_append_empty_string_in_str();                                                      printf("\n");
+
+    test_append_empty_ch_in_str();                                                          printf("\n");
 
     test_oper_empty_str();                                                                  printf("\n");    
 
@@ -737,6 +949,10 @@ void stress_test() {
     test_str_append_stress();                                                               printf("\n");   
 
     test_str_append_with_reserve_stress();                                                  printf("\n");
+
+    test_str_append_ch_stress();                                                            printf("\n");
+
+    test_str_append_ch_with_reserve_stress();                                               printf("\n");
 }
 
 int main()

@@ -137,6 +137,17 @@ len: 0, capacity: 1314
  * @warning The parameter **sub_str** shouldn't be **NULL**
  */
 hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
+
+/**
+ * Append character in str
+ * 
+ * @note The len will keep the same when append '\0'
+ * @note The capacity will grow when the capacity is 0 and this function return suc
+ * 
+ * @return Return **hm_str_ret_error** when append fail
+ * @return Return **hm_str_ret_suc** when append success
+ */
+hm_str_ret hm_str_append_ch(hm_str* str, char ch);
 ```
 
 <a id = "get"></a>
@@ -208,6 +219,58 @@ FGHI
 GHI
 HI
 I
+```
+
+</details>
+
+</details>
+
+<details>
+<summary>try: append character & get</summary>
+
+```c
+#include <hm_str.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+const char chs[] = {'I', 'L', 'X', 'L'};
+int num = sizeof(chs) / sizeof(char);
+
+void print_str(hm_str* str) {
+    size_t len = hm_str_len(str);
+    // get
+    for (int i = 0; i < len; i++) {
+        const char* s = hm_str_get(str, i);
+        printf("%s\n", s);
+    }
+}
+
+int main() {
+    hm_str str;
+    hm_str_init(&str);
+
+    // append character
+    for (int i = 0; i < num; i++) {
+        hm_str_append_ch(&str, chs[i]);
+    }
+
+    // print
+    print_str(&str);
+
+    hm_str_free(&str);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+ILXL
+LXL
+XL
+L
 ```
 
 </details>

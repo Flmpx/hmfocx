@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Added
+- Add the new function for `hm_str` -- `hm_str_append_ch()` to append the single character
+
 ### Changed
 - **Refactor:** Change the name of list's node from `hm_listnode` to `hm_list_node`
     - You can use **find and replace** function to change it in the old version

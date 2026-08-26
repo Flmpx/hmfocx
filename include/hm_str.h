@@ -58,7 +58,7 @@ extern hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity);
  */
 
 extern hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
-
+extern hm_str_ret hm_str_append_ch(hm_str* str, char ch);
 
 /**
  * Get

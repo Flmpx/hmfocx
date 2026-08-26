@@ -136,6 +136,45 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str) {
     return hm_str_ret_suc;
 }
 
+
+/**
+ * Append character in str
+ * 
+ * @note - The len will keep the same when append '\0'
+ * @note - The capacity will grow when the capacity is 0 and this function return suc
+ * 
+ * @return - Return `hm_str_ret_error` when append fail
+ * @return - Return `hm_str_ret_suc` when append success
+ */
+hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
+    assert(str != NULL);
+
+    if (str->capacity == 0) {
+        if (hm_str_init_reserve(str, min_capacity) != hm_str_ret_suc) {
+            return hm_str_ret_error;
+        }
+    } else if (str->len == str->capacity) {
+        // prevent overflow
+        if (str->capacity > SIZE_MAX / 2) {
+            return hm_str_ret_error;
+        }
+        size_t new_capacity = str->capacity * 2;
+        if (hm_str_fresh(str, new_capacity) != hm_str_ret_suc) {
+            return hm_str_ret_error;
+        }
+    }
+
+    // return suc when it is '\0', and guarantee val isn't NULL after append and malloc suc
+    if (ch == '\0') return hm_str_ret_suc;
+
+    str->val[str->len] = ch;
+    str->len++;
+    str->val[str->len] = '\0';
+
+    return hm_str_ret_suc;
+
+}
+
 /**
  * Get the str at the specified index
  * 
