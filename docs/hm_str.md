@@ -31,9 +31,8 @@
 ## Functions
 
 >  [!Tip]
->  - The capacity of str is equal to the real memory size of string - 1(Because `\0` is existed in string)
->  - For this container, the capacity only have two situation -- `capacity == 0` or `capacity >= 17(min_capacity)`, and the val(string) in str is `NULL` when `capacity == 0`
-> 
+>  - `\0` is a valid characters in this str container
+>  - Cosidering the string saftey, `\0` will existed in the string at the index of str's length
 
 
 >  [!Note]  
@@ -64,12 +63,12 @@ size_t hm_str_capacity(hm_str* str);
 /**
  * Initialize str
  */
-void hm_str_init(hm_str* str);
+hm_str_ret hm_str_init(hm_str* str);
 
 /**
  * Reserve capacity and initialize str
  * 
- * @note Use the parameter **capacity** to set the start capacity of this str, the **min_capacity** is 17, **capacity** will be **min_capacity** if **capacity** < **min_capacity**
+ * @note Use the parameter **capacity** to set the start capacity of this str
  * 
  * @return Return **hm_str_ret_suc** when initialize success
  * @return Return **hm_str_ret_error** when initialize failure
@@ -85,6 +84,7 @@ hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 void print_str_status(hm_str* str) {
     printf("len: %zu, capacity: %zu\n", hm_str_len(str), hm_str_capacity(str));
@@ -130,19 +130,18 @@ len: 0, capacity: 1314
 /**
  * Append string in str
  * 
+ * @note Use the parameter to set the length of sub_str
+ * 
  * @return Return **hm_str_ret_error** when append fail
  * @return Return **hm_str_ret_suc** when append success
  * 
  * @warning Append itself is prohibited
  * @warning The parameter **sub_str** shouldn't be **NULL**
  */
-hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
+hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len);
 
 /**
  * Append character in str
- * 
- * @note The len will keep the same when append '\0'
- * @note The capacity will grow when the capacity is 0 and this function return suc
  * 
  * @return Return **hm_str_ret_error** when append fail
  * @return Return **hm_str_ret_suc** when append success
@@ -160,7 +159,6 @@ hm_str_ret hm_str_append_ch(hm_str* str, char ch);
  * 
  * @note **Index**  must be >= **0**, and <= **the len of str**
  * 
- * @return Return **NULL** when the **capacity** of str is **0**
  * @return Return **NULL** when **index** is out of bounds
  * 
  * @warning Change the string is prohibited
@@ -176,6 +174,7 @@ const char* hm_str_get(hm_str* str, size_t index);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 const char* strings[] = {"ABC", "DEF", "GHI"};
 int num = sizeof(strings) / sizeof(char*);
@@ -195,7 +194,7 @@ int main() {
 
     // append
     for (int i = 0; i < num; i++) {
-        hm_str_append(&str, strings[i]);
+        hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
     // print
@@ -233,6 +232,7 @@ I
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 const char chs[] = {'I', 'L', 'X', 'L'};
 int num = sizeof(chs) / sizeof(char);
@@ -287,7 +287,9 @@ L
  * Pop the string from str
  * 
  * @note The string will be removed but not free it(Memory Ownership Transfer)
- * @note Please free this string after use
+ * @note Please free this return string after use
+ * 
+ * @warning The str can't be used after call this function because the lifetime of str is over
  */
 char* hm_str_pop(hm_str* str);
 ```
@@ -300,6 +302,7 @@ char* hm_str_pop(hm_str* str);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
 int num = sizeof(strings) / sizeof(char*);
@@ -310,15 +313,15 @@ int main() {
 
     // append
     for (int i = 0; i < num; i++) {
-        hm_str_append(&str, strings[i]);
+        hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
     // pop
-    char* s = hm_str_pop(&str);
+    char* s = hm_str_pop(&str);     // str can't be use after pop
     printf("%s\n", s);
 
     free(s);
-    hm_str_free(&str);
+
     return 0;
 }
 ```
@@ -344,6 +347,8 @@ Hi, I'm Flmpx
 /**
  * Shrink the capacity of str if possible
  * 
+ * @note Shrink to the half of original capacity every call this function
+ * 
  * @return Return **hm_str_ret_suc** when shrink success
  * @return Return **hm_str_ret_none** when the str can't be shrunk
  * @return Return **hm_str_ret_error** when shrink failure
@@ -359,6 +364,7 @@ hm_str_ret hm_str_shrink(hm_str* str);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 void print_str_status(hm_str* str) {
     printf("| len: %-5zu capacity: %5zu\n", hm_str_len(str), hm_str_capacity(str));
@@ -392,6 +398,10 @@ int main() {
 | len: 0     capacity:    82
 | len: 0     capacity:    41
 | len: 0     capacity:    20
+| len: 0     capacity:    10
+| len: 0     capacity:     5
+| len: 0     capacity:     2
+| len: 0     capacity:     1
 ```
 
 </details>
@@ -418,6 +428,7 @@ void hm_str_clear(hm_str* str);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
 int num = sizeof(strings) / sizeof(char*);
@@ -432,7 +443,7 @@ int main() {
 
     // append
     for (int i = 0; i < num; i++) {
-        hm_str_append(&str, strings[i]);
+        hm_str_append(&str, strings[i], strlen(strings[i]));
     }
     printf("%s\n", hm_str_get(&str, 0));
     print_str_status(&str);
@@ -452,9 +463,9 @@ int main() {
 
 ```txt
 Hi, I'm Flmpx
-| len: 13    capacity:    17
+| len: 13    capacity:    16
 
-| len: 0     capacity:    17
+| len: 0     capacity:    16
 ```
 
 </details>
@@ -470,6 +481,8 @@ Hi, I'm Flmpx
 ```c
 /**
  * Free the str
+ * 
+ * @warning The str can't be used after call this function because the lifetime of str is over
  */
 void hm_str_free(hm_str* str);
 ```
@@ -482,6 +495,7 @@ void hm_str_free(hm_str* str);
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 const char* strings[] = {"Hi, ", "I'm ", "Flmpx"};
 int num = sizeof(strings) / sizeof(char*);
@@ -492,11 +506,11 @@ int main() {
 
     // append
     for (int i = 0; i < num; i++) {
-        hm_str_append(&str, strings[i]);
+        hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
     // str must be freed after use
-    hm_str_free(&str);
+    hm_str_free(&str);      // // str can't be use after free
     return 0;
 }
 ```
@@ -513,7 +527,7 @@ int main() {
 ## Other Things
 
 >  [!Tip]
->  - The string will be `NULL` after calling `hm_str_free()` or `hm_str_init()`, `hm_str_get()` and `hm_str_pop()` will get `NULL` at this time
+>  - You can't use the str after `pop` or `free` because the lifetime of str is over , you should init it when you want to use it again
 >  
 
 

@@ -11,11 +11,6 @@
 #include <stdint.h>
 #include <assert.h>
 
-/**
- * `min_capacity` represents the minimal capacity of str
- */
-static const size_t min_capacity = 17;
-
 
 
 size_t hm_str_len(hm_str* str) {
@@ -30,18 +25,6 @@ size_t hm_str_capacity(hm_str* str) {
     return str->capacity;
 }
 
-/**
- * Initialize str
- */
-void hm_str_init(hm_str* str) {
-    assert(str != NULL);
-
-    *str = (hm_str){
-        .capacity = 0,
-        .len = 0,
-        .val = NULL
-    };
-}
 
 
 /**
@@ -75,7 +58,7 @@ static hm_str_ret hm_str_fresh(hm_str* str, size_t new_capacity) {
 /**
  * Reserve capacity and initialize str
  * 
- * @note - Use the parameter `capacity` to set the start capacity of this str, the `min_capacity` is 17, `capacity` will be `min_capacity` if `capacity` < `min_capacity`
+ * @note - Use the parameter `capacity` to set the start capacity of this str
  * 
  * @return - Return `hm_str_ret_suc` when initialize success
  * @return - Return `hm_str_ret_error` when initialize failure
@@ -83,8 +66,9 @@ static hm_str_ret hm_str_fresh(hm_str* str, size_t new_capacity) {
 hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity) {
     assert(str != NULL);
 
-    hm_str_init(str);
-    if (hm_str_fresh(str, (capacity > min_capacity) ? capacity : min_capacity) != hm_str_ret_suc) {
+    memset(str, 0, sizeof(hm_str));
+
+    if (hm_str_fresh(str, capacity) != hm_str_ret_suc) {
         return hm_str_ret_error;
     }
     str->val[0] = '\0';
@@ -92,9 +76,20 @@ hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity) {
 }
 
 
+/**
+ * Initialize str
+ */
+hm_str_ret hm_str_init(hm_str* str) {
+    assert(str != NULL);
+
+    return hm_str_init_reserve(str, 0);
+}
+
 
 /**
  * Append string in str
+ * 
+ * @note - Use the parameter to set the length of sub_str
  * 
  * @return - Return `hm_str_ret_error` when append fail
  * @return - Return `hm_str_ret_suc` when append success
@@ -102,37 +97,34 @@ hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity) {
  * @warning - Append itself is prohibited
  * @warning - The parameter `sub_str` shouldn't be `NULL`
  */
-hm_str_ret hm_str_append(hm_str* str, const char* sub_str) {
+hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len) {
     assert(str != NULL);
     assert(sub_str != NULL);
 
-    if (str->capacity == 0) {
-        if (hm_str_init_reserve(str, min_capacity) != hm_str_ret_suc) {
-            return hm_str_ret_error;
-        }
-    }
-    size_t sub_len = strlen(sub_str);
     // prevent overflow
-    if (str->len > SIZE_MAX - sub_len) {
+    if (str->len > SIZE_MAX - sub_str_len) {
         return hm_str_ret_error;
     }
-    size_t need = str->len + sub_len;
-    if (need > str->capacity) {
+
+    size_t need = str->len + sub_str_len;
+    if (need > str->capacity) {         // the all code block is invalid when need is `0`, so `need` > 0 when the code block is valid
+
         // prevent overflow
         if (str->capacity > SIZE_MAX / 2) {
             return hm_str_ret_error;
         }
+
         size_t new_capacity = str->capacity * 2;
-        if (need > str->capacity * 2) {
-            new_capacity = need;
+        if (need > str->capacity * 2) {         // the `new_cpapcity` isn't be 0 even if the `str->cpacity` is 0
+            new_capacity = need;                
         }
         if (hm_str_fresh(str, new_capacity) != hm_str_ret_suc) {
             return hm_str_ret_error;
         }
     }
-    // prevent sub_str is in str.val
-    strcat(str->val + str->len, sub_str);
+    memmove(str->val + str->len, sub_str, sub_str_len);
     str->len = need;
+    str->val[str->len] = '\0';
     return hm_str_ret_suc;
 }
 
@@ -140,32 +132,30 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str) {
 /**
  * Append character in str
  * 
- * @note - The len will keep the same when append '\0'
- * @note - The capacity will grow when the capacity is 0 and this function return suc
- * 
  * @return - Return `hm_str_ret_error` when append fail
  * @return - Return `hm_str_ret_suc` when append success
  */
 hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
     assert(str != NULL);
 
-    if (str->capacity == 0) {
-        if (hm_str_init_reserve(str, min_capacity) != hm_str_ret_suc) {
-            return hm_str_ret_error;
+    if (str->len == str->capacity) {
+        size_t new_capacity = 0;
+
+        if (str->capacity) {
+            // prevent overflow
+            if (str->capacity > SIZE_MAX / 2) {
+                return hm_str_ret_error;
+            }
+            new_capacity = str->capacity * 2;
+        } else {
+            new_capacity = 1;
         }
-    } else if (str->len == str->capacity) {
-        // prevent overflow
-        if (str->capacity > SIZE_MAX / 2) {
-            return hm_str_ret_error;
-        }
-        size_t new_capacity = str->capacity * 2;
+        
         if (hm_str_fresh(str, new_capacity) != hm_str_ret_suc) {
             return hm_str_ret_error;
         }
-    }
 
-    // return suc when it is '\0', and guarantee val isn't NULL after append and malloc suc
-    if (ch == '\0') return hm_str_ret_suc;
+    }
 
     str->val[str->len] = ch;
     str->len++;
@@ -180,7 +170,6 @@ hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
  * 
  * @note - `Index`  must be >= `0`, and <= `the len of str`
  * 
- * @return - Return `NULL` when the `capacity` of str is `0`
  * @return - Return `NULL` when `index` is out of bounds
  * 
  * @warning - Change the string is prohibited
@@ -188,10 +177,10 @@ hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
 const char* hm_str_get(hm_str* str, size_t index) {
     assert(str != NULL);
 
-    if (index > str->len || str->val == NULL) {
-        // index is invalid or capacity == 0(str->val == NULL)
+    if (index > str->len) {
         return NULL;
     }
+
     return (const char*)(str->val + index);
 }
 
@@ -200,13 +189,16 @@ const char* hm_str_get(hm_str* str, size_t index) {
  * Pop the string from str
  * 
  * @note - The string will be removed but not free it(Memory Ownership Transfer)
- * @note - Please free this string after use
+ * @note - Please free this return string after use
+ * 
+ * @warning - The str can't be used after call this function because the lifetime of str is over
  */
 char* hm_str_pop(hm_str* str) {
     assert(str != NULL);
 
     char* ret_val = str->val;
-    hm_str_init(str);
+    memset(str, 0, sizeof(hm_str));
+
     return ret_val;
 }
 
@@ -217,22 +209,25 @@ void hm_str_clear(hm_str* str) {
     assert(str != NULL);
 
     str->len = 0;
-    if (str->val) {
-        str->val[0] = '\0';
-    }
+    str->val[0] = '\0';
 }
 
 /**
  * Free the str
+ * 
+ * @warning - The str can't be used after call this function because the lifetime of str is over
  */
 void hm_str_free(hm_str* str) {
     if (str == NULL) return;
+
     free(str->val);
-    hm_str_init(str);
+    memset(str, 0, sizeof(hm_str));
 }
 
 /**
  * Shrink the capacity of str if possible
+ * 
+ * @note - Shrink to the half of original capacity every call this function
  * 
  * @return - Return `hm_str_ret_suc` when shrink success
  * @return - Return `hm_str_ret_none` when the str can't be shrunk
@@ -242,7 +237,7 @@ hm_str_ret hm_str_shrink(hm_str* str) {
     assert(str != NULL);
 
     size_t l = str->len, c = str->capacity;
-    if (c < min_capacity * 2 || l >= c / 2) {
+    if (l >= c / 2) {
         return hm_str_ret_none;
     }
     return hm_str_fresh(str, c / 2);

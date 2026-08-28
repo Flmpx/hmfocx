@@ -49,7 +49,7 @@ extern size_t hm_str_capacity(hm_str* str);
  * Init
  */
 
-extern void hm_str_init(hm_str* str);
+extern hm_str_ret hm_str_init(hm_str* str);
 extern hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity);
 
 
@@ -57,7 +57,7 @@ extern hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity);
  * Append
  */
 
-extern hm_str_ret hm_str_append(hm_str* str, const char* sub_str);
+extern hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len);
 extern hm_str_ret hm_str_append_ch(hm_str* str, char ch);
 
 /**

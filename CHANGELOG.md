@@ -6,11 +6,16 @@
 
 ### Added
 - Add the new function for `hm_str` -- `hm_str_append_ch()` to append the single character
+- Append `\0` is allowed in function `hm_str_append_ch()`
 
 ### Changed
 - **Refactor:** Change the name of list's node from `hm_listnode` to `hm_list_node`
     - You can use **find and replace** function to change it in the old version
 - **Refactor:** Pass `NULL` in `hm_{container}_free()` is allowed
+- **Refactor!!!:** Next change is about `hm_str`, detailed information see [hm_str](docs/hm_str.md)
+    - Cancel the min_capacity when init or init_reserve
+    - Add a parameter `sub_str_len` to set the length of the pass-in `sub_str` when call `hm_str_append()`
+    - The lifetime of `hm_str` is over when you call `pop` or `free`
 
 ### Others
 - Add `assert()` when some pointer is `NULL` 

@@ -19,23 +19,9 @@ int all_failure_num = 0;
 void test_str_integrity(hm_str* str, int* fail_cnt, int tag, size_t len) {
     check_res(str->len == len, "TEST OF INTEGRITY: str's len is unexpected", fail_cnt, tag);
     check_res(str->len <= str->capacity, "TEST OF INTEGRITY: str's `capacity` should be greater than `len`", fail_cnt, tag);
-    /**
-     * 1. capacity = 0, val == NULL
-     * 2. capacity >= 17, val != NULL
-     */
-    check_res(str->capacity == 0 || str->capacity >= 17, "TEST OF INTEGRITY: str's capacity should be (c == 0 || c >= 16)", fail_cnt, tag);
-    check_res(!(str->capacity == 0 && str->val != NULL), "TEST OF INTEGRITY: str's capacity is 0, but val isn't NULL", fail_cnt, tag);
-    check_res(!(str->capacity >= 17 && str->val == NULL), "TEST OF INTEGRITY: str's capacity  >= 16, but val is NULL", fail_cnt, tag);
 
-    if (str->capacity == 0) return;     // only capacity >= 17    
-    size_t real_len = 0;
-    const char* s = str->val;
-    int cnt = str->len;
-    while (*s++ && cnt--) {
-        real_len++;
-    }
-    check_res(*(--s) == '\0', "TEST OF INTEGRITY: the end of string should be '\\0'", fail_cnt, tag++);
-    check_res(real_len == str->len, "TEST OF INTEGRITY: the real len is different from the str's len", fail_cnt, tag);
+    check_res(str->val != NULL, "TEST OF INTEGRITY: str's val shouldn't be NULL", fail_cnt, tag);
+    check_res(str->val[str->len] == '\0', "TEST OF INTEGRITY: str's character at the index of str's len isn't '\\0'", fail_cnt, tag);
 
 }
 
@@ -52,9 +38,8 @@ void test_str_init() {
     hm_str_init(&str);
 
     // check
-    check_res(str.capacity == 0, "str's capacity should be NULL", &fail_cnt, tag++);
+    check_res(str.capacity == 0, "str's capacity should be 0", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
-    check_res(str.val == NULL, "str's val should be NULL", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
 
     hm_str_free(&str);
@@ -80,11 +65,10 @@ void test_str_init_reserve() {
     hm_str_free(&str);
 
     int s_capacity = 0;
-    int min_capacity = 17;
     hm_str_init_reserve(&str, s_capacity);
 
     // check
-    check_res(str.capacity == min_capacity, "str's should be min_capacity", &fail_cnt, tag++);
+    check_res(str.capacity == s_capacity, "str's should be min_capacity", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
     check_res(str.val != NULL, "str's val shouldn't be NULL", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -119,7 +103,7 @@ void test_str_append() {
     for (int i = 0; i < repeat_cnt; i++) {
         
         for (int j = 0; j < num; j++) {
-            if (hm_str_append(&str, strings[j]) != hm_str_ret_suc) {
+            if (hm_str_append(&str, strings[j], strlen(strings[j])) != hm_str_ret_suc) {
                 fail++;
             }
         }
@@ -174,7 +158,7 @@ void test_str_get() {
     // append
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
             strcat(compare_str, strings[j]);
         }
     }
@@ -232,12 +216,12 @@ void test_str_pop() {
     // append
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
     // pop
     char* s = hm_str_pop(&str);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    // it can't test integrity because str can't be used after pop
 
     // verify
     size_t now_len = 0;
@@ -254,7 +238,6 @@ void test_str_pop() {
     }
     check_res(fail == 0, "the pop string is wrong", &fail_cnt, tag++);
 
-    hm_str_free(&str);
     free(s);
 
     print_end("STR | FUNC | POP", fail_cnt);
@@ -276,7 +259,7 @@ void test_str_clear() {
     // append
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
     size_t capacity = hm_str_capacity(&str);
@@ -312,19 +295,14 @@ void test_str_free() {
     // append
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
 
     // free
-    hm_str_free(&str);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);              // use valgrid to check memory leak
+    // can't use after free
     
-    // double free
-    hm_str_free(&str);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-
-    hm_str_free(&str);
 
     print_end("STR | FUNC | FREE", fail_cnt);
     HM_TEST_COUNTER
@@ -345,7 +323,7 @@ void test_str_shrink() {
     // append
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
 
@@ -354,7 +332,7 @@ void test_str_shrink() {
     // append
     for (int i = 0; i < repeat_cnt / 10; i++) {
         for (int j = 0; j < num; j++) {
-            hm_str_append(&str, strings[j]);
+            hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
 
@@ -409,7 +387,7 @@ void test_append_empty_string_in_str() {
 
     int fail = 0;
     for (int i = 0; i < cnt; i++) {
-        if (hm_str_append(&str, string) != hm_str_ret_suc) {
+        if (hm_str_append(&str, string, 0) != hm_str_ret_suc) {
             fail++;
         }
     }
@@ -445,11 +423,17 @@ void test_append_empty_ch_in_str() {
         }
     }
     check_res(fail == 0, "append function should return suc when append many empty characters", &fail_cnt, tag++);
-    check_res(str.capacity <= 17, "the str's capacity shouldn't be big when append many empty characters", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    test_str_integrity(&str, &fail_cnt, tag++, cnt);
     
+    // verify
+    fail = 0;
     const char* s = hm_str_get(&str, 0);
-    check_res(strcmp(s, "") == 0, "the string should be empty string when append many empty characters", &fail_cnt, tag++);
+    for (int i = 0; i < cnt; i++) {
+        if (s[i] != '\0') {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the val should include many empty characters", &fail_cnt, tag++);
     
     hm_str_free(&str);
     
@@ -468,7 +452,6 @@ void test_oper_empty_str() {
     
     // get
     hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
 
     check_res(strcmp(hm_str_get(&str, 0), "") == 0, "get on empty str should return empty string", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -476,7 +459,6 @@ void test_oper_empty_str() {
     
     // shrink
     hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
 
     check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a empty str(capacity == 17) should return none", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -485,18 +467,16 @@ void test_oper_empty_str() {
     
     // append
     hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
     
     char* string = "abcdefg";
-    hm_str_append(&str, string);
+    hm_str_append(&str, string, strlen(string));
     check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a empty str", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
     hm_str_free(&str);
 
 
     // append character
-    hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
+    hm_str_init(&str);    // let it to empty, not no-capacity
     
     char ch = 'A';
     hm_str_append_ch(&str, ch);
@@ -507,7 +487,6 @@ void test_oper_empty_str() {
     
     // clear
     hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
 
     hm_str_clear(&str);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -515,12 +494,10 @@ void test_oper_empty_str() {
     
     // pop
     hm_str_init(&str);
-    hm_str_append(&str, "");        // let it to empty, not no-capacity
     
     char* s = hm_str_pop(&str);
     check_res(strcmp(s, "") == 0, "the pop on empty str should return empty string", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
+    // can't use after pop
     free(s);
     
     
@@ -528,147 +505,6 @@ void test_oper_empty_str() {
     HM_TEST_COUNTER
     
 }
-
-
-
-void test_oper_no_capacity_str() {
-    int fail_cnt = 0;
-    int tag = 0;
-    print_run("STR | BOUNDARY | OPER NO CAPACIYT STR");
-    
-    hm_str str;
-    
-    // get
-    hm_str_init(&str);
-
-    check_res(hm_str_get(&str, 0) == NULL, "get on no-capacity str should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    check_res(hm_str_get(&str, 100) == NULL, "get on no-capacity str with large index should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    
-    // append
-    hm_str_init(&str);
-
-    char* string = "abcdefg";
-    hm_str_append(&str, string);
-    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a no-capacity str", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
-    hm_str_free(&str);
-
-    // append character
-    hm_str_init(&str);
-    
-    char ch = 'A';
-    hm_str_append_ch(&str, ch);
-    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a no-capacity str", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 1);
-    hm_str_free(&str);
-    
-    // shrink
-    hm_str_init(&str);
-
-    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a no-capacity str should return none", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    // clear
-    hm_str_init(&str);
-
-    hm_str_clear(&str);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    // pop
-    hm_str_init(&str);
-
-    check_res(hm_str_pop(&str) == NULL, "the pop on no-capacity str should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    
-    print_end("STR | BOUNDARY | OPER NO CAPACIYT STR", fail_cnt);
-    HM_TEST_COUNTER
-    
-}
-
-void test_oper_freed_str() {
-    int fail_cnt = 0;
-    int tag = 0;
-    print_run("STR | BOUNDARY | OPER FREED STR");
-    
-    hm_str str;
-    
-    // get
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-
-    check_res(hm_str_get(&str, 0) == NULL, "get on freed str should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    check_res(hm_str_get(&str, 100) == NULL, "get on freed str with large index should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    
-    // append
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-    
-    char* string = "abcdefg";
-    hm_str_append(&str, string);
-    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a freed str", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
-    hm_str_free(&str);
-    
-
-    // append character
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-    
-    char ch = 'A';
-    hm_str_append_ch(&str, ch);
-    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a freed str", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 1);
-    hm_str_free(&str);
-    
-    // shrink
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-    
-    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a freed str should return none", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    // clear
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-    
-    hm_str_clear(&str);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-    // pop
-    hm_str_init(&str);
-    hm_str_append(&str, "cccccccccccc");
-    hm_str_free(&str);
-    
-    check_res(hm_str_pop(&str) == NULL, "the pop on freed str should return NULL", &fail_cnt, tag++);
-    test_str_integrity(&str, &fail_cnt, tag++, 0);
-    hm_str_free(&str);
-    
-
-    
-    print_end("STR | BOUNDARY | OPER FREED STR", fail_cnt);
-    HM_TEST_COUNTER
-
-}
-
 
 
 
@@ -692,7 +528,7 @@ void test_str_append_stress() {
         int fail = 0;
         clock_t start = clock();
         for (int j = 0; j < nums[i]; j++) {
-            if (hm_str_append(&str, string) != hm_str_ret_suc) {
+            if (hm_str_append(&str, string, strlen(string)) != hm_str_ret_suc) {
                 fail++;
             }
         }
@@ -738,7 +574,7 @@ void test_str_append_with_reserve_stress() {
         int fail = 0;
         clock_t start = clock();
         for (int j = 0; j < nums[i]; j++) {
-            if (hm_str_append(&str, string) != hm_str_ret_suc) {
+            if (hm_str_append(&str, string, strlen(string)) != hm_str_ret_suc) {
                 fail++;
             }
         }
@@ -938,10 +774,6 @@ void boundary_test() {
     test_append_empty_ch_in_str();                                                          printf("\n");
 
     test_oper_empty_str();                                                                  printf("\n");    
-
-    test_oper_no_capacity_str();                                                            printf("\n");
-
-    test_oper_freed_str();                                                                  printf("\n");
     
 }
 
