@@ -16,6 +16,7 @@
     - Cancel the min_capacity when init or init_reserve
     - Add a parameter `sub_str_len` to set the length of the pass-in `sub_str` when call `hm_str_append()`
     - The lifetime of `hm_str` is over when you call `pop` or `free`
+- **Refactor!:** Use container after free it is prohibited
 
 ### Others
 - Add `assert()` when some pointer is `NULL` 

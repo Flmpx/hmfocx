@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 size_t hm_heap_size(hm_heap* heap) {
     assert(heap != NULL);
@@ -401,12 +402,14 @@ void hm_heap_clear(hm_heap* heap) {
 /**
  * Free all contents of the heap
  * 
- * @note - The heap can be reused when it is `dynamic-grow` but `fixed-size` cannot
+ * @warning - The heap can't be used after call this function because the lifetime of heap is over
  */
 void hm_heap_free(hm_heap* heap) {
     if (heap == NULL) return;
+
     hm_heap_clear(heap);
     free(heap->vals);
-    heap->vals = NULL;
-    heap->capacity = 0;
+    
+    memset(heap, 0, sizeof(hm_heap));
+
 }

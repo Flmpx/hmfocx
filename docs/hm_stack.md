@@ -408,7 +408,7 @@ size: 0  , capacity: 20
 /**
  * Free all contents of the stack
  * 
- * @note The stack can be reused when it is **dynamic-grow** but **fixed-size** cannot
+ * @warning The stack can't be used after call this function because the lifetime of stack is over
  */
 void hm_stack_free(hm_stack* stack);
 ```
@@ -450,6 +450,9 @@ int main()
 
 ## Other Things
 
+>  [!Tip]
+>  - You can't use the stack after `free` because the lifetime of stack is over , you should init it when you want to use it again
+>  
 
 
 

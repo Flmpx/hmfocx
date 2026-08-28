@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 
 size_t hm_set_size(hm_set* set) {
@@ -458,13 +459,18 @@ void hm_set_clear(hm_set* set) {
 }
 /**
  * Free all contents of the set
+ * 
+ * @warning - The set can't be used after call this function because the lifetime of set is over
  */
 void hm_set_free(hm_set* set) {
     if (set == NULL) return;
+
     hm_set_clear(set);
     free(set->buckets);
     free(set->buckets_status);
-    hm_set_init(set, set->hash_key, set->cmp_key, set->free_key);
+    
+    memset(set, 0, sizeof(hm_set));
+
 }
 
 

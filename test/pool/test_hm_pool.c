@@ -443,11 +443,12 @@ void test_pool_allocate_stress() {
     hm_pool pool;
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(int);
-    hm_pool_init(&pool, sizeof(int), 2048);
-
+    
     for (int i = 0; i < cnt; i++) {
-
+        
         int** pointers = (int**)malloc(nums[i] * sizeof(int*));
+        
+        hm_pool_init(&pool, sizeof(int), 2048);
 
         clock_t start_a = clock();
         for (int j = 0; j < nums[i]; j++) {
@@ -491,12 +492,13 @@ void test_pool_free_stress() {
     hm_pool pool;
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000, 50000000};
     int cnt = sizeof(nums) / sizeof(int);
-    hm_pool_init(&pool, sizeof(int), 2048);
-
+    
     for (int i = 0; i < cnt; i++) {
-
+        
         int** pointers = (int**)malloc(nums[i] * sizeof(int*));
-
+        
+        hm_pool_init(&pool, sizeof(int), 2048);
+        
         for (int j = 0; j < nums[i]; j++) {
             pointers[j] = hm_pool_block_allocate(&pool);
             *pointers[j] = 10 + j;

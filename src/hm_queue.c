@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 
 size_t hm_queue_size(hm_queue* queue) {
@@ -267,13 +268,15 @@ void hm_queue_clear(hm_queue* queue) {
 /**
  * Free all contents of the queue
  * 
- * @note - The queue can be reused when it is `dynamic-grow` but `fixed-size` cannot
+ * @warning - The queue can't be used after call this function because the lifetime of queue is over
  */
 void hm_queue_free(hm_queue* queue) {
     if (queue == NULL) return;
+
     hm_queue_clear(queue);
     free(queue->vals);
-    queue->vals = NULL;
-    queue->capacity = 0;
+
+    memset(queue, 0, sizeof(hm_queue));
+
 }
 

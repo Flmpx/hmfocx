@@ -977,6 +977,8 @@ int main()
 ```c
 /**
  * Free all contents of the map
+ * 
+ * @warning The map can't be used after call this function because the lifetime of map is over
  */
 void hm_map_free(hm_map* map);
 ```
@@ -1041,7 +1043,9 @@ int main()
 >  - **Do not modify the map(del, insert, clear, or free) while iterating over it**
 >  
 
-
+>  [!Tip]
+>  - You can't use the map after `free` because the lifetime of map is over , you should init it when you want to use it again
+>  
 
 
 

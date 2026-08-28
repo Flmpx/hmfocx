@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 size_t hm_stack_size(hm_stack* stack) {
     assert(stack != NULL);
@@ -241,12 +242,14 @@ void hm_stack_clear(hm_stack* stack) {
 /**
  * Free all contents of the stack
  * 
- * @note - The stack can be reused when it is `dynamic-grow` but `fixed-size` cannot
+ * @warning - The stack can't be used after call this function because the lifetime of stack is over
  */
 void hm_stack_free(hm_stack* stack) {
     if (stack == NULL) return;
+
     hm_stack_clear(stack);
     free(stack->vals);
-    stack->vals = NULL;
-    stack->capacity = 0;
+    
+    memset(stack, 0, sizeof(stack));
+
 }

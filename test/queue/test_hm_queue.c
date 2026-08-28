@@ -577,28 +577,7 @@ void test_queue_fixed_free() {
     
     // free
     hm_queue_free(&queue);
-    
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, free);
-
-    int* val = hm_queue_deq(&queue);
-    check_res(val == NULL, "the dequeue front val should be NULL after free the queue", &fail_cnt, tag++);
-
-    val = hm_queue_peek(&queue);
-    check_res(val == NULL, "the peek front val should be NULL after free the queue", &fail_cnt, tag++);
-
-    // double free
-    hm_queue_free(&queue);
-    
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, free);
-
-    val = hm_queue_deq(&queue);
-    check_res(val == NULL, "the dequeue front val should be NULL after double free the queue", &fail_cnt, tag++);
-
-    val = hm_queue_peek(&queue);
-    check_res(val == NULL, "the peek front val should be NULL after double free the queue", &fail_cnt, tag++);
-
-    hm_queue_free(&queue);
-    
+    // use valgrind to check memory leak
 
 
     print_end("QUEUE(FIXED) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -629,28 +608,7 @@ void test_queue_dynamic_free() {
     
     // free
     hm_queue_free(&queue);
-    
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, 0, free);
-
-    int* val = hm_queue_deq(&queue);
-    check_res(val == NULL, "the dequeue front val should be NULL after free the queue", &fail_cnt, tag++);
-
-    val = hm_queue_peek(&queue);
-    check_res(val == NULL, "the peek front val should be NULL after free the queue", &fail_cnt, tag++);
-
-    // double free
-    hm_queue_free(&queue);
-    
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, 0, free);
-
-    val = hm_queue_deq(&queue);
-    check_res(val == NULL, "the dequeue front val should be NULL after double free the queue", &fail_cnt, tag++);
-
-    val = hm_queue_peek(&queue);
-    check_res(val == NULL, "the peek front val should be NULL after double free the queue", &fail_cnt, tag++);
-
-    hm_queue_free(&queue);
-    
+    // use valgrind to check memory leak
 
 
     print_end("QUEUE(DYNAMIC) | FUNC | FREE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -669,46 +627,48 @@ void test_empty_fixed_queue_oper() {
     int val = 10;
 
     int capacity = 64;
-    hm_queue_init(&queue, capacity, NULL);
-
+    
+    
     // peek
-
+    hm_queue_init(&queue, capacity, NULL);
     void* pointer = hm_queue_peek(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
     check_res(pointer == NULL, "the peek front should be NULL when queue is emtpy", &fail_cnt, tag++);
+    hm_queue_free(&queue);
     
     // shrink
+    hm_queue_init(&queue, capacity, NULL);
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when queue is empty", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
-
+    hm_queue_free(&queue);
+    
     // dequeue
+    hm_queue_init(&queue, capacity, NULL);
     pointer = hm_queue_deq(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
     check_res(pointer == NULL, "the dequeue front should be NULL when queue is emtpy", &fail_cnt, tag++);
+    hm_queue_free(&queue);
     
     // clear
+    hm_queue_init(&queue, capacity, NULL);
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
-    
     // double clear
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
+    hm_queue_free(&queue);
     
-
+    
     // enqueue
+    hm_queue_init(&queue, capacity, NULL);
     hm_queue_enq(&queue, &val);
     test_queue_integrity(&queue, &fail_cnt, tag++, 1, false, capacity, NULL);
     check_res(*(int*)(queue.vals[queue.front]) == val, "the val in queue is wrong when dequeue  a val in a empty queue", &fail_cnt, tag++);
+    hm_queue_free(&queue);
 
 
     // free
     hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, NULL);
-    
-    // double free
-    hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, 0, NULL);
-    
 
 
     print_end("QUEUE(FIXED) | BOUNDARY | OPER EMPTY QUEUE | CAPACITY: 64 TYPE: [INT]", fail_cnt);
@@ -727,45 +687,47 @@ void test_empty_dynamic_queue_oper() {
     int val = 10;
 
     int capacity = 64;
-    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
-
+    
+    
     // peek
-
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     void* pointer = hm_queue_peek(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
     check_res(pointer == NULL, "the peek front should be NULL when queue is emtpy", &fail_cnt, tag++);
+    hm_queue_free(&queue);
     
     // dequeue
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     pointer = hm_queue_deq(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
     check_res(pointer == NULL, "the dequeue front should be NULL when queue is emtpy", &fail_cnt, tag++);
+    hm_queue_free(&queue);
     
     // clear
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
-    
     // double clear
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
+    hm_queue_free(&queue);
     
-
+    
     // enqueue
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     hm_queue_enq(&queue, &val);
     test_queue_integrity(&queue, &fail_cnt, tag++, 1, true, capacity, NULL);
     check_res(*(int*)(queue.vals[queue.front]) == val, "the val in queue is wrong when dequeue  a val in a empty queue", &fail_cnt, tag++);
-
-
-    // free
     hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
     
-    // double free
-    hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
-
-
+    
+    // free
     hm_queue_init_dynamic_grow(&queue, capacity, NULL);
+    hm_queue_free(&queue);
 
+
+    // shrink
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_suc, "shrink should return suc when queue is empty", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
     hm_queue_free(&queue);
@@ -861,16 +823,15 @@ void test_full_dynamic_queue_oper() {
     
 }
 
-void test_no_capacity_fixed_queue() {
+void test_no_capacity_fixed_queue_oper() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(FIXED) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]");
     hm_queue queue;
     int capacity = 0;
-    hm_queue_init(&queue, capacity, free);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
     
     // enqueue
+    hm_queue_init(&queue, capacity, free);
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_queue_ret ret = hm_queue_enq(&queue, val);
@@ -879,28 +840,36 @@ void test_no_capacity_fixed_queue() {
     if (ret == hm_queue_ret_full) {
         free(val);
     }
-
+    hm_queue_free(&queue);
+    
     
     // peek
+    hm_queue_init(&queue, capacity, free);
     check_res(hm_queue_peek(&queue) == NULL, "the peek val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+    hm_queue_free(&queue);
     
     // dequeue
+    hm_queue_init(&queue, capacity, free);
     check_res(hm_queue_deq(&queue) == NULL, "the dequeue val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+    hm_queue_free(&queue);
     
     // clear
+    hm_queue_init(&queue, capacity, free);
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+    hm_queue_free(&queue);
     
     // free
+    hm_queue_init(&queue, capacity, free);
     hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
-
+    
+    
     // shrink
+    hm_queue_init(&queue, capacity, free);
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
-
     hm_queue_free(&queue);
 
 
@@ -909,7 +878,7 @@ void test_no_capacity_fixed_queue() {
     
 }
 
-void test_no_capacity_dynamic_queue() {
+void test_no_capacity_dynamic_queue_oper() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("QUEUE(DYNAMIC) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]");
@@ -917,43 +886,45 @@ void test_no_capacity_dynamic_queue() {
 
     hm_queue queue;
     int capacity = 0;
-    hm_queue_init_dynamic_grow(&queue, capacity, free);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
     
     // enqueue
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     hm_queue_ret ret = hm_queue_enq(&queue, val);
     test_queue_integrity(&queue, &fail_cnt, tag++, 1, true, capacity, free);
     check_res(ret == hm_queue_ret_suc, "it dequeue function should return suc when dequeue a val in 0-capacity and fixed-size queue", &fail_cnt, tag++);
+    hm_queue_free(&queue);
     
-
     // peek
-    check_res(hm_queue_peek(&queue) == val, "the peek val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 1, true, capacity, free);
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    check_res(hm_queue_peek(&queue) == NULL, "the peek val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
+    hm_queue_free(&queue);
     
     // dequeue
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
     int* pointer = hm_queue_deq(&queue);
-    check_res(pointer == val, "the dequeue val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
+    check_res(pointer == NULL, "the dequeue val should be NULL in 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
-
-    if (pointer == val) {
-        free(val);
-    }
-
+    hm_queue_free(&queue);
+    
     // clear
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
     hm_queue_clear(&queue);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
+    hm_queue_free(&queue);
     
     // free
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
     hm_queue_free(&queue);
-    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
     
-
+    // shrink
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
-
     hm_queue_free(&queue);
+
 
 
 
@@ -1220,7 +1191,7 @@ void test_queue_fixed_boundary() {
 
     test_full_fixed_queue_oper();                               printf("\n");
 
-    test_no_capacity_fixed_queue();                             printf("\n");
+    test_no_capacity_fixed_queue_oper();                        printf("\n");
 
     test_init_big_capacity_fixed_queue();                       printf("\n");
 }
@@ -1230,7 +1201,7 @@ void test_queue_dynamic_boundary() {
 
     test_full_dynamic_queue_oper();                             printf("\n");
 
-    test_no_capacity_dynamic_queue();                           printf("\n");
+    test_no_capacity_dynamic_queue_oper();                      printf("\n");
 
     test_init_big_capacity_dynamic_queue();                     printf("\n");
 }

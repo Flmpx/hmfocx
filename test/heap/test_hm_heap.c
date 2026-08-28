@@ -512,13 +512,8 @@ void test_heap_fixed_free() {
 
     // free
     hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, 0, free, cmp_int_up);
-
-    // double free
-    hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, 0, free, cmp_int_up);
-
     // use valgrind to check leak memory
+
         
     print_end("HEAP(FIXED) | FUNC | FREE | CAPAITY: 64", fail_cnt);
     HM_TEST_COUNTER
@@ -545,13 +540,8 @@ void test_heap_dynamic_free() {
     
     // free
     hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, free, cmp_int_up);
-
-    // double free
-    hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, free, cmp_int_up);
-    
     // use valgrind to check leak memory
+    
     
     print_end("HEAP(DYNAMIC) | FUNC | FREE | CAPAITY: 64", fail_cnt);
     HM_TEST_COUNTER
@@ -859,74 +849,59 @@ void test_empty_fixed_heap_oper() {
     print_run("HEAP(FIXED) | BOUNDARY | OPER EMPTY HEAP | CAPACITY: 64");
     hm_heap heap;
     int capacity = 64;
-    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
-
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     
     // peek
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_peek(&heap) == NULL, "the peek val should be NULL when heap is empty", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
-
-
+    hm_heap_free(&heap);
+    
     // shrink
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when heap is empty", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
-
+    
     // extract
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_extract(&heap) == NULL, "the extract val should be NULL when heap is empty", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
-    int val = 10;
     
     // insert
-    
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
+    int val = 10;
     hm_heap_insert(&heap, &val);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 1, false, capacity, NULL, cmp_int_up);
-    
     int* pointer = hm_heap_peek(&heap);
     check_res(pointer, "the peek val shouldn't be NULL after insert a val in the empty heap", &fail_cnt, tag++);
     if (pointer) {
         check_res(*pointer == val, "the peek val is wrong after insert a val in the empty heap", &fail_cnt, tag++);
     }
-
     hm_heap_free(&heap);
     
     // build
     void** vals = (void**)malloc(sizeof(void*) * capacity);
     hm_heap_build(&heap, vals, 0, capacity, NULL, cmp_int_up);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
-    
     hm_heap_free(&heap);
     
+    
     // rebuild
-    
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
-    
     hm_heap_rebuild(&heap, cmp_int_down);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_down);
-    
     hm_heap_free(&heap);
     
     // clear
-
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
-    
     hm_heap_clear(&heap);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     
-    
     // free
-    
     hm_heap_free(&heap);
-    
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, 0, NULL, cmp_int_up);
 
 
     print_end("HEAP(FIXED) | BOUNDARY | OPER EMPTY HEAP | CAPACITY: 64", fail_cnt);
@@ -941,71 +916,59 @@ void test_empty_dynamic_heap_oper() {
 
     hm_heap heap;
     int capacity = 64;
-    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
-
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
+    
     
     // peek
-    check_res(hm_heap_peek(&heap) == NULL, "the peek val should be NULL when heap is empty", &fail_cnt, tag++);
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
+    check_res(hm_heap_peek(&heap) == NULL, "the peek val should be NULL when heap is empty", &fail_cnt, tag++);    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
-
+    hm_heap_free(&heap);
+    
+    
     // extract
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_extract(&heap) == NULL, "the extract val should be NULL when heap is empty", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
-    int val = 10;
     
     // insert
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
+    int val = 10;
     hm_heap_insert(&heap, &val);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 1, true, capacity, NULL, cmp_int_up);
-    
     int* pointer = hm_heap_peek(&heap);
     check_res(pointer, "the peek val shouldn't be NULL after insert a val in the empty heap", &fail_cnt, tag++);
     if (pointer) {
         check_res(*pointer == val, "the peek val is wrong after insert a val in the empty heap", &fail_cnt, tag++);
     }
-
     hm_heap_free(&heap);
     
     // build
     void** vals = (void**)malloc(sizeof(void*) * capacity);
     hm_heap_build_dynamic_grow(&heap, vals, 0, capacity, NULL, cmp_int_up);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
-    
     hm_heap_free(&heap);
     
     // rebuild
-    
     hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
-    
     hm_heap_rebuild(&heap, cmp_int_down);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_down);
-    
     hm_heap_free(&heap);
     
+    
     // clear
-
     hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
-    
     hm_heap_clear(&heap);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
     
     
+    
     // free
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     hm_heap_free(&heap);
-    
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, NULL, cmp_int_up);
 
     // shrink
-
     hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_suc, "shrink should return suc when heap is empty", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
@@ -1287,53 +1250,55 @@ void test_no_capacity_fixed_heap_oper() {
 
     hm_heap heap;
     int capacity = 0;
-    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
-
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     
     
     // insert
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     int val = -1;
-    
     check_res(hm_heap_insert(&heap, &val) == hm_heap_ret_full, "it insert function should return full when insert a val in 0-capacity and fixed-size heap", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
+    
     
     // peek
-    
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_peek(&heap) == NULL, "the peek val should be NULL in 0-capacity and fixed-size heap", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
     // extract
-    
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_extract(&heap) == NULL, "the extract val should be NULL in 0-capacity and fixed-size heap", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
     // clear
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     hm_heap_clear(&heap);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
     // free
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     
     
     // build
     hm_heap_build(&heap, NULL, 0, capacity, NULL, cmp_int_up);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
-    
     hm_heap_free(&heap);
     
     // rebuild
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     hm_heap_rebuild(&heap, cmp_int_down);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_down);
     hm_heap_free(&heap);
-
+    
+    // shrink
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and fixed-size heap", &fail_cnt, tag++);;
-
     hm_heap_free(&heap);
+
 
     print_end("HEAP(FIXED) | BOUNDARY | NO CAPACITY HEAP OPER | CAPACITY: 0", fail_cnt);
     HM_TEST_COUNTER
@@ -1346,75 +1311,64 @@ void test_no_capacity_dynamic_heap_oper() {
 
     hm_heap heap;
     int capacity = 0;
-    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
-
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
     
     
     
     // peek
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_peek(&heap) == NULL, "the peek val should be NULL in 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
+    
     
     // extract
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_extract(&heap) == NULL, "the extract val should be NULL in 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
-
+    
     // insert
     int val = -1;
-    
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_insert(&heap, &val) == hm_heap_ret_suc, "it insert function should return suc when insert a val in 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, capacity + 1, true, capacity, NULL, cmp_int_up);
-
     void** vals = heap.vals;
     int* v = (int*)vals[0];
     check_res(v == &val, "the val is wrong when insert a val in a 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
-
+    hm_heap_free(&heap);
     
-
+    
     // clear
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     hm_heap_clear(&heap);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
     // free
+    hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     hm_heap_free(&heap);
-    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
     
     
     // build
     hm_heap_build_dynamic_grow(&heap, NULL, 0, capacity, NULL, cmp_int_up);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_up);
-    
-    
     check_res(hm_heap_insert(&heap, &val) == hm_heap_ret_suc, "it insert function should return suc when insert a val in 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, capacity + 1, true, capacity, NULL, cmp_int_up);
-
     vals = heap.vals;
     v = (int*)vals[0];
     check_res(v == &val, "the val is wrong when insert a val in a 0-capacity and dynamic-grow `build` heap", &fail_cnt, tag++);
-    
     hm_heap_free(&heap);
 
     // rebuild
     hm_heap_init_dynamic_grow(&heap, capacity, NULL, cmp_int_up);
     hm_heap_rebuild(&heap, cmp_int_down);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, NULL, cmp_int_down);
-
-
     check_res(hm_heap_insert(&heap, &val) == hm_heap_ret_suc, "it insert function should return suc when insert a val in 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
-    
     test_heap_integrity(&heap, &fail_cnt, tag++, capacity + 1, true, capacity, NULL, cmp_int_down);
-
     vals = heap.vals;
     v = (int*)vals[0];
     check_res(v == &val, "the val is wrong when insert a val in a 0-capacity and dynamic-grow `rebuild` heap", &fail_cnt, tag++);
-    
     hm_heap_free(&heap);
 
     // shrink

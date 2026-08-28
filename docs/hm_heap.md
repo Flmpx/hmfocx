@@ -642,7 +642,7 @@ size: 0  , capacity: 20
 /**
  * Free all contents of the heap
  * 
- * @note The heap can be reused when it is **dynamic-grow** but **fixed-size** cannot
+ * @warning The heap can't be used after call this function because the lifetime of heap is over
  */
 void hm_heap_free(hm_heap* heap);
 ```
@@ -690,7 +690,9 @@ int main()
 
 ## Other Things
 
-
+>  [!Tip]
+>  - You can't use the heap after `free` because the lifetime of heap is over , you should init it when you want to use it again
+>  
 
 
 

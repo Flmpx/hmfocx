@@ -726,7 +726,7 @@ size: 0  , capacity: 20
 /**
  * Free all contents of the arr
  * 
- * @note The arr can be reused when it is **dynamic-grow** but **fixed-size** cannot
+ * @warning The arr can't be used after call this function because the lifetime of arr is over
  */
 void hm_arr_free(hm_arr* arr);
 ```
@@ -774,7 +774,9 @@ int main()
 >  **Return a pointer to the pointer of value**: What you pass in is a pointer (a pointer to the value), the internal container will have a space to store this pointer, and what’s returned is a pointer to this space. You can use it to change what it points to, but be careful to manage the memory yourself.
 >  
 
-
+>  [!Tip]
+>  - You can't use the arr after `free` because the lifetime of arr is over , you should init it when you want to use it again
+>  
 
 
 <a id = "othercontainer"></a>

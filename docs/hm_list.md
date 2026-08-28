@@ -672,6 +672,8 @@ int main()
  * Free a list
  * 
  * @note If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
+ * 
+ * @warning The list can't be used after call this function because the lifetime of list is over
  */
 void hm_list_free(hm_list* list);
 ```
@@ -795,7 +797,9 @@ int main()
 >  - **Do not modify the list (del, insert, free, or sort) while iterating over it**
 >  
 
-
+>  [!Tip]
+>  - You can't use the list after `free` because the lifetime of list is over , you should init it when you want to use it again
+>  
 
 
 

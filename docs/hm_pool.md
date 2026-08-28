@@ -159,6 +159,7 @@ int main()
  * @note Pass **NULL**(block pointer) is allowed
  * 
  * @warning The pointer of block must match the memory pool
+ * @warning The block can't be used after call this function because the lifetime of block is over
  */
 void hm_pool_block_free(hm_pool* pool, void* block);
 ```
@@ -204,7 +205,8 @@ int main()
 /**
  * Free all content of the memory pool
  * 
- * @note Do not use blocks from a freed memory pool
+ * @warning Do not use blocks from a freed memory pool
+ * @warning The pool can't be used after call this function because the lifetime of pool is over
  */
 void hm_pool_free(hm_pool* pool);
 ```
@@ -249,7 +251,9 @@ int main()
 
 ## Other Things
 
-
+>  [!Tip]
+>  - You can't use the pool after `free` because the lifetime of str is over , you should init it when you want to use it again
+>  
 
 
 

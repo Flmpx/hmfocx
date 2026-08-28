@@ -465,14 +465,9 @@ void test_set_shrink() {
     check_res(fail_shrink == 0, "it shouldn't to shrink set but it do", &fail_cnt, tag++);
     check_res(fail_no_shrink == 0, "it should to shrink set but it not do", &fail_cnt, tag++);
     
-
-    // shrink empty set
     hm_set_free(&set);
-    check_res(hm_set_shrink(&set) == hm_set_ret_none, "it shouldn't to shrink empty set but it do", &fail_cnt, tag++);
-    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    
 
-    
-    
     print_end("SET | FUNC | SHRINK | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 
@@ -561,16 +556,7 @@ void test_set_free() {
 
 
     hm_set_free(&set);
-
-    check_res(set.size == 0, "set.size isn't 0 after free set", &fail_cnt, tag++);
-    check_res(set.len == 0, "set.len isn't 0 after free set", &fail_cnt, tag++);
-    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
-    
-    // double free
-    hm_set_free(&set);
-    check_res(set.size == 0, "set.size isn't 0 after double free set", &fail_cnt, tag++);
-    check_res(set.len == 0, "set.len isn't 0 after double free set", &fail_cnt, tag++);
-    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    // use valgrind to check memory leak
     
 
     print_end("SET | FUNC | FREE | TYPE: [INT]", fail_cnt);
@@ -732,9 +718,10 @@ void test_set_get_stress() {
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_set set;
-    hm_set_init(&set, hash_int_1, cmp_int_up, free);
-
+    
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
         // insert
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
@@ -791,9 +778,10 @@ void test_set_del_stress() {
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_set set;
-    hm_set_init(&set, hash_int_1, cmp_int_up, free);
-
+    
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
         // insert
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
@@ -853,9 +841,10 @@ void test_set_clear_stress() {
     hm_set set;
 
     // clear the set including entry that have power to free the key
-    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
         // insert
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
@@ -890,9 +879,9 @@ void test_set_clear_stress() {
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
     // clear the set including entry that don't have power to free the key
-    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
-
+    
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
 
         // insert
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
@@ -936,9 +925,10 @@ void test_set_free_stress() {
     hm_set set;
     
     // free the set including entry that have power to free the key
-    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
         // insert
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
@@ -952,7 +942,7 @@ void test_set_free_stress() {
         hm_set_free(&set);
         
         clock_t end = clock();
-        test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+        
         print_run_time("FREE", start, end, nums_free[i], nums_free[i]);
         
         
@@ -972,9 +962,9 @@ void test_set_free_stress() {
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
     // free the set including entry that don't have power to free the key
-    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     
     for (int i = 0; i < cnt; i++) {
+        hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     
         // insert
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
@@ -990,7 +980,7 @@ void test_set_free_stress() {
         hm_set_free(&set);        
     
         clock_t end = clock();
-        test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, NULL);
+        
         print_run_time("FREE", start, end, nums_null[i], nums_null[i]);
     
         free(keys);
@@ -1011,24 +1001,31 @@ void test_empty_set_oper() {
 
 
     hm_set set;
-    hm_set_init(&set, hash_int_1, cmp_int_up, free);
-
     int k = 0;
+
+
     // get
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     check_res(hm_set_get(&set, &k).key == NULL, "get on empty set should return invalid entry", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    hm_set_free(&set);
     
     // pop
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     check_res(hm_set_pop(&set, &k).key == NULL, "pop on empty set should return invalid entry", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    hm_set_free(&set);
     
     // del
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     k = 10;
     check_res(hm_set_del(&set, &k) == hm_set_ret_none, "del on empty set should return none", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    hm_set_free(&set);
     
     
     // iter
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     int loop_cnt = 0;
@@ -1038,6 +1035,7 @@ void test_empty_set_oper() {
     }
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
     check_res(loop_cnt == 0, "iterator over empty set should yield zero entrys", &fail_cnt, tag++);
+    hm_set_free(&set);
 
 
     print_end("SET | BOUNDARY | OPER EMPTY SET | TYPE: [INT]", fail_cnt);
@@ -1054,19 +1052,20 @@ void test_single_entry_oper() {
 
 
     hm_set set;
-    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     int k = 1;
-
+    
     
     // insert single entry and get
+    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     hm_set_entry e = hm_set_get(&set, &k);
     test_set_integrity(&set, &fail_cnt, tag++, 1, hash_int_1, cmp_int_up, NULL);
     check_res(*(int*)(e.key) == k, "the key is wrong when run `set_get` on single entry's set", &fail_cnt, tag++);
     hm_set_free(&set);
-
+    
     
     // insert single entry and pop
+    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     e = hm_set_pop(&set, &k);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, NULL);
@@ -1075,14 +1074,16 @@ void test_single_entry_oper() {
     
     
     // insert single entry and delete it 
+    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     check_res(hm_set_del(&set, &k) == hm_set_ret_suc, "del on single entry's set should return suc", &fail_cnt, tag++);
     check_res(set.size == 0, "set.size should be `zero` after del on single entry's set", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, NULL);
     hm_set_free(&set);
-
+    
     
     // insert two indetical keys
+    hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     int new_k = k;
     hm_set_insert(&set, &new_k);
@@ -1091,7 +1092,7 @@ void test_single_entry_oper() {
     check_res(e.key == &k, "the key should be old key when insert two indetical keys", &fail_cnt, tag++);
     check_res(set.size == 1, "the set.size should be 1 when insert two indetical keys", &fail_cnt, tag++);
     hm_set_free(&set);
-
+    
 
     print_end("SET | BOUNDARY | OPER SINGLE ENTRY'S SET | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER

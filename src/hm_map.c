@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 size_t hm_map_size(hm_map* map) {
     assert(map != NULL);
@@ -501,13 +502,18 @@ void hm_map_clear(hm_map* map) {
 }
 /**
  * Free all contents of the map
+ * 
+ * @warning - The map can't be used after call this function because the lifetime of map is over
  */
 void hm_map_free(hm_map* map) {
     if (map == NULL) return;
+
     hm_map_clear(map);
     free(map->buckets);
     free(map->buckets_status);
-    hm_map_init(map, map->hash_key, map->cmp_key, map->free_key, map->free_val);
+    
+    memset(map, 0, sizeof(hm_map));
+
 }
 
 

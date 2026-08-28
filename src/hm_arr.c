@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 size_t hm_arr_size(hm_arr* arr) {
     assert(arr != NULL);
@@ -363,12 +364,14 @@ void hm_arr_clear(hm_arr* arr) {
 /**
  * Free all contents of the arr
  * 
- * @note - The arr can be reused when it is `dynamic-grow` but `fixed-size` cannot
+ * @warning - The arr can't be used after call this function because the lifetime of arr is over
  */
 void hm_arr_free(hm_arr* arr) {
     if (arr == NULL) return;
+
     hm_arr_clear(arr);
     free(arr->vals);
-    arr->vals = NULL;
-    arr->capacity = 0;
+    
+    memset(arr, 0, sizeof(hm_arr));
+
 }

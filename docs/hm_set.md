@@ -804,6 +804,8 @@ int main()
 ```c
 /**
  * Free all contents of the set
+ * 
+ * @warning The set can't be used after call this function because the lifetime of set is over
  */
 void hm_set_free(hm_set* set);
 ```
@@ -864,6 +866,9 @@ int main()
 >  - **Do not modify the set(del, insert, clear, or free) while iterating over it**
 >  
 
+>  [!Tip]
+>  - You can't use the set after `free` because the lifetime of set is over , you should init it when you want to use it again
+>  
 
 
 

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <string.h>
 
 
 size_t hm_list_size(hm_list* list) {
@@ -38,9 +39,12 @@ void hm_list_init(hm_list* list, hm_free free_val) {
  * Free a list
  * 
  * @note - If the list was initialized without freeing capacity, this function can't free the values stored in the Nodes
+ * 
+ * @warning - The list can't be used after call this function because the lifetime of list is over
  */
 void hm_list_free(hm_list* list) {
     if (list == NULL) return;
+
     hm_list_node* cur = list->head;
     while (cur) {
         hm_list_node* tmp = cur;
@@ -50,7 +54,9 @@ void hm_list_free(hm_list* list) {
         }
         free(tmp);
     }
-    hm_list_init(list, list->free_val);
+
+    memset(list, 0, sizeof(hm_list));
+    
 }
 
 /**

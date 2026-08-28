@@ -36,3 +36,7 @@
 >  [!Tip]
 >  - Use `get` function can change the data that you pass in container
 >  - Use `get_pointer/get_entry/get_node` function can change the pointer of the data, it can replace the whole data, so, you have the responsibility to manage the old memory data
+
+>  [!Tip]
+>  - You can't use the container after `free` because the lifetime of container is over , you should init it when you want to use it again
+>  

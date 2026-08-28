@@ -409,7 +409,7 @@ size: 0  , capacity: 20
 /**
  * Free all contents of the queue
  * 
- * @note The queue can be reused when it is **dynamic-grow** but **fixed-size** cannot
+ * @warning The queue can't be used after call this function because the lifetime of queue is over
  */
 void hm_queue_free(hm_queue* queue);
 ```
@@ -453,7 +453,9 @@ int main()
 
 ## Other Things
 
-
+>  [!Tip]
+>  - You can't use the queue after `free` because the lifetime of queue is over , you should init it when you want to use it again
+>  
 
 
 

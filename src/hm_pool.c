@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 /**
  * Align the memory to the variable `align`
@@ -112,6 +113,7 @@ void* hm_pool_block_allocate(hm_pool* pool) {
  * @note - Pass `NULL`(block pointer) is allowed
  * 
  * @warning - The pointer of block must match the memory pool
+ * @warning - The block can't be used after call this function because the lifetime of block is over
  */
 void hm_pool_block_free(hm_pool* pool, void* block) {
     assert(pool != NULL);
@@ -126,17 +128,21 @@ void hm_pool_block_free(hm_pool* pool, void* block) {
 /**
  * Free all content of the memory pool
  * 
- * @note Do not use blocks from a freed memory pool
+ * @warning - Do not use blocks from a freed memory pool
+ * @warning - The pool can't be used after call this function because the lifetime of pool is over
  */
 void hm_pool_free(hm_pool* pool) {
     if (pool == NULL) return;
+
     hm_pool_page_node* node = pool->head_page;
     while (node) {
         hm_pool_page_node* cur = node;
         node = node->next;
         free(cur);
     }
-    hm_pool_init(pool, pool->block_size, pool->blocks_per_page);
+
+    memset(pool, 0, sizeof(hm_pool));
+    
 }
 
 
