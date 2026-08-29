@@ -43,7 +43,7 @@ include(FetchContent)
 FetchContent_Declare(
     hmfocx
     GIT_REPOSITORY https://github.com/Flmpx/hmfocx.git  # or git@github.com:Flmpx/hmfocx.git
-    GIT_TAG v0.13.0
+    GIT_TAG v0.14.0
 )
 
 FetchContent_MakeAvailable(hmfocx)
