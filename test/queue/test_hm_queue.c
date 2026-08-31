@@ -1148,6 +1148,94 @@ void test_queue_dynamic_shrink() {
 }
 
 
+void test_enq_and_deq_some_in_fixed_queue() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(FIXED) | BOUNDARY | ENQ AND DEQ SOME | TYPE: [INT]");
+    
+    int capacity = 64;
+    int v = 666;
+    hm_queue queue;
+    
+    hm_queue_init(&queue, capacity, NULL);
+
+    int step_num = 3;
+    int repeat_cnt = capacity * 5;
+
+    int fail_enq = 0;
+    int fail_deq = 0;
+    for (int i = 0; i < repeat_cnt; i++) {
+
+        // enq
+        for (int j = 0; j < step_num; j++) {
+            if (hm_queue_enq(&queue, &v) != hm_queue_ret_suc) {
+                fail_enq++;
+            }
+        }
+
+        // deq
+        for (int j = 0; j < step_num; j++) {
+            if (hm_queue_deq(&queue) != &v) {
+                fail_deq++;
+            }
+        }
+
+    }
+    check_res(fail_enq == 0, "enqueue should return suc", &fail_cnt, tag++);
+    check_res(fail_deq == 0, "the enq val is wrong", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
+    
+    hm_queue_free(&queue);
+
+    print_end("QUEUE(FIXED) | BOUNDARY | ENQ AND DEQ SOME | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_enq_and_deq_some_in_dynamic_queue() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(DYNAMIC) | BOUNDARY | ENQ AND DEQ SOME | TYPE: [INT]");
+    
+    int capacity = 64;
+    int v = 666;
+    hm_queue queue;
+    
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
+    
+    int enq_step_num = 3;
+    int deq_step_num = 2;
+    int repeat_cnt = capacity * 5;
+    
+    int fail_enq = 0;
+    int fail_deq = 0;
+    for (int i = 0; i < repeat_cnt; i++) {
+    
+        // enq
+        for (int j = 0; j < enq_step_num; j++) {
+            if (hm_queue_enq(&queue, &v) != hm_queue_ret_suc) {
+                fail_enq++;
+            }
+        }
+    
+        // deq
+        for (int j = 0; j < deq_step_num; j++) {
+            if (hm_queue_deq(&queue) != &v) {
+                fail_deq++;
+            }
+        }
+    
+    }
+    check_res(fail_enq == 0, "enqueue should return suc", &fail_cnt, tag++);
+    check_res(fail_deq == 0, "the enq val is wrong", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, repeat_cnt * (enq_step_num - deq_step_num), true, capacity, NULL);
+    
+    hm_queue_free(&queue);
+    
+    print_end("QUEUE(DYNAMIC) | BOUNDARY | ENQ AND DEQ SOME | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+    
+}
+
 void test_queue_fixed_func() {
     test_queue_fixed_init();                                    printf("\n");
     
@@ -1194,6 +1282,8 @@ void test_queue_fixed_boundary() {
     test_no_capacity_fixed_queue_oper();                        printf("\n");
 
     test_init_big_capacity_fixed_queue();                       printf("\n");
+
+    test_enq_and_deq_some_in_fixed_queue();                     printf("\n");
 }
 
 void test_queue_dynamic_boundary() {
@@ -1204,6 +1294,8 @@ void test_queue_dynamic_boundary() {
     test_no_capacity_dynamic_queue_oper();                      printf("\n");
 
     test_init_big_capacity_dynamic_queue();                     printf("\n");
+
+    test_enq_and_deq_some_in_dynamic_queue();                   printf("\n");
 }
 
 void function_test() {
