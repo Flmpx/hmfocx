@@ -32,7 +32,7 @@ mingw32-make
 
 ### Use `CMake` Completely
 
-I strongly suggest you to use `cmake` to clone, build and use this library(In that case, you can see comments of a function when you use this function)  
+I strongly suggest you to use `cmake` to clone, build and use this library(In that case, you can see some comments when you use this function)  
 
 #### Add some code in `CMakeLists.txt` of your project  
 
@@ -53,7 +53,7 @@ FetchContent_MakeAvailable(hmfocx)
 target_link_library(your_executable PRIVATE hmfocx)
 ```
 
-#### Run common the build process of `cmake`  
+#### Run some common build commands of `cmake`  
 ```shell
 mkdir build 
 cd build
@@ -66,8 +66,8 @@ make
 ### The document include next part
 - Introduction of containers
 - The detained comment about functions of every containers
-- `Try` part to will teach you how to calling this function
-- Some `Tip`,  `Note` or `Warning` in it
+- `Try` part will teach you how to calling these function
+- It also has some `Tip`,  `Note` or `Warning`
 
 ### Document Link
 
@@ -88,14 +88,14 @@ make
 The Container include the main container and it's iterator  
 
 ### The Name Of Containers Or Some Variable
+Main format -- `hm_{container}_{Other_1}_{Other_2}_ ...`  
 
-- main format -- `hm_{container}_{Other_1}_{Other_2}_ ...`
 - All containers' name start with `hm_`, like List's name -- `hm_list`, and this is a flag of this library
-- And there have some `enum` or `struct` in every container, like Map's entry name -- `hm_map_entry`, some enum's name see comment of every function
+- And there are some `enum` or `struct` in every container, like Map's entry name -- `hm_map_entry` and List's node name --`hm_list_node`, some enum's name see the comment of every function
 
 ### The Functions' Name Of Every Container
+Main format -- `hm_{container}_{action}_{more info}_ ...`  
 
-- main format -- `hm_{container}_{action}_{more info}_ ...`
 - Like conatiner's name, it must start with `hm_`
 - The action include `init`, `insert`, `del`, `shrink`, `clear`, `free` and more...
 

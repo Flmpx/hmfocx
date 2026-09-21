@@ -366,7 +366,7 @@ hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index);
 #include <stdio.h>
 
 void print_arr(hm_arr* arr) {
-    int s = arr->size;
+    int s = hm_arr_size(arr);
     for (int i = 0; i < s; i++) {
         int* v = hm_arr_get(arr, i);
         printf("%d ", *v);
@@ -457,7 +457,7 @@ void* hm_arr_pop(hm_arr* arr, size_t index);
 #include <stdio.h>
 
 void print_arr(hm_arr* arr) {
-    int s = arr->size;
+    int s = hm_arr_size(arr);
     for (int i = 0; i < s; i++) {
         int* v = hm_arr_get(arr, i);
         printf("%d ", *v);

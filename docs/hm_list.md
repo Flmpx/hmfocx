@@ -147,7 +147,7 @@ hm_list_node* hm_list_get_node(hm_list* list, size_t index);
 #include <stdio.h>
 
 void print_list(hm_list* list) {
-    int s = list->size;
+    int s = hm_list_size(list);
     // get and print
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
@@ -311,7 +311,7 @@ void* hm_list_pop(hm_list* list, size_t index)
 #include <stdio.h>
 
 void print_list(hm_list* list) {
-    int s = list->size;
+    int s = hm_list_size(list);
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
         printf("%d ", *v);
@@ -403,7 +403,7 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index);
 #include <stdio.h>
 
 void print_list(hm_list* list) {
-    int s = list->size;
+    int s = hm_list_size(list);
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
         printf("%d ", *v);

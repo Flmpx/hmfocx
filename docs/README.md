@@ -4,8 +4,8 @@
 ## The document include next part
 - Introduction of containers
 - The detained comment about functions of every containers
-- `Try` part to teach you how to calling this function
-- Some `Tip`,  `Note` or `Warning` in it
+- `Try` part will teach you how to calling these function
+- It also has some `Tip`,  `Note` or `Warning`
 
 ## Document Link
 
@@ -40,3 +40,11 @@
 >  [!Tip]
 >  - You can't use the container after `free` because the lifetime of container is over , you should init it when you want to use it again
 >  
+
+## Return Code 
+
+It include `error`, `warn`, `suc`, `none` and more  
+
+>  [!Tip]
+>  All function will check the pass-in parameters firstly and then check the status of container  
+>  For example: insert val at the invalid index of array and this array is full, it will return `hm_arr_ret_warn` instead of `hm_arr_ret_full`
