@@ -223,7 +223,7 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
 hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index) {
     assert(arr != NULL);
 
-    if (index >= arr->size || hm_arr_is_empty(arr)) {
+    if (index >= arr->size) {
         return hm_arr_ret_none;
     }
     arr->free_val(arr->vals[index]);
@@ -277,7 +277,7 @@ hm_arr_ret hm_arr_del_tail(hm_arr* arr) {
 void** hm_arr_get_pointer(hm_arr* arr, size_t index) {
     assert(arr != NULL);
 
-    if (index >= arr->size || hm_arr_is_empty(arr)) {
+    if (index >= arr->size) {
         return NULL;
     }
     return arr->vals + index;
@@ -293,7 +293,7 @@ void** hm_arr_get_pointer(hm_arr* arr, size_t index) {
 void* hm_arr_get(hm_arr* arr, size_t index) {
     assert(arr != NULL);
 
-    if (index >= arr->size || hm_arr_is_empty(arr)) {
+    if (index >= arr->size) {
         return NULL;
     }
     return arr->vals[index];
@@ -310,7 +310,7 @@ void* hm_arr_get(hm_arr* arr, size_t index) {
 void* hm_arr_pop(hm_arr* arr, size_t index) {
     assert(arr != NULL);
 
-    if (index >= arr->size || hm_arr_is_empty(arr)) {
+    if (index >= arr->size) {
         return NULL;
     }
     void* ret_val = arr->vals[index];
