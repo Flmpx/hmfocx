@@ -93,11 +93,11 @@ int main()
 {
     int capacity = 50;
     hm_stack stack;
-    // fixed-size
+    /* fixed-size */
     hm_stack_init(&stack, capacity, free);
     hm_stack_free(&stack);
     
-    // dynamic-grow
+    /* dynamic-grow */
     hm_stack_init_dynamic_grow(&stack, capacity, free);
     hm_stack_free(&stack);
 
@@ -164,21 +164,21 @@ int main()
 {
     int capacity = 20;
     hm_stack stack;
-    // fixed-size
+    /* fixed-size */
     hm_stack_init(&stack, capacity, free);
     
-    // push
+    /* push */
     for (int i = 0; i < capacity; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
         hm_stack_push(&stack, v);
     }
     
-    // peek
+    /* peek */
     int* val = hm_stack_peek(&stack);
     printf("%d\n", *val);
 
-    // pop
+    /* pop */
     for (int i = 0; i < capacity; i++) {
         int* v = hm_stack_pop(&stack);
         printf("%d ", *v);
@@ -233,14 +233,14 @@ int main()
 {
     int capacity = 20;
     hm_stack stack;
-    // fixed-size
+    /* fixed-size */
     hm_stack_init(&stack, capacity, free);
     
     if (hm_stack_is_empty(&stack)) {
         printf("stack is empty\n");
     }
 
-    // push
+    /* push */
     int i = 0;
     while (!hm_stack_is_full(&stack)) {
         int* v = (int*)malloc(sizeof(int));
@@ -303,7 +303,7 @@ int main()
 {
     hm_stack stack;
     int capacity = 520;
-    // only dynamic-grow stack can do
+    /* only dynamic-grow stack can do */
     hm_stack_init_dynamic_grow(&stack, capacity, free);
     print_stack_status(&stack);
 
@@ -361,7 +361,7 @@ void hm_stack_clear(hm_stack* stack);
 #include <stdlib.h>
 
 void print_stack_status(hm_stack* stack) {
-    // print size and capacity of stack
+    /* print size and capacity of stack */
     printf("size: %-3d, capacity: %-3d\n", hm_stack_size(stack), hm_stack_capacity(stack));
 }
 
@@ -369,7 +369,7 @@ int main()
 {
     int capacity = 20;
     hm_stack stack;
-    // fixed-size
+    /* fixed-size */
     hm_stack_init(&stack, capacity, free);
     
     for (int i = 0; i < capacity; i++) {
@@ -379,7 +379,7 @@ int main()
     }
     print_stack_status(&stack);
     
-    // clear
+    /* clear */
     hm_stack_clear(&stack);
     
     print_stack_status(&stack);
@@ -426,7 +426,7 @@ int main()
 {
     int capacity = 20;
     hm_stack stack;
-    // fixed-size
+    /* fixed-size */
     hm_stack_init(&stack, capacity, free);
     
     for (int i = 0; i < capacity; i++) {
@@ -435,7 +435,7 @@ int main()
         hm_stack_push(&stack, v);
     }
 
-    // stack must be freed after use
+    /* stack must be freed after use */
     hm_stack_free(&stack);
     return 0;
 }

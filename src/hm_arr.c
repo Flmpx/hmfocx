@@ -35,7 +35,7 @@ hm_arr_ret hm_arr_init(hm_arr* arr, size_t capacity, hm_free free_val) {
     assert(arr != NULL);
 
     if (capacity) {
-        // prevent overflow
+        /* prevent overflow */
         if (capacity > SIZE_MAX / sizeof(void*)) {
             return hm_arr_ret_error;
         }
@@ -49,10 +49,9 @@ hm_arr_ret hm_arr_init(hm_arr* arr, size_t capacity, hm_free free_val) {
     arr->dynamic_grow = false;
     arr->capacity = capacity;
     arr->free_val = free_val;
-    
     arr->size = 0;
+    
     return hm_arr_ret_suc;    
-
 }
 
 /**
@@ -71,6 +70,7 @@ hm_arr_ret hm_arr_init_dynamic_grow(hm_arr* arr, size_t start_capacity, hm_free 
     if (ret == hm_arr_ret_suc) {
         arr->dynamic_grow = true;
     }
+
     return ret;
 }
 
@@ -109,7 +109,7 @@ static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
         return hm_arr_ret_warn;
     }
 
-    // prevent overflow
+    /* prevent overflow */
     if (new_capacity > SIZE_MAX / sizeof(void*)) {
         return hm_arr_ret_error;
     }
@@ -147,17 +147,14 @@ hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
         return hm_arr_ret_full;
     }
 
-    /**
-     * Check if need relloc
-     */
-    // is the condition is true, indicate the arr is dynamic growth
+    /* is the condition is true, indicate the arr is dynamic growth */
     if (arr->size == arr->capacity) {
         size_t new_capacity = 0;
         if (arr->capacity) {
             if (arr->capacity > SIZE_MAX / 2) {
                 return hm_arr_ret_error;
             }
-            // expand to twice the origin size
+            /* expand to twice the origin size */
             new_capacity = arr->capacity * 2;
         } else {
             new_capacity = 1;
@@ -168,7 +165,6 @@ hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
         }
         
     }
-
     memmove(arr->vals + index + 1, arr->vals + index, (arr->size - index) * sizeof(void*));
     arr->vals[index] = val;
     arr->size++;
@@ -189,6 +185,7 @@ hm_arr_ret hm_arr_insert_head(hm_arr* arr, void* val) {
     if (hm_arr_is_full(arr)) {
         return hm_arr_ret_full;
     }
+
     return hm_arr_insert_index(arr, val, 0);
 }
 
@@ -206,6 +203,7 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
     if (hm_arr_is_full(arr)) {
         return hm_arr_ret_full;
     }
+
     return hm_arr_insert_index(arr, val, arr->size);
 }
 
@@ -244,6 +242,7 @@ hm_arr_ret hm_arr_del_head(hm_arr* arr) {
     if (hm_arr_is_empty(arr)) {
         return hm_arr_ret_none;
     }
+
     return hm_arr_del_index(arr, 0);
 }
 
@@ -261,6 +260,7 @@ hm_arr_ret hm_arr_del_tail(hm_arr* arr) {
     if (hm_arr_is_empty(arr)) {
         return hm_arr_ret_none;
     }
+
     return hm_arr_del_index(arr, arr->size - 1);
 }
 
@@ -278,6 +278,7 @@ void** hm_arr_get_pointer(hm_arr* arr, size_t index) {
     if (index >= arr->size) {
         return NULL;
     }
+    
     return arr->vals + index;
 }
 
@@ -336,7 +337,6 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr) {
     size_t new_capacity = arr->capacity / 2;
 
     return hm_arr_fresh(arr, new_capacity);
-
 }
 
 
@@ -351,12 +351,13 @@ void hm_arr_clear(hm_arr* arr) {
     hm_free free_val = arr->free_val;
     size_t total = arr->size;
     void** vals = arr->vals;
-    
+
     if (free_val) {
         for (size_t i = 0; i < total; i++) {
             free_val(vals[i]);
         }
     }
+
     arr->size = 0;
 }
 
@@ -372,5 +373,4 @@ void hm_arr_free(hm_arr* arr) {
     free(arr->vals);
     
     memset(arr, 0, sizeof(hm_arr));
-
 }

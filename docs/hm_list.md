@@ -148,7 +148,7 @@ hm_list_node* hm_list_get_node(hm_list* list, size_t index);
 
 void print_list(hm_list* list) {
     int s = hm_list_size(list);
-    // get and print
+    /* get and print */
     for (int i = 0; i < s; i++) {
         int* v = hm_list_get(list, i);
         printf("%d ", *v);
@@ -159,11 +159,11 @@ void print_list(hm_list* list) {
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
     int cnt = 10;
-    // insert head
+    /* insert head */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
@@ -171,7 +171,7 @@ int main()
     }
     print_list(&list);    
 
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
@@ -181,11 +181,11 @@ int main()
 
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
-    // insert val at index 2
+    /* insert val at index 2 */
     hm_list_insert_index(&list, val, 2);
     print_list(&list);
 
-    // use get to change val at index 3
+    /* use get to change val at index 3 */
     int* v = hm_list_get(&list, 3);
     *v = 66666666;
     print_list(&list);
@@ -223,7 +223,7 @@ char* vals[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 
 void print_list(hm_list* list) {
     int s = hm_list_size(list);
-    // get_node and print
+    /* get_node and print */
     for (int i = 0; i < s; i++) {
         hm_list_node* n = hm_list_get_node(list, i);
         char* v = n->val;
@@ -235,10 +235,10 @@ void print_list(hm_list* list) {
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, NULL);
 
-    // insert tail
+    /* insert tail */
     int cnt = sizeof(vals) / sizeof(char*);
     for (int i = 0; i < cnt; i++) {
         hm_list_insert_tail(&list, vals[i]);
@@ -246,7 +246,7 @@ int main()
     print_list(&list);
 
     char* tmp_str = "Hello, I'm Flmpx";
-    // use get_node to change the pointer of val at index 3
+    /* use get_node to change the pointer of val at index 3 */
     hm_list_node* v = hm_list_get_node(&list, 3);
     v->val = tmp_str;
     print_list(&list);
@@ -322,11 +322,11 @@ void print_list(hm_list* list) {
 int main()
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
     int cnt = 20;
-    // insert
+    /* insert */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
@@ -334,11 +334,11 @@ int main()
     }
     print_list(&list);
 
-    // pop | index: 4
+    /* pop | index: 4 */
     int* pop_v = hm_list_pop(&list, 4);
     print_list(&list);
 
-    // print poped val
+    /* print poped val */
     printf("pop val: %d\n", *pop_v);
 
     free(pop_v); // memory ownership swap is happend, so, you should free it
@@ -414,11 +414,11 @@ void print_list(hm_list* list) {
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
     int cnt = 20;
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
@@ -426,19 +426,19 @@ int main()
     }
     print_list(&list);
 
-    // del index | index: 4
+    /* del index | index: 4 */
     hm_list_del_index(&list, 4);
     print_list(&list);
 
     int num_h = 3;
-    // del head | num: 3
+    /* del head | num: 3 */
     for (int i = 0; i < num_h; i++) {
         hm_list_del_head(&list);
     }
     print_list(&list);
 
     int num_t = 2;
-    // del tail | num: 2
+    /* del tail | num: 2 */
     for (int i = 0; i < num_t; i++) {
         hm_list_del_tail(&list);
     }
@@ -469,7 +469,7 @@ int main()
 > **Iterator**
 ```c
 
-// These functions will be remove
+/* These functions will be remove */
 
 /**
  * Initialize iterator of list
@@ -493,7 +493,7 @@ bool hm_list_iter_has_next(hm_list_iter* iter);
 void* hm_list_iter_next(hm_list_iter* iter);
 
 
-// New functions of iterator
+/* New functions of iterator */
 
 /**
  * Initialize iterator of list
@@ -554,19 +554,19 @@ void hm_list_iter_move_prev(hm_list_iter* iter);
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
 
     int cnt = 20;
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
         hm_list_insert_tail(&list, v);
     }
     
-    // iter [old]
+    /* iter [old] */
     
     hm_list_iter iter;
     hm_list_iter_init(&iter, &list);
@@ -600,46 +600,46 @@ int main()
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
     int cnt = 20;
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
         hm_list_insert_tail(&list, v);
     }
     
-    // iter [new]
+    /* iter [new] */
     hm_list_iter iter;
 
-    // iterate from head 
+    /* iterate from head  */
     hm_list_iter_init_head(&iter, &list);
     while (hm_list_iter_has_cur(&iter)) {
         int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
-        // move next
+        /* move next */
         hm_list_iter_move_next(&iter);
     }
     printf("\n");
     
-    // iterate from tail | reverse
+    /* iterate from tail | reverse */
     hm_list_iter_init_tail(&iter, &list);
     while (hm_list_iter_has_cur(&iter)) {
         int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
-        // move prev
+        /* move prev */
         hm_list_iter_move_prev(&iter);
     }
     printf("\n");
     
-    // iterate from index 4
+    /* iterate from index 4 */
     hm_list_iter_init_index(&iter, &list, 4);
     while (hm_list_iter_has_cur(&iter)) {
         int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
-        // move next
+        /* move next */
         hm_list_iter_move_next(&iter);
     }
     printf("\n");
@@ -688,18 +688,18 @@ void hm_list_free(hm_list* list);
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
     int cnt = 20;
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
         hm_list_insert_tail(&list, v);
     }
     
-    // list must be freed after use
+    /* list must be freed after use */
     hm_list_free(&list);
     
     return 0;
@@ -751,15 +751,15 @@ int cmp_up(const void* p1, const void* p2) {
 int main() 
 {
     hm_list list;
-    // init
+    /* init */
     hm_list_init(&list, free);
 
-    // get random number
+    /* get random number */
     int seed = 5201314;
     srand(seed);
 
     int cnt = 10;
-    // insert tail
+    /* insert tail */
     for (int i = 0; i < cnt; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = rand();

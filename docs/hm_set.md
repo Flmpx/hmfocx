@@ -112,12 +112,12 @@ int main()
 {
     hm_set set;
 
-    // init
+    /* init */
     hm_set_init(&set, hash, cmp, free);
     print_set_status(&set);
     hm_set_free(&set);
     
-    // init with reverse
+    /* init with reverse */
     int start_len = 1314;
     hm_set_init_reserve(&set, hash, cmp, free, start_len);
     print_set_status(&set);
@@ -200,7 +200,7 @@ size_t hash(const void* key) {
 
 
 void print_set(hm_set* set, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(set, &i);
         int* k = e.key;
@@ -225,11 +225,11 @@ int main()
     }
     print_set(&set, num);
 
-    // insert same key;
+    /* insert same key; */
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_set_insert(&set, k) == hm_set_ret_existed) {
-        // handle this special situation -- free key
+        /* handle this special situation -- free key */
         free(k);
     }
     print_set(&set, num);
@@ -277,7 +277,7 @@ int main()
  * @note The entry will be removed but not free its memory(Memory Ownership Transfer)
  * @note Entry contains pointer to key
  * 
- * @return Return **(hm_set_entry){NULL}** when key is not existed in map
+ * @return Return **(hm_set_entry){NULL}** when key is not existed in set
  */
 hm_set_entry hm_set_pop(hm_set* set, void* key);
 ```
@@ -308,7 +308,7 @@ size_t hash(const void* key) {
 
 
 void print_set(hm_set* set, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(set, &i);
         int* k = e.key;
@@ -333,12 +333,12 @@ int main()
     }
     print_set(&set, num);
 
-    // pop | key: 2
+    /* pop | key: 2 */
     int key = 2;
     hm_set_entry e = hm_set_pop(&set, &key);
     print_set(&set, num);
 
-    // print poped entry
+    /* print poped entry */
     int* k = e.key;
     if (k) {
         printf("pop entry:\n| k: %d\n", *k);
@@ -424,7 +424,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_set(hm_set* set, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(set, &i);
         int* k = e.key;
@@ -447,7 +447,7 @@ int main()
     }
     print_set(&set, num);
 
-    // del 1 3 5
+    /* del 1 3 5 */
     for (int i = 0; i < num; i++) {
         if (i % 2) {
             hm_set_del(&set, &i);
@@ -540,7 +540,7 @@ int main()
     }
     print_load_factor(&set);
     
-    // del some
+    /* del some */
     for (int i = 0; i < num * 1000 - num * 10; i++) {
         hm_set_del(&set, &i);
     }
@@ -630,7 +630,7 @@ size_t hash(const void* key) {
 }
 
 void print_set(hm_set* set, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(set, &i);
         int* k = e.key;
@@ -764,7 +764,7 @@ int main()
     print_set(&set);
     print_load_factor(&set);
     
-    // clear
+    /* clear */
     hm_set_clear(&set);
     
     print_set(&set);
@@ -846,7 +846,7 @@ int main()
         hm_set_insert(&set, k);
     }
     
-    // set must be freed after use
+    /* set must be freed after use */
     hm_set_free(&set);
     return 0;
 }

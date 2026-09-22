@@ -56,7 +56,7 @@ void print_speed_vs(const char* info_a, clock_t start_a, clock_t end_a,
                     size_t scale, size_t oper_cnt) {
     printf(COLOR_YELLOW "| (SCALE):" COLOR_RESET "[%zu]\n", scale);
     printf(COLOR_YELLOW "| (OPERATION CNT):" COLOR_RESET "[%zu]\n", oper_cnt);
-    // compare cost time
+    /* compare cost time */
     printf(COLOR_YELLOW "| (COST TIME):");
     printf(COLOR_YELLOW "%s" COLOR_RESET ": [%lfs] | ", info_a, (double)(end_a - start_a) / CLOCKS_PER_SEC); 
     printf(COLOR_YELLOW "%s" COLOR_RESET ": [%lfs]\n", info_b, (double)(end_b - start_b) / CLOCKS_PER_SEC); 

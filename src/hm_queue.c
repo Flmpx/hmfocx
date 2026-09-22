@@ -36,7 +36,7 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
     assert(queue != NULL);
 
     if (capacity) {
-        // prevent overflow
+        /* prevent overflow */
         if (capacity > SIZE_MAX / sizeof(void*)) {
             return hm_queue_ret_error;
         }
@@ -47,11 +47,9 @@ hm_queue_ret hm_queue_init(hm_queue* queue, size_t capacity, hm_free free_val) {
     } else {
         queue->vals = NULL;
     }
-
     queue->dynamic_grow = false;
     queue->capacity = capacity;
     queue->free_val = free_val;
-
     queue->front = queue->rear = 0;
     queue->size = 0;
 
@@ -75,6 +73,7 @@ hm_queue_ret hm_queue_init_dynamic_grow(hm_queue* queue, size_t start_capacity, 
     if (ret == hm_queue_ret_suc) {
         queue->dynamic_grow = true;
     }
+
     return ret;
 }
 
@@ -115,7 +114,7 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
         return hm_queue_ret_warn;
     }
 
-    // prevent overflow
+    /* prevent overflow */
     if (new_capacity > SIZE_MAX / sizeof(void*)) {
         return hm_queue_ret_error;
     }
@@ -138,10 +137,8 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
 
     free(queue->vals);
     queue->vals = new_vals;
-
     queue->front = 0;
     queue->rear = queue->size;
-
     queue->capacity = new_capacity;
 
     return hm_queue_ret_suc;
@@ -163,17 +160,14 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
         return hm_queue_ret_full;
     }
 
-    /**
-     * Check if need relloc
-     */
-    // is the condition is true, indicate the queue is dynamic growth
+    /* if the condition is true, indicate the queue is dynamic growth */
     if (queue->size == queue->capacity) {
         size_t new_capacity = 0;
         if (queue->capacity) {
             if (queue->capacity > SIZE_MAX / 2) {
                 return hm_queue_ret_error;
             }
-            // expand to twice the origin size
+            /* expand to twice the origin size */
             new_capacity = queue->capacity * 2;
         } else {
             new_capacity = 1;
@@ -190,7 +184,6 @@ hm_queue_ret hm_queue_enq(hm_queue* queue, void* val) {
     queue->size++;
 
     return hm_queue_ret_suc;
-
 }
 
 /**
@@ -204,6 +197,7 @@ void* hm_queue_peek(hm_queue* queue) {
     if (hm_queue_is_empty(queue)) {
         return NULL;
     }
+
     return queue->vals[queue->front];
 }
 
@@ -286,6 +280,5 @@ void hm_queue_free(hm_queue* queue) {
     free(queue->vals);
 
     memset(queue, 0, sizeof(hm_queue));
-
 }
 

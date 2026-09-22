@@ -33,16 +33,14 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
 
     pool->blocks_per_page = blocks_per_page;
 
-    // let pool.block_size == 0 when pass-in block_size == 0
-    // This action can let allocator handle this sitution easily
+    /* let pool.block_size == 0 when pass-in block_size == 0 */
+    /* This action can let allocator handle this sitution easily */
     if (block_size == 0) {
         pool->block_size = 0;
         return;
     }
-
     block_size = block_size > sizeof(hm_pool_block_node) ? block_size : sizeof(hm_pool_block_node);
     pool->block_size = align_up(block_size, sizeof(void*));
-
 }
 
 
@@ -55,24 +53,26 @@ void hm_pool_init(hm_pool* pool, size_t block_size, size_t blocks_per_page) {
 void* hm_pool_block_allocate(hm_pool* pool) {
     assert(pool != NULL);
 
-    // refactor: allocator reurn NULL when `block_size` or `blocks_per_page` == 0
+    /* refactor: allocator reurn NULL when `block_size` or `blocks_per_page` == 0 */
     if (pool->block_size == 0 || pool->blocks_per_page == 0) {
         return NULL;
 
     }
+
+    /* there have some freed block */
     if (pool->head_block) {
         hm_pool_block_node* node = pool->head_block;
         pool->head_block = pool->head_block->next;
         return node;
     }
 
-    // product check
+    /* prevent product overflow */
     if (pool->blocks_per_page > SIZE_MAX / pool->block_size) {
         return NULL;
     }
     size_t product = pool->block_size * pool->blocks_per_page;
 
-    // add check
+    /* prevent add overflow */
     if (product > SIZE_MAX - sizeof(hm_pool_page_node)) {
         return NULL;
     }
@@ -95,14 +95,7 @@ void* hm_pool_block_allocate(hm_pool* pool) {
     }
 
     hm_pool_block_node* node = pool->head_block;
-
-    /**
-     * the next action will generate error if the `blocks_per_page` is zero
-     * So, let it return NULL for user
-     */
-    if (pool->head_block) {
-        pool->head_block = pool->head_block->next;
-    }
+    pool->head_block = pool->head_block->next;
 
     return node;
 }
@@ -143,7 +136,6 @@ void hm_pool_free(hm_pool* pool) {
     }
 
     memset(pool, 0, sizeof(hm_pool));
-    
 }
 
 
@@ -159,6 +151,7 @@ size_t hm_pool_get_pages(hm_pool* pool) {
         cur = cur->next;
         cnt++;
     }
+    
     return cnt;
 }
 

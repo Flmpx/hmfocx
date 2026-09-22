@@ -170,11 +170,11 @@
 - **Breaking:** Change `hm_cmp` and `hm_hash` signatures from `void*` to use `const void*`
     - Users must update their signature accordingly, the code below is an example
     ```c
-    // old version
+    /* old version */
     int my_cmp(void* ptr1, void* ptr2);
     size_t my_hash(void* ptr);
 
-    // new version
+    /* new version */
     int my_cmp(const void* ptr1, const void* ptr2);
     size_t my_hash(const void* ptr);
     ```

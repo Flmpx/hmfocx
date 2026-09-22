@@ -37,7 +37,7 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
     assert(stack != NULL);
 
     if (capacity) {
-        // prevent overflow
+        /* prevent overflow */
         if (capacity > SIZE_MAX / sizeof(void*)) {
             return hm_stack_ret_error;
         }
@@ -51,10 +51,10 @@ hm_stack_ret hm_stack_init(hm_stack* stack, size_t capacity, hm_free free_val) {
     stack->dynamic_grow = false;
     stack->capacity = capacity;
     stack->free_val = free_val;
-    // Because the `size_t` type is a positive number 
+    /* Because the `size_t` type is a positive number  */
     stack->top = 0;
-    return hm_stack_ret_suc;    
 
+    return hm_stack_ret_suc;    
 }
 
 
@@ -74,6 +74,7 @@ hm_stack_ret hm_stack_init_dynamic_grow(hm_stack* stack, size_t start_capacity, 
     if (ret == hm_stack_ret_suc) {
         stack->dynamic_grow = true;
     }
+
     return ret;
 }
 
@@ -112,7 +113,7 @@ static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
         return hm_stack_ret_warn;
     }
 
-    // prevent overflow
+    /* prevent overflow */
     if (new_capacity > SIZE_MAX / sizeof(void*)) {
         return hm_stack_ret_error;
     }
@@ -141,17 +142,14 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
         return hm_stack_ret_full;
     }
 
-    /**
-     * Check if need relloc
-     */
-    // is the condition is true, indicate the stack is dynamic growth
+    /* is the condition is true, indicate the stack is dynamic growth */
     if (stack->top == stack->capacity) {
         size_t new_capacity = 0;
         if (stack->capacity) {
             if (stack->capacity > SIZE_MAX / 2) {
                 return hm_stack_ret_error;
             }
-            // expand to twice the origin size
+            /* expand to twice the origin size */
             new_capacity = stack->capacity * 2;
         } else {
             new_capacity = 1;
@@ -166,7 +164,6 @@ hm_stack_ret hm_stack_push(hm_stack* stack, void* val) {
     stack->vals[stack->top++] = val;
 
     return hm_stack_ret_suc;
-    
 }
 
 
@@ -181,6 +178,7 @@ void* hm_stack_peek(hm_stack* stack) {
     if (hm_stack_is_empty(stack)) {
         return NULL;
     }
+
     return stack->vals[stack->top - 1];
 }
 
@@ -195,6 +193,7 @@ void* hm_stack_pop(hm_stack* stack) {
     if (hm_stack_is_empty(stack)) {
         return NULL;
     } 
+
     return stack->vals[--(stack->top)];
 }
 
@@ -217,7 +216,6 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
     size_t new_capacity = stack->capacity / 2;
 
     return hm_stack_fresh(stack, new_capacity);
-
 }
 
 
@@ -253,5 +251,4 @@ void hm_stack_free(hm_stack* stack) {
     free(stack->vals);
     
     memset(stack, 0, sizeof(stack));
-
 }

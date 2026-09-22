@@ -13,7 +13,7 @@
     all_failure_num += fail_cnt;
 
 
-// This variable can record the all number of failure
+/* This variable can record the all number of failure */
 int all_failure_num = 0;
 
 void test_set_integrity(hm_set* set, int* fail_cnt, int tag, size_t size, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key) {
@@ -27,7 +27,7 @@ void test_set_integrity(hm_set* set, int* fail_cnt, int tag, size_t size, hm_has
     check_res(!(set->len != 0 && set->buckets == NULL), "TEST OF INTEGRITY: set's isn't 0, but buckets is NULL", fail_cnt, tag);
     check_res(!(set->len != 0 && set->buckets_status == NULL), "TEST OF INTEGRITY: set's isn't 0, but buckets_status is NULL", fail_cnt, tag);
 
-    // size [exist | none | del]
+    /* size [exist | none | del] */
     int len = set->len;
 
     int existed = 0, none = 0, del = 0;
@@ -136,11 +136,11 @@ void test_set_insert() {
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
     int fail = 0;
     
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
-        // only return `hm_set_ret_suc` if the function runing correctly
+        /* only return `hm_set_ret_suc` if the function runing correctly */
         if (hm_set_insert(&set, k) != hm_set_ret_suc) {
             fail++;
         }
@@ -148,7 +148,7 @@ void test_set_insert() {
     check_res(num == set.size, "the size of set is wrong", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free);
 
-    // verify
+    /* verify */
     int fail_no_exist_k = 0;
     int fail_count_k = 0;
     int fail_invalid_k = 0;
@@ -254,7 +254,7 @@ void test_set_get() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
@@ -262,7 +262,7 @@ void test_set_get() {
     }
 
     
-    // verify valid k
+    /* verify valid k */
     int fail_no_exist_k = 0;
     int fail_count_k = 0;
     int fail_invalid_k = 0;
@@ -294,7 +294,7 @@ void test_set_get() {
     check_res(fail_no_exist_k == 0, "key in set is NULL when get valid key", &fail_cnt, tag++);
     
     
-    // verify invalid key
+    /* verify invalid key */
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
         hm_set_entry e = hm_set_get(&set, &i);
@@ -325,7 +325,7 @@ void test_set_del() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
@@ -333,7 +333,7 @@ void test_set_del() {
     }
 
     
-    // del half of set
+    /* del half of set */
     int fail_del = 0;
     for (int i = 0; i < num / 2; i++) {
         if (hm_set_del(&set, &i) != hm_set_ret_suc) {
@@ -344,7 +344,7 @@ void test_set_del() {
     test_set_integrity(&set, &fail_cnt, tag++, num - num / 2, hash_int_1, cmp_int_up, free);
 
     
-    // verify
+    /* verify */
     int fail_no_exist = 0;
 
     for (int i = 0; i < num / 2; i++) {
@@ -356,7 +356,7 @@ void test_set_del() {
     check_res(fail_no_exist == 0, "the del entry is still existed in set after del", &fail_cnt, tag++);
 
 
-    // verify existed entry
+    /* verify existed entry */
     int fail_no_exist_k = 0;
     int fail_count_k = 0;
     int fail_invalid_k = 0;
@@ -388,7 +388,7 @@ void test_set_del() {
     check_res(fail_no_exist_k == 0, "existed key in set is NULL after del half of set", &fail_cnt, tag++);
     
     
-    // del all 
+    /* del all  */
     for (int i = num / 2; i < num; i++) {
         hm_set_del(&set, &i);
     }
@@ -396,7 +396,7 @@ void test_set_del() {
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
 
     
-    // del empty set
+    /* del empty set */
     int k[] = {2, 3, 2, 100};
     int cnt = sizeof(k) / sizeof(int);
 
@@ -429,20 +429,20 @@ void test_set_shrink() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
         hm_set_insert(&set, k);
     }
 
-    // del some
+    /* del some */
     for (int i = 0; i < num; i += 2) {
         hm_set_del(&set, &i);
     }
 
     
-    // shrink and verify
+    /* shrink and verify */
     int cnt = 10;
     int fail_shrink = 0;
     int fail_no_shrink = 0;
@@ -485,7 +485,7 @@ void test_set_clear() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
@@ -493,13 +493,13 @@ void test_set_clear() {
     }
 
     
-    // clear
+    /* clear */
     hm_set_clear(&set);
 
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
 
     
-    // verfiy
+    /* verfiy */
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(&set, &i);
@@ -511,13 +511,13 @@ void test_set_clear() {
     check_res(fail_exist == 0, "some entry still existed in set after clear this set", &fail_cnt, tag++);
 
 
-    // double clear
+    /* double clear */
     hm_set_clear(&set);
 
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
 
     
-    // verfiy
+    /* verfiy */
     fail_exist = 0;
     for (int i = 0; i < num; i++) {
         hm_set_entry e = hm_set_get(&set, &i);
@@ -547,7 +547,7 @@ void test_set_free() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
@@ -556,7 +556,7 @@ void test_set_free() {
 
 
     hm_set_free(&set);
-    // use valgrind to check memory leak
+    /* use valgrind to check memory leak */
     
 
     print_end("SET | FUNC | FREE | TYPE: [INT]", fail_cnt);
@@ -571,7 +571,7 @@ void test_set_insert_stress() {
 
 
 
-    // type : int
+    /* type : int */
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     for (int i = 0; i < cnt; i++) {
@@ -620,7 +620,7 @@ void test_set_insert_with_reserve_stress() {
 
 
 
-    // type : int
+    /* type : int */
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     for (int i = 0; i < cnt; i++) {
@@ -670,7 +670,7 @@ void test_set_insert_same() {
 
 
     int cnt = 1000;
-    // the key is different from every element of keys
+    /* the key is different from every element of keys */
     int keys[] = {100, 200};
     int num = sizeof(keys) / sizeof(int);
     hm_set set;
@@ -678,7 +678,7 @@ void test_set_insert_same() {
     int fail_ret = 0;
     for (int i = 0; i < num; i++) {
 
-        // insert a key firstly
+        /* insert a key firstly */
         int* k = (int*)malloc(sizeof(int));
         *k = keys[i];
         hm_set_ret ret = hm_set_insert(&set, k);
@@ -714,7 +714,7 @@ void test_set_get_stress() {
 
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_set set;
@@ -722,14 +722,14 @@ void test_set_get_stress() {
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             *k = j;
             hm_set_insert(&set, k);
         }
                 
-        // find existent
+        /* find existent */
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
@@ -743,7 +743,7 @@ void test_set_get_stress() {
         check_res(fail_existed == 0, "the get function get NULL when key is existent in set", &fail_cnt, tag++);
         print_run_time("GET EXISTENT ENTRY", start, end, nums[i], nums[i]);
         
-        // find non-existent
+        /* find non-existent */
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
@@ -774,7 +774,7 @@ void test_set_del_stress() {
 
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_set set;
@@ -782,14 +782,14 @@ void test_set_del_stress() {
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             *k = j;
             hm_set_insert(&set, k);
         }
                 
-        // del non-existent
+        /* del non-existent */
         int fail_del_noexist = 0;
         clock_t start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
@@ -803,7 +803,7 @@ void test_set_del_stress() {
         check_res(fail_del_noexist == 0, "del non-existent entry should return none", &fail_cnt, tag++);
         print_run_time("DEL NON-EXISTENT ENTRY", start, end, nums[i], nums[i]);
         
-        // del existent
+        /* del existent */
         int fail_del_exist = 0;
         start = clock();
         for (int j = 0; j < nums[i]; j++) {
@@ -835,24 +835,24 @@ void test_set_clear_stress() {
 
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_set set;
 
-    // clear the set including entry that have power to free the key
+    /* clear the set including entry that have power to free the key */
     
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             *k = j;
             hm_set_insert(&set, k);
         }
         
-        // clear
+        /* clear */
         clock_t start = clock();
         
         hm_set_clear(&set);
@@ -875,15 +875,15 @@ void test_set_clear_stress() {
     print_run("SET | STRESS | CLEAR (hm_free: NULL) | TYPE: [INT]");
 
     fail_cnt = 0;
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
-    // clear the set including entry that don't have power to free the key
+    /* clear the set including entry that don't have power to free the key */
     
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
 
-        // insert
+        /* insert */
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
         
         for (int j = 0; j < nums_null[i]; j++) {
@@ -891,7 +891,7 @@ void test_set_clear_stress() {
             hm_set_insert(&set, &keys[j]);
         }
         
-        // clear
+        /* clear */
         clock_t start = clock();
 
         hm_set_clear(&set);
@@ -919,24 +919,24 @@ void test_set_free_stress() {
 
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_set set;
     
-    // free the set including entry that have power to free the key
+    /* free the set including entry that have power to free the key */
     
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             *k = j;
             hm_set_insert(&set, k);
         }
         
-        // free
+        /* free */
         clock_t start = clock();
         
         hm_set_free(&set);
@@ -958,15 +958,15 @@ void test_set_free_stress() {
     print_run("SET | STRESS | FREE (hm_free: NULL) | TYPE: [INT]");
     
     fail_cnt = 0;
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
-    // free the set including entry that don't have power to free the key
+    /* free the set including entry that don't have power to free the key */
     
     for (int i = 0; i < cnt; i++) {
         hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     
-        // insert
+        /* insert */
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
         
         for (int j = 0; j < nums_null[i]; j++) {
@@ -974,7 +974,7 @@ void test_set_free_stress() {
             hm_set_insert(&set, &keys[j]);
         }
         
-        // free
+        /* free */
         clock_t start = clock();
     
         hm_set_free(&set);        
@@ -1004,19 +1004,19 @@ void test_empty_set_oper() {
     int k = 0;
 
 
-    // get
+    /* get */
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
     check_res(hm_set_get(&set, &k).key == NULL, "get on empty set should return invalid entry", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
     hm_set_free(&set);
     
-    // pop
+    /* pop */
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
     check_res(hm_set_pop(&set, &k).key == NULL, "pop on empty set should return invalid entry", &fail_cnt, tag++);
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
     hm_set_free(&set);
     
-    // del
+    /* del */
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
     k = 10;
     check_res(hm_set_del(&set, &k) == hm_set_ret_none, "del on empty set should return none", &fail_cnt, tag++);
@@ -1024,7 +1024,7 @@ void test_empty_set_oper() {
     hm_set_free(&set);
     
     
-    // iter
+    /* iter */
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
@@ -1055,7 +1055,7 @@ void test_single_entry_oper() {
     int k = 1;
     
     
-    // insert single entry and get
+    /* insert single entry and get */
     hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     hm_set_entry e = hm_set_get(&set, &k);
@@ -1064,7 +1064,7 @@ void test_single_entry_oper() {
     hm_set_free(&set);
     
     
-    // insert single entry and pop
+    /* insert single entry and pop */
     hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     e = hm_set_pop(&set, &k);
@@ -1073,7 +1073,7 @@ void test_single_entry_oper() {
     hm_set_free(&set);
     
     
-    // insert single entry and delete it 
+    /* insert single entry and delete it  */
     hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     check_res(hm_set_del(&set, &k) == hm_set_ret_suc, "del on single entry's set should return suc", &fail_cnt, tag++);
@@ -1082,7 +1082,7 @@ void test_single_entry_oper() {
     hm_set_free(&set);
     
     
-    // insert two indetical keys
+    /* insert two indetical keys */
     hm_set_init(&set, hash_int_1, cmp_int_up, NULL);
     hm_set_insert(&set, &k);
     int new_k = k;
@@ -1110,7 +1110,7 @@ void test_set_pop() {
     hm_set set;
     hm_set_init(&set, hash_int_1, cmp_int_up, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i; 
@@ -1142,12 +1142,12 @@ void test_set_pop() {
         
                 flag[pop_keys[i]] = 1;
             } else {
-                // valid key but invald entry
+                /* valid key but invald entry */
                 fail_valid_key++;
             }
         } else {
             if (k) {
-                // invalid key but valid entry
+                /* invalid key but valid entry */
                 fail_invalid_key++;
             }
         }
@@ -1157,7 +1157,7 @@ void test_set_pop() {
     check_res(fail_invalid_key == 0, "pop with invalid key should return invalid entry", &fail_cnt, tag++);
     
 
-    // verify
+    /* verify */
     int fail = 0;
     for (int i = 0; i < pop_cnt; i++) {
         hm_set_iter iter;

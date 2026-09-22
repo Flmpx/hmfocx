@@ -105,11 +105,11 @@ int main()
 {
     int capacity = 50;
     hm_heap heap;
-    // fixed-size
+    /* fixed-size */
     hm_heap_init(&heap, capacity, free, cmp_up);
     hm_heap_free(&heap);
     
-    // dynamic-grow
+    /* dynamic-grow */
     hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_up);
     hm_heap_free(&heap);
 
@@ -182,15 +182,15 @@ int main()
 {
     int capacity = 12;
 
-    // get random number
+    /* get random number */
     int seed = 5201314;
     srand(seed);
 
     hm_heap heap;
-    // fixed-size
+    /* fixed-size */
     hm_heap_init(&heap, capacity, free, cmp_up);
     
-    // insert
+    /* insert */
     for (int i = 0; i < capacity; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = rand();
@@ -199,11 +199,11 @@ int main()
     }
     printf("\n");
     
-    // peek
+    /* peek */
     int* val = hm_heap_peek(&heap);
     printf("%d\n", *val);
 
-    // extract
+    /* extract */
     for (int i = 0; i < capacity; i++) {
         int* v = hm_heap_extract(&heap);
         printf("%d ", *v);
@@ -263,14 +263,14 @@ int main()
 {
     int capacity = 20;
     hm_heap heap;
-    // fixed-size
+    /* fixed-size */
     hm_heap_init(&heap, capacity, free, cmp_up);
     
     if (hm_heap_is_empty(&heap)) {
         printf("heap is empty\n");
     }
 
-    // insert
+    /* insert */
     int i = 0;
     while (!hm_heap_is_full(&heap)) {
         int* v = (int*)malloc(sizeof(int));
@@ -341,7 +341,7 @@ int main()
 {
     hm_heap heap;
     int capacity = 520;
-    // only dynamic-grow heap can do
+    /* only dynamic-grow heap can do */
     hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_up);
     print_heap_status(&heap);
 
@@ -422,7 +422,7 @@ int cmp_up(const void* p1, const void* p2) {
 
 int main()
 {
-    // get random number
+    /* get random number */
     int seed = 9420;
     srand(seed);
 
@@ -438,7 +438,7 @@ int main()
     }
     printf("\n");
 
-    // fixed-size
+    /* fixed-size */
     hm_heap_build(&heap, vals, capacity, capacity, free, cmp_up);
     for (int i = 0; i < capacity; i++) {
         int* v = hm_heap_extract(&heap);
@@ -505,7 +505,7 @@ int cmp_down(const void* p1, const void* p2) {
 }
 
 void heap_insert(hm_heap* heap) {
-    // get same and random number
+    /* get same and random number */
     srand(seed);
     for (int i = 0; i < capacity; i++) {
         int* v = (int*)malloc(sizeof(int));
@@ -529,7 +529,7 @@ int main()
     hm_heap_init(&heap, capacity, free, cmp_up);
 
     srand(seed);
-    // print original number
+    /* print original number */
     for (int i = 0; i < capacity; i++) {
         printf("%d ", rand());
     }
@@ -540,7 +540,7 @@ int main()
     printf("\n");
     
     heap_insert(&heap);
-    // rebuild
+    /* rebuild */
     hm_heap_rebuild(&heap, cmp_down);
     print_heap_extract(&heap);
     printf("\n");
@@ -593,7 +593,7 @@ int cmp_up(const void* p1, const void* p2) {
 }
 
 void print_heap_status(hm_heap* heap) {
-    // print size and capacity of heap
+    /* print size and capacity of heap */
     printf("size: %-3d, capacity: %-3d\n", hm_heap_size(heap), hm_heap_capacity(heap));
 }
 
@@ -601,7 +601,7 @@ int main()
 {
     int capacity = 20;
     hm_heap heap;
-    // fixed-size
+    /* fixed-size */
     hm_heap_init(&heap, capacity, free, cmp_up);
     
     for (int i = 0; i < capacity; i++) {
@@ -611,7 +611,7 @@ int main()
     }
     print_heap_status(&heap);
     
-    // clear
+    /* clear */
     hm_heap_clear(&heap);
     
     print_heap_status(&heap);
@@ -666,7 +666,7 @@ int main()
 {
     int capacity = 20;
     hm_heap heap;
-    // fixed-size
+    /* fixed-size */
     hm_heap_init(&heap, capacity, free, cmp_up);
     
     for (int i = 0; i < capacity; i++) {
@@ -675,7 +675,7 @@ int main()
         hm_heap_insert(&heap, v);
     }
 
-    // heap must be freed after use
+    /* heap must be freed after use */
     hm_heap_free(&heap);
     return 0;
 }

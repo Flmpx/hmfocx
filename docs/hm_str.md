@@ -93,12 +93,12 @@ void print_str_status(hm_str* str) {
 int main() 
 {
     hm_str str;
-    // init
+    /* init */
     hm_str_init(&str);
     print_str_status(&str);
     hm_str_free(&str);
 
-    // init with reserve
+    /* init with reserve */
     size_t capacity = 1314;
     hm_str_init_reserve(&str, capacity);
     print_str_status(&str);
@@ -181,7 +181,7 @@ int num = sizeof(strings) / sizeof(char*);
 
 void print_str(hm_str* str) {
     size_t len = hm_str_len(str);
-    // get
+    /* get */
     for (int i = 0; i < len; i++) {
         const char* s = hm_str_get(str, i);
         printf("%s\n", s);
@@ -192,12 +192,12 @@ int main() {
     hm_str str;
     hm_str_init(&str);
 
-    // append
+    /* append */
     for (int i = 0; i < num; i++) {
         hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
-    // print
+    /* print */
     print_str(&str);
 
     hm_str_free(&str);
@@ -239,7 +239,7 @@ int num = sizeof(chs) / sizeof(char);
 
 void print_str(hm_str* str) {
     size_t len = hm_str_len(str);
-    // get
+    /* get */
     for (int i = 0; i < len; i++) {
         const char* s = hm_str_get(str, i);
         printf("%s\n", s);
@@ -250,12 +250,12 @@ int main() {
     hm_str str;
     hm_str_init(&str);
 
-    // append character
+    /* append character */
     for (int i = 0; i < num; i++) {
         hm_str_append_ch(&str, chs[i]);
     }
 
-    // print
+    /* print */
     print_str(&str);
 
     hm_str_free(&str);
@@ -311,12 +311,12 @@ int main() {
     hm_str str;
     hm_str_init(&str);
 
-    // append
+    /* append */
     for (int i = 0; i < num; i++) {
         hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
-    // pop
+    /* pop */
     char* s = hm_str_pop(&str);     // str can't be use after pop
     printf("%s\n", s);
 
@@ -376,7 +376,7 @@ int main() {
     int capcity = 1314;
     hm_str_init_reserve(&str, capcity);
 
-    // shrink and print status
+    /* shrink and print status */
     print_str_status(&str);
     while (hm_str_shrink(&str) == hm_str_ret_suc) {
         print_str_status(&str);
@@ -441,14 +441,14 @@ int main() {
     hm_str str;
     hm_str_init(&str);
 
-    // append
+    /* append */
     for (int i = 0; i < num; i++) {
         hm_str_append(&str, strings[i], strlen(strings[i]));
     }
     printf("%s\n", hm_str_get(&str, 0));
     print_str_status(&str);
     
-    // clear
+    /* clear */
     hm_str_clear(&str);
     printf("%s\n", hm_str_get(&str, 0));
     print_str_status(&str);
@@ -504,12 +504,12 @@ int main() {
     hm_str str;
     hm_str_init(&str);
 
-    // append
+    /* append */
     for (int i = 0; i < num; i++) {
         hm_str_append(&str, strings[i], strlen(strings[i]));
     }
 
-    // str must be freed after use
+    /* str must be freed after use */
     hm_str_free(&str);      // // str can't be use after free
     return 0;
 }

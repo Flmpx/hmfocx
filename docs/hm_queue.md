@@ -93,11 +93,11 @@ int main()
 {
     int capacity = 50;
     hm_queue queue;
-    // fixed-size
+    /* fixed-size */
     hm_queue_init(&queue, capacity, free);
     hm_queue_free(&queue);
     
-    // dynamic-grow
+    /* dynamic-grow */
     hm_queue_init_dynamic_grow(&queue, capacity, free);
     hm_queue_free(&queue);
 
@@ -164,21 +164,21 @@ int main()
 {
     int capacity = 20;
     hm_queue queue;
-    // fixed-size
+    /* fixed-size */
     hm_queue_init(&queue, capacity, free);
     
-    // enqueue
+    /* enqueue */
     for (int i = 0; i < capacity; i++) {
         int* v = (int*)malloc(sizeof(int));
         *v = i;
         hm_queue_enq(&queue, v);
     }
     
-    // peek
+    /* peek */
     int* val = hm_queue_peek(&queue);
     printf("%d\n", *val);
 
-    // dequeue
+    /* dequeue */
     for (int i = 0; i < capacity; i++) {
         int* v = hm_queue_deq(&queue);
         printf("%d ", *v);
@@ -232,14 +232,14 @@ int main()
 {
     int capacity = 20;
     hm_queue queue;
-    // fixed-size
+    /* fixed-size */
     hm_queue_init(&queue, capacity, free);
     
     if (hm_queue_is_empty(&queue)) {
         printf("queue is empty\n");
     }
 
-    // enqueue
+    /* enqueue */
     int i = 0;
     while (!hm_queue_is_full(&queue)) {
         int* v = (int*)malloc(sizeof(int));
@@ -303,7 +303,7 @@ int main()
 {
     hm_queue queue;
     int capacity = 520;
-    // only dynamic-grow queue can do
+    /* only dynamic-grow queue can do */
     hm_queue_init_dynamic_grow(&queue, capacity, free);
     print_queue_status(&queue);
 
@@ -362,7 +362,7 @@ void hm_queue_clear(hm_queue* queue);
 #include <stdlib.h>
 
 void print_queue_status(hm_queue* queue) {
-    // print size and capacity of queue
+    /* print size and capacity of queue */
     printf("size: %-3d, capacity: %-3d\n", hm_queue_size(queue), hm_queue_capacity(queue));
 }
 
@@ -370,7 +370,7 @@ int main()
 {
     int capacity = 20;
     hm_queue queue;
-    // fixed-size
+    /* fixed-size */
     hm_queue_init(&queue, capacity, free);
     
     for (int i = 0; i < capacity; i++) {
@@ -380,7 +380,7 @@ int main()
     }
     print_queue_status(&queue);
     
-    // clear
+    /* clear */
     hm_queue_clear(&queue);
     
     print_queue_status(&queue);
@@ -428,7 +428,7 @@ int main()
 {
     int capacity = 20;
     hm_queue queue;
-    // fixed-size
+    /* fixed-size */
     hm_queue_init(&queue, capacity, free);
     
     for (int i = 0; i < capacity; i++) {
@@ -437,7 +437,7 @@ int main()
         hm_queue_enq(&queue, v);
     }
 
-    // queue must be freed after use
+    /* queue must be freed after use */
     hm_queue_free(&queue);
     return 0;
 }

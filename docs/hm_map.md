@@ -112,12 +112,12 @@ void print_map_status(hm_map* map) {
 int main() 
 {
     hm_map map;
-    // init
+    /* init */
     hm_map_init(&map, hash, cmp, free, free);
     print_map_status(&map);
     hm_map_free(&map);
     
-    // init with reserve
+    /* init with reserve */
     size_t start_len = 520;
     hm_map_init_reserve(&map, hash, cmp, free, free, start_len);
     print_map_status(&map);
@@ -221,7 +221,7 @@ char val[][101] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(val[0]);
 
 void print_map(hm_map* map, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_map_entry e = hm_map_get(map, &i);
         int* k = e.key;
@@ -246,17 +246,17 @@ int main()
     }
     print_map(&map, num);
 
-    // insert same key;
+    /* insert same key; */
     char* v = "so, why?";
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
-        // handle this special situation -- free key
+        /* handle this special situation -- free key */
         free(k);
     }
     print_map(&map, num);
 
-    // use get to change the val
+    /* use get to change the val */
     k = (int*)malloc(sizeof(int));
     *k = 3;
     hm_map_entry e = hm_map_get(&map, k);
@@ -333,7 +333,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map, int num) {
-    // get_entry and print
+    /* get_entry and print */
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(map, &i);
         if (e) {
@@ -358,17 +358,17 @@ int main()
     }
     print_map(&map, num);
 
-    // insert same key;
+    /* insert same key; */
     char* v = "so, why?";
     int* k = (int*)malloc(sizeof(int));
     *k = 5;
     if (hm_map_insert(&map, k, v) == hm_map_ret_existed) {
-        // handle this special situation -- free key
+        /* handle this special situation -- free key */
         free(k);
     }
     print_map(&map, num);
 
-    // use get_entry to change the pointer of val 
+    /* use get_entry to change the pointer of val  */
     k = (int*)malloc(sizeof(int));
     *k = 5;
     hm_map_entry* e = hm_map_get_entry(&map, k);
@@ -464,7 +464,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_map_entry e = hm_map_get(map, &i);
         int* k = e.key;
@@ -490,12 +490,12 @@ int main()
     }
     print_map(&map, num);
 
-    // pop | key: 2
+    /* pop | key: 2 */
     int key = 2;
     hm_map_entry e = hm_map_pop(&map, &key);
     print_map(&map, num);
     
-    // print poped entry
+    /* print poped entry */
     int* k = e.key;
     char* v = e.val;
     if (k && v) {
@@ -580,7 +580,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_map_entry e = hm_map_get(map, &i);
         int* k = e.key;
@@ -605,7 +605,7 @@ int main()
     }
     print_map(&map, num);
 
-    // del 1 3 5
+    /* del 1 3 5 */
     for (int i = 0; i < num; i++) {
         if (i % 2) {
             hm_map_del(&map, &i);
@@ -702,7 +702,7 @@ int main()
     }
     print_load_factor(&map);
     
-    // del some
+    /* del some */
     for (int i = 0; i < num * 1000 - num * 10; i++) {
         hm_map_del(&map, &i);
     }
@@ -796,7 +796,7 @@ char* val[] = {"xl", "oi", "i", "hate", "love", "so", "family"};
 int num = sizeof(val) / sizeof(char*);
 
 void print_map(hm_map* map, int num) {
-    // get and print
+    /* get and print */
     for (int i = 0; i < num; i++) {
         hm_map_entry e = hm_map_get(map, &i);
         int* k = e.key;
@@ -937,7 +937,7 @@ int main()
     print_map(&map);
     print_load_factor(&map);
     
-    // clear
+    /* clear */
     hm_map_clear(&map);
     
     print_map(&map);
@@ -1023,7 +1023,7 @@ int main()
         hm_map_insert(&map, k, v);
     }
     
-    // map must be freed after use
+    /* map must be freed after use */
     hm_map_free(&map);
     return 0;
 }

@@ -51,6 +51,7 @@ static hm_str_ret hm_str_fresh(hm_str* str, size_t new_capacity) {
     }
     str->val = new_val;
     str->capacity = new_capacity;
+
     return hm_str_ret_suc;
 }
 
@@ -72,6 +73,7 @@ hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity) {
         return hm_str_ret_error;
     }
     str->val[0] = '\0';
+
     return hm_str_ret_suc;
 }
 
@@ -101,7 +103,7 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len) {
     assert(str != NULL);
     assert(sub_str != NULL);
 
-    // prevent overflow
+    /* prevent overflow */
     if (str->len > SIZE_MAX - sub_str_len) {
         return hm_str_ret_error;
     }
@@ -109,7 +111,7 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len) {
     size_t need = str->len + sub_str_len;
     if (need > str->capacity) {         // the all code block is invalid when need is `0`, so `need` > 0 when the code block is valid
 
-        // prevent overflow
+        /* prevent overflow */
         if (str->capacity > SIZE_MAX / 2) {
             return hm_str_ret_error;
         }
@@ -125,6 +127,7 @@ hm_str_ret hm_str_append(hm_str* str, const char* sub_str, size_t sub_str_len) {
     memmove(str->val + str->len, sub_str, sub_str_len);
     str->len = need;
     str->val[str->len] = '\0';
+
     return hm_str_ret_suc;
 }
 
@@ -142,7 +145,7 @@ hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
         size_t new_capacity = 0;
 
         if (str->capacity) {
-            // prevent overflow
+            /* prevent overflow */
             if (str->capacity > SIZE_MAX / 2) {
                 return hm_str_ret_error;
             }
@@ -162,7 +165,6 @@ hm_str_ret hm_str_append_ch(hm_str* str, char ch) {
     str->val[str->len] = '\0';
 
     return hm_str_ret_suc;
-
 }
 
 /**
@@ -240,5 +242,6 @@ hm_str_ret hm_str_shrink(hm_str* str) {
     if (l >= c / 2) {
         return hm_str_ret_none;
     }
+    
     return hm_str_fresh(str, c / 2);
 }

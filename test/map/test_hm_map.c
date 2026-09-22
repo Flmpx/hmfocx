@@ -13,7 +13,7 @@
     all_failure_num += fail_cnt;
 
 
-// This variable can record the all number of failure
+/* This variable can record the all number of failure */
 int all_failure_num = 0;
 
 void test_map_integrity(hm_map* map, int* fail_cnt, int tag, size_t size, hm_hash hash_key, hm_cmp cmp_key, hm_free free_key, hm_free free_val) {
@@ -29,7 +29,7 @@ void test_map_integrity(hm_map* map, int* fail_cnt, int tag, size_t size, hm_has
     check_res(!(map->len != 0 && map->buckets_status == NULL), "TEST OF INTEGRITY: map's isn't 0, but buckets_status is NULL", fail_cnt, tag);
     
     
-    // size [exist | none | del]
+    /* size [exist | none | del] */
     
     int len = map->len;
     
@@ -137,13 +137,13 @@ void test_map_insert() {
     int fail = 0;
     int flag[num];
     
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
         int* v = (int*)malloc(sizeof(int));
         *k = i; *v = flag[i];
-        // only return `hm_map_ret_suc` if the function runing correctly
+        /* only return `hm_map_ret_suc` if the function runing correctly */
         if (hm_map_insert(&map, k, v) != hm_map_ret_suc) {
             fail++;
         }
@@ -151,7 +151,7 @@ void test_map_insert() {
     check_res(num == map.size, "the size of map is wrong", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free, free);
 
-    // verify
+    /* verify */
     int fail_invalid_k = 0;
     int fail_diff_v = 0;
     for (int i = 0; i < map.len; i++) {
@@ -237,7 +237,7 @@ void test_map_get() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -247,7 +247,7 @@ void test_map_get() {
     }
 
 
-    // verify valid k
+    /* verify valid k */
     int fail_no_existed = 0;
     int fail_diff_v = 0;
     int fail_invalid_k = 0;
@@ -274,7 +274,7 @@ void test_map_get() {
     check_res(fail_diff_v == 0, "val got by `hm_map_get` is wrong", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free, free);
     
-    // verify invalid key
+    /* verify invalid key */
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
         hm_map_entry e = hm_map_get(&map, &i);
@@ -305,7 +305,7 @@ void test_map_get_entry() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -314,7 +314,7 @@ void test_map_get_entry() {
         hm_map_insert(&map, k, v);
     }
     
-    // verify valid k
+    /* verify valid k */
     int fail_no_existed = 0;
     int fail_diff_v = 0;
     int fail_invalid_k = 0;
@@ -341,7 +341,7 @@ void test_map_get_entry() {
     check_res(fail_diff_v == 0, "val got by `hm_map_get` is wrong", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free, free);
     
-    // verify invalid key
+    /* verify invalid key */
     int fail_exist = 0;
     for (int i = num; i < 2 * num; i++) {
         hm_map_entry* e = hm_map_get_entry(&map, &i);
@@ -372,9 +372,9 @@ void test_map_change() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // change with get
+    /* change with get */
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -383,7 +383,7 @@ void test_map_change() {
         hm_map_insert(&map, k, v);
     }
 
-    // change
+    /* change */
     int diff = 99;
     for (int i = 0; i < num; i++) {
         hm_map_entry e = hm_map_get(&map, &i);
@@ -392,7 +392,7 @@ void test_map_change() {
     }
     test_map_integrity(&map, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free, free);
 
-    // verify 
+    /* verify  */
     int fail_diff = 0;
     int fail_no_exist = 0;
     for (int i = 0; i < num; i++) {
@@ -413,7 +413,7 @@ void test_map_change() {
     hm_map_free(&map);
 
 
-    // change with get_entry
+    /* change with get_entry */
     
     char* start_str[] = {"a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg", "hhhhhhhh"};
     char* end_str[] = {"hahahahaha", "lalalalala", "mamamamama", "mimimimimi", "xixixixixi", "sososososo", "fufufufufu", "kikikikiki"};
@@ -421,21 +421,21 @@ void test_map_change() {
     hm_map_init(&map, hash_int_1, cmp_int_up, free, NULL);
     num = sizeof(end_str) / sizeof(end_str);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         *k = i;
         hm_map_insert(&map, k, start_str[i]);
     }
 
-    // change 
+    /* change  */
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(&map, &i);
         e->val = end_str[i];
     }
     test_map_integrity(&map, &fail_cnt, tag++, num, hash_int_1, cmp_int_up, free, NULL);
 
-    // verify
+    /* verify */
     fail_diff = fail_no_exist = 0;
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(&map, &i);
@@ -468,7 +468,7 @@ void test_map_del() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -477,7 +477,7 @@ void test_map_del() {
         hm_map_insert(&map, k, v);
     }
     
-    // del half of map
+    /* del half of map */
     int fail_del = 0;
     for (int i = 0; i < num / 2; i++) {
         if (hm_map_del(&map, &i) != hm_map_ret_suc) {
@@ -488,7 +488,7 @@ void test_map_del() {
     test_map_integrity(&map, &fail_cnt, tag++, num - num / 2, hash_int_1, cmp_int_up, free, free);
 
     
-    // verify
+    /* verify */
     int fail_no_exist = 0;
     for (int i = 0; i < num / 2; i++) {
         hm_map_entry e = hm_map_get(&map, &i);
@@ -498,7 +498,7 @@ void test_map_del() {
     }
     check_res(fail_no_exist == 0, "the del entry is still existed in map after del", &fail_cnt, tag++);
 
-    // verify existed entry
+    /* verify existed entry */
     int fail_exist = 0;
     int fail_diff_v = 0;
     for (int i = num / 2; i < num; i++) {
@@ -515,7 +515,7 @@ void test_map_del() {
     check_res(fail_diff_v == 0, "the existed entry's val is wrong after del half of map", &fail_cnt, tag++);
     check_res(fail_exist == 0, "the existed entry become NULL in map after del half of map", &fail_cnt, tag++);
     
-    // del all 
+    /* del all  */
     for (int i = num / 2; i < num; i++) {
         hm_map_del(&map, &i);
     }
@@ -523,7 +523,7 @@ void test_map_del() {
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     
     
-    // del empty map
+    /* del empty map */
     int k[] = {2, 3, 2, 100};
     int cnt = sizeof(k) / sizeof(int);
     int fail_del_invalid_k = 0;
@@ -555,7 +555,7 @@ void test_map_shrink() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -564,12 +564,12 @@ void test_map_shrink() {
         hm_map_insert(&map, k, v);
     }
 
-    // del some vals
+    /* del some vals */
     for (int i = 0; i < num; i += 2) {
         hm_map_del(&map, &i);
     }
 
-    // shrink and verify
+    /* shrink and verify */
     int cnt = 10;
     int fail_shrink = 0;
     int fail_no_shrink = 0;
@@ -613,7 +613,7 @@ void test_map_clear() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -622,12 +622,12 @@ void test_map_clear() {
         hm_map_insert(&map, k, v);
     }
 
-    // clear
+    /* clear */
     hm_map_clear(&map);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
 
 
-    // verfiy
+    /* verfiy */
     int fail_exist = 0;
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(&map, &i);
@@ -638,11 +638,11 @@ void test_map_clear() {
     check_res(fail_exist == 0, "some entry still existed in map after clear this map", &fail_cnt, tag++);
     
     
-    // double clear
+    /* double clear */
     hm_map_clear(&map);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     
-    // verfiy
+    /* verfiy */
     fail_exist = 0;
     for (int i = 0; i < num; i++) {
         hm_map_entry* e = hm_map_get_entry(&map, &i);
@@ -672,7 +672,7 @@ void test_map_free() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         flag[i] = i * 10;
         int* k = (int*)malloc(sizeof(int));
@@ -681,9 +681,9 @@ void test_map_free() {
         hm_map_insert(&map, k, v);
     }
 
-    // free
+    /* free */
     hm_map_free(&map);
-    // use valgrind to check memory leak
+    /* use valgrind to check memory leak */
     
     
 
@@ -698,7 +698,7 @@ void test_map_insert_stress() {
     print_run("MAP | STRESS | INSERT | TYPE K:[INT] V:[INT]");
 
 
-    // type : int
+    /* type : int */
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     for (int i = 0; i < cnt; i++) {
@@ -748,7 +748,7 @@ void test_map_insert_with_reserve_stress() {
     print_run("MAP | STRESS | INSERT WITH RESERVE | TYPE K:[INT] V:[INT]");
 
 
-    // type : int
+    /* type : int */
     size_t nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(size_t);
     for (int i = 0; i < cnt; i++) {
@@ -799,7 +799,7 @@ void test_map_insert_same() {
 
 
     int cnt = 1000;
-    // the key is different from every element of keys
+    /* the key is different from every element of keys */
     int keys[] = {100, 200};
     int vals[] = {200, 300};
     int num = sizeof(keys) / sizeof(int);
@@ -836,7 +836,7 @@ void test_map_get_stress() {
 
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
@@ -844,7 +844,7 @@ void test_map_get_stress() {
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             int* v = (int*)malloc(sizeof(int));
@@ -853,7 +853,7 @@ void test_map_get_stress() {
             hm_map_insert(&map, k, v);
         }
                 
-        // find existent
+        /* find existent */
         clock_t start = clock();
         int fail_existed = 0;
         for (int j = 0; j < nums[i]; j++) {
@@ -867,7 +867,7 @@ void test_map_get_stress() {
         check_res(fail_existed == 0, "the get function get NULL when key is existent in map", &fail_cnt, tag++);
         print_run_time("GET EXISTENT ENTRY", start, end, nums[i], nums[i]);
         
-        // find non-existent
+        /* find non-existent */
         int fail_no_existed = 0;
         start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
@@ -897,7 +897,7 @@ void test_map_del_stress() {
     print_run("MAP | STRESS | DEL | TYPE K:[INT] V:[INT]");
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
@@ -905,7 +905,7 @@ void test_map_del_stress() {
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             int* v = (int*)malloc(sizeof(int));
@@ -915,7 +915,7 @@ void test_map_del_stress() {
         }
         
 
-        // del non-existent
+        /* del non-existent */
         int fail_del_noexist = 0;
         clock_t start = clock();
         for (int j = nums[i]; j < 2 * nums[i]; j++) {
@@ -930,7 +930,7 @@ void test_map_del_stress() {
         print_run_time("DEL NON-EXISTENT ENTRY", start, end, nums[i], nums[i]);
         
         
-        // del existent
+        /* del existent */
         int fail_del_exist = 0;
         start = clock();
         for (int j = 0; j < nums[i]; j++) {
@@ -960,17 +960,17 @@ void test_map_clear_stress() {
     print_run("MAP | STRESS | CLEAR (hm_free: free) | TYPE K:[INT] V:[INT]");
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_map map;
 
-    // clear the map including entry that have power to free the key and value
+    /* clear the map including entry that have power to free the key and value */
     
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             int* v = (int*)malloc(sizeof(int));
@@ -979,7 +979,7 @@ void test_map_clear_stress() {
             hm_map_insert(&map, k, v);
         }
         
-        // clear
+        /* clear */
         clock_t start = clock();
         
         hm_map_clear(&map);
@@ -1001,15 +1001,15 @@ void test_map_clear_stress() {
     print_run("MAP | STRESS | CLEAR (hm_free: NULL) | TYPE K:[INT] V:[INT]");
 
     fail_cnt = 0;
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
-    // clear the map including entry that don't have power to free the key and value
+    /* clear the map including entry that don't have power to free the key and value */
     
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
 
-        // insert
+        /* insert */
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
         int* vals = (int*)malloc(nums_null[i] * sizeof(int));
         
@@ -1019,7 +1019,7 @@ void test_map_clear_stress() {
             hm_map_insert(&map, &keys[j], &vals[j]);
         }
         
-        // clear
+        /* clear */
         clock_t start = clock();
 
         hm_map_clear(&map);
@@ -1047,17 +1047,17 @@ void test_map_free_stress() {
     print_run("MAP | STRESS | FREE (hm_free: free) | TYPE K:[INT] V:[INT]");
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_free[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_free) / sizeof(int);
     hm_map map;
     
-    // free the map including entry that have power to free the key and value
+    /* free the map including entry that have power to free the key and value */
     
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums_free[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             int* v = (int*)malloc(sizeof(int));
@@ -1066,7 +1066,7 @@ void test_map_free_stress() {
             hm_map_insert(&map, k, v);
         }
         
-        // free
+        /* free */
         clock_t start = clock();
         
         hm_map_free(&map);
@@ -1087,15 +1087,15 @@ void test_map_free_stress() {
     print_run("MAP | STRESS | FREE (hm_free: NULL) | TYPE K:[INT] V:[INT]");
     
     fail_cnt = 0;
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums_null[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_null) / sizeof(int);
-    // free the map including entry that don't have power to free the key and value
+    /* free the map including entry that don't have power to free the key and value */
     
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     
-        // insert
+        /* insert */
         int* keys = (int*)malloc(nums_null[i] * sizeof(int));
         int* vals = (int*)malloc(nums_null[i] * sizeof(int));
         
@@ -1105,7 +1105,7 @@ void test_map_free_stress() {
             hm_map_insert(&map, &keys[j], &vals[j]);
         }
         
-        // free
+        /* free */
         clock_t start = clock();
     
         hm_map_free(&map);        
@@ -1131,7 +1131,7 @@ void test_map_iter_stress() {
     print_run("MAP | STRESS | ITERATOR | TYPE K:[INT] V:[INT]");
 
 
-    // the value of num cann't greater than 10^9
+    /* the value of num cann't greater than 10^9 */
     int nums[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums) / sizeof(int);
     hm_map map;
@@ -1139,7 +1139,7 @@ void test_map_iter_stress() {
     for (int i = 0; i < cnt; i++) {
         hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-        // insert
+        /* insert */
         for (int j = 0; j < nums[i]; j++) {
             int* k = (int*)malloc(sizeof(int));
             int* v = (int*)malloc(sizeof(int));
@@ -1148,7 +1148,7 @@ void test_map_iter_stress() {
             hm_map_insert(&map, k, v);
         }
     
-        // itering map
+        /* itering map */
         hm_map_iter iter;
         hm_map_iter_init(&iter, &map);
 
@@ -1186,34 +1186,34 @@ void test_empty_map_oper() {
     int k = 0;
 
 
-    // get
+    /* get */
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     hm_map_entry e = hm_map_get(&map, &k);
     check_res(e.key == NULL && e.val == NULL, "get on empty map should return invalid entry", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     hm_map_free(&map);
     
-    // get entry
+    /* get entry */
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     check_res(hm_map_get_entry(&map, &k) == NULL, "get_entry on empty map should return `NULL`", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     hm_map_free(&map);
     
-    // pop
+    /* pop */
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     e = hm_map_pop(&map, &k);
     check_res(e.key == NULL && e.val == NULL, "pop on empty map should return invalid entry", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     hm_map_free(&map);
     
-    // del
+    /* del */
     k = 10;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     check_res(hm_map_del(&map, &k) == hm_map_ret_none, "del on empty map should return `NULL`", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     hm_map_free(&map);
     
-    // iter
+    /* iter */
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
@@ -1243,7 +1243,7 @@ void test_single_entry_oper() {
     int k = 1, v = 10;
     
     
-    // insert single entry and get
+    /* insert single entry and get */
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_insert(&map, &k, &v);
     hm_map_entry e = hm_map_get(&map, &k);
@@ -1252,7 +1252,7 @@ void test_single_entry_oper() {
     check_res(*(int*)(e.val) == v, "the val is wrong when run `map_get` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);
     
-    // insert single entry and get entry
+    /* insert single entry and get entry */
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_insert(&map, &k, &v);
     hm_map_entry* e_p = hm_map_get_entry(&map, &k);
@@ -1261,7 +1261,7 @@ void test_single_entry_oper() {
     check_res(*(int*)(e_p->val) == v, "the val is wrong when run `map_get_entry` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);
     
-    // insert single entry and pop
+    /* insert single entry and pop */
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_insert(&map, &k, &v);
     e = hm_map_pop(&map, &k);
@@ -1270,7 +1270,7 @@ void test_single_entry_oper() {
     check_res(*(int*)(e.val) == v, "the val is wrong when run `map_pop` on single entry's map", &fail_cnt, tag++);
     hm_map_free(&map);
     
-    // insert single entry and delete it 
+    /* insert single entry and delete it  */
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_insert(&map, &k, &v);
     check_res(hm_map_del(&map, &k) == hm_map_ret_suc, "del on single entry's map should return suc", &fail_cnt, tag++);
@@ -1278,7 +1278,7 @@ void test_single_entry_oper() {
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_free(&map);
     
-    // insert two indetical keys
+    /* insert two indetical keys */
     hm_map_init(&map, hash_int_1, cmp_int_up, NULL, NULL);
     hm_map_insert(&map, &k, &v);
     int new_v = 100;
@@ -1307,7 +1307,7 @@ void test_map_pop() {
     hm_map map;
     hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
 
-    // insert
+    /* insert */
     for (int i = 0; i < num; i++) {
         int* k = (int*)malloc(sizeof(int));
         int* v = (int*)malloc(sizeof(int));
@@ -1344,12 +1344,12 @@ void test_map_pop() {
         
                 flag[pop_keys[i]] = 1;
             } else {
-                // valid key but invald entry
+                /* valid key but invald entry */
                 fail_valid_key++;
             }
         } else {
             if (k || v) {
-                // invalid key but valid entry
+                /* invalid key but valid entry */
                 fail_invalid_key++;
             }
         }
@@ -1359,7 +1359,7 @@ void test_map_pop() {
     check_res(fail_invalid_key == 0, "pop with invalid key should return invalid entry", &fail_cnt, tag++);
     
 
-    // verify
+    /* verify */
     int fail = 0;
     for (int i = 0; i < pop_cnt; i++) {
         hm_map_iter iter;

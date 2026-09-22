@@ -73,38 +73,39 @@ endif()
 #include "../../include/hm_list.h"
 #include "../hm_test_tool.h"
 
-// This variable can record the total number of failures and it can be used as a return value to check whether the test passed
+/* This variable can record the total number of failures and it can be used as a return value to check whether the test passed */
 int all_failure_num = 0;
 
-// use a macro to replace the repetitive code 
+/* use a macro to replace the repetitive code  */
 #define HM_TEST_COUNTER \
     all_failure_num += fail_cnt;
 
 
-// every test function ...
+/* every test function ... */
 
 void function_test() {
     test_list_init();                               printf("\n");
-    // You should add `printf("\n");` after each test function call
-    // and more ...
+    /* You should add `printf("\n");` after each test function call */
+    /* and more ... */
 }
 
 void boundary_test() {
     test_empty_list_oper();                         printf("\n");
-    // and more ...
+    /* and more ... */
 }
 
 void stress_test() {
     test_list_insert_tail_stress();                 printf("\n");
-    // and more ...
+    /* and more ... */
 }
 
 int main()
 {
-    // Group the test roughly
+    /* Group the test roughly */
     function_test();
     boundary_test();
     stress_test();
+    
     return all_failure_num;
 }
 
@@ -126,9 +127,9 @@ void test_list_insert_head() {
     
     int fail = 0;
     
-    // some test ...
+    /* some test ... */
     
-    // **CHECK**
+    /* **CHECK** */
     check_res(fail == 0, "some deail information of faillure", &fail_cnt, tag++);
     
     

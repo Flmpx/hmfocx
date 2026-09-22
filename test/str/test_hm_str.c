@@ -8,10 +8,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-// This variable can record the total number of failures and it can be used as a return value to check whether the test passed
+/* This variable can record the total number of failures and it can be used as a return value to check whether the test passed */
 int all_failure_num = 0;
 
-// use a macro to replace the repetitive code 
+/* use a macro to replace the repetitive code  */
 #define HM_TEST_COUNTER \
     all_failure_num += fail_cnt;
 
@@ -27,7 +27,7 @@ void test_str_integrity(hm_str* str, int* fail_cnt, int tag, size_t len) {
 
 
 
-// every test function ...
+/* every test function ... */
 
 void test_str_init() {
     int fail_cnt = 0;
@@ -37,7 +37,7 @@ void test_str_init() {
     hm_str str;
     hm_str_init(&str);
 
-    // check
+    /* check */
     check_res(str.capacity == 0, "str's capacity should be 0", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -57,7 +57,7 @@ void test_str_init_reserve() {
     hm_str str;
     hm_str_init_reserve(&str, capacity);
     
-    // check
+    /* check */
     check_res(str.capacity == capacity, "str's capacity is unexpected", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
     check_res(str.val != NULL, "str's val shouldn't be NULL", &fail_cnt, tag++);
@@ -67,7 +67,7 @@ void test_str_init_reserve() {
     int s_capacity = 0;
     hm_str_init_reserve(&str, s_capacity);
 
-    // check
+    /* check */
     check_res(str.capacity == s_capacity, "str's should be min_capacity", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
     check_res(str.val != NULL, "str's val shouldn't be NULL", &fail_cnt, tag++);
@@ -93,13 +93,13 @@ void test_str_append() {
 
     int repeat_cnt = 64;
     int len_every_repeat = 0;
-    // get the length of every repeat append
+    /* get the length of every repeat append */
     for (int i = 0; i < num; i++) {
         len_every_repeat += strlen(strings[i]);
     }
 
     int fail = 0;
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         
         for (int j = 0; j < num; j++) {
@@ -112,7 +112,7 @@ void test_str_append() {
     test_str_integrity(&str, &fail_cnt, tag++, repeat_cnt * len_every_repeat);
     check_res(fail == 0, "append function should return suc", &fail_cnt, tag++);
 
-    // verify
+    /* verify */
     const char* s = str.val;
     size_t now_len = 0;
     fail = 0;
@@ -148,14 +148,14 @@ void test_str_get() {
 
     int repeat_cnt = 32;
     int len_every_repeat = 0;
-    // get the length of every repeat append
+    /* get the length of every repeat append */
     for (int i = 0; i < num; i++) {
         len_every_repeat += strlen(strings[i]);
     }
     char compare_str[repeat_cnt * len_every_repeat + 100];
     compare_str[0] = '\0';
 
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
@@ -164,9 +164,9 @@ void test_str_get() {
     }
     size_t capacity = hm_str_capacity(&str);
 
-    // get
+    /* get */
     size_t l = hm_str_len(&str);
-    // valid index
+    /* valid index */
     int fail_null = 0;
     int fail_diff = 0;
     for (int i = 0; i <= l; i++) {
@@ -182,7 +182,7 @@ void test_str_get() {
     check_res(fail_null == 0, "the string get by `get` should be valid when index is valid", &fail_cnt, tag++);
     check_res(fail_diff == 0, "the string get by `get` is wrong", &fail_cnt, tag++);
     
-    // invalid index
+    /* invalid index */
     int fail_no_null = 0;
     for (int i = l + 1; i < l * 2; i++) {
         const char* index_s = hm_str_get(&str, i);
@@ -213,17 +213,17 @@ void test_str_pop() {
     int num = sizeof(strings) / sizeof(const char*);
 
     int repeat_cnt = 64;
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
-    // pop
+    /* pop */
     char* s = hm_str_pop(&str);
-    // it can't test integrity because str can't be used after pop
+    /* it can't test integrity because str can't be used after pop */
 
-    // verify
+    /* verify */
     size_t now_len = 0;
     int fail = 0;
     for (int i = 0; i < repeat_cnt; i++) {
@@ -256,7 +256,7 @@ void test_str_clear() {
     int num = sizeof(strings) / sizeof(const char*);
 
     int repeat_cnt = 64;
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
@@ -264,12 +264,12 @@ void test_str_clear() {
     }
     size_t capacity = hm_str_capacity(&str);
 
-    // clear
+    /* clear */
     hm_str_clear(&str);
     check_res(str.capacity == capacity, "the capacity is wrong after clear", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     
-    // double clear
+    /* double clear */
     hm_str_clear(&str);
     check_res(str.capacity == capacity, "the capacity is wrong after double clear", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -292,16 +292,16 @@ void test_str_free() {
     int num = sizeof(strings) / sizeof(const char*);
 
     int repeat_cnt = 64;
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
 
-    // free
+    /* free */
     hm_str_free(&str);              // use valgrid to check memory leak
-    // can't use after free
+    /* can't use after free */
     
 
     print_end("STR | FUNC | FREE", fail_cnt);
@@ -320,16 +320,16 @@ void test_str_shrink() {
     int num = sizeof(strings) / sizeof(const char*);
     
     int repeat_cnt = 64;
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
         }
     }
 
-    // clear
+    /* clear */
     hm_str_clear(&str);
-    // append
+    /* append */
     for (int i = 0; i < repeat_cnt / 10; i++) {
         for (int j = 0; j < num; j++) {
             hm_str_append(&str, strings[j], strlen(strings[j]));
@@ -347,18 +347,18 @@ void test_str_shrink() {
         size_t c = hm_str_capacity(&str), l = hm_str_len(&str);
         hm_str_ret ret = hm_str_shrink(&str);
         if (c < 2 * min_capacity || l >= c / 2) {
-            // shouldn't shrink
+            /* shouldn't shrink */
             if (ret != hm_str_ret_none) {
                 fail_shrink++;
             }
         } else {
-            // should shrink
+            /* should shrink */
             if (ret != hm_str_ret_suc) {
                 fail_no_shrink++;
             }
         }
         if (str.len != len) {
-            // len should be fixed
+            /* len should be fixed */
             fail_len++;
         }
     }
@@ -425,7 +425,7 @@ void test_append_empty_ch_in_str() {
     check_res(fail == 0, "append function should return suc when append many empty characters", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, cnt);
     
-    // verify
+    /* verify */
     fail = 0;
     const char* s = hm_str_get(&str, 0);
     for (int i = 0; i < cnt; i++) {
@@ -450,14 +450,14 @@ void test_oper_empty_str() {
     
     hm_str str;
     
-    // get
+    /* get */
     hm_str_init(&str);
 
     check_res(strcmp(hm_str_get(&str, 0), "") == 0, "get on empty str should return empty string", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     hm_str_free(&str);
     
-    // shrink
+    /* shrink */
     hm_str_init(&str);
 
     check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a empty str(capacity == 17) should return none", &fail_cnt, tag++);
@@ -465,7 +465,7 @@ void test_oper_empty_str() {
     hm_str_free(&str);
     
     
-    // append
+    /* append */
     hm_str_init(&str);
     
     char* string = "abcdefg";
@@ -475,7 +475,7 @@ void test_oper_empty_str() {
     hm_str_free(&str);
 
 
-    // append character
+    /* append character */
     hm_str_init(&str);    // let it to empty, not no-capacity
     
     char ch = 'A';
@@ -485,19 +485,19 @@ void test_oper_empty_str() {
     hm_str_free(&str);
     
     
-    // clear
+    /* clear */
     hm_str_init(&str);
 
     hm_str_clear(&str);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     hm_str_free(&str);
     
-    // pop
+    /* pop */
     hm_str_init(&str);
     
     char* s = hm_str_pop(&str);
     check_res(strcmp(s, "") == 0, "the pop on empty str should return empty string", &fail_cnt, tag++);
-    // can't use after pop
+    /* can't use after pop */
     free(s);
     
     
@@ -536,7 +536,7 @@ void test_str_append_stress() {
         print_run_time("APPEND", start, end, nums[i] * len_every, nums[i]);
         check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
         test_str_integrity(&str, &fail_cnt, tag++, len_every * nums[i]);
-        // verify
+        /* verify */
         fail = 0;
         for (int j = 0; j < nums[i]; j++) {
             const char* s = hm_str_get(&str, j * len_every);
@@ -582,7 +582,7 @@ void test_str_append_with_reserve_stress() {
         print_run_time("APPEND", start, end, nums[i] * len_every, nums[i]);
         check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
         test_str_integrity(&str, &fail_cnt, tag++, len_every * nums[i]);
-        // verify
+        /* verify */
         fail = 0;
         for (int j = 0; j < nums[i]; j++) {
             const char* s = hm_str_get(&str, j * len_every);
@@ -633,7 +633,7 @@ void test_str_append_ch_stress() {
         check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
         test_str_integrity(&str, &fail_cnt, tag++, ch_num * nums[i]);
 
-        // verify
+        /* verify */
         fail = 0;
         const char* val = hm_str_get(&str, 0);
         for (size_t j = 0; j < nums[i] * ch_num; j++) {
@@ -685,7 +685,7 @@ void test_str_append_ch_with_reserve_stress() {
         check_res(fail == 0, "append should return suc", &fail_cnt, tag++);
         test_str_integrity(&str, &fail_cnt, tag++, ch_num * nums[i]);
 
-        // verify
+        /* verify */
         fail = 0;
         const char* val = hm_str_get(&str, 0);
         for (size_t j = 0; j < nums[i] * ch_num; j++) {
@@ -716,7 +716,7 @@ void test_str_append_ch() {
     int repeat_cnt = 64;
     
     int fail = 0;
-    // append character
+    /* append character */
     for (int i = 0; i <repeat_cnt; i++) {
 
         for (int j = 0; j < num; j++) {
@@ -728,7 +728,7 @@ void test_str_append_ch() {
     test_str_integrity(&str, &fail_cnt, tag++, num * repeat_cnt);
     check_res(fail == 0, "append character function should return suc", &fail_cnt, tag++);
 
-    // verify
+    /* verify */
     const char* val = hm_str_get(&str, 0);  // get the string
     fail = 0;
 
@@ -789,7 +789,7 @@ void stress_test() {
 
 int main()
 {
-    // Group the test roughly
+    /* Group the test roughly */
     function_test();
     boundary_test();
     stress_test();

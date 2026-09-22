@@ -56,7 +56,6 @@ void hm_list_free(hm_list* list) {
     }
 
     memset(list, 0, sizeof(hm_list));
-    
 }
 
 /**
@@ -76,7 +75,7 @@ hm_list_node* hm_list_get_node(hm_list* list, size_t index) {
     hm_list_node* cur = NULL;
     size_t cnt = 0;
 
-    // perf the logic about finding target Node
+    /* perf the logic about finding target Node */
     if (index > list->size / 2) {
         cur = list->tail;
         cnt = list->size - index - 1;
@@ -94,6 +93,7 @@ hm_list_node* hm_list_get_node(hm_list* list, size_t index) {
         }
 
     }
+
     return cur;
 }
 
@@ -121,8 +121,8 @@ hm_list_ret hm_list_insert_head(hm_list* list, void* val) {
         list->head->prev = new_node;
         list->head = new_node;
     }
-
     list->size++;
+
     return hm_list_ret_suc;
 }
 
@@ -152,8 +152,8 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
         list->tail->next = new_node;
         list->tail = new_node;
     }
-
     list->size++;
+
     return hm_list_ret_suc;
 }
 
@@ -183,7 +183,7 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
     }
     new_node->val = val;
 
-    // the index is valid when run there
+    /* the index is valid when run there */
     hm_list_node* cur = hm_list_get_node(list, index);
 
 
@@ -192,7 +192,6 @@ hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
 
     cur->prev->next = new_node;
     cur->prev = new_node;
-
 
     list->size++;
 
@@ -215,7 +214,6 @@ static void* hm_list_pop_head(hm_list* list) {
 
     hm_list_node* pop_node = list->head;
 
-
     if (list->size == 1) {
         list->head = list->tail = NULL;
     } else {
@@ -224,9 +222,7 @@ static void* hm_list_pop_head(hm_list* list) {
     }
 
     void* ret_val = pop_node->val;
-
     free(pop_node);
-
     list->size--;
 
     return ret_val;
@@ -257,9 +253,7 @@ static void* hm_list_pop_tail(hm_list* list) {
     }
 
     void* ret_val = pop_node->val;
-
     free(pop_node);
-
     list->size--;
     
     return ret_val;
@@ -283,7 +277,7 @@ void* hm_list_pop(hm_list* list, size_t index) {
     if (index == 0) return hm_list_pop_head(list);
     if (index == list->size - 1) return hm_list_pop_tail(list);
 
-    // the index is valid when run there
+    /* the index is valid when run there */
     hm_list_node* cur = hm_list_get_node(list, index);
 
 
@@ -291,13 +285,10 @@ void* hm_list_pop(hm_list* list, size_t index) {
     cur->next->prev = cur->prev;
 
     void* ret_val = cur->val;
-
     free(cur);
-    
     list->size--;
 
     return ret_val;
-
 }
 
 /**
@@ -367,7 +358,6 @@ hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
     }
 
     return hm_list_ret_suc;
-
 }
 
 /**
@@ -546,6 +536,7 @@ void hm_list_iter_move_prev(hm_list_iter* iter) {
  */
 static hm_list_node* split(hm_list_node* head, size_t n) {
     if (!head) return NULL;
+
     hm_list_node* cur = head;
     for (size_t i = 1; i < n && cur->next; i++) {
         cur = cur->next;
@@ -595,6 +586,7 @@ static hm_list_node* merge(hm_list_node* left, hm_list_node* right, hm_list_node
         r->prev = tail;
         while (tail->next) tail = tail->next;
     }
+    
     return tail;
 }
 

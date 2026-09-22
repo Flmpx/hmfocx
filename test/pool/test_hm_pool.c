@@ -15,7 +15,7 @@
     all_failure_num += fail_cnt;
 
 
-// This variable can record the all number of failure
+/* This variable can record the all number of failure */
 int all_failure_num = 0;
 
 
@@ -23,7 +23,7 @@ void test_pool_integrity(hm_pool* pool, size_t used_block_num, int* fail_cnt, in
     size_t pages = 0;
     size_t free_block_num = 0;
     
-    // get pages
+    /* get pages */
     hm_pool_page_node* page_node = pool->head_page;
     while (page_node) {
         page_node = page_node->next;
@@ -54,7 +54,7 @@ enum location_block {
  */
 int judge_memory_location(hm_pool* pool, void* block) {
 
-    // Is freed block ?
+    /* Is freed block ? */
     hm_pool_block_node* b_node = pool->head_block;
     while (b_node) {
         if (b_node == block) {
@@ -64,7 +64,7 @@ int judge_memory_location(hm_pool* pool, void* block) {
     }
 
 
-    // Is used block ?
+    /* Is used block ? */
     hm_pool_page_node* p_node = pool->head_page;
     while (p_node) {
         void* min = p_node + 1;
@@ -75,7 +75,7 @@ int judge_memory_location(hm_pool* pool, void* block) {
         p_node = p_node->next;
     }
 
-    // Oh ! others
+    /* Oh ! others */
     return other_block_in_pool;
 
 }
@@ -118,12 +118,12 @@ void test_pool_allocate() {
     test_pool_integrity(&pool, 1, &fail_cnt, tag++);
     check_res(judge_memory_location(&pool, val) == used_block_in_pool, "the val should be the used block in memory pool", &fail_cnt, tag++);
     check_res(val != NULL, "the allocated block shouldn't be NULL when allocate one block", &fail_cnt, tag++);
-    // because this test exclude free test and `hm_pool_free` should destroy all the memory, so, cancel the free the block
+    /* because this test exclude free test and `hm_pool_free` should destroy all the memory, so, cancel the free the block */
 
     int nums = blocks_per_page;
     int* pointers[nums];
     int flag[nums];
-    // allocate more than an page's blocks, **Tip: val still existed**
+    /* allocate more than an page's blocks, **Tip: val still existed** */
     for (int i = 0; i < nums; i++) {
         int* v = hm_pool_block_allocate(&pool);
         *v = flag[i] = i * 10;
@@ -131,7 +131,7 @@ void test_pool_allocate() {
     }
     test_pool_integrity(&pool, nums + 1, &fail_cnt, tag++);
 
-    // verify the number of same pointer
+    /* verify the number of same pointer */
     int fail_same = 0;
     for (int i = 0; i < nums; i++) {
         for (int j = i + 1; j < nums; j++) {
@@ -142,7 +142,7 @@ void test_pool_allocate() {
     }
     check_res(fail_same == 0, "the pointer should be different", &fail_cnt, tag++);
 
-    // verify the pointer got by `hm_pool_block_allocate`
+    /* verify the pointer got by `hm_pool_block_allocate` */
     int fail_NULL = 0;
     int fail_diff = 0;
     int fail_wrong_location = 0;
@@ -161,7 +161,7 @@ void test_pool_allocate() {
     check_res(fail_wrong_location == 0, "the val should be the used block in memory pool", &fail_cnt, tag++);
 
     
-    // verify the pages 
+    /* verify the pages  */
     int pages = 0;
     hm_pool_page_node* node = pool.head_page;
     while (node) {
@@ -192,7 +192,7 @@ void test_pool_get_pages() {
     int allocate_blocks = 10000;
     int expected_pages = (allocate_blocks + blocks_per_page - 1) / blocks_per_page;
     
-    // allocate
+    /* allocate */
     for (int i = 0; i < allocate_blocks; i++) {
         hm_pool_block_allocate(&pool);  // the work of free assgin to `hm_pool_free`
     }
@@ -229,11 +229,11 @@ void test_pool_get_bytes() {
     int allocate_blocks = 10000;
     size_t expected_bytes_per_page = sizeof(hm_pool_page_node) + pool.blocks_per_page * pool.block_size;
     
-    // start 
+    /* start  */
 
     check_res(expected_bytes_per_page == hm_pool_get_bytes_per_page(&pool), "the bytes of every page got by `get_bytes_func` is wrong after init pool", &fail_cnt, tag++);
     
-    // after allocate
+    /* after allocate */
     for (int i = 0; i < allocate_blocks; i++) {
         hm_pool_block_allocate(&pool);  // the work of free assgin to `hm_pool_free`
     }
@@ -260,11 +260,11 @@ void test_pool_block_free() {
     hm_pool_init(&pool, sizeof(int), blocks_per_page);
 
     
-    // the val should be same as the new_val because the pool is use the method of `head_insert list` 
+    /* the val should be same as the new_val because the pool is use the method of `head_insert list`  */
     int* val = hm_pool_block_allocate(&pool);
     hm_pool_block_free(&pool, val);
     
-    // 0 used
+    /* 0 used */
     test_pool_integrity(&pool, 0, &fail_cnt, tag++);
     int* new_val = hm_pool_block_allocate(&pool);
     check_res(val == new_val, "val should be same as the new_val after a allocate and a free", &fail_cnt, tag++);
@@ -278,14 +278,14 @@ void test_pool_block_free() {
         pointers[i] = hm_pool_block_allocate(&pool);
     }
 
-    // free half
+    /* free half */
     for (int i = 0; i < nums / 2; i++) {
         hm_pool_block_free(&pool, pointers[i]);
     }
     test_pool_integrity(&pool, nums - nums / 2, &fail_cnt, tag++);
 
     
-    // verify
+    /* verify */
     int fail_freed = 0;
     for (int i = 0; i < nums / 2; i++) {
         if (judge_memory_location(&pool, pointers[i]) != freed_block_in_pool) {
@@ -305,13 +305,13 @@ void test_pool_block_free() {
     check_res(fail_used == 0, "the used block isn't in used area of memory pool", &fail_cnt, tag++);
 
     
-    // free all
+    /* free all */
     for (int i = nums / 2; i < nums; i++) {
         hm_pool_block_free(&pool, pointers[i]);
     }
     test_pool_integrity(&pool, 0, &fail_cnt, tag++);
 
-    // verify
+    /* verify */
 
     fail_freed = 0;
     for (int i = 0; i < nums; i++) {
@@ -347,7 +347,7 @@ void test_pool_free() {
     }
 
 
-    //  **Use valgrind or other tool that can check `leak-memory` to check if there existed memory leak**
+    /*  **Use valgrind or other tool that can check `leak-memory` to check if there existed memory leak** */
     hm_pool_free(&pool);
     
     
@@ -366,7 +366,7 @@ void test_minmax_pageblock_oper() {
     size_t blocks_per_page;
     size_t block_size;
 
-    // blocks_per_page = 0; block_size = sizeof(int)
+    /* blocks_per_page = 0; block_size = sizeof(int) */
     blocks_per_page = 0;
     block_size = sizeof(int);
 
@@ -377,7 +377,7 @@ void test_minmax_pageblock_oper() {
     test_pool_integrity(&pool, 0, &fail_cnt, tag++);
     hm_pool_free(&pool);
 
-    // block_size = 0; blocks_per_page = 1024;
+    /* block_size = 0; blocks_per_page = 1024; */
     block_size = 0;
     blocks_per_page = 1024;
     hm_pool_init(&pool, block_size, blocks_per_page);
@@ -387,7 +387,7 @@ void test_minmax_pageblock_oper() {
     hm_pool_free(&pool);
 
 
-    // block_size = SIZE_MAX / 2, blocks_per_page = 1;
+    /* block_size = SIZE_MAX / 2, blocks_per_page = 1; */
     blocks_per_page = 1;
     block_size = SIZE_MAX / 2;
     hm_pool_init(&pool, block_size, blocks_per_page);
@@ -396,7 +396,7 @@ void test_minmax_pageblock_oper() {
     check_res(v == NULL, "the v should be NULL when `block_size` is too big", &fail_cnt, tag++);
     hm_pool_free(&pool);
     
-    // block_size = sizeof(int), blocks_per_page = SIZE_MAX / 2;
+    /* block_size = sizeof(int), blocks_per_page = SIZE_MAX / 2; */
 
     blocks_per_page = SIZE_MAX / 2;
     block_size = sizeof(int);
@@ -420,7 +420,7 @@ void test_free_NULL() {
 
 
 
-    // free a nullptr
+    /* free a nullptr */
     hm_pool pool;
     hm_pool_init(&pool, sizeof(int), 2048);
 
@@ -467,7 +467,7 @@ void test_pool_allocate_stress() {
         }
         clock_t end_b = clock();
 
-        // free
+        /* free */
         for (int j = 0; j < nums[i]; j++) {
             free(pointers[j]);
         }
@@ -505,7 +505,7 @@ void test_pool_free_stress() {
         }
         test_pool_integrity(&pool, nums[i], &fail_cnt, tag++);
 
-        // pool free
+        /* pool free */
         clock_t start_a = clock();
         for (int j = 0; j < nums[i]; j++) {
             hm_pool_block_free(&pool, pointers[j]);
@@ -522,7 +522,7 @@ void test_pool_free_stress() {
         }
         
         clock_t start_b = clock();
-        // free
+        /* free */
         for (int j = 0; j < nums[i]; j++) {
             free(pointers[j]);
         }

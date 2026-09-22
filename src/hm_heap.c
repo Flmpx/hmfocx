@@ -36,7 +36,7 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cm
     assert(cmp_val != NULL);
 
     if (capacity) {
-        // prevent overflow
+        /* prevent overflow */
         if (capacity > SIZE_MAX / sizeof(void*)) {
             return hm_heap_ret_error;
         }
@@ -47,13 +47,10 @@ hm_heap_ret hm_heap_init(hm_heap* heap, size_t capacity, hm_free free_val, hm_cm
     } else {
         heap->vals = NULL;
     }
-
     heap->dynamic_grow = false;
     heap->capacity = capacity;
-    
     heap->free_val = free_val;
     heap->cmp_val = cmp_val;
-
     heap->size = 0;
     
     return hm_heap_ret_suc;
@@ -78,6 +75,7 @@ hm_heap_ret hm_heap_init_dynamic_grow(hm_heap* heap, size_t start_capacity, hm_f
     if (ret == hm_heap_ret_suc) {
         heap->dynamic_grow = true;
     }
+
     return ret;
 }
 
@@ -133,6 +131,7 @@ static hm_heap_ret hm_heap_sift_up(hm_heap* heap, size_t kid) {
             kid = parent;
         }
     }
+
     return hm_heap_ret_suc;
 }
 
@@ -152,7 +151,8 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
         return hm_heap_ret_warn;
     }
     void** vals = heap->vals;
-    // parent should have kids
+
+    /* parent should have kids */
     while (2 * parent + 1 < s) {
         size_t l = 2 * parent + 1;
         size_t r = l + 1;
@@ -169,6 +169,7 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
             parent = min;
         }
     }
+
     return hm_heap_ret_suc;
 }
 
@@ -189,7 +190,7 @@ static hm_heap_ret hm_heap_fresh(hm_heap* heap, size_t new_capacity) {
         return hm_heap_ret_warn;
     }
 
-    // prevent overflow
+    /* prevent overflow */
     if (new_capacity > SIZE_MAX / sizeof(void*)) {
         return hm_heap_ret_error;
     }
@@ -219,17 +220,14 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val) {
         return hm_heap_ret_full;
     }
 
-    /**
-     * Check if need relloc
-     */
-    // is the condition is true, indicate the heap is dynamic growth
+    /* is the condition is true, indicate the heap is dynamic growth */
     if (heap->size == heap->capacity) {
         size_t new_capacity = 0;
         if (heap->capacity) {
             if (heap->capacity > SIZE_MAX / 2) {
                 return hm_heap_ret_error;
             }
-            // expand to twice the origin size
+            /* expand to twice the origin size */
             new_capacity = heap->capacity * 2;
         } else {
             new_capacity = 1;
@@ -239,9 +237,9 @@ hm_heap_ret hm_heap_insert(hm_heap* heap, void* val) {
             return hm_heap_ret_error;
         }
     }
-
     heap->vals[heap->size++] = val;
     hm_heap_sift_up(heap, heap->size - 1);
+
     return hm_heap_ret_suc;
 }
 
@@ -256,6 +254,7 @@ void* hm_heap_peek(hm_heap* heap) {
     if (hm_heap_is_empty(heap)) {
         return NULL;
     }
+
     return heap->vals[0];
 }
 
@@ -272,8 +271,9 @@ void* hm_heap_extract(hm_heap* heap) {
     }
     void* val = heap->vals[0];
     heap->vals[0] = heap->vals[--heap->size];
-    // it will return warn when size == 0, but it can be ignored
+    /* it will return warn when size == 0, but it can be ignored */
     hm_heap_sift_down(heap, 0);
+
     return val;
 }
 
@@ -296,22 +296,17 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
     }
 
     heap->dynamic_grow = false;
-
     heap->capacity = capacity;
     heap->size = size;
-
     heap->cmp_val = cmp_val;
     heap->free_val = free_val;
-
     heap->vals = vals;
     
     if (size > 1) {
-
         for (size_t i = 0; i <= ((size - 1) - 1) / 2; i++) {
             size_t parent = ((size - 1) - 1) / 2 - i;
             hm_heap_sift_down(heap, parent);
         }
-
     }
 
     return hm_heap_ret_suc;
@@ -351,7 +346,7 @@ void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp_val) {
     assert(new_cmp_val != NULL);
 
     heap->cmp_val = new_cmp_val;
-    
+
     size_t size = heap->size;
     if (size > 1) {
         for (size_t i = 0; i <= ((size - 1) - 1) / 2; i++) {
@@ -399,6 +394,7 @@ void hm_heap_clear(hm_heap* heap) {
             free_val(vals[i]);
         }
     }
+
     heap->size = 0;
 }
 
@@ -414,5 +410,4 @@ void hm_heap_free(hm_heap* heap) {
     free(heap->vals);
     
     memset(heap, 0, sizeof(hm_heap));
-
 }

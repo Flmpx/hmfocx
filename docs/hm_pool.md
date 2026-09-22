@@ -126,7 +126,7 @@ int main()
         *v = i;
         vals[i] = v;
     }
-    // print
+    /* print */
     for (int i = 0; i < num; i++) {
         printf("%d ", *vals[i]);
     }
@@ -185,7 +185,7 @@ int main()
         *v = i;
         vals[i] = v;
     }
-    // free block
+    /* free block */
     for (int i = 0; i < num; i++) {
         hm_pool_block_free(&pool, vals[i]);
         vals[i] = NULL;
@@ -228,14 +228,14 @@ int main()
     
     int num = 100;
     int* vals[num];
-    // allocate
+    /* allocate */
     for (int i = 0; i < num; i++) {
         int* v = (int*)hm_pool_block_allocate(&pool);
         *v = i;
         vals[i] = v;
     }
     
-    // pool must be freed after use
+    /* pool must be freed after use */
     hm_pool_free(&pool);
     return 0;
 }

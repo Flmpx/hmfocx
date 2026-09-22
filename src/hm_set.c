@@ -64,6 +64,7 @@ static bool is_prime(size_t n) {
             return false;
         }
     }
+
     return true;
 }
 
@@ -79,6 +80,7 @@ static size_t max_prime(size_t n) {
             return i;
         }
     }
+
     return SIZE_MAX;
 }
 
@@ -127,14 +129,18 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
     hm_cmp cmp_key = set->cmp_key;
     
     for (size_t i = 0; i < l; i++) {
+        /* `none` represent it can store there */
         if (buckets_status[index] == hm_none_in_set) {
             break;
         }
+
+        /* record the first del tag index */
         if (!flag_find_del && buckets_status[index] == hm_del_in_set) {
             flag_find_del = true;
             first_del_index = index;
         }
 
+        /* key has existed in map */
         if (buckets_status[index] == hm_exist_in_set && cmp_key(buckets[index].key, key) == hm_same) {
             /*keep the same and old entry(key) */
             return hm_set_ret_existed;
@@ -148,13 +154,9 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
 
     set->buckets[index] = (hm_set_entry){key};
     set->buckets_status[index] = hm_exist_in_set;
-
     set->size++;
 
     return hm_set_ret_suc;
-
-    
-
 }
 
 
@@ -170,6 +172,8 @@ static hm_set_ret hm_set_addfunc_fresh(hm_set* set, void* key) {
 
     size_t l = set->len;
     size_t index = set->hash_key(key) % l;
+
+    /* the status of set only have `none` and `existed` */
     while (set->buckets_status[index] != hm_none_in_set) {
         index = (index + 1) % l;
     }
@@ -203,6 +207,7 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
     hm_set_init(&new_set, set->hash_key, set->cmp_key, set->free_key);
     new_set.len = new_len;
 
+    /* prevent overflow */
     if (new_len > SIZE_MAX / sizeof(hm_set_entry) || new_len > SIZE_MAX / sizeof(hm_set_entry_status)) {
         return hm_set_ret_error;
     }
@@ -222,7 +227,7 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
     hm_set_entry e;
     hm_set_entry_status* old_buckets_status = set->buckets_status;
     hm_set_entry* old_buckets = set->buckets;
-    
+
     for (size_t i = 0; i < old_l; i++) {
         if (old_buckets_status[i] == hm_exist_in_set) {
             e = old_buckets[i];
@@ -240,8 +245,6 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
     *set = new_set;
 
     return hm_set_ret_suc;
-    
-
 }
 
 
@@ -272,7 +275,7 @@ hm_set_ret hm_set_insert(hm_set* set, void* key) {
 
         flag_fresh = true;
         new_len = max_prime(2 * l);
-        // Check the return number of `max_prime`
+        /* Check the return number of `max_prime` */
         if (new_len == SIZE_MAX) {
             return hm_set_ret_error;
         }
@@ -283,9 +286,8 @@ hm_set_ret hm_set_insert(hm_set* set, void* key) {
             return hm_set_ret_error;
         }
     }
+
     return hm_set_addfunc(set, key);
-
-
 }
 
 
@@ -307,7 +309,6 @@ hm_set_ret hm_set_init_reserve(hm_set* set, hm_hash hash_key, hm_cmp cmp_key, hm
     hm_set_init(set, hash_key, cmp_key, free_key);
 
     return hm_set_fresh(set, (len > min_len) ? len : min_len);
-
 }
 
 /**
@@ -333,14 +334,19 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
     for (size_t i = 0; i < l; i++) {
         status = buckets_status[index];
         
+        /* represent it isn't existed in map */
         if (status == hm_none_in_set) {
             break;
         }
+
+        /* get it */
         if (status == hm_exist_in_set && cmp_key(buckets[index].key, key) == hm_same) {
             return index;
         } 
+
         index = (index + 1) % l;
     }
+
     return invalid_index;
 }
 /**
@@ -374,7 +380,7 @@ hm_set_entry hm_set_get(hm_set* set, void* key) {
  * @note - The entry will be removed but not free its memory(Memory Ownership Transfer)
  * @note - Entry contains pointer to key
  * 
- * @return - Return `(hm_set_entry){NULL}` when key is not existed in map
+ * @return - Return `(hm_set_entry){NULL}` when key is not existed in set
  */
 hm_set_entry hm_set_pop(hm_set* set, void* key) {
     assert(set != NULL);
@@ -388,9 +394,7 @@ hm_set_entry hm_set_pop(hm_set* set, void* key) {
     if (index == invalid_index) {
         return (hm_set_entry){NULL};
     } else {
-
         set->buckets_status[index] = hm_del_in_set;
-
         set->size--;
 
         return set->buckets[index];
@@ -419,7 +423,6 @@ hm_set_ret hm_set_del(hm_set* set, void* key) {
         if (set->free_key) set->free_key(set->buckets[index].key);
 
         set->buckets_status[index] = hm_del_in_set;
-
         set->size--;
 
         return hm_set_ret_suc;
@@ -451,8 +454,8 @@ hm_set_ret hm_set_shrink(hm_set* set) {
 void hm_set_clear(hm_set* set) {
     assert(set != NULL);
 
+    
     size_t l = set->len;
-
     hm_free free_key = set->free_key;
     hm_set_entry_status* buckets_status = set->buckets_status;
     hm_set_entry* buckets = set->buckets;
@@ -469,8 +472,8 @@ void hm_set_clear(hm_set* set) {
             buckets_status[i] = hm_none_in_set;
         }
     }
-    set->size = 0;
 
+    set->size = 0;
 }
 /**
  * Free all contents of the set
@@ -485,7 +488,6 @@ void hm_set_free(hm_set* set) {
     free(set->buckets_status);
     
     memset(set, 0, sizeof(hm_set));
-
 }
 
 
@@ -521,8 +523,8 @@ bool hm_set_iter_has_next(hm_set_iter* iter) {
         }
         index++;
     }
-    return false;
 
+    return false;
 }
 /**
  * Get next entry of set
@@ -549,8 +551,8 @@ hm_set_entry hm_set_iter_next(hm_set_iter* iter) {
         index++;
     }
     iter->index = index;
+    
     return (hm_set_entry){NULL};
-
 }
 
 

@@ -108,13 +108,13 @@ extern void* hm_list_pop(hm_list* list, size_t index);
  * Iterator functions
  */
 
-// These functions will be remove
+/* These functions will be remove */
 
 extern void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
 extern bool hm_list_iter_has_next(hm_list_iter* iter);
 extern void* hm_list_iter_next(hm_list_iter* iter);
 
-// New function of iterator
+/* New function of iterator */
 
 extern void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
 extern void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
