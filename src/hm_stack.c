@@ -229,11 +229,13 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
 void hm_stack_clear(hm_stack* stack) {
     assert(stack != NULL);
 
-    if (stack->free_val) {
-        size_t total = stack->top;
-        void** vals = stack->vals;
+    hm_free free_val = stack->free_val;
+    size_t total = stack->top;
+    void** vals = stack->vals;
+
+    if (free_val) {
         for (size_t i = 0; i < total; i++) {
-            stack->free_val(vals[i]);
+            free_val(vals[i]);
         }
     }
     stack->top = 0;

@@ -87,7 +87,8 @@ void* hm_pool_block_allocate(hm_pool* pool) {
     new_page->next = pool->head_page;
     pool->head_page = new_page;
 
-    for (size_t i = 0; i < pool->blocks_per_page * pool->block_size; i += pool->block_size) {
+    size_t block_size = pool->block_size;
+    for (size_t i = 0; i < product; i += block_size) {
         hm_pool_block_node* node = (hm_pool_block_node*)((char*)(new_page + 1) + i);
         node->next = pool->head_block;
         pool->head_block = node;

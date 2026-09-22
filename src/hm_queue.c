@@ -126,9 +126,14 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
         return hm_queue_ret_error;
     }
 
-    for (size_t i = 0; i < queue->size; i++) {
-        size_t pos = (i + queue->front) % queue->capacity;
-        new_vals[i] = queue->vals[pos];
+    size_t size = queue->size;
+    size_t capacity = queue->capacity;
+    size_t front = queue->front;
+    void** vals = queue->vals;
+    
+    for (size_t i = 0; i < size; i++) {
+        size_t pos = (i + front) % capacity;
+        new_vals[i] = vals[pos];
     }
 
     free(queue->vals);
@@ -251,12 +256,16 @@ hm_queue_ret hm_queue_shrink(hm_queue* queue) {
 void hm_queue_clear(hm_queue* queue) {
     assert(queue != NULL);
 
-    if (queue->free_val) {
-        size_t size = queue->size;
-        void** vals = queue->vals;
+    size_t size = queue->size;
+    size_t capacity = queue->capacity;
+    size_t front = queue->front;
+    void** vals = queue->vals;
+    hm_free free_val = queue->free_val;
+
+    if (free_val) {
         for (size_t i = 0; i < size; i++) {
-            size_t pos = (queue->front + i) % queue->capacity;
-            queue->free_val(vals[pos]);
+            size_t pos = (front + i) % capacity;
+            free_val(vals[pos]);
         }
     }
     queue->front = queue->rear = 0;

@@ -305,10 +305,10 @@ hm_heap_ret hm_heap_build(hm_heap* heap, void** vals, size_t size, size_t capaci
 
     heap->vals = vals;
     
-    if (heap->size > 1) {
+    if (size > 1) {
 
-        for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
-            size_t parent = ((heap->size - 1) - 1) / 2 - i;
+        for (size_t i = 0; i <= ((size - 1) - 1) / 2; i++) {
+            size_t parent = ((size - 1) - 1) / 2 - i;
             hm_heap_sift_down(heap, parent);
         }
 
@@ -351,9 +351,11 @@ void hm_heap_rebuild(hm_heap* heap, hm_cmp new_cmp_val) {
     assert(new_cmp_val != NULL);
 
     heap->cmp_val = new_cmp_val;
-    if (heap->size > 1) {
-        for (size_t i = 0; i <= ((heap->size - 1) - 1) / 2; i++) {
-            size_t parent = ((heap->size - 1) - 1) / 2 - i;
+    
+    size_t size = heap->size;
+    if (size > 1) {
+        for (size_t i = 0; i <= ((size - 1) - 1) / 2; i++) {
+            size_t parent = ((size - 1) - 1) / 2 - i;
             hm_heap_sift_down(heap, parent);
         }
     }
@@ -389,9 +391,10 @@ void hm_heap_clear(hm_heap* heap) {
     assert(heap != NULL);
 
     hm_free free_val = heap->free_val;
+    size_t total = heap->size;
+    void** vals = heap->vals;
+
     if (free_val) {
-        size_t total = heap->size;
-        void** vals = heap->vals;
         for (size_t i = 0; i < total; i++) {
             free_val(vals[i]);
         }

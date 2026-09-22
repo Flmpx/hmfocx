@@ -169,11 +169,10 @@ hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
         
     }
 
-    for (size_t i = arr->size; i > index; i--) {
-        arr->vals[i] = arr->vals[i - 1];
-    }
+    memmove(arr->vals + index + 1, arr->vals + index, (arr->size - index) * sizeof(void*));
     arr->vals[index] = val;
     arr->size++;
+
     return hm_arr_ret_suc;
 }
 
@@ -227,10 +226,9 @@ hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index) {
         return hm_arr_ret_none;
     }
     arr->free_val(arr->vals[index]);
-    for (size_t i = index; i < arr->size - 1; i++) {
-        arr->vals[i] = arr->vals[i + 1];
-    }
+    memmove(arr->vals + index, arr->vals + index + 1, (arr->size - index - 1) * sizeof(void*));
     arr->size--;
+
     return hm_arr_ret_suc;
 }
 
@@ -314,10 +312,9 @@ void* hm_arr_pop(hm_arr* arr, size_t index) {
         return NULL;
     }
     void* ret_val = arr->vals[index];
-    for (size_t i = index; i < arr->size - 1; i++) {
-        arr->vals[i] = arr->vals[i + 1];
-    }
+    memmove(arr->vals + index, arr->vals + index + 1, (arr->size - index - 1) * sizeof(void*));
     arr->size--;
+
     return ret_val;
 }
 
@@ -351,11 +348,13 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr) {
 void hm_arr_clear(hm_arr* arr) {
     assert(arr != NULL);
     
-    if (arr->free_val) {
-        size_t total = arr->size;
-        void** vals = arr->vals;
+    hm_free free_val = arr->free_val;
+    size_t total = arr->size;
+    void** vals = arr->vals;
+    
+    if (free_val) {
         for (size_t i = 0; i < total; i++) {
-            arr->free_val(vals[i]);
+            free_val(vals[i]);
         }
     }
     arr->size = 0;

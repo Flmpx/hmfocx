@@ -122,17 +122,20 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
     bool flag_find_del = false;
     size_t first_del_index = invalid_index;
 
+    hm_set_entry_status* buckets_status = set->buckets_status;
+    hm_set_entry* buckets = set->buckets;
+    hm_cmp cmp_key = set->cmp_key;
     
     for (size_t i = 0; i < l; i++) {
-        if (set->buckets_status[index] == hm_none_in_set) {
+        if (buckets_status[index] == hm_none_in_set) {
             break;
         }
-        if (!flag_find_del && set->buckets_status[index] == hm_del_in_set) {
+        if (!flag_find_del && buckets_status[index] == hm_del_in_set) {
             flag_find_del = true;
             first_del_index = index;
         }
 
-        if (set->buckets_status[index] == hm_exist_in_set && set->cmp_key(set->buckets[index].key, key) == hm_same) {
+        if (buckets_status[index] == hm_exist_in_set && cmp_key(buckets[index].key, key) == hm_same) {
             /*keep the same and old entry(key) */
             return hm_set_ret_existed;
         }
@@ -217,9 +220,12 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
     }
 
     hm_set_entry e;
+    hm_set_entry_status* old_buckets_status = set->buckets_status;
+    hm_set_entry* old_buckets = set->buckets;
+    
     for (size_t i = 0; i < old_l; i++) {
-        if (set->buckets_status[i] == hm_exist_in_set) {
-            e = set->buckets[i];
+        if (old_buckets_status[i] == hm_exist_in_set) {
+            e = old_buckets[i];
             hm_set_addfunc_fresh(&new_set, e.key);
         }
     }
@@ -320,13 +326,17 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
     size_t index = set->hash_key(key) % l;
 
     hm_set_entry_status status;
+    hm_cmp cmp_key = set->cmp_key;
+    hm_set_entry_status* buckets_status = set->buckets_status;
+    hm_set_entry* buckets = set->buckets;
+
     for (size_t i = 0; i < l; i++) {
-        status = set->buckets_status[index];
+        status = buckets_status[index];
         
         if (status == hm_none_in_set) {
             break;
         }
-        if (status == hm_exist_in_set && set->cmp_key(set->buckets[index].key, key) == hm_same) {
+        if (status == hm_exist_in_set && cmp_key(buckets[index].key, key) == hm_same) {
             return index;
         } 
         index = (index + 1) % l;
@@ -442,16 +452,21 @@ void hm_set_clear(hm_set* set) {
     assert(set != NULL);
 
     size_t l = set->len;
-    if (set->free_key) {
+
+    hm_free free_key = set->free_key;
+    hm_set_entry_status* buckets_status = set->buckets_status;
+    hm_set_entry* buckets = set->buckets;
+
+    if (free_key) {
         for (size_t i = 0; i < l; i++) {
-            if (set->buckets_status[i] == hm_exist_in_set) {
-                set->free_key(set->buckets[i].key);
+            if (buckets_status[i] == hm_exist_in_set) {
+                free_key(buckets[i].key);
             }
-            set->buckets_status[i] = hm_none_in_set;
+            buckets_status[i] = hm_none_in_set;
         }
     } else {
         for (size_t i = 0; i < l; i++) {
-            set->buckets_status[i] = hm_none_in_set;
+            buckets_status[i] = hm_none_in_set;
         }
     }
     set->size = 0;
