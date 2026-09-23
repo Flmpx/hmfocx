@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Added
+- Add new function for `hm_arr` -- `hm_arr_shrink_to_fit()` to shrink the capacity fit to the size of arr
+
 ## [0.14.0] - 2026-08-29
 
 ### Added

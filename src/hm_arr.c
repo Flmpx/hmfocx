@@ -105,8 +105,23 @@ bool hm_arr_is_empty(hm_arr* arr) {
 static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
     assert(arr != NULL);
 
+    /* the new capacity can't fit the size */
     if (arr->size > new_capacity) {
         return hm_arr_ret_warn;
+    }
+
+    /* keep original status */
+    if (arr->capacity == new_capacity) {
+        return hm_arr_ret_suc;
+    }
+
+    /* prevent the return code of `realloc` isn't NULL  */
+    if (new_capacity == 0) {
+        free(arr->vals);
+        arr->vals = NULL;
+        arr->capacity = 0;
+
+        return hm_arr_ret_suc;
     }
 
     /* prevent overflow */
@@ -337,6 +352,26 @@ hm_arr_ret hm_arr_shrink(hm_arr* arr) {
     size_t new_capacity = arr->capacity / 2;
 
     return hm_arr_fresh(arr, new_capacity);
+}
+
+
+/**
+ * Shrink the capacity fit to size of arr if possible
+ * 
+ * @note - Only dynamic-grow arr have a chance to shrink
+ * 
+ * @return - Return `hm_arr_ret_suc` when shrink success
+ * @return - Return `hm_arr_ret_none` when the arr is fixed-size
+ * @return - Return `hm_arr_ret_error` when shrink failure
+ */
+hm_arr_ret hm_arr_shrink_to_fit(hm_arr* arr) {
+    assert(arr != NULL);
+    
+    if (!arr->dynamic_grow) {
+        return hm_arr_ret_none;
+    }
+
+    return hm_arr_fresh(arr, arr->size);
 }
 
 
