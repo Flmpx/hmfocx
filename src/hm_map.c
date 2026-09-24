@@ -199,8 +199,23 @@ static hm_map_ret hm_map_fresh(hm_map* map, size_t new_len) {
     assert(map != NULL);
 
     size_t old_l = map->len, old_s = map->size;
+
+    /* the new len can't fit to the size */
     if (old_s > new_len) {
         return hm_map_ret_warn;
+    }
+
+    /* prevent the return code of `malloc` isn't NULL  */
+    if (new_len == 0) {
+        free(map->buckets);
+        map->buckets = NULL;
+
+        free(map->buckets_status);
+        map->buckets_status = NULL;
+
+        map->len = 0;
+
+        return hm_map_ret_suc;
     }
 
     hm_map new_map;

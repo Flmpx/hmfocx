@@ -198,8 +198,23 @@ static hm_set_ret hm_set_fresh(hm_set* set, size_t new_len) {
     assert(set != NULL);
 
     size_t old_l = set->len, old_s = set->size;
+
+    /* the new len can't fit to the size */
     if (old_s > new_len) {
         return hm_set_ret_warn;
+    }
+
+    /* prevent the return code of `malloc` isn't NULL  */
+    if (new_len == 0) {
+        free(set->buckets);
+        set->buckets = NULL;
+
+        free(set->buckets_status);
+        set->buckets_status = NULL;
+
+        set->len = 0;
+
+        return hm_set_ret_suc;
     }
 
     hm_set new_set;
