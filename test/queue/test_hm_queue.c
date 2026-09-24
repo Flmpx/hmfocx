@@ -638,7 +638,13 @@ void test_empty_fixed_queue_oper() {
     
     /* shrink */
     hm_queue_init(&queue, capacity, NULL);
-    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when queue is empty", &fail_cnt, tag++);
+    check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none when queue is fixed-size", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
+    hm_queue_free(&queue);
+    
+    /* shrink to fit */
+    hm_queue_init(&queue, capacity, NULL);
+    check_res(hm_queue_shrink_to_fit(&queue) == hm_queue_ret_none, "shrink to fit function should return none when queue is fixed-size", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, NULL);
     hm_queue_free(&queue);
     
@@ -730,6 +736,13 @@ void test_empty_dynamic_queue_oper() {
     hm_queue_init_dynamic_grow(&queue, capacity, NULL);
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_suc, "shrink should return suc when queue is empty", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, NULL);
+    hm_queue_free(&queue);
+    
+    /* shrink to fit */
+    hm_queue_init_dynamic_grow(&queue, capacity, NULL);
+    check_res(hm_queue_shrink_to_fit(&queue) == hm_queue_ret_suc, "shrink to fit should return suc when queue is empty and dynamic-grow", &fail_cnt, tag++);
+    check_res(queue.capacity == 0, "the capapcity of queue should be 0 when shrink to fit on empty and dynamic-grow queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, 0, NULL);
     hm_queue_free(&queue);
 
 
@@ -871,6 +884,12 @@ void test_no_capacity_fixed_queue_oper() {
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and fixed-size queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
     hm_queue_free(&queue);
+    
+    /* shrink to fit */
+    hm_queue_init(&queue, capacity, free);
+    check_res(hm_queue_shrink_to_fit(&queue) == hm_queue_ret_none, "shrink to fit function should return none in a 0-capacity and fixed-size queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, false, capacity, free);
+    hm_queue_free(&queue);
 
 
     print_end("QUEUE(FIXED) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]", fail_cnt);
@@ -924,9 +943,13 @@ void test_no_capacity_dynamic_queue_oper() {
     check_res(hm_queue_shrink(&queue) == hm_queue_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow queue", &fail_cnt, tag++);
     test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
     hm_queue_free(&queue);
-
-
-
+    
+    /* shrink to fit */
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    check_res(hm_queue_shrink_to_fit(&queue) == hm_queue_ret_suc, "shrink function should return suc in a 0-capacity and dynamic-grow queue", &fail_cnt, tag++);
+    check_res(queue.capacity == 0, "the capacity should be 0 when shrink to fit on 0-capacity and dynamic-grow queue", &fail_cnt, tag++);
+    test_queue_integrity(&queue, &fail_cnt, tag++, 0, true, capacity, free);
+    hm_queue_free(&queue);
 
     print_end("QUEUE(DYNAMIC) | BOUNDARY | NO CAPACITY QUEUE OPER | CAPACITY: 0 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -1147,6 +1170,78 @@ void test_queue_dynamic_shrink() {
     
 }
 
+void test_queue_fixed_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+
+
+    int capacity = 64;
+    hm_queue queue;
+    hm_queue_init(&queue, capacity, free);
+
+    /* push */
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_queue_shrink_to_fit(&queue) != hm_queue_ret_none) {
+            fail++;
+        }
+        test_queue_integrity(&queue, &fail_cnt, tag++, capacity - i, false, capacity, free);
+        int* v = hm_queue_deq(&queue);
+        free(v);
+    }
+    check_res(fail == 0, "shrink to fit function shouldn return `none` when shrink fixed-size queue", &fail_cnt, tag++);
+    
+    hm_queue_free(&queue);
+
+
+    print_end("QUEUE(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_queue_dynamic_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("QUEUE(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+
+
+    int start_capacity = 64;
+    hm_queue queue;
+    hm_queue_init_dynamic_grow(&queue, start_capacity, free);
+
+    /* push */
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_queue_enq(&queue, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        if (hm_queue_shrink_to_fit(&queue) != hm_queue_ret_suc) {
+            fail++;
+        }
+        check_res(queue.capacity == start_capacity * 2 - i, "the capacity should be equal to size when shrink to fit on a dynamic-grow queue", &fail_cnt, tag++);
+        test_queue_integrity(&queue, &fail_cnt, tag++, start_capacity * 2 - i, true, start_capacity * 2 - i, free);
+        int* v = hm_queue_deq(&queue);
+        free(v);
+    }
+    check_res(fail == 0, "shrink to fit function should return suc when shrink to fit on a dyanmic-grow queue", &fail_cnt, tag++);
+    
+    hm_queue_free(&queue);
+
+    print_end("QUEUE(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 
 void test_enq_and_deq_some_in_fixed_queue() {
     int fail_cnt = 0;
@@ -1252,6 +1347,8 @@ void test_queue_fixed_func() {
     test_queue_fixed_judge();                                   printf("\n");
 
     test_queue_fixed_shrink();                                  printf("\n");
+
+    test_queue_fixed_shrink_to_fit();                           printf("\n");
     
 }
 
@@ -1271,6 +1368,8 @@ void test_queue_dynamic_func() {
     test_queue_dynamic_judge();                                 printf("\n");
 
     test_queue_dynamic_shrink();                                printf("\n");
+
+    test_queue_dynamic_shrink_to_fit();                         printf("\n");
     
 }
 

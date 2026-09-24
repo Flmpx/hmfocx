@@ -110,8 +110,23 @@ bool hm_queue_is_empty(hm_queue* queue) {
 static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
     assert(queue != NULL);
 
+    /* the new capacity can't fit the size */
     if (queue->size > new_capacity) {
         return hm_queue_ret_warn;
+    }
+
+    /* keep original status */
+    if (queue->capacity == new_capacity) {
+        return hm_queue_ret_suc;
+    }
+
+    /* prevent the return code of `realloc` isn't NULL  */
+    if (new_capacity == 0) {
+        free(queue->vals);
+        queue->vals = NULL;
+        queue->capacity = 0;
+
+        return hm_queue_ret_suc;
     }
 
     /* prevent overflow */
@@ -138,7 +153,8 @@ static hm_queue_ret hm_queue_fresh(hm_queue* queue, size_t new_capacity) {
     free(queue->vals);
     queue->vals = new_vals;
     queue->front = 0;
-    queue->rear = queue->size;
+    /* the rear should be 0 when size is equal to capacity */
+    queue->rear = queue->size % new_capacity;   
     queue->capacity = new_capacity;
 
     return hm_queue_ret_suc;
@@ -241,6 +257,24 @@ hm_queue_ret hm_queue_shrink(hm_queue* queue) {
     return hm_queue_fresh(queue, new_capacity);
 }
 
+/**
+ * Shrink the capacity fit to size of queue if possible
+ * 
+ * @note - Only dynamic-grow queue have a chance to shrink
+ * 
+ * @return - Return `hm_queue_ret_suc` when shrink success
+ * @return - Return `hm_queue_ret_none` when the queue is fixed-size
+ * @return - Return `hm_queue_ret_error` when shrink failure
+ */
+hm_queue_ret hm_queue_shrink_to_fit(hm_queue* queue) {
+    assert(queue != NULL);
+
+    if (!queue->dynamic_grow) {
+        return hm_queue_ret_none;
+    }
+
+    return hm_queue_fresh(queue, queue->size);
+}
 
 /**
  * Clear the queue 

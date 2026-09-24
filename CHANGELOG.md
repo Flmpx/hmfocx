@@ -8,6 +8,7 @@
 - Add new function `hm_{container}_shrink_to_fit()` for some containers -- This can shrink the capacity fit to the size
     - `hm_arr` -- `hm_arr_shrink_to_fit()`
     - `hm_heap` -- `hm_heap_shrink_to_fit()`
+    - `hm_queue` -- `hm_queue_shrink_to_fit()`
 
 ## [0.14.0] - 2026-08-29
 

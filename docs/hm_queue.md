@@ -284,6 +284,17 @@ queue is full
  * @return Return **hm_queue_ret_error** when shrink failure
  */
 hm_queue_ret hm_queue_shrink(hm_queue* queue);
+
+/**
+ * Shrink the capacity fit to size of queue if possible
+ * 
+ * @note Only dynamic-grow queue have a chance to shrink
+ * 
+ * @return Return **hm_queue_ret_suc** when shrink success
+ * @return Return **hm_queue_ret_none** when the queue is fixed-size
+ * @return Return **hm_queue_ret_error** when shrink failure
+ */
+hm_queue_ret hm_queue_shrink_to_fit(hm_queue* queue);
 ```
 
 <details>
@@ -333,10 +344,48 @@ size: 0, capacity: 1
 ```
 </details>
 
-
-
 </details>
 
+
+<details>
+<summary>try: shrink to fit</summary>
+
+```c
+#include <hm_queue.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_queue_status(hm_queue* queue) {
+    printf("size: %zu, capacity: %zu\n", hm_queue_size(queue), hm_queue_capacity(queue));
+}
+
+int main()
+{
+    hm_queue queue;
+    int capacity = 520;
+    /* only dynamic-grow queue can do */
+    hm_queue_init_dynamic_grow(&queue, capacity, free);
+    print_queue_status(&queue);
+
+    hm_queue_shrink_to_fit(&queue);
+    print_queue_status(&queue);
+
+    hm_queue_free(&queue);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 0
+```
+</details>
+
+</details>
 
 <br><br><br>
 
