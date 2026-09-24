@@ -73,6 +73,7 @@ extern const char* hm_str_get(hm_str* str, size_t index);
  */
 
 extern hm_str_ret hm_str_shrink(hm_str* str);
+extern hm_str_ret hm_str_shrink_to_fit(hm_str* str);
 
 /**
  * Pop
