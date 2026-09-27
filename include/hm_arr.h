@@ -100,6 +100,7 @@ extern void* hm_arr_pop(hm_arr* arr, size_t index);
  */
 
 extern hm_arr_ret hm_arr_shrink(hm_arr* arr);
+extern hm_arr_ret hm_arr_shrink_to_fit(hm_arr* arr);
 
 
 /**

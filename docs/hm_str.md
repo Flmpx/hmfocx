@@ -354,6 +354,14 @@ Hi, I'm Flmpx
  * @return Return **hm_str_ret_error** when shrink failure
  */
 hm_str_ret hm_str_shrink(hm_str* str);
+
+/**
+ * Shrink the capacity fit to len of str if possible
+ * 
+ * @return Return **hm_str_ret_suc** when shrink success
+ * @return Return **hm_str_ret_error** when shrink failure
+ */
+hm_str_ret hm_str_shrink_to_fit(hm_str* str);
 ```
 
 <details>
@@ -407,6 +415,49 @@ int main() {
 </details>
 
 </details>
+
+<details>
+<summary>try: shrink to fit</summary>
+
+```c
+#include <hm_str.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+void print_str_status(hm_str* str) {
+    printf("| len: %-5zu capacity: %5zu\n", hm_str_len(str), hm_str_capacity(str));
+}
+
+int main() {
+    hm_str str;
+
+    int capcity = 1314;
+    hm_str_init_reserve(&str, capcity);
+    print_str_status(&str);
+
+    /* shrink and print status */
+    hm_str_shrink_to_fit(&str);
+    print_str_status(&str);
+
+    hm_str_free(&str);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+| len: 0     capacity:  1314
+| len: 0     capacity:     0
+```
+
+</details>
+
+</details>
+
 <br><br><br>
 
 <a id = "clear"></a>

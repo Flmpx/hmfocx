@@ -638,9 +638,17 @@ void test_empty_fixed_stack_oper() {
 
     /* shrink */
     hm_stack_init(&stack, capacity, NULL);
-    check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none when stack is empty", &fail_cnt, tag++);
+    check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none when stack is fixed-size", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, NULL);
     hm_stack_free(&stack);
+
+    
+    /* shrink to fit */
+    hm_stack_init(&stack, capacity, NULL);
+    check_res(hm_stack_shrink_to_fit(&stack) == hm_stack_ret_none, "shrink function should return none when stack is fixed-size", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, NULL);
+    hm_stack_free(&stack);
+
 
     /* pop */
     hm_stack_init(&stack, capacity, NULL);
@@ -721,6 +729,12 @@ void test_empty_dynamic_stack_oper() {
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, start_capacity, NULL);
     hm_stack_free(&stack);
 
+    
+    hm_stack_init_dynamic_grow(&stack, start_capacity, NULL);
+    check_res(hm_stack_shrink_to_fit(&stack) == hm_stack_ret_suc, "shrink tof it should return suc when stack is empty and dynamic-grow", &fail_cnt, tag++);
+    check_res(stack.capacity == 0, "the capapcity of stack of stack should be 0 when shrink to fit on empty and dyanmic-grow stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, 0, NULL);
+    hm_stack_free(&stack);
     
     print_end("STACK(DYNAMIC) | BOUNDARY | OPER EMPTY STACK | CAPACITY: 64 TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -856,6 +870,12 @@ void test_no_capacity_fixed_stack_oper() {
     check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none in a 0-capacity and fixed-size stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, free);
     hm_stack_free(&stack);
+    
+    /* shrink to fit */
+    hm_stack_init(&stack, capacity, free);
+    check_res(hm_stack_shrink_to_fit(&stack) == hm_stack_ret_none, "shrink to fit function should return none in a 0-capacity and fixed-size stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, false, capacity, free);
+    hm_stack_free(&stack);
 
     
     print_end("STACK(FIEXE) | BOUNDARY | NO CAPACITY STACK OPER | TYPE: [INT]", fail_cnt);
@@ -909,6 +929,13 @@ void test_no_capacity_dynamic_stack_oper() {
     /* shrink */
     hm_stack_init_dynamic_grow(&stack, capacity, free);
     check_res(hm_stack_shrink(&stack) == hm_stack_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
+    test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity, free);
+    hm_stack_free(&stack);
+    
+    /* shrink to fit */
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    check_res(hm_stack_shrink_to_fit(&stack) == hm_stack_ret_suc, "shrink to fit function should return suc in a 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
+    check_res(stack.capacity == 0, "the capacity should be 0 when shrink to fit on 0-capacity and dynamic-grow stack", &fail_cnt, tag++);
     test_stack_integrity(&stack, &fail_cnt, tag++, 0, true, capacity, free);
     hm_stack_free(&stack);
 
@@ -1122,6 +1149,78 @@ void test_stack_dynamic_shrink() {
     HM_TEST_COUNTER
     
 }
+
+void test_stack_fixed_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STACK(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+
+    int capacity = 64;
+    hm_stack stack;
+    hm_stack_init(&stack, capacity, free);
+
+    /* push */
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_stack_shrink_to_fit(&stack) != hm_stack_ret_none) {
+            fail++;
+        }
+        test_stack_integrity(&stack, &fail_cnt, tag++, capacity - i, false, capacity, free);
+        int* v = hm_stack_pop(&stack);
+        free(v);
+    }
+    check_res(fail == 0, "shrink to fit function shouldn return `none` when shrink fixed-size stack", &fail_cnt, tag++);
+    
+    hm_stack_free(&stack);
+    
+    
+    print_end("STACK(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_stack_dynamic_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STACK(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+
+    int start_capacity = 64;
+    hm_stack stack;
+    hm_stack_init_dynamic_grow(&stack, start_capacity, free);
+
+    /* push */
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_stack_push(&stack, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        if (hm_stack_shrink_to_fit(&stack) != hm_stack_ret_suc) {
+            fail++;
+        }
+        check_res(stack.capacity == start_capacity * 2 - i, "the capacity should be equal to size when shrink to fit on a dynamic-grow stack", &fail, tag++);
+        test_stack_integrity(&stack, &fail_cnt, tag++, start_capacity * 2 - i, true, start_capacity * 2 - i, free);
+        int* v = hm_stack_pop(&stack);
+        free(v);
+    }
+    check_res(fail == 0, "shrink to fit function should return suc when shrink to fit on a dynamic-grow stack", &fail_cnt, tag++);
+    
+    hm_stack_free(&stack);
+
+    
+    print_end("STACK(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void test_stack_fixed_func() {
     test_stack_fixed_init();                                        printf("\n");
 
@@ -1138,6 +1237,8 @@ void test_stack_fixed_func() {
     test_stack_fixed_judge();                                       printf("\n");
 
     test_stack_fixed_shrink();                                      printf("\n");
+
+    test_stack_fixed_shrink_to_fit();                               printf("\n");
 
 }
 
@@ -1158,6 +1259,8 @@ void test_stack_dynamic_func() {
     test_stack_dynamic_judge();                                     printf("\n");
 
     test_stack_dynamic_shrink();                                    printf("\n");
+
+    test_stack_dynamic_shrink_to_fit();                             printf("\n");
 }
 
 

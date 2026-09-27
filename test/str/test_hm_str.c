@@ -68,7 +68,7 @@ void test_str_init_reserve() {
     hm_str_init_reserve(&str, s_capacity);
 
     /* check */
-    check_res(str.capacity == s_capacity, "str's should be min_capacity", &fail_cnt, tag++);
+    check_res(str.capacity == s_capacity, "str's should be s_capacity", &fail_cnt, tag++);
     check_res(str.len == 0, "str's len should be 0", &fail_cnt, tag++);
     check_res(str.val != NULL, "str's val shouldn't be NULL", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
@@ -342,11 +342,10 @@ void test_str_shrink() {
     int fail_no_shrink = 0;
     int fail_len = 0;
     int cnt = 10;
-    int min_capacity = 17;
     for (int i = 0; i < 10; i++) {
         size_t c = hm_str_capacity(&str), l = hm_str_len(&str);
         hm_str_ret ret = hm_str_shrink(&str);
-        if (c < 2 * min_capacity || l >= c / 2) {
+        if (l >= c / 2) {
             /* shouldn't shrink */
             if (ret != hm_str_ret_none) {
                 fail_shrink++;
@@ -372,6 +371,47 @@ void test_str_shrink() {
     print_end("STR | FUNC | SHRINK", fail_cnt);
     HM_TEST_COUNTER
     
+}
+
+void test_str_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("STR | FUNC | SHRINK TO FIT");
+    
+    hm_str str;
+    hm_str_init(&str);
+    
+    const char* strings[] = {"a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg"};
+    int num = sizeof(strings) / sizeof(const char*);
+    
+    int repeat_cnt = 64;
+    /* append */
+    for (int i = 0; i < repeat_cnt; i++) {
+        for (int j = 0; j < num; j++) {
+            hm_str_append(&str, strings[j], strlen(strings[j]));
+        }
+    }
+
+    /* clear */
+    hm_str_clear(&str);
+    /* append */
+    for (int i = 0; i < repeat_cnt / 10; i++) {
+        for (int j = 0; j < num; j++) {
+            hm_str_append(&str, strings[j], strlen(strings[j]));
+        }
+    }
+
+    size_t len = hm_str_len(&str);
+
+    check_res(hm_str_shrink_to_fit(&str) == hm_str_ret_suc, "shrink to fit on str should return suc", &fail_cnt, tag++);
+    check_res(str.capacity == len, "the capacity should be equal to len after call shrink to fit function", &fail_cnt, tag++);
+    check_res(str.len = len, "the length is wrong after shrink to fit on str", &fail_cnt, tag++);
+    
+    hm_str_free(&str);
+
+    
+    print_end("STR | FUNC | SHRINK TO FIT", fail_cnt);
+    HM_TEST_COUNTER
 }
 
 void test_append_empty_string_in_str() {
@@ -449,57 +489,103 @@ void test_oper_empty_str() {
     print_run("STR | BOUNDARY | OPER EMTPY STR");
     
     hm_str str;
+    int capacity = 520;
     
+    /*  There are two situation: (len = 0 & capacity = 0) and (len = 0 & capacity != 0)   */
+
     /* get */
     hm_str_init(&str);
-
     check_res(strcmp(hm_str_get(&str, 0), "") == 0, "get on empty str should return empty string", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     hm_str_free(&str);
     
+    hm_str_init_reserve(&str, capacity);
+    check_res(strcmp(hm_str_get(&str, 0), "") == 0, "get on empty str but have many capacity should return empty string", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+
+    
     /* shrink */
     hm_str_init(&str);
-
-    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a empty str(capacity == 17) should return none", &fail_cnt, tag++);
+    check_res(hm_str_shrink(&str) == hm_str_ret_none, "shrink on a empty str should return none", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     hm_str_free(&str);
     
+    hm_str_init_reserve(&str, capacity);
+    check_res(hm_str_shrink(&str) == hm_str_ret_suc, "shrink on a empty str but have many capacity should return suc", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+
     
+    /* shrink to fit */
+    hm_str_init(&str);
+    check_res(hm_str_shrink_to_fit(&str) == hm_str_ret_suc, "shrink to fit on a empty str should return suc", &fail_cnt, tag++);
+    check_res(str.capacity == 0, "the capacity should be 0 when shrink to fit on a empty str", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+    
+    hm_str_init_reserve(&str, capacity);
+    check_res(hm_str_shrink_to_fit(&str) == hm_str_ret_suc, "shrink to fit on a empty str but have many capacity should return suc", &fail_cnt, tag++);
+    check_res(str.capacity == 0, "the capacity should be 0 when shrink to fit on a empty str but have many capacity", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+
     /* append */
     hm_str_init(&str);
-    
     char* string = "abcdefg";
     hm_str_append(&str, string, strlen(string));
     check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a empty str", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
     hm_str_free(&str);
-
+    
+    hm_str_init_reserve(&str, capacity);
+    string = "abcdefg";
+    hm_str_append(&str, string, strlen(string));
+    check_res(strcmp(hm_str_get(&str, 0), string) == 0, "the string is wrong when append a string on a empty str but have many capacity", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, strlen(string));
+    hm_str_free(&str);
 
     /* append character */
+
     hm_str_init(&str);    // let it to empty, not no-capacity
-    
     char ch = 'A';
     hm_str_append_ch(&str, ch);
     check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a empty str", &fail_cnt, tag++);
     test_str_integrity(&str, &fail_cnt, tag++, 1);
     hm_str_free(&str);
     
+    hm_str_init_reserve(&str, capacity);    // let it to empty, not no-capacity
+    ch = 'A';
+    hm_str_append_ch(&str, ch);
+    check_res(*hm_str_get(&str, 0) == ch, "the string is wrong when append a character on a empty str but have many capacity", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 1);
+    hm_str_free(&str);
     
     /* clear */
     hm_str_init(&str);
-
     hm_str_clear(&str);
     test_str_integrity(&str, &fail_cnt, tag++, 0);
     hm_str_free(&str);
     
+    hm_str_init_reserve(&str, capacity);
+    hm_str_clear(&str);
+    check_res(str.capacity == capacity, "the capacity should be fixed after clear on a empty str but have many capacity", &fail_cnt, tag++);
+    test_str_integrity(&str, &fail_cnt, tag++, 0);
+    hm_str_free(&str);
+
+
     /* pop */
     hm_str_init(&str);
-    
     char* s = hm_str_pop(&str);
     check_res(strcmp(s, "") == 0, "the pop on empty str should return empty string", &fail_cnt, tag++);
     /* can't use after pop */
     free(s);
     
+    hm_str_init_reserve(&str, capacity);
+    s = hm_str_pop(&str);
+    check_res(strcmp(s, "") == 0, "the pop on empty str but have many capacity should return empty string", &fail_cnt, tag++);
+    /* can't use after pop */
+    free(s);
     
     print_end("STR | BOUNDARY | OPER EMPTY STR", fail_cnt);
     HM_TEST_COUNTER
@@ -763,6 +849,8 @@ void function_test() {
     test_str_free();                                                                        printf("\n");
 
     test_str_shrink();                                                                      printf("\n");
+
+    test_str_shrink_to_fit();                                                               printf("\n");
 
     test_str_append_ch();                                                                   printf("\n");
 

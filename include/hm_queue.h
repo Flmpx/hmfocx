@@ -76,6 +76,7 @@ extern hm_queue_ret hm_queue_enq(hm_queue* queue, void* val);
 extern void* hm_queue_peek(hm_queue* queue);
 extern void* hm_queue_deq(hm_queue* queue);
 extern hm_queue_ret hm_queue_shrink(hm_queue* queue);
+extern hm_queue_ret hm_queue_shrink_to_fit(hm_queue* queue);
 
 /**
  * Free and clear

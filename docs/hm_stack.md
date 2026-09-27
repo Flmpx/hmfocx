@@ -285,6 +285,17 @@ stack is full
  * @return Return **hm_stack_ret_error** when shrink failure
  */
 hm_stack_ret hm_stack_shrink(hm_stack* stack);
+
+/**
+ * Shrink the capacity fit to the size of stack if possible
+ * 
+ * @note Only dynamic-grow stack have a chance to shrink
+ * 
+ * @return Return **hm_stack_ret_suc** when shrink success
+ * @return Return **hm_stack_ret_none** when the stack is fixed-size
+ * @return Return **hm_stack_ret_error** when shrink failure
+ */
+hm_stack_ret hm_stack_shrink_to_fit(hm_stack* stack);
 ```
 <details>
 <summary>try: shrink</summary>
@@ -336,6 +347,46 @@ size: 0, capacity: 1
 
 </details>
 
+
+<details>
+<summary>try: shrink to fit</summary>
+
+```c
+#include <hm_stack.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_stack_status(hm_stack* stack) {
+    printf("size: %zu, capacity: %zu\n", hm_stack_size(stack), hm_stack_capacity(stack));
+}
+
+int main()
+{
+    hm_stack stack;
+    int capacity = 520;
+    /* only dynamic-grow stack can do */
+    hm_stack_init_dynamic_grow(&stack, capacity, free);
+    print_stack_status(&stack);
+
+    hm_stack_shrink_to_fit(&stack);
+    print_stack_status(&stack);
+
+    hm_stack_free(&stack);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 0
+```
+</details>
+
+</details>
 
 <br><br><br>
 

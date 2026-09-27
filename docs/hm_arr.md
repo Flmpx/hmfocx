@@ -596,6 +596,17 @@ arr is full
  * @return Return **hm_arr_ret_error** when shrink failure
  */
 hm_arr_ret hm_arr_shrink(hm_arr* arr);
+
+/**
+ * Shrink the capacity fit to size of arr if possible
+ * 
+ * @note Only dynamic-grow arr have a chance to shrink
+ * 
+ * @return Return **hm_arr_ret_suc** when shrink success
+ * @return Return **hm_arr_ret_none** when the arr is fixed-size
+ * @return Return **hm_arr_ret_error** when shrink failure
+ */
+hm_arr_ret hm_arr_shrink_to_fit(hm_arr* arr);
 ```
 
 <details>
@@ -647,6 +658,48 @@ size: 0, capacity: 1
 </details>
 
 </details>
+
+<details>
+<summary>try: shrink to fit</summary>
+
+```c
+#include <hm_arr.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr_status(hm_arr* arr) {
+    printf("size: %zu, capacity: %zu\n", hm_arr_size(arr), hm_arr_capacity(arr));
+}
+
+int main()
+{
+    hm_arr arr;
+    int capacity = 520;
+    /* only dynamic-grow arr can do */
+    hm_arr_init_dynamic_grow(&arr, capacity, free);
+    print_arr_status(&arr);
+
+    hm_arr_shrink_to_fit(&arr);
+    print_arr_status(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 0
+```
+
+</details>
+
+</details>
+
 <br><br><br>
 
 

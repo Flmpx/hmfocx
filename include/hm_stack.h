@@ -74,7 +74,7 @@ extern hm_stack_ret hm_stack_push(hm_stack* stack, void* val);
 extern void* hm_stack_peek(hm_stack* stack);
 extern void* hm_stack_pop(hm_stack* stack);
 extern hm_stack_ret hm_stack_shrink(hm_stack* stack);
-
+extern hm_stack_ret hm_stack_shrink_to_fit(hm_stack* stack);
 
 /**
  * Free and clear

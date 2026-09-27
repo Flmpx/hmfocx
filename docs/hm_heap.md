@@ -316,6 +316,17 @@ heap is full
  * @return Return **hm_heap_ret_error** when shrink failure
  */
 hm_heap_ret hm_heap_shrink(hm_heap* heap);
+
+/**
+ * Shrink the capacity fit to size of arr if possible
+ * 
+ * @note Only dynamic-grow heap have a chance to shrink
+ * 
+ * @return Return **hm_heap_ret_suc** when shrink success
+ * @return Return **hm_heap_ret_none** when the heap is fixed-size
+ * @return Return **hm_heap_ret_error** when shrink failure
+ */
+hm_heap_ret hm_heap_shrink_to_fit(hm_heap* heap);
 ```
 
 <details>
@@ -368,6 +379,52 @@ size: 0, capacity: 8
 size: 0, capacity: 4
 size: 0, capacity: 2
 size: 0, capacity: 1
+```
+</details>
+
+</details>
+
+<details>
+<summary>try: shrink to fit</summary>
+
+```c
+#include <hm_heap.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+int cmp_up(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+void print_heap_status(hm_heap* heap) {
+    printf("size: %zu, capacity: %zu\n", hm_heap_size(heap), hm_heap_capacity(heap));
+}
+
+int main()
+{
+    hm_heap heap;
+    int capacity = 520;
+    /* only dynamic-grow heap can do */
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_up);
+    print_heap_status(&heap);
+
+    hm_heap_shrink_to_fit(&heap);
+    print_heap_status(&heap);
+    
+    hm_heap_free(&heap);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+size: 0, capacity: 520
+size: 0, capacity: 0
 ```
 </details>
 

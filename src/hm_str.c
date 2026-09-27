@@ -39,18 +39,46 @@ size_t hm_str_capacity(hm_str* str) {
 static hm_str_ret hm_str_fresh(hm_str* str, size_t new_capacity) {
     assert(str != NULL);
 
+    /* the new capacity can't fit the length */
     if (str->len > new_capacity) {
         return hm_str_ret_warn;
     }
+
+    /* keep original status */
+    if (str->capacity == new_capacity) {
+        return hm_str_ret_suc;
+    }
+
+    /* prevent overflow */
     if (new_capacity == SIZE_MAX) {
         return hm_str_ret_error;
     }
+
     char* new_val = (char*)realloc(str->val, new_capacity + 1);
     if (new_val == NULL) {
         return hm_str_ret_error;
     }
     str->val = new_val;
     str->capacity = new_capacity;
+
+    return hm_str_ret_suc;
+}
+
+
+/**
+ * Initialize str
+ */
+hm_str_ret hm_str_init(hm_str* str) {
+    assert(str != NULL);
+
+    str->val = (char*)malloc(1);
+    if (str->val == NULL) {
+        return hm_str_ret_error;
+    }
+    str->val[0] = '\0';
+
+    str->capacity = 0;
+    str->len = 0;
 
     return hm_str_ret_suc;
 }
@@ -67,25 +95,19 @@ static hm_str_ret hm_str_fresh(hm_str* str, size_t new_capacity) {
 hm_str_ret hm_str_init_reserve(hm_str* str, size_t capacity) {
     assert(str != NULL);
 
-    memset(str, 0, sizeof(hm_str));
-
-    if (hm_str_fresh(str, capacity) != hm_str_ret_suc) {
+    if (hm_str_init(str) != hm_str_ret_suc) {
         return hm_str_ret_error;
     }
-    str->val[0] = '\0';
+
+    if (hm_str_fresh(str, capacity) != hm_str_ret_suc) {
+        /* because `hm_str_init` will malloc */
+        hm_str_free(str);           
+        return hm_str_ret_error;
+    }
 
     return hm_str_ret_suc;
 }
 
-
-/**
- * Initialize str
- */
-hm_str_ret hm_str_init(hm_str* str) {
-    assert(str != NULL);
-
-    return hm_str_init_reserve(str, 0);
-}
 
 
 /**
@@ -244,4 +266,17 @@ hm_str_ret hm_str_shrink(hm_str* str) {
     }
     
     return hm_str_fresh(str, c / 2);
+}
+
+
+/**
+ * Shrink the capacity fit to len of str if possible
+ * 
+ * @return - Return `hm_str_ret_suc` when shrink success
+ * @return - Return `hm_str_ret_error` when shrink failure
+ */
+hm_str_ret hm_str_shrink_to_fit(hm_str* str) {
+    assert(str != NULL);
+
+    return hm_str_fresh(str, str->len);
 }

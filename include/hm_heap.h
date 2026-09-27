@@ -71,7 +71,7 @@ extern hm_heap_ret hm_heap_insert(hm_heap* heap, void* val);
 extern void* hm_heap_peek(hm_heap* heap);
 extern void* hm_heap_extract(hm_heap* heap);
 extern hm_heap_ret hm_heap_shrink(hm_heap* heap);
-
+extern hm_heap_ret hm_heap_shrink_to_fit(hm_heap* heap);
 
 /**
  * Build

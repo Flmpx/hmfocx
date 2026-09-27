@@ -858,10 +858,15 @@ void test_empty_fixed_heap_oper() {
     
     /* shrink */
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
-    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when heap is empty", &fail_cnt, tag++);
+    check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none when heap is dynamic-grow", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     hm_heap_free(&heap);
     
+    /* shrink to fit */
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
+    check_res(hm_heap_shrink_to_fit(&heap) == hm_heap_ret_none, "shrink to fit on a fixed-size heap should return none", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
     
     /* extract */
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
@@ -972,6 +977,13 @@ void test_empty_dynamic_heap_oper() {
     hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_suc, "shrink should return suc when heap is empty", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
+    hm_heap_free(&heap);
+
+    /* shrink to fit */
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    check_res(hm_heap_shrink_to_fit(&heap) == hm_heap_ret_suc, "shrink to fit should return suc when heap is dynamic-grow", &fail_cnt, tag++);
+    check_res(heap.capacity == 0, "the capacity of heap should be 0 when shrink to fit on empty and dynamic-grow heap", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, 0, free, cmp_int_up);
     hm_heap_free(&heap);
 
     print_end("HEAP(DYNAMIC) | BOUNDARY | OPER EMPTY HEAP | CAPACITY: 64", fail_cnt);
@@ -1297,6 +1309,13 @@ void test_no_capacity_fixed_heap_oper() {
     /* shrink */
     hm_heap_init(&heap, capacity, NULL, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and fixed-size heap", &fail_cnt, tag++);;
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
+    hm_heap_free(&heap);
+
+    /* shrink to fit */
+    hm_heap_init(&heap, capacity, NULL, cmp_int_up);
+    check_res(hm_heap_shrink_to_fit(&heap) == hm_heap_ret_none, "shrink to fit on 0-capacity and fixed-size heap should return none", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, false, capacity, NULL, cmp_int_up);
     hm_heap_free(&heap);
 
 
@@ -1374,6 +1393,13 @@ void test_no_capacity_dynamic_heap_oper() {
     /* shrink */
     hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
     check_res(hm_heap_shrink(&heap) == hm_heap_ret_none, "shrink function should return none in a 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
+    test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
+    hm_heap_free(&heap);
+
+    /* shrink to fit */
+    hm_heap_init_dynamic_grow(&heap, capacity, free, cmp_int_up);
+    check_res(hm_heap_shrink_to_fit(&heap) == hm_heap_ret_suc, "shrink to fit on 0-capacity and dynamic-grow heap should return suc", &fail_cnt, tag++);
+    check_res(heap.capacity == 0, "the capacity should be 0 when shrink to fit on 0-capacity and dynamic-grow heap", &fail_cnt, tag++);
     test_heap_integrity(&heap, &fail_cnt, tag++, 0, true, capacity, free, cmp_int_up);
     hm_heap_free(&heap);
 
@@ -1575,6 +1601,74 @@ void test_heap_dynamic_shrink() {
     
 }
 
+void test_heap_fixed_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+    int capacity = 64;
+    hm_heap heap;
+    hm_heap_init(&heap, capacity, free, cmp_int_up);
+
+    /* push */
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_heap_insert(&heap, v);
+    }
+
+    /* shrink */
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        if (hm_heap_shrink_to_fit(&heap) != hm_heap_ret_none) {
+            fail++;
+        }
+        test_heap_integrity(&heap, &fail_cnt, tag++, capacity - i, false, capacity, free, cmp_int_up);
+        int* v = hm_heap_extract(&heap);
+        free(v);
+    }
+    check_res(fail == 0, "shrink function shouldn return `none` when shrink fixed-size heap", &fail_cnt, tag++);
+    
+    hm_heap_free(&heap);
+
+    print_end("HEAP(FIXED) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_heap_dynamic_shrink_to_fit() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("HEAP(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]");
+    
+    int start_capacity = 64;
+    hm_heap heap;
+    hm_heap_init_dynamic_grow(&heap, start_capacity, free, cmp_int_up);
+
+    /* push */
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = i;
+        hm_heap_insert(&heap, v);
+    }
+
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        if (hm_heap_shrink_to_fit(&heap) != hm_heap_ret_suc) {
+            fail++;
+        }
+        check_res(heap.capacity == start_capacity * 2 - i, "the capacity should be equal to size when shrink to fit on a dynamic-grow heap", &fail_cnt, tag++);
+        test_heap_integrity(&heap, &fail_cnt, tag++, start_capacity * 2 - i, true, start_capacity * 2 - i, free, cmp_int_up);
+        int* v = hm_heap_extract(&heap);
+        free(v);
+    }
+    check_res(fail == 0, "shrink function should return suc when shrink to fit on a dynamic-grow heap", &fail_cnt, tag++);
+    
+    hm_heap_free(&heap);
+
+    print_end("HEAP(DYNAMIC) | FUNC | SHRINK TO FIT | TYPE: [INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 
 void test_heap_fixed_func() {
     test_heap_fixed_init();                                                                     printf("\n");    
@@ -1596,6 +1690,8 @@ void test_heap_fixed_func() {
     test_heap_fixed_judge();                                                                    printf("\n");
 
     test_heap_fixed_shrink();                                                                   printf("\n");
+
+    test_heap_fixed_shrink_to_fit();                                                            printf("\n");
 
 }
 
@@ -1619,6 +1715,8 @@ void test_heap_dynamic_func() {
     test_heap_dynamic_judge();                                                                  printf("\n");
 
     test_heap_dynamic_shrink();                                                                 printf("\n");
+
+    test_heap_dynamic_shrink_to_fit();                                                          printf("\n");
 
 }
 

@@ -109,8 +109,23 @@ bool hm_stack_is_empty(hm_stack* stack) {
 static hm_stack_ret hm_stack_fresh(hm_stack* stack, size_t new_capacity) {
     assert(stack != NULL);
 
+    /* the new capacity can't fit the size(top) */
     if (stack->top > new_capacity) {
         return hm_stack_ret_warn;
+    }
+
+    /* keep original status */
+    if (stack->capacity == new_capacity) {
+        return hm_stack_ret_suc;
+    }
+
+    /* prevent the return code of `realloc` isn't NULL  */
+    if (new_capacity == 0) {
+        free(stack->vals);
+        stack->vals = NULL;
+        stack->capacity = 0;
+
+        return hm_stack_ret_suc;
     }
 
     /* prevent overflow */
@@ -216,6 +231,26 @@ hm_stack_ret hm_stack_shrink(hm_stack* stack) {
     size_t new_capacity = stack->capacity / 2;
 
     return hm_stack_fresh(stack, new_capacity);
+}
+
+/**
+ * Shrink the capacity fit to the size of stack if possible
+ * 
+ * @note - Only dynamic-grow stack have a chance to shrink
+ * 
+ * @return - Return `hm_stack_ret_suc` when shrink success
+ * @return - Return `hm_stack_ret_none` when the stack is fixed-size
+ * @return - Return `hm_stack_ret_error` when shrink failure
+ */
+hm_stack_ret hm_stack_shrink_to_fit(hm_stack* stack) {
+    assert(stack != NULL);
+
+    if (!stack->dynamic_grow) {
+        return hm_stack_ret_none;
+    }
+
+    /* size is equal to `top` */
+    return hm_stack_fresh(stack, stack->top);
 }
 
 

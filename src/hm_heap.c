@@ -186,8 +186,23 @@ static hm_heap_ret hm_heap_sift_down(hm_heap* heap, size_t parent) {
 static hm_heap_ret hm_heap_fresh(hm_heap* heap, size_t new_capacity) {
     assert(heap != NULL);
 
+    /* the new capacity can't fit the size */
     if (heap->size > new_capacity) {
         return hm_heap_ret_warn;
+    }
+
+    /* keep original status */
+    if (heap->capacity == new_capacity) {
+        return hm_heap_ret_suc;
+    }
+
+    /* prevent the return code of `realloc` isn't NULL  */
+    if (new_capacity == 0) {
+        free(heap->vals);
+        heap->vals = NULL;
+        heap->capacity = 0;
+
+        return hm_heap_ret_suc;
     }
 
     /* prevent overflow */
@@ -375,6 +390,25 @@ hm_heap_ret hm_heap_shrink(hm_heap* heap) {
     size_t new_capacity = heap->capacity / 2;
 
     return hm_heap_fresh(heap, new_capacity);
+}
+
+/**
+ * Shrink the capacity fit to size of arr if possible
+ * 
+ * @note - Only dynamic-grow heap have a chance to shrink
+ * 
+ * @return - Return `hm_heap_ret_suc` when shrink success
+ * @return - Return `hm_heap_ret_none` when the heap is fixed-size
+ * @return - Return `hm_heap_ret_error` when shrink failure
+ */
+hm_heap_ret hm_heap_shrink_to_fit(hm_heap* heap) {
+    assert(heap != NULL);
+
+    if (!heap->dynamic_grow) {
+        return hm_heap_ret_none;
+    }
+
+    return hm_heap_fresh(heap, heap->size);
 }
 
 /**
