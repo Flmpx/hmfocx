@@ -11,7 +11,9 @@
     - `hm_queue` -- `hm_queue_shrink_to_fit()`
     - `hm_stack` -- `hm_stack_shrink_to_fit()`
     - `hm_str` -- `hm_str_shrink_to_fit()`
-- Add new function `hm_map_rehash()` for `hm_map` -- This function can clear the del tag and perf the search efficiency
+- Add new function `hm_{container}_rehash()` for map and set -- This function can clear the del tag and perf the search efficiency 
+    - `hm_map` -- `hm_map_rehash()`
+    - `hm_set` -- `hm_set_rehash()`
 
 ## [0.14.0] - 2026-08-29
 

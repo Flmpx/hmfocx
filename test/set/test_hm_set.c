@@ -1037,6 +1037,13 @@ void test_empty_set_oper() {
     check_res(loop_cnt == 0, "iterator over empty set should yield zero entrys", &fail_cnt, tag++);
     hm_set_free(&set);
 
+    /* rehash */
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
+    check_res(hm_set_rehash(&set) == hm_set_ret_suc, "rehash function should return suc when rehash a empty set", &fail_cnt, tag++);
+    check_res(hm_set_len(&set) == 0, "the len of set should be 0 after rehash a empty set", &fail_cnt, tag++);
+    test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
+    hm_set_free(&set);
+
 
     print_end("SET | BOUNDARY | OPER EMPTY SET | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
@@ -1180,6 +1187,59 @@ void test_set_pop() {
     HM_TEST_COUNTER
 }
 
+void test_set_rehash() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("SET | FUNC | REHASH | TYPE K:[INT]");
+    
+    srand(666);
+    int num = 256;
+    hm_set set;
+    hm_set_init(&set, hash_int_1, cmp_int_up, free);
+
+    /* insert */
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i;
+        hm_set_insert(&set, k);
+    }
+
+    /* del half */
+    for (int i = 0; i < num / 2; i++) {
+        hm_set_del(&set, &i);
+    }
+
+    /* Rehash */
+    check_res(hm_set_rehash(&set) == hm_set_ret_suc, "rehash function should return suc after del hald of entry", &fail_cnt, tag++);
+    test_set_integrity(&set, &fail_cnt, tag++, num - num / 2, hash_int_1, cmp_int_up, free);
+
+    /* verify entry status */
+    int fail = 0;
+    for (int i = 0; i < hm_set_len(&set); i++) {
+        hm_set_entry_status s = set.buckets_status[i];
+        if (s != hm_exist_in_set && s != hm_none_in_set) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the staus of entry only to be exist or none in set after rehash", &fail_cnt, tag++);
+
+    /* verify the entry */
+    int fail_no_exist = 0;
+    for (int i = num / 2; i < num; i++) {
+        hm_set_entry ep = hm_set_get(&set, &i);
+        if (ep.key == NULL) {
+            fail_no_exist++;
+        }
+    }
+    check_res(fail_no_exist == 0, "the entry is lost after rehash the set", &fail_cnt, tag++);
+
+    hm_set_free(&set);
+    
+    print_end("SET | FUNC | REHASH | TYPE K:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void function_test() {
     test_set_init();                                printf("\n");
 
@@ -1196,6 +1256,8 @@ void function_test() {
     test_set_del();                                 printf("\n");
     
     test_set_shrink();                              printf("\n");
+
+    test_set_rehash();                              printf("\n");
     
     test_set_clear();                               printf("\n");
     
