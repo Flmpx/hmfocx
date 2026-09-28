@@ -121,6 +121,11 @@ extern hm_set_ret hm_set_del(hm_set* set, void* key);
 
 extern hm_set_ret hm_set_shrink(hm_set* set);
 
+/**
+ * ReHash
+ */
+
+extern hm_set_ret hm_set_rehash(hm_set* set);
 
 /**
  * Clear And Free

@@ -128,6 +128,12 @@ extern hm_map_ret hm_map_shrink(hm_map* map);
 
 
 /**
+ * ReHash
+ */
+
+extern hm_map_ret hm_map_rehash(hm_map* map);
+
+/**
  * Clear And Free
  */
 

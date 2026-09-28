@@ -140,7 +140,7 @@ static hm_set_ret hm_set_addfunc(hm_set* set, void* key) {
             first_del_index = index;
         }
 
-        /* key has existed in map */
+        /* key has existed in set */
         if (buckets_status[index] == hm_exist_in_set && cmp_key(buckets[index].key, key) == hm_same) {
             /*keep the same and old entry(key) */
             return hm_set_ret_existed;
@@ -349,7 +349,7 @@ static size_t hm_set_get_index(hm_set* set, void* key) {
     for (size_t i = 0; i < l; i++) {
         status = buckets_status[index];
         
-        /* represent it isn't existed in map */
+        /* represent it isn't existed in set */
         if (status == hm_none_in_set) {
             break;
         }
@@ -461,6 +461,19 @@ hm_set_ret hm_set_shrink(hm_set* set) {
     size_t new_len = max_prime(l / 2);
 
     return hm_set_fresh(set, new_len);
+}
+
+
+/**
+ * Rahash the set
+ * 
+ * @note - This function can clear the del tag and perf the search efficiency
+ * 
+ * @return - Return `hm_set_ret_suc` when rehash success
+ * @return - Return `hm_set_ret_error` when rehash failure
+ */
+hm_set_ret hm_set_rehash(hm_set* set) {
+    return hm_set_fresh(set, set->len);
 }
 
 /**

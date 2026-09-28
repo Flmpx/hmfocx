@@ -13,6 +13,7 @@
     - [Iterator](#iter)
     - [Del](#del)
     - [Shrink](#shrink)
+    - [ReHash](#rehash)
     - [Clear](#clear)
     - [Free](#free)
 - [Other Things](#otherthings)
@@ -575,6 +576,23 @@ int main()
 </details>
 <br><br><br>
 
+
+<a id = "shrink"></a>
+
+> **Shrink**
+```c
+/**
+ * Rahash the set
+ * 
+ * @note This function can clear the del tag and perf the search efficiency
+ * 
+ * @return Return **hm_set_ret_suc** when rehash success
+ * @return Return **hm_set_ret_error** when rehash failure
+ */
+hm_set_ret hm_set_rehash(hm_set* set);
+```
+
+<br><br><br>
 
 
 
