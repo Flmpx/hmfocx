@@ -1596,6 +1596,10 @@ void test_empty_fixed_arr_oper() {
     check_res(hm_arr_shrink_to_fit(&arr) == hm_arr_ret_none, "shrink to fit on empty and fixed-size arr should return none", &fail_cnt, tag++);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
 
+    /* sort */
+    hm_arr_sort(&arr, cmp_int_up);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+
     /* clear */
     hm_arr_clear(&arr);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
@@ -1697,6 +1701,12 @@ void test_empty_dynamic_arr_oper() {
     hm_arr_init_dynamic_grow(&arr, capacity, NULL);
     check_res(hm_arr_shrink_to_fit(&arr) == hm_arr_ret_suc, "shrink to fit on empty and dynamic-grow arr should return suc", &fail_cnt, tag++);
     check_res(arr.capacity == 0, "the capacity of arr should be 0 when shrink to fit on empty and dynamic-grow arr", &fail_cnt, tag++);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, 0, NULL);
+    hm_arr_free(&arr);
+
+    /* sort */
+    hm_arr_init_dynamic_grow(&arr, capacity, NULL);
+    hm_arr_sort(&arr, cmp_int_up);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, 0, NULL);
     hm_arr_free(&arr);
 
@@ -2025,6 +2035,12 @@ void test_no_capacity_fixed_arr_oper() {
     check_res(hm_arr_shrink_to_fit(&arr) == hm_arr_ret_none, "shrink to fit on 0-capacity and fixed-size arr should return none", &fail_cnt, tag++);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
     hm_arr_free(&arr);
+
+    /* sort */
+    hm_arr_init(&arr, capacity, NULL);
+    hm_arr_sort(&arr, cmp_int_up);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, false, capacity, NULL);
+    hm_arr_free(&arr);
     
     /* clear */
     hm_arr_init(&arr, capacity, NULL);
@@ -2129,6 +2145,12 @@ void test_no_capacity_dynamic_arr_oper() {
     check_res(hm_arr_shrink_to_fit(&arr) == hm_arr_ret_suc, "shrink to fit on 0-capacity and dynamic-grow arr should return suc", &fail_cnt, tag++);
     test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
     hm_arr_free(&arr);
+
+    /* sort */
+    hm_arr_init_dynamic_grow(&arr, capacity, NULL);
+    hm_arr_sort(&arr, cmp_int_up);
+    test_arr_integrity(&arr, &fail_cnt, tag++, 0, true, capacity, NULL);
+    hm_arr_free(&arr);
     
     /* clear */
     hm_arr_init_dynamic_grow(&arr, capacity, NULL);
@@ -2221,6 +2243,90 @@ void test_init_big_capacity_dynamic_arr() {
 
 
 
+void test_arr_fixed_sort() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(FIXED) | FUNC | SORT | CAPACITY: 64");
+    
+    hm_arr arr;
+    int capacity = 64;
+    hm_arr_init(&arr, capacity, free);
+
+    srand(555);
+    int flag[capacity];
+
+    /* insert */
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        flag[i] = *v;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    /* sort */
+    qsort(flag, capacity, sizeof(int), cmp_int_up);
+    hm_arr_sort(&arr, cmp_int_up);
+    test_arr_integrity(&arr, &fail_cnt, tag++, capacity, false, capacity, free);
+
+    /* verify */
+    int fail = 0;
+    for (int i = 0; i < capacity; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != flag[i]) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the array's order is wrong after sort", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+    
+    
+    print_end("ARR(FIXED) | FUNC | SORT | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
+void test_arr_dynamic_sort() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("ARR(DYNAMIC) | FUNC | SORT | CAPACITY: 64");
+    
+    hm_arr arr;
+    int start_capacity = 64;
+    hm_arr_init_dynamic_grow(&arr, start_capacity, free);
+
+    srand(555);
+    int flag[start_capacity * 2];
+
+    /* insert */
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand();
+        flag[i] = *v;
+        hm_arr_insert_tail(&arr, v);
+    }
+
+    /* sort */
+    qsort(flag, start_capacity * 2, sizeof(int), cmp_int_up);
+    hm_arr_sort(&arr, cmp_int_up);
+    test_arr_integrity(&arr, &fail_cnt, tag++, start_capacity * 2, true, start_capacity, free);
+
+    /* verify */
+    int fail = 0;
+    for (int i = 0; i < start_capacity * 2; i++) {
+        int* v = hm_arr_get(&arr, i);
+        if (*v != flag[i]) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the array's order is wrong after sort", &fail_cnt, tag++);
+
+    hm_arr_free(&arr);
+    
+    
+    print_end("ARR(DYNAMIC) | FUNC | SORT | CAPACITY: 64", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 
 
 void test_arr_fixed_func() {
@@ -2236,6 +2342,8 @@ void test_arr_fixed_func() {
     test_arr_fixed_change();                                                            printf("\n");
 
     test_arr_fixed_pop();                                                               printf("\n");
+
+    test_arr_fixed_sort();                                                              printf("\n");
 
     test_arr_fixed_del_head();                                                          printf("\n");
     test_arr_fixed_del_tail();                                                          printf("\n");
@@ -2264,6 +2372,8 @@ void test_arr_dynamic_func() {
     test_arr_dynamic_change();                                                          printf("\n");
 
     test_arr_dynamic_pop();                                                             printf("\n");
+
+    test_arr_dynamic_sort();                                                            printf("\n");
 
     test_arr_dynamic_del_head();                                                        printf("\n");
     test_arr_dynamic_del_tail();                                                        printf("\n");

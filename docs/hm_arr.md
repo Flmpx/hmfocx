@@ -10,6 +10,7 @@
     - [Initialize](#init)
     - [Insert](#insert)
     - [Get](#get)
+    - [Sort](#sort)
     - [Del](#del)
     - [Pop](#pop)
     - [Judge](#judge)
@@ -321,6 +322,87 @@ int main()
 
 </details>
 <br><br><br>
+
+
+<a id = "sort"></a>
+
+> **Sort**
+
+```c
+/**
+ * Sort arr
+ * 
+ * @note Pass a comparison function to this function
+ * @note The **cmp** function pointer **must not be NULL**
+ */
+void hm_arr_sort(hm_arr* arr, hm_cmp cmp);
+```
+
+<details>
+<summary>try: sort</summary>
+
+```c
+#include <hm_arr.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+
+void print_arr(hm_arr* arr) {
+    int s = hm_arr_size(arr);
+    for (int i = 0; i < s; i++) {
+        int* v = hm_arr_get(arr, i);
+        printf("%d ", *v);
+    }
+    printf("\n");
+}
+
+int cmp_up(const void* p1, const void* p2) {
+    int a = *(int*)p1;
+    int b = *(int*)p2;
+    return (a > b) - (a < b);
+}
+
+int main() 
+{
+    hm_arr arr;
+    /* init */
+    int capacity = 20;
+    /* fixed-size */
+    hm_arr_init(&arr, capacity, free);
+
+    srand(666);
+
+    /* insert tail */
+    for (int i = 0; i < capacity; i++) {
+        int* v = (int*)malloc(sizeof(int));
+        *v = rand() % 100;
+        hm_arr_insert_tail(&arr, v);
+    }
+    print_arr(&arr);
+
+    /* sort */
+    hm_arr_sort(&arr, cmp_up);
+    print_arr(&arr);
+
+    hm_arr_free(&arr);
+    return 0;
+}
+```
+
+<details>
+<summary>run result</summary>
+
+```txt
+61 22 18 86 79 11 65 78 81 41 93 9 79 19 76 1 64 57 48 58 
+1 9 11 18 19 22 41 48 57 58 61 64 65 76 78 79 79 81 86 93 
+```
+
+</details>
+
+</details>
+<br><br><br>
+
+
 
 
 

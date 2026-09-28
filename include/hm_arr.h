@@ -89,6 +89,12 @@ extern void** hm_arr_get_pointer(hm_arr* arr, size_t index);
 
 
 /**
+ * Sort
+ */
+
+extern void hm_arr_sort(hm_arr* arr, hm_cmp cmp);
+
+/**
  * Pop
  */
 

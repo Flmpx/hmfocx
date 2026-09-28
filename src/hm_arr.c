@@ -10,6 +10,10 @@
 #include <assert.h>
 #include <string.h>
 
+#if 0
+    #include "../include/hm_heap.h"
+#endif
+
 size_t hm_arr_size(hm_arr* arr) {
     assert(arr != NULL);
 
@@ -333,6 +337,79 @@ void* hm_arr_pop(hm_arr* arr, size_t index) {
 
     return ret_val;
 }
+
+#if 0
+/**
+ * Swap two values
+ */
+static void hm_swap(void** a, void** b) {
+    void* tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+/**
+ * Sort arr
+ * 
+ * @note - Pass a comparison function to this function
+ * @note - The `cmp` function pointer `must not be NULL`
+ */
+void hm_arr_sort(hm_arr* arr, hm_cmp cmp) {
+    assert(arr != NULL);
+    assert(cmp != NULL);
+
+    size_t s = arr->size;
+    void** vals = arr->vals;
+    hm_heap heap;
+    hm_heap_build(&heap, vals, s, s, NULL, cmp);
+    for (size_t i = 0; i < s; i++) {
+        vals[s - i - 1] = hm_heap_extract(&heap);
+    }
+
+    // convert
+    for (size_t i = 0; i < s / 2; i++) {
+        hm_swap(vals + i, vals + s - i - 1);
+    }
+}
+
+#endif
+
+/**
+ * Swap two values
+ */
+static void hm_swap(void** a, void** b) {
+    void* tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+
+/**
+ * Sort arr
+ * 
+ * @note - Pass a comparison function to this function
+ * @note - The `cmp` function pointer `must not be NULL`
+ */
+void hm_arr_sort(hm_arr* arr, hm_cmp cmp) {
+    assert(arr != NULL);
+    assert(cmp != NULL);
+
+    size_t s = arr->size;
+    if (s <= 1) return;
+
+    void** vals = arr->vals;
+    for (int i = s - 1; i > 0; i--) {
+        bool flag = true;
+        for (int j = 0; j < i; j++) {
+            if (cmp(vals[j], vals[j + 1]) > 0) {
+                hm_swap(vals + j, vals + j + 1);
+                flag = false;
+            }
+        }
+        if (flag) break;
+    }
+}
+
 
 /**
  * Shrink the capacity of arr if possible

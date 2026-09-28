@@ -11,6 +11,7 @@
     - `hm_queue` -- `hm_queue_shrink_to_fit()`
     - `hm_stack` -- `hm_stack_shrink_to_fit()`
     - `hm_str` -- `hm_str_shrink_to_fit()`
+- Add new function `hm_arr_sort()` for arr -- it can sort element
 
 ## [0.14.0] - 2026-08-29
 
