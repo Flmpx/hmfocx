@@ -10,17 +10,33 @@ add_library(hmfocx STATIC ${SRC_LIST})
 
 target_include_directories(hmfocx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-option(BUILD_TESTS "Build test programs" OFF)
 
-if (BUILD_TESTS)
+
+
+
+# main switch
+option(HMFOCX_BUILD_TEST "Build test programs"  OFF)
+
+set(
+CONTAINERS 
+"LIST" "MAP" "POOL" "STACK" "QUEUE" "HEAP" "SET" "ARR" "STR" 
+)
+
+# create test option
+foreach(CONTAINER IN LISTS CONTAINERS)
+    option(HMFOCX_${CONTAINER}_TEST "TEST FOR ${CONTAINER}" OFF)
+endforeach()
+
+
+if (HMFOCX_BUILD_TEST)
     enable_testing()
-    add_subdirectory(test/list)
-    add_subdirectory(test/map)
-    add_subdirectory(test/pool)
-    add_subdirectory(test/stack)
-    add_subdirectory(test/queue)
-    add_subdirectory(test/heap)
-    add_subdirectory(test/set)
-    add_subdirectory(test/arr)
-    add_subdirectory(test/str)
+
+    # run test when variable is true
+    foreach(CONTAINER IN LISTS CONTAINERS)
+        message(STATUS "HMFOCX_${CONTAINER}_TEST = ${HMFOCX_${CONTAINER}_TEST}")        # output message
+        if (HMFOCX_${CONTAINER}_TEST)
+            string(TOLOWER "${CONTAINER}" container)
+            add_subdirectory("test/${container}")
+        endif()
+    endforeach()
 endif()
