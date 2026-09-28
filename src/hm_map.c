@@ -491,6 +491,19 @@ hm_map_ret hm_map_shrink(hm_map* map) {
 }
 
 /**
+ * Rahash the map
+ * 
+ * @note - This function can clear the del tag and perf the search efficiency
+ * 
+ * @return - Return `hm_map_ret_suc` when rehash success
+ * @return - Return `hm_map_ret_error` when rehash failure
+ */
+hm_map_ret hm_map_rehash(hm_map* map) {
+    return hm_map_fresh(map, map->len);
+}
+
+
+/**
  * Free the keys and values in map but keeps the buckets and buckets_status array existed
  */
 void hm_map_clear(hm_map* map) {

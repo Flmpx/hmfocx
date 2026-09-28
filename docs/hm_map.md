@@ -14,6 +14,7 @@
     - [Iterator](#iter)
     - [Del](#del)
     - [Shrink](#shrink)
+    - [ReHash](#rehash)
     - [Clear](#clear)
     - [Free](#free)
 - [Other Things](#otherthings)
@@ -737,6 +738,24 @@ int main()
 </details>
 <br><br><br>
 
+
+
+<a id = "rehash"></a>
+
+> **ReHash**
+```c
+/**
+ * Rahash the map
+ * 
+ * @note This function can clear the del tag and perf the search efficiency
+ * 
+ * @return Return **hm_map_ret_suc** when rehash success
+ * @return Return **hm_map_ret_error** when rehash failure
+ */
+hm_map_ret hm_map_rehash(hm_map* map);
+```
+
+<br><br><br>
 
 
 

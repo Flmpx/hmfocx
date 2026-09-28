@@ -1225,6 +1225,13 @@ void test_empty_map_oper() {
     check_res(loop_cnt == 0, "iterator over empty map should yield zero entrys", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
     hm_map_free(&map);
+
+    /* rehash */
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+    check_res(hm_map_rehash(&map) == hm_map_ret_suc, "rehash function should return suc when rehash a empty map", &fail_cnt, tag++);
+    check_res(hm_map_len(&map) == 0, "the len of map should be 0 after rehash a empty map", &fail_cnt, tag++);
+    test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
+    hm_map_free(&map);
     
 
     print_end("MAP | BOUNDARY | OPER EMPTY MAP | TYPE K:[INT] V:[INT]", fail_cnt);
@@ -1385,6 +1392,66 @@ void test_map_pop() {
     
 }
 
+void test_map_rehash() {
+    int fail_cnt = 0;
+    int tag = 0;
+    print_run("MAP | FUNC | REHASH | TYPE K:[INT] V:[INT]");
+    
+    srand(666);
+    int num = 256;
+    hm_map map;
+    hm_map_init(&map, hash_int_1, cmp_int_up, free, free);
+
+    /* insert */
+    int flag[num];
+    for (int i = 0; i < num; i++) {
+        int* k = (int*)malloc(sizeof(int));
+        int* v = (int*)malloc(sizeof(int));
+        *k = i;
+        *v = rand();
+        flag[i] = *v;
+        hm_map_insert(&map, k, v);
+    }
+
+    /* del half */
+    for (int i = 0; i < num / 2; i++) {
+        hm_map_del(&map, &i);
+    }
+
+    /* Rehash */
+    check_res(hm_map_rehash(&map) == hm_map_ret_suc, "rehash function should return suc after del hald of entry", &fail_cnt, tag++);
+    test_map_integrity(&map, &fail_cnt, tag++, num - num / 2, hash_int_1, cmp_int_up, free, free);
+
+    /* verify entry status */
+    int fail = 0;
+    for (int i = 0; i < hm_map_len(&map); i++) {
+        hm_map_entry_status s = map.buckets_status[i];
+        if (s != hm_exist_in_map && s != hm_none_in_map) {
+            fail++;
+        }
+    }
+    check_res(fail == 0, "the staus of entry only to be exist or none in map after rehash", &fail_cnt, tag++);
+
+    /* verify the entry */
+    int fail_no_exist = 0;
+    int fail_wrong = 0;
+    for (int i = num / 2; i < num; i++) {
+        hm_map_entry* ep = hm_map_get_entry(&map, &i);
+        if (ep == NULL) {
+            fail_no_exist++;
+        } else if (*(int*)ep->val != flag[i]) {
+            fail_wrong++;
+        }
+    }
+    check_res(fail_no_exist == 0, "the entry is lost after rehash the map", &fail_cnt, tag++);
+    check_res(fail_wrong == 0, "the val of key is wrong after rehash", &fail_cnt, tag++);
+
+    hm_map_free(&map);
+    
+    print_end("MAP | FUNC | REHASH | TYPE K:[INT] V:[INT]", fail_cnt);
+    HM_TEST_COUNTER
+}
+
 void function_test() {
     test_map_init();                                printf("\n");
 
@@ -1405,6 +1472,8 @@ void function_test() {
     test_map_del();                                 printf("\n");
     
     test_map_shrink();                              printf("\n");
+
+    test_map_rehash();                              printf("\n");
     
     test_map_clear();                               printf("\n");
     
