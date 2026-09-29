@@ -76,7 +76,7 @@ extern void hm_list_free(hm_list* list);
 
 extern hm_list_ret hm_list_insert_head(hm_list* list, void* val);
 extern hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
-extern hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
+extern hm_list_ret hm_list_insert(hm_list* list, void* val, size_t index);
 
 
 
@@ -86,7 +86,7 @@ extern hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
 
 extern hm_list_ret hm_list_del_head(hm_list* list);
 extern hm_list_ret hm_list_del_tail(hm_list* list);
-extern hm_list_ret hm_list_del_index(hm_list* list, size_t index);
+extern hm_list_ret hm_list_del(hm_list* list, size_t index);
 
 /**
  * Get functions
@@ -110,7 +110,7 @@ extern void* hm_list_pop(hm_list* list, size_t index);
 
 extern void hm_list_iter_init_head(hm_list_iter* iter, hm_list* list);
 extern void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
-extern void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
+extern void hm_list_iter_init(hm_list_iter* iter, hm_list* list, size_t index);
 
 extern bool hm_list_iter_has_cur(hm_list_iter* iter);
 extern void* hm_list_iter_cur(hm_list_iter* iter);

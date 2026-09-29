@@ -167,7 +167,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
  * @return - Return `hm_list_ret_error` when insert failure
  * @return - Return `hm_list_ret_suc` when insert success
  */
-hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
+hm_list_ret hm_list_insert(hm_list* list, void* val, size_t index) {
     assert(list != NULL);
 
     if (index > list->size) {
@@ -344,7 +344,7 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
  * @return - Return `hm_list_ret_none` when the `index` is out of bounds
  * @return - Return `hm_list_ret_suc` when delete success
  */
-hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
+hm_list_ret hm_list_del(hm_list* list, size_t index) {
     assert(list != NULL);
 
     if (index >= list->size) {
@@ -409,7 +409,7 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
  * @note - Let the iterator point to the specified `index` of the list
  * @note - Iterator will point to `NULL` when `index` is out of bounds
  */
-void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
+void hm_list_iter_init(hm_list_iter* iter, hm_list* list, size_t index) {
     assert(iter != NULL);
     assert(list != NULL);
 

@@ -155,7 +155,7 @@ static hm_arr_ret hm_arr_fresh(hm_arr* arr, size_t new_capacity) {
  * @return - Return `hm_arr_ret_suc` when insert success
  * @return - Return `hm_arr_ret_error` when arr is `dynamic-grow` and expand failure
  */
-hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index) {
+hm_arr_ret hm_arr_insert(hm_arr* arr, void* val, size_t index) {
     assert(arr != NULL);
 
     if (index > arr->size) {
@@ -205,7 +205,7 @@ hm_arr_ret hm_arr_insert_head(hm_arr* arr, void* val) {
         return hm_arr_ret_full;
     }
 
-    return hm_arr_insert_index(arr, val, 0);
+    return hm_arr_insert(arr, val, 0);
 }
 
 
@@ -223,7 +223,7 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
         return hm_arr_ret_full;
     }
 
-    return hm_arr_insert_index(arr, val, arr->size);
+    return hm_arr_insert(arr, val, arr->size);
 }
 
 
@@ -236,7 +236,7 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val) {
  * @return - Return `hm_arr_ret_none` when the `index` is out of bounds or arr is empty
  * @return - Return `hm_arr_ret_suc` when delete success
  */
-hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index) {
+hm_arr_ret hm_arr_del(hm_arr* arr, size_t index) {
     assert(arr != NULL);
 
     if (index >= arr->size) {
@@ -262,7 +262,7 @@ hm_arr_ret hm_arr_del_head(hm_arr* arr) {
         return hm_arr_ret_none;
     }
 
-    return hm_arr_del_index(arr, 0);
+    return hm_arr_del(arr, 0);
 }
 
 
@@ -280,7 +280,7 @@ hm_arr_ret hm_arr_del_tail(hm_arr* arr) {
         return hm_arr_ret_none;
     }
 
-    return hm_arr_del_index(arr, arr->size - 1);
+    return hm_arr_del(arr, arr->size - 1);
 }
 
 /**

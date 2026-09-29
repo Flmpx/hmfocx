@@ -167,16 +167,16 @@ void test_list_insert_tail() {
 
 
 
-void test_list_insert_index() {
+void test_list_insert() {
     int fail_cnt = 0;
     int tag = 0;
-    print_run("LIST | FUNC | INSERT INDEX | TYPE: [INT]");
+    print_run("LIST | FUNC | INSERT | TYPE: [INT]");
 
     hm_list list;
     hm_list_init(&list, free);
     hm_list_node* curr;
     
-    /* insert index */
+    /* insert */
     int fail_diff = 0;
     int fail_invalid_index = 0;
     
@@ -193,7 +193,7 @@ void test_list_insert_index() {
         
         size_t prev_s = hm_list_size(&list);
 
-        hm_list_ret ret = hm_list_insert_index(&list, v, index[i]);
+        hm_list_ret ret = hm_list_insert(&list, v, index[i]);
         
         if (index[i] <= prev_s) {
             size_t loop_cnt = index[i];
@@ -220,7 +220,7 @@ void test_list_insert_index() {
     check_res(fail_invalid_index == 0, "pass invalid index but the return of this function isn't `hm_list_ret_warn`", &fail_cnt, tag++);
     hm_list_free(&list);
 
-    print_end("LIST | FUNC | INSERT INDEX | TYPE: [INT]", fail_cnt);
+    print_end("LIST | FUNC | INSERT | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
 }
@@ -320,10 +320,10 @@ void test_list_iter_tail() {
     
 }
 
-void test_list_iter_index() {
+void test_list_iter() {
     int fail_cnt = 0;
     int tag = 0;
-    print_run("LIST | FUNC | ITERATOR INDEX | TYPE: [INT]");
+    print_run("LIST | FUNC | ITERATOR | TYPE: [INT]");
     
     hm_list list;
     hm_list_init(&list, free);
@@ -350,7 +350,7 @@ void test_list_iter_index() {
         
         hm_list_iter iter;
         /* iter to next from specified index */
-        hm_list_iter_init_index(&iter, &list, idxs[i]);
+        hm_list_iter_init(&iter, &list, idxs[i]);
         int cnt_next = 0;
         
         while (hm_list_iter_has_cur(&iter)) {
@@ -371,7 +371,7 @@ void test_list_iter_index() {
 
 
         /* iter to prev from specified index */
-        hm_list_iter_init_index(&iter, &list, idxs[i]);
+        hm_list_iter_init(&iter, &list, idxs[i]);
         int cnt_prev = 0;
         
         while (hm_list_iter_has_cur(&iter)) {
@@ -397,7 +397,7 @@ void test_list_iter_index() {
     check_res(fail_diff_prev == 0, "the val got by iterator is wrong when itering from index to `prev`", &fail_cnt, tag++);
     hm_list_free(&list);
 
-    print_end("LIST | FUNC | ITERATOR INDEX | TYPE: [INT]", fail_cnt);
+    print_end("LIST | FUNC | ITERATOR | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 
 }
@@ -741,10 +741,10 @@ void test_list_del_tail() {
     
 }
 
-void test_list_del_index() {
+void test_list_del() {
     int fail_cnt = 0;
     int tag = 0;
-    print_run("LIST | FUNC | DEL INDEX | TYPE: [INT]");
+    print_run("LIST | FUNC | DEL | TYPE: [INT]");
 
     int num = 100;
     hm_list list;
@@ -770,7 +770,7 @@ void test_list_del_index() {
         int prev_size = hm_list_size(&list);
         int* del_v = hm_list_get(&list, index[i]);
 
-        hm_list_ret ret = hm_list_del_index(&list, index[i]);
+        hm_list_ret ret = hm_list_del(&list, index[i]);
 
         if (index[i] >= prev_size) {
             if (ret != hm_list_ret_none) {
@@ -798,7 +798,7 @@ void test_list_del_index() {
     check_res(fail_del_exist == 0, "the val still existed in list when del this val", &fail_cnt, tag++);
     hm_list_free(&list);
 
-    print_end("LIST | FUNC | DEL INDEX | TYPE: [INT]", fail_cnt);
+    print_end("LIST | FUNC | DEL | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
 
 }
@@ -943,7 +943,7 @@ void test_list_insert_index_stress() {
 
 
     /* insert head */
-    print_run("LIST | STRESS | INSERT INDEX(HEAD) | TYPE: [INT]");
+    print_run("LIST | STRESS | INSERT(HEAD) | TYPE: [INT]");
     
     size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_head) / sizeof(size_t);
@@ -953,7 +953,7 @@ void test_list_insert_index_stress() {
         size_t suc = 0;
         clock_t start = clock();
         for (size_t j = 0; j < nums_head[i]; j++) {
-            if (hm_list_insert_index(&list, &v, 0) == hm_list_ret_suc) {
+            if (hm_list_insert(&list, &v, 0) == hm_list_ret_suc) {
                 suc++;
             }
         }
@@ -964,14 +964,14 @@ void test_list_insert_index_stress() {
         hm_list_free(&list);
     }
 
-    print_end("LIST | STRESS | INSERT INDEX(HEAD) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | INSERT(HEAD) | TYPE: [INT]\n", fail_cnt);
 
 
 
 
 
     /* insert tail */
-    print_run("LIST | STRESS | INSERT INDEX(TAIL) | TYPE: [INT]");
+    print_run("LIST | STRESS | INSERT(TAIL) | TYPE: [INT]");
 
     size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail) / sizeof(size_t);
@@ -982,7 +982,7 @@ void test_list_insert_index_stress() {
         size_t suc = 0;
         clock_t start = clock();
         for (size_t j = 0; j < nums_tail[i]; j++) {
-            if (hm_list_insert_index(&list, &v, list.size) == hm_list_ret_suc) {
+            if (hm_list_insert(&list, &v, list.size) == hm_list_ret_suc) {
                 suc++;
             }
         }
@@ -993,20 +993,20 @@ void test_list_insert_index_stress() {
         hm_list_free(&list);
     }
 
-    print_end("LIST | STRESS | INSERT INDEX(TAIL) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | INSERT(TAIL) | TYPE: [INT]\n", fail_cnt);
     
 
 
 
 
     /* insert ++list.size - 1++ */
-    print_run("LIST | STRESS | INSERT INDEX(TAIL - 1) | TYPE: [INT]");
+    print_run("LIST | STRESS | INSERT(TAIL - 1) | TYPE: [INT]");
 
     size_t nums_tail_sub_1[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
 
     fail_cnt = 0;
-    /* this can test the perf of `hm_list_insert_index` */
+    /* this can test the perf of `hm_list_insert` */
 
     for (int i = 0; i < cnt; i++) {
         hm_list_init(&list, NULL);
@@ -1018,7 +1018,7 @@ void test_list_insert_index_stress() {
         suc++;
 
         for (size_t j = 0; j < nums_tail_sub_1[i]; j++) {
-            if (hm_list_insert_index(&list, &v, list.size - 1) == hm_list_ret_suc) {
+            if (hm_list_insert(&list, &v, list.size - 1) == hm_list_ret_suc) {
                 suc++;
             }
         }
@@ -1029,7 +1029,7 @@ void test_list_insert_index_stress() {
         hm_list_free(&list);
     }
 
-    print_end("LIST | STRESS | INSERT INDEX(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | INSERT(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
 
 
 
@@ -1038,7 +1038,7 @@ void test_list_insert_index_stress() {
 
 
     /* insert half of list.size */
-    print_run("LIST | STRESS | INSERT INDEX(MID) | TYPE: [INT]");
+    print_run("LIST | STRESS | INSERT(MID) | TYPE: [INT]");
 
     size_t nums_mid[] = {10000, 50000, 100000};
     cnt = sizeof(nums_mid) / sizeof(size_t);
@@ -1049,7 +1049,7 @@ void test_list_insert_index_stress() {
         size_t suc = 0;
         clock_t start = clock();
         for (size_t j = 0; j < nums_mid[i]; j++) {
-            if (hm_list_insert_index(&list, &v, list.size / 2) == hm_list_ret_suc) {
+            if (hm_list_insert(&list, &v, list.size / 2) == hm_list_ret_suc) {
                 suc++;
             }
         }
@@ -1060,7 +1060,7 @@ void test_list_insert_index_stress() {
         hm_list_free(&list);
     }
 
-    print_end("LIST | STRESS | INSERT INDEX(MID) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | INSERT(MID) | TYPE: [INT]\n", fail_cnt);
     HM_TEST_COUNTER
 
 }
@@ -1411,7 +1411,7 @@ void test_list_del_index_stress() {
 
 
     /* del head */
-    print_run("LIST | STRESS | DEL INDEX(HEAD) | TYPE: [INT]");
+    print_run("LIST | STRESS | DEL(HEAD) | TYPE: [INT]");
 
     size_t nums_head[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     int cnt = sizeof(nums_head) / sizeof(size_t);
@@ -1430,19 +1430,19 @@ void test_list_del_index_stress() {
         
         clock_t start = clock();
         for (size_t j = 0; j < nums_head[i]; j++) {
-            if (hm_list_del_index(&list, 0) != hm_list_ret_suc) {
+            if (hm_list_del(&list, 0) != hm_list_ret_suc) {
                 fail_del++;
             }
         }
         clock_t end = clock();
         test_list_integrity(&list, &fail_cnt, tag++, 0, NULL);
-        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(head) test", &fail_cnt, tag++);
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del(head) test", &fail_cnt, tag++);
         print_run_time("DEL", start, end, nums_head[i], nums_head[i]);
         hm_list_free(&list);
 
     }
 
-    print_end("LIST | STRESS | DEL INDEX(HEAD) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | DEL(HEAD) | TYPE: [INT]\n", fail_cnt);
 
     
 
@@ -1452,7 +1452,7 @@ void test_list_del_index_stress() {
 
 
     /* del tail */
-    print_run("LIST | STRESS | DEL INDEX(TAIL) | TYPE: [INT]");
+    print_run("LIST | STRESS | DEL(TAIL) | TYPE: [INT]");
 
     size_t nums_tail[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail) / sizeof(size_t);
@@ -1471,19 +1471,19 @@ void test_list_del_index_stress() {
         
         clock_t start = clock();
         for (size_t j = 0; j < nums_head[i]; j++) {
-            if (hm_list_del_index(&list, list.size - 1) != hm_list_ret_suc) {
+            if (hm_list_del(&list, list.size - 1) != hm_list_ret_suc) {
                 fail_del++;
             }
         }
         clock_t end = clock();
         test_list_integrity(&list, &fail_cnt, tag++, 0, NULL);
-        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(tail) test", &fail_cnt, tag++);
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del(tail) test", &fail_cnt, tag++);
         print_run_time("DEL", start, end, nums_head[i], nums_head[i]);
         hm_list_free(&list);
 
     }
 
-    print_end("LIST | STRESS | DEL INDEX(TAIL) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | DEL(TAIL) | TYPE: [INT]\n", fail_cnt);
 
 
 
@@ -1491,11 +1491,11 @@ void test_list_del_index_stress() {
     
     
     /* del ++list.size - 2 == The one before the last one in list++ */
-    print_run("LIST | STRESS | DEL INDEX(TAIL - 1) | TYPE: [INT]");
+    print_run("LIST | STRESS | DEL(TAIL - 1) | TYPE: [INT]");
     
     size_t nums_tail_sub_1[] = {10000, 50000, 100000, 500000, 1000000, 5000000, 10000000};
     cnt = sizeof(nums_tail_sub_1) / sizeof(size_t);
-    /* this can test the perf of `hm_list_del_index` */
+    /* this can test the perf of `hm_list_del` */
 
     for (int i = 0; i < cnt; i++) {
         hm_list_init(&list, NULL);
@@ -1513,19 +1513,19 @@ void test_list_del_index_stress() {
         
         /* the loop count must be limited at `nums_tail_sub_1[i] - 1` because the `index` that pass in when `list.size == 1` */
         for (size_t j = 0; j < nums_tail_sub_1[i] - 1; j++) {
-            if (hm_list_del_index(&list, list.size - 2) != hm_list_ret_suc) {
+            if (hm_list_del(&list, list.size - 2) != hm_list_ret_suc) {
                 fail_del++;
             }
         }
         clock_t end = clock();
         test_list_integrity(&list, &fail_cnt, tag++, 1, NULL);  // list will remain a Node
-        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(tail - 1) test", &fail_cnt, tag++);
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del(tail - 1) test", &fail_cnt, tag++);
         print_run_time("DEL", start, end, nums_tail_sub_1[i], nums_tail_sub_1[i] - 1);
         hm_list_free(&list);
     
     }
 
-    print_end("LIST | STRESS | DEL INDEX(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
+    print_end("LIST | STRESS | DEL(TAIL - 1) | TYPE: [INT]\n", fail_cnt);
 
     
 
@@ -1534,8 +1534,8 @@ void test_list_del_index_stress() {
 
 
 
-    /* del index at the middle of list */
-    print_run("LIST | STRESS | DEL INDEX(MID) | TYPE: [INT]");
+    /* del at the middle of list */
+    print_run("LIST | STRESS | DEL(MID) | TYPE: [INT]");
 
     size_t nums_mid[] = {10000, 50000, 100000};
     cnt = sizeof(nums_mid) / sizeof(size_t);
@@ -1554,19 +1554,19 @@ void test_list_del_index_stress() {
         
         clock_t start = clock();
         for (size_t j = 0; j < nums_mid[i]; j++) {
-            if (hm_list_del_index(&list, list.size / 2) != hm_list_ret_suc) {
+            if (hm_list_del(&list, list.size / 2) != hm_list_ret_suc) {
                 fail_del++;
             }
         }
         clock_t end = clock();
         test_list_integrity(&list, &fail_cnt, tag++, 0, NULL);
-        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del index(middle) test", &fail_cnt, tag++);
+        check_res(fail_del == 0, "the tag of return isn't suc when run stressful del(middle) test", &fail_cnt, tag++);
         print_run_time("DEL", start, end, nums_mid[i], nums_mid[i]);
         hm_list_free(&list);
 
     }
     
-    print_end("LIST | STRESS | DEL INDEX(MID) | TYPE: [INT]", fail_cnt);
+    print_end("LIST | STRESS | DEL(MID) | TYPE: [INT]", fail_cnt);
     HM_TEST_COUNTER
     
 }
@@ -1676,7 +1676,7 @@ void test_empty_list_oper() {
     test_list_integrity(&list, &fail_cnt, tag++, 0, free);
     check_res(hm_list_del_tail(&list) == hm_list_ret_none, "del_tail on empty list should return none", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++, 0, free);
-    check_res(hm_list_del_index(&list, 0) == hm_list_ret_none, "del_index on empty list should return none", &fail_cnt, tag++);
+    check_res(hm_list_del(&list, 0) == hm_list_ret_none, "del on empty list should return none", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++, 0, free);
     hm_list_free(&list);
     
@@ -1741,10 +1741,10 @@ void test_single_listnode_oper() {
     test_list_integrity(&list, &fail_cnt, tag++, 0, NULL);
     hm_list_free(&list);
 
-    /* del index */
+    /* del */
     hm_list_init(&list, NULL);
     hm_list_insert_tail(&list, &v);
-    check_res(hm_list_del_index(&list, 0) == hm_list_ret_suc, "del_index on single listnode's list should return suc", &fail_cnt, tag++);
+    check_res(hm_list_del(&list, 0) == hm_list_ret_suc, "del on single listnode's list should return suc", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++, 0, NULL);
     hm_list_free(&list);
     
@@ -1931,7 +1931,7 @@ void function_test() {
     
     test_list_insert_head();                                        printf("\n");
     test_list_insert_tail();                                        printf("\n");
-    test_list_insert_index();                                       printf("\n");
+    test_list_insert();                                             printf("\n");
     
     test_list_get();                                                printf("\n");
 
@@ -1943,7 +1943,7 @@ void function_test() {
     
     test_list_del_head();                                           printf("\n");
     test_list_del_tail();                                           printf("\n");
-    test_list_del_index();                                          printf("\n");
+    test_list_del();                                                printf("\n");
     
     test_list_free();                                               printf("\n");
 
@@ -1953,7 +1953,7 @@ void function_test() {
 
     test_list_iter_tail();                                          printf("\n");
 
-    test_list_iter_index();                                         printf("\n");
+    test_list_iter();                                               printf("\n");
 
 }
 
