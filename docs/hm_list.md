@@ -468,33 +468,6 @@ int main()
 
 > **Iterator**
 ```c
-
-/* These functions will be remove */
-
-/**
- * Initialize iterator of list
- */
-void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
-
-/**
- * Check if the iterator has a next element
- * 
- * @return Return **true** when iterator has next
- */
-bool hm_list_iter_has_next(hm_list_iter* iter);
-
-/**
- * Get next value of list
- * 
- * @note Use **hm_list_iter_has_next()** to check before calling **hm_list_iter_next()**
- * 
- * @return Return **NULL** when iterator doesn't has next
- */
-void* hm_list_iter_next(hm_list_iter* iter);
-
-
-/* New functions of iterator */
-
 /**
  * Initialize iterator of list
  * 
@@ -543,54 +516,9 @@ void hm_list_iter_move_next(hm_list_iter* iter);
  */
 void hm_list_iter_move_prev(hm_list_iter* iter);
 ```
-<details>
-<summary>try: iter  [old]</summary>
-
-```c
-#include <hm_list.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-int main() 
-{
-    hm_list list;
-    /* init */
-    hm_list_init(&list, free);
-
-
-    int cnt = 20;
-    /* insert tail */
-    for (int i = 0; i < cnt; i++) {
-        int* v = (int*)malloc(sizeof(int));
-        *v = i;
-        hm_list_insert_tail(&list, v);
-    }
-    
-    /* iter [old] */
-    
-    hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
-    while (hm_list_iter_has_next(&iter)) {
-        int* v = hm_list_iter_next(&iter);
-        printf("%d ", *v);
-    }
-    hm_list_free(&list);
-    return 0;
-}
-```
 
 <details>
-<summary>run result</summary>
-
-```txt
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
-```
-</details>
-
-</details>
-
-<details>
-<summary>try: iter  [new]</summary>
+<summary>try: iter</summary>
 
 ```c
 #include <hm_list.h>
@@ -611,7 +539,7 @@ int main()
         hm_list_insert_tail(&list, v);
     }
     
-    /* iter [new] */
+    /* iter */
     hm_list_iter iter;
 
     /* iterate from head  */
@@ -718,7 +646,7 @@ int main()
  * Sort list
  * 
  * @note Pass a comparison function to this function
- * @note - The `cmp` function pointer `must not be NULL`
+ * @note - The **cmp** function pointer **must not be NULL**
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```

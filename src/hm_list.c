@@ -377,53 +377,6 @@ void* hm_list_get(hm_list* list, size_t index) {
     return cur->val;
 }
 
-
-/**
- * Initialize iterator of list
- */
-void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
-    assert(iter != NULL);
-    assert(list != NULL);
-
-    iter->cur = list->head;
-}
-
-
-
-/**
- * Check if the iterator has a next element
- * 
- * @return - Return `true` when iterator has next
- */
-bool hm_list_iter_has_next(hm_list_iter* iter) {
-    assert(iter != NULL);
-
-    return iter->cur != NULL;
-}
-
-/**
- * Get next value of list
- * 
- * @note - Use `hm_list_iter_has_next()` to check before calling `hm_list_iter_next()`
- * 
- * @return - Return `NULL` when iterator doesn't has next
- */
-void* hm_list_iter_next(hm_list_iter* iter) {
-    assert(iter != NULL);
-
-    hm_list_node* cur = iter->cur;
-
-    if (cur == NULL) {
-        return NULL;
-    }
-
-    void* val = cur->val;
-
-    iter->cur = cur->next;
-
-    return val;
-}
-
 /**
  * Initialize iterator of list
  * 

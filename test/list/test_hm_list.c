@@ -225,48 +225,8 @@ void test_list_insert_index() {
     
 }
 
-void test_iter_list() {
-    int fail_cnt = 0;
-    int tag = 0;
-    print_run("LIST | FUNC | ITERATOR | TYPE: [INT]");
 
-    hm_list list;
-    hm_list_init(&list, free);
-    int num = 100;
-    int flag[num];
-
-    /* insert */
-    for (int i = 0; i < num; i++) {
-        flag[i] = i * 10;
-        int* v = (int*)malloc(sizeof(int));
-        *v = flag[i];
-        hm_list_insert_tail(&list, v);
-    }
-
-    /* iterator */
-    int cnt = 0;
-    hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
-    int fail_diff = 0;
-    while (hm_list_iter_has_next(&iter)) {
-        int* v = hm_list_iter_next(&iter);
-        if (*v != flag[cnt]) {
-            fail_diff++;
-        }
-        cnt++;
-    }
-    check_res(cnt == list.size, "the number of val got by list's iterator is wrong", &fail_cnt, tag++);
-    check_res(fail_diff == 0, "the val got by iterator is wrong", &fail_cnt, tag++);
-    test_list_integrity(&list, &fail_cnt, tag++, num, free);
-    hm_list_free(&list);
-    
-    print_end("LIST | FUNC | ITERATOR | TYPE: [INT]", fail_cnt);
-    HM_TEST_COUNTER
-
-}
-
-
-void test_iter_list_head() {
+void test_list_iter_head() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("LIST | FUNC | ITERATOR HEAD | TYPE: [INT]");
@@ -313,7 +273,7 @@ void test_iter_list_head() {
 }
 
 
-void test_iter_list_tail() {
+void test_list_iter_tail() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("LIST | FUNC | ITERATOR TAIL | TYPE: [INT]");
@@ -360,7 +320,7 @@ void test_iter_list_tail() {
     
 }
 
-void test_iter_list_index() {
+void test_list_iter_index() {
     int fail_cnt = 0;
     int tag = 0;
     print_run("LIST | FUNC | ITERATOR INDEX | TYPE: [INT]");
@@ -658,15 +618,16 @@ void test_list_del_head() {
 
     /* verify */
     hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
+    hm_list_iter_init_head(&iter, &list);
     int fail_diff = 0;
     int cur = num / 2;
-    while (hm_list_iter_has_next(&iter)) {
-        int* v = hm_list_iter_next(&iter);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         if (*v != flag[cur]) {
             fail_diff++;
         }
         cur++;
+        hm_list_iter_move_next(&iter);
     }
     check_res(fail_diff == 0, "data in list is wrong after del half of vals in list", &fail_cnt, tag++);
 
@@ -734,15 +695,16 @@ void test_list_del_tail() {
     
     /* verify */
     hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
+    hm_list_iter_init_head(&iter, &list);
     int fail_diff = 0;
     int cur = 0;
-    while (hm_list_iter_has_next(&iter)) {
-        int* v = hm_list_iter_next(&iter);
+    while (hm_list_iter_has_cur(&iter)) {
+        int* v = hm_list_iter_cur(&iter);
         if (*v != flag[cur]) {
             fail_diff++;
         }
         cur++;
+        hm_list_iter_move_next(&iter);
     }
     check_res(fail_diff == 0, "data in list is wrong after del half of vals in list", &fail_cnt, tag++);
     
@@ -816,13 +778,14 @@ void test_list_del_index() {
             }
         } else {
             hm_list_iter iter;
-            hm_list_iter_init(&iter, &list);
-            while (hm_list_iter_has_next(&iter)) {
-                int* v = hm_list_iter_next(&iter);
+            hm_list_iter_init_head(&iter, &list);
+            while (hm_list_iter_has_cur(&iter)) {
+                int* v = hm_list_iter_cur(&iter);
                 if (v == del_v) {
                     fail_del_exist++;
                     break;
                 }
+                hm_list_iter_move_next(&iter);
             }
             del_cnt++;
         }
@@ -1720,11 +1683,12 @@ void test_empty_list_oper() {
     /* iter */
     hm_list_init(&list, free);
     hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
+    hm_list_iter_init_head(&iter, &list);
     int loop_cnt = 0;
-    while (hm_list_iter_has_next(&iter)) {
-        hm_list_iter_next(&iter);       // the return value don't have any function for this test
+    while (hm_list_iter_has_cur(&iter)) {
+        hm_list_iter_cur(&iter);       // the return value don't have any function for this test
         loop_cnt++;
+        hm_list_iter_move_next(&iter);
     }
     check_res(loop_cnt == 0, "iterator over empty list should yield zero elements", &fail_cnt, tag++);
     test_list_integrity(&list, &fail_cnt, tag++, 0, free);
@@ -1868,14 +1832,15 @@ void test_list_sort_stress() {
         int fail_sort = 0;
         size_t n = 0;
         hm_list_iter iter;
-        hm_list_iter_init(&iter, &list);
+        hm_list_iter_init_head(&iter, &list);
 
-        while (hm_list_iter_has_next(&iter)) {
-            int* v = hm_list_iter_next(&iter);
+        while (hm_list_iter_has_cur(&iter)) {
+            int* v = hm_list_iter_cur(&iter);
             if (*v != vals[n]) {
                 fail_sort++;
             }
             n++;
+            hm_list_iter_move_next(&iter);
         }
         check_res(fail_sort == 0, "the value is wrong after sort list with many vals", &fail_cnt, tag++);
         
@@ -1968,8 +1933,6 @@ void function_test() {
     test_list_insert_tail();                                        printf("\n");
     test_list_insert_index();                                       printf("\n");
     
-    test_iter_list();                                               printf("\n");
-    
     test_list_get();                                                printf("\n");
 
     test_list_get_node();                                           printf("\n");
@@ -1986,11 +1949,11 @@ void function_test() {
 
     test_list_sort();                                               printf("\n");
 
-    test_iter_list_head();                                          printf("\n");
+    test_list_iter_head();                                          printf("\n");
 
-    test_iter_list_tail();                                          printf("\n");
+    test_list_iter_tail();                                          printf("\n");
 
-    test_iter_list_index();                                         printf("\n");
+    test_list_iter_index();                                         printf("\n");
 
 }
 

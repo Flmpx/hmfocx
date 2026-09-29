@@ -7,6 +7,9 @@
 ### Changed
 - **Refactor!:** Change the method of iterating all entry in map and set(see [Map Document](docs/hm_map.md#iter) and [Set Document](docs/hm_set.md#iter))
 
+### Removed
+- The old iterator of list is removed now(from [0.6.0 Deprecated](#deprecated))
+
 ## [0.15.0] - 2026-09-29
 
 ### Added
