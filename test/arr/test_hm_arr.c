@@ -4,7 +4,7 @@
  */
 
 
-#include "../../include/hm_arr.h"
+#include <hm_arr.h>
 #include "../hm_test_tool.h"
 #include <stdlib.h>
 #include <stdint.h>

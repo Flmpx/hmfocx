@@ -3,7 +3,7 @@
  * Licensed under MIT (see LICENSE).
  */
 
-#include "../include/hm_queue.h"
+#include <hm_queue.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>

@@ -5,7 +5,7 @@
 
 
 
-#include "../include/hm_str.h"
+#include <hm_str.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>

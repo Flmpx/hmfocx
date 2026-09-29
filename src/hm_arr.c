@@ -4,14 +4,14 @@
  */
 
 
-#include "../include/hm_arr.h"
+#include <hm_arr.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
 #include <string.h>
 
 #if 0
-    #include "../include/hm_heap.h"
+    #include <hm_heap.h>
 #endif
 
 size_t hm_arr_size(hm_arr* arr) {

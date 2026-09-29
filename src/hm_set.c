@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Flmpx
  * Licensed under MIT (see LICENSE).
  */
-#include "../include/hm_set.h"
+#include <hm_set.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>

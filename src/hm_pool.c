@@ -3,7 +3,7 @@
  * Licensed under MIT (see LICENSE).
  */
 
-#include "../include/hm_pool.h"
+#include <hm_pool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>

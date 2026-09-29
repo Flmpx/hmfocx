@@ -4,7 +4,7 @@
  */
 
 
-#include "../include/hm_stack.h"
+#include <hm_stack.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>

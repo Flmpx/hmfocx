@@ -12,7 +12,7 @@
 #ifndef HM_STR_H
 #define HM_STR_H
 
-#include "hm_base.h"
+#include <hm_base.h>
 
 /**
  * The return signal of function in str

@@ -3,7 +3,7 @@
  * Licensed under MIT (see LICENSE).
  */
 
-#include "../../include/hm_str.h"
+#include <hm_str.h>
 #include "../hm_test_tool.h"
 #include <string.h>
 #include <stdlib.h>

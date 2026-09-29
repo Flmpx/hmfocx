@@ -4,9 +4,9 @@
  */
 
 
+#include <hm_queue.h>
 #include "../hm_test_tool.h"
 #include <stdlib.h>
-#include "../../include/hm_queue.h"
 #include <stdint.h>
 
 /* This variable can record the total number of failures and it can be used as a return value to check whether the test passed */

@@ -10,8 +10,7 @@ add_library(hmfocx STATIC ${SRC_LIST})
 
 target_include_directories(hmfocx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 # main switch

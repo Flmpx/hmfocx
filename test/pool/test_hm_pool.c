@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Flmpx
  * Licensed under MIT (see LICENSE).
  */
-#include "../../include/hm_pool.h"
+#include <hm_pool.h>
 #include <stdbool.h>
 #include "../hm_test_tool.h"
 #include <stdlib.h>
