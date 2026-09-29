@@ -573,12 +573,13 @@ void hm_map_iter_init(hm_map_iter* iter, hm_map* map) {
     iter->index = 0;
     iter->len = map->len;
 }
+
 /**
- * Check if the iterator has a next entry
+ * Check if the iterator's current pointer is valid
  * 
- * @return - Return `true` when the iterator has next
+ * @return - Return `true` when iterator's current pointer is valid
  */
-bool hm_map_iter_has_next(hm_map_iter* iter) {
+bool hm_map_iter_has_cur(hm_map_iter* iter) {
     assert(iter != NULL);
 
     size_t l = iter->len;
@@ -596,33 +597,33 @@ bool hm_map_iter_has_next(hm_map_iter* iter) {
 
     return false;
 }
+
 /**
- * Get next entry of map
+ * Get the current value of iterator
  * 
- * @note - Use `hm_map_iter_has_next()` to check before calling `hm_map_iter_next()`
- * @note - Entry contains pointers to key and val
+ * @note - Use `hm_map_iter_has_cur()` to check before calling `hm_map_iter_cur()`
  * 
- * @return - Return `(hm_map_entry){NULL, NULL}` when iterator doesn't has next 
+ * @return - Return `(hm_map_entry){NULL, NULL}` when iterator current pointer is invalid
  */
-hm_map_entry hm_map_iter_next(hm_map_iter* iter) {
+hm_map_entry hm_map_iter_cur(hm_map_iter* iter) {
+    if (hm_map_iter_has_cur(iter)) {
+        return iter->buckets[iter->index];
+    } else {
+        return (hm_map_entry){NULL, NULL};
+    }
+}
+
+/**
+ * Move the iterator's pointer to next
+ */
+void hm_map_iter_move_next(hm_map_iter* iter) {
     assert(iter != NULL);
 
-    size_t l = iter->len;
-    size_t index = iter->index;
-    hm_map_entry_status status;
-
-    while (index < l) {
-        status = iter->buckets_status[index];
-        if (status == hm_exist_in_map) {
-            /*next index is start of next entry*/
-            iter->index = index + 1;
-            return iter->buckets[index];
-        }
-        index++;
+    if (!hm_map_iter_has_cur(iter)) {
+        return;
     }
-    iter->index = index;
 
-    return (hm_map_entry){NULL, NULL};
+    iter->index++;
 }
 
 

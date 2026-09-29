@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+### Changed
+- **Refactor!:** Change the method of iterating all entry in map(see [Document](docs/hm_map.md#iter))
+
 ## [0.15.0] - 2026-09-29
 
 ### Added

@@ -2,9 +2,9 @@ name: Test for all containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "refactor" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "refactor" ]
 
 env:
   BUILD_TYPE: Debug

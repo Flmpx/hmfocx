@@ -142,11 +142,12 @@ extern void hm_map_free(hm_map* map);
 
 
 /**
- * Some funtion of iterator of map , like `next` and `has next`
+ * Some funtion of iterator of map , like `cur` and `has cur`
  */
 
 extern void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
-extern bool hm_map_iter_has_next(hm_map_iter* iter);
-extern hm_map_entry hm_map_iter_next(hm_map_iter* iter);
+extern bool hm_map_iter_has_cur(hm_map_iter* iter);
+extern hm_map_entry hm_map_iter_cur(hm_map_iter* iter);
+extern void hm_map_iter_move_next(hm_map_iter* iter);
 
 #endif

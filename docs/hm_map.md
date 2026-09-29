@@ -770,22 +770,41 @@ hm_map_ret hm_map_rehash(hm_map* map);
 void hm_map_iter_init(hm_map_iter* iter, hm_map* map);
 
 /**
- * Check if the iterator has a next entry
+ * Check if the iterator's current pointer is valid
  * 
- * @return Return **true** when the iterator has next
+ * @return Return **true** when iterator's current pointer is valid
  */
-bool hm_map_iter_has_next(hm_map_iter* iter);
+bool hm_map_iter_has_cur(hm_map_iter* iter);
 
 /**
- * Get next entry of map
+ * Get the current value of iterator
  * 
- * @note Use **hm_map_iter_has_next()** to check before calling **hm_map_iter_next()**
- * @note Entry contains pointers to key and val
+ * @note Use **hm_map_iter_has_cur()** to check before calling **hm_map_iter_cur()**
  * 
- * @return Return **(hm_map_entry){NULL, NULL}** when iterator doesn't has next 
+ * @return Return **(hm_map_entry){NULL, NULL}** when iterator current pointer is invalid
  */
-hm_map_entry hm_map_iter_next(hm_map_iter* iter);
+hm_map_entry hm_map_iter_cur(hm_map_iter* iter);
+
+/**
+ * Move the iterator's pointer to next
+ */
+void hm_map_iter_move_next(hm_map_iter* iter);
 ```
+
+>  [!Note]  
+>  **See next graph**  
+>  - When initialize iterator, the iterator's pointer will located in **one**, move next will go to **two**
+>  - The iterator's pointer will located in last entry in every area when call `cur()` and `has_cur()`
+>  - `cur()` will return **(hm_map_entry){NULL, NULL}** and `has_cur()` will return **false** when pointer is located in `invalid` 
+ 
+  
+```
+|<-          one            ->|<-  two  ->|<- three ->|<-   invalid   ->|
+________________________________________________________________________
+|  ?  |  ?  |  ?  |  ?  |  2  |  ?  |  3  |  ?  |  9  |  ?  |  ?  |  ?  |  
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+```
+
 <details>
 <summary>try: iter</summary>
 
@@ -842,11 +861,12 @@ int main()
 
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
-    while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry e = hm_map_iter_next(&iter);
+    while (hm_map_iter_has_cur(&iter)) {
+        hm_map_entry e = hm_map_iter_cur(&iter);
         int* k = e.key;
         char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
+        hm_map_iter_move_next(&iter);
     }
     printf("\n");
 
