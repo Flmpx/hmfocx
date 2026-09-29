@@ -209,8 +209,8 @@ void test_iter_set() {
 
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
-    while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry e = hm_set_iter_next(&iter);
+    while (hm_set_iter_has_cur(&iter)) {
+        hm_set_entry e = hm_set_iter_cur(&iter);
         if (e.key) {
             int* k = e.key;
                 if (k == NULL) {
@@ -226,6 +226,7 @@ void test_iter_set() {
         } else {
             fail_no_exist_e++;
         }
+        hm_set_iter_move_next(&iter);
     }
     check_res(fail_no_exist_e == 0, "entry is NULL in iterating", &fail_cnt, tag++);
     check_res(fail_count_k == 0, "key in set is repetitive in iterating", &fail_cnt, tag++);
@@ -1029,9 +1030,10 @@ void test_empty_set_oper() {
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
     int loop_cnt = 0;
-    while (hm_set_iter_has_next(&iter)) {
-        hm_set_iter_next(&iter);
+    while (hm_set_iter_has_cur(&iter)) {
+        hm_set_iter_cur(&iter);
         loop_cnt++;
+        hm_set_iter_move_next(&iter);
     }
     test_set_integrity(&set, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free);
     check_res(loop_cnt == 0, "iterator over empty set should yield zero entrys", &fail_cnt, tag++);
@@ -1169,11 +1171,12 @@ void test_set_pop() {
     for (int i = 0; i < pop_cnt; i++) {
         hm_set_iter iter;
         hm_set_iter_init(&iter, &set);
-        while (hm_set_iter_has_next(&iter)) {
-            hm_set_entry e = hm_set_iter_next(&iter);
+        while (hm_set_iter_has_cur(&iter)) {
+            hm_set_entry e = hm_set_iter_cur(&iter);
             if (e.key == pop_k[i]) {
                 fail++;
             }
+            hm_set_iter_move_next(&iter);
         }
     }
     check_res(fail == 0, "the pop entry shouldn't be existed in set", &fail_cnt, tag++);

@@ -607,22 +607,41 @@ hm_set_ret hm_set_rehash(hm_set* set);
 void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
 
 /**
- * Check if the iterator has a next entry
+ * Check if the iterator's current pointer is valid
  * 
- * @return Return **true** when the iterator has next
+ * @return Return **true** when iterator's current pointer is valid
  */
-bool hm_set_iter_has_next(hm_set_iter* iter);
+bool hm_set_iter_has_cur(hm_set_iter* iter);
 
 /**
- * Get next entry of set
+ * Get the current value of iterator
  * 
- * @note Use **hm_set_iter_has_next()** to check before calling **hm_set_iter_next()**
- * @note Entry contains pointer to key
+ * @note Use **hm_set_iter_has_cur()** to check before calling **hm_set_iter_cur()**
  * 
- * @return Return **(hm_set_entry){NULL}** when iterator doesn't has next 
+ * @return Return **(hm_set_entry){NULL}** when iterator current pointer is invalid
  */
-hm_set_entry hm_set_iter_next(hm_set_iter* iter);
+hm_set_entry hm_set_iter_cur(hm_set_iter* iter);
+
+/**
+ * Move the iterator's pointer to next
+ */
+void hm_set_iter_move_next(hm_set_iter* iter);
 ```
+
+>  [!Tip]
+>  - When initialize iterator, the iterator's pointer will located in **one**, move next will go to **two**  
+>  - The iterator's pointer will located in last entry in every area when call `cur()` and `has_cur()` 
+>  - `cur()` will return **(hm_set_entry){NULL}** and `has_cur()` will return **false** when pointer is located in `invalid`  
+
+  
+```
+|<-          one            ->|<-  two  ->|<- three ->|<-   invalid   ->|
+________________________________________________________________________
+|  ?  |  ?  |  ?  |  ?  |  7  |  ?  |  2  |  ?  |  1  |  ?  |  ?  |  ?  |  
+‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+```
+
+
 <details>
 <summary>try: iter</summary>
 
@@ -674,10 +693,11 @@ int main()
 
     hm_set_iter iter;
     hm_set_iter_init(&iter, &set);
-    while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry e = hm_set_iter_next(&iter);
+    while (hm_set_iter_has_cur(&iter)) {
+        hm_set_entry e = hm_set_iter_cur(&iter);
         int* k = e.key;
         printf("| k: %d\n", *k);
+        hm_set_iter_move_next(&iter);
     }
     printf("\n");
 

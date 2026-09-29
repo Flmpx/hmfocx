@@ -5,7 +5,7 @@
 ## [Unreleased]
 
 ### Changed
-- **Refactor!:** Change the method of iterating all entry in map(see [Document](docs/hm_map.md#iter))
+- **Refactor!:** Change the method of iterating all entry in map and set(see [Map Document](docs/hm_map.md#iter) and [Set Document](docs/hm_set.md#iter))
 
 ## [0.15.0] - 2026-09-29
 
