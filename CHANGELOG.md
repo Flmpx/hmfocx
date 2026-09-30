@@ -4,6 +4,21 @@
 
 ## [Unreleased]
 
+### Changed
+- **Refactor!:** Change the method of iterating all entry in map and set(see [Map Document](docs/hm_map.md#iter) and [Set Document](docs/hm_set.md#iter))
+- **Refacotr!:** Rename some function in arr and list
+    - **List**
+        - `hm_list_insert_index()` -> `hm_list_insert()`
+        - `hm_list_del_index()` -> `hm_list_del()`
+        - `hm_list_iter_init_index()` -> `hm_list_iter_init()`
+    - **Arr**
+        - `hm_arr_insert_index()` -> `hm_arr_insert()`
+        - `hm_arr_del_index()` -> `hm_arr_del()`
+
+
+### Removed
+- The old iterator of list is removed now(from [0.6.0 Deprecated](#deprecated))
+
 ## [0.15.0] - 2026-09-29
 
 ### Added

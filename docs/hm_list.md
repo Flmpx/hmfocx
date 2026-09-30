@@ -110,7 +110,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val);
  * @return Return **hm_list_ret_error** when insert failure
  * @return Return **hm_list_ret_suc** when insert success
  */
-hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index);
+hm_list_ret hm_list_insert(hm_list* list, void* val, size_t index);
 ```
 
 <a id = "get"></a>
@@ -182,7 +182,7 @@ int main()
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     /* insert val at index 2 */
-    hm_list_insert_index(&list, val, 2);
+    hm_list_insert(&list, val, 2);
     print_list(&list);
 
     /* use get to change val at index 3 */
@@ -391,7 +391,7 @@ hm_list_ret hm_list_del_tail(hm_list* list);
  * @return Return **hm_list_ret_none** when the **index** is out of bounds
  * @return Return **hm_list_ret_suc** when delete success
  */
-hm_list_ret hm_list_del_index(hm_list* list, size_t index);
+hm_list_ret hm_list_del(hm_list* list, size_t index);
 ```
 <details>
 <summary>try: del</summary>
@@ -426,8 +426,8 @@ int main()
     }
     print_list(&list);
 
-    /* del index | index: 4 */
-    hm_list_del_index(&list, 4);
+    /* del | index: 4 */
+    hm_list_del(&list, 4);
     print_list(&list);
 
     int num_h = 3;
@@ -468,33 +468,6 @@ int main()
 
 > **Iterator**
 ```c
-
-/* These functions will be remove */
-
-/**
- * Initialize iterator of list
- */
-void hm_list_iter_init(hm_list_iter* iter, hm_list* list);
-
-/**
- * Check if the iterator has a next element
- * 
- * @return Return **true** when iterator has next
- */
-bool hm_list_iter_has_next(hm_list_iter* iter);
-
-/**
- * Get next value of list
- * 
- * @note Use **hm_list_iter_has_next()** to check before calling **hm_list_iter_next()**
- * 
- * @return Return **NULL** when iterator doesn't has next
- */
-void* hm_list_iter_next(hm_list_iter* iter);
-
-
-/* New functions of iterator */
-
 /**
  * Initialize iterator of list
  * 
@@ -515,7 +488,7 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list);
  * @note Let the iterator point to the specified **index** of the list
  * @note Iterator will point to **NULL** when **index** is out of bounds
  */
-void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index);
+void hm_list_iter_init(hm_list_iter* iter, hm_list* list, size_t index);
 
 /**
  * Check if the iterator's current pointer is valid
@@ -543,54 +516,24 @@ void hm_list_iter_move_next(hm_list_iter* iter);
  */
 void hm_list_iter_move_prev(hm_list_iter* iter);
 ```
-<details>
-<summary>try: iter  [old]</summary>
-
-```c
-#include <hm_list.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-int main() 
-{
-    hm_list list;
-    /* init */
-    hm_list_init(&list, free);
 
 
-    int cnt = 20;
-    /* insert tail */
-    for (int i = 0; i < cnt; i++) {
-        int* v = (int*)malloc(sizeof(int));
-        *v = i;
-        hm_list_insert_tail(&list, v);
-    }
-    
-    /* iter [old] */
-    
-    hm_list_iter iter;
-    hm_list_iter_init(&iter, &list);
-    while (hm_list_iter_has_next(&iter)) {
-        int* v = hm_list_iter_next(&iter);
-        printf("%d ", *v);
-    }
-    hm_list_free(&list);
-    return 0;
-}
+>  [!Note]
+>  **See next graph**  
+>  - When initialize iterator, the iterator's pointer will located in the specific index(**2**), move next or move prev will go to next(**3**) or prev(**1**)
+>  - `cur()` will return **NULL** and `has_cur()` will return **false** when pointer is located in `NULL`
+
+
+```
+          1          2          3          4       
+       _______    _______    _______    _______
+NULL <-|  L  |<-->|  S  |<-->|  T  |<-->|  K  |-> NULL 
+       ‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾
 ```
 
-<details>
-<summary>run result</summary>
-
-```txt
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
-```
-</details>
-
-</details>
 
 <details>
-<summary>try: iter  [new]</summary>
+<summary>try: iter</summary>
 
 ```c
 #include <hm_list.h>
@@ -611,7 +554,7 @@ int main()
         hm_list_insert_tail(&list, v);
     }
     
-    /* iter [new] */
+    /* iter */
     hm_list_iter iter;
 
     /* iterate from head  */
@@ -635,7 +578,7 @@ int main()
     printf("\n");
     
     /* iterate from index 4 */
-    hm_list_iter_init_index(&iter, &list, 4);
+    hm_list_iter_init(&iter, &list, 4);
     while (hm_list_iter_has_cur(&iter)) {
         int* v = hm_list_iter_cur(&iter);
         printf("%d ", *v);
@@ -718,7 +661,7 @@ int main()
  * Sort list
  * 
  * @note Pass a comparison function to this function
- * @note - The `cmp` function pointer `must not be NULL`
+ * @note - The **cmp** function pointer **must not be NULL**
  */
 void hm_list_sort(hm_list* list, hm_cmp cmp);
 ```

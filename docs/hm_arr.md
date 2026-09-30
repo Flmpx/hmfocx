@@ -143,7 +143,7 @@ hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val);
  * @return Return **hm_arr_ret_suc** when insert success
  * @return Return **hm_arr_ret_error** when arr is **dynamic-grow** and expand failure
  */
-hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index);
+hm_arr_ret hm_arr_insert(hm_arr* arr, void* val, size_t index);
 ```
 
 
@@ -220,7 +220,7 @@ int main()
     int* val = (int*)malloc(sizeof(int));
     *val = -1;
     /* insert val at index 2 */
-    hm_arr_insert_index(&arr, val, 2);
+    hm_arr_insert(&arr, val, 2);
     print_arr(&arr);
 
 
@@ -435,7 +435,7 @@ hm_arr_ret hm_arr_del_tail(hm_arr* arr);
  * @return Return **hm_arr_ret_none** when the **index** is out of bounds or arr is empty
  * @return Return **hm_arr_ret_suc** when delete success
  */
-hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index);
+hm_arr_ret hm_arr_del(hm_arr* arr, size_t index);
 ```
 
 <details>
@@ -472,8 +472,8 @@ int main()
     }
     print_arr(&arr);
 
-    /* del index | index: 4 */
-    hm_arr_del_index(&arr, 4);
+    /* del | index: 4 */
+    hm_arr_del(&arr, 4);
     print_arr(&arr);
 
     int num_h = 3;

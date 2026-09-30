@@ -167,7 +167,7 @@ hm_list_ret hm_list_insert_tail(hm_list* list, void* val) {
  * @return - Return `hm_list_ret_error` when insert failure
  * @return - Return `hm_list_ret_suc` when insert success
  */
-hm_list_ret hm_list_insert_index(hm_list* list, void* val, size_t index) {
+hm_list_ret hm_list_insert(hm_list* list, void* val, size_t index) {
     assert(list != NULL);
 
     if (index > list->size) {
@@ -344,7 +344,7 @@ hm_list_ret hm_list_del_tail(hm_list* list) {
  * @return - Return `hm_list_ret_none` when the `index` is out of bounds
  * @return - Return `hm_list_ret_suc` when delete success
  */
-hm_list_ret hm_list_del_index(hm_list* list, size_t index) {
+hm_list_ret hm_list_del(hm_list* list, size_t index) {
     assert(list != NULL);
 
     if (index >= list->size) {
@@ -375,53 +375,6 @@ void* hm_list_get(hm_list* list, size_t index) {
     hm_list_node* cur = hm_list_get_node(list, index);
 
     return cur->val;
-}
-
-
-/**
- * Initialize iterator of list
- */
-void hm_list_iter_init(hm_list_iter* iter, hm_list* list) {
-    assert(iter != NULL);
-    assert(list != NULL);
-
-    iter->cur = list->head;
-}
-
-
-
-/**
- * Check if the iterator has a next element
- * 
- * @return - Return `true` when iterator has next
- */
-bool hm_list_iter_has_next(hm_list_iter* iter) {
-    assert(iter != NULL);
-
-    return iter->cur != NULL;
-}
-
-/**
- * Get next value of list
- * 
- * @note - Use `hm_list_iter_has_next()` to check before calling `hm_list_iter_next()`
- * 
- * @return - Return `NULL` when iterator doesn't has next
- */
-void* hm_list_iter_next(hm_list_iter* iter) {
-    assert(iter != NULL);
-
-    hm_list_node* cur = iter->cur;
-
-    if (cur == NULL) {
-        return NULL;
-    }
-
-    void* val = cur->val;
-
-    iter->cur = cur->next;
-
-    return val;
 }
 
 /**
@@ -456,7 +409,7 @@ void hm_list_iter_init_tail(hm_list_iter* iter, hm_list* list) {
  * @note - Let the iterator point to the specified `index` of the list
  * @note - Iterator will point to `NULL` when `index` is out of bounds
  */
-void hm_list_iter_init_index(hm_list_iter* iter, hm_list* list, size_t index) {
+void hm_list_iter_init(hm_list_iter* iter, hm_list* list, size_t index) {
     assert(iter != NULL);
     assert(list != NULL);
 

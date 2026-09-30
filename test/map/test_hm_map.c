@@ -201,8 +201,8 @@ void test_iter_map() {
 
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
-    while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry e = hm_map_iter_next(&iter);
+    while (hm_map_iter_has_cur(&iter)) {
+        hm_map_entry e = hm_map_iter_cur(&iter);
         int* k = e.key;
         int* v = e.val;
         if (*k >= num || *k < 0) {
@@ -212,6 +212,7 @@ void test_iter_map() {
                 fail_diff_v++;
             }
         }
+        hm_map_iter_move_next(&iter);
     }
 
     check_res(fail_invalid_k == 0, "the k got by iter_map is invalid ", &fail_cnt, tag++);
@@ -1154,13 +1155,14 @@ void test_map_iter_stress() {
 
         int fail_iter = 0;
         clock_t start = clock();
-        while (hm_map_iter_has_next(&iter)) {
-            hm_map_entry e = hm_map_iter_next(&iter);
+        while (hm_map_iter_has_cur(&iter)) {
+            hm_map_entry e = hm_map_iter_cur(&iter);
             int k = *(int*)(e.key);
             int v = *(int*)(e.val);
             if (v != 2 * k) {
                 fail_iter++;
             }
+            hm_map_iter_move_next(&iter);
         }
         clock_t end = clock();
         check_res(fail_iter == 0, "the value shoule be twice key", &fail_cnt, tag++);
@@ -1218,9 +1220,10 @@ void test_empty_map_oper() {
     hm_map_iter iter;
     hm_map_iter_init(&iter, &map);
     int loop_cnt = 0;
-    while (hm_map_iter_has_next(&iter)) {
-        hm_map_iter_next(&iter);
+    while (hm_map_iter_has_cur(&iter)) {
+        hm_map_iter_cur(&iter);
         loop_cnt++;
+        hm_map_iter_move_next(&iter);
     }
     check_res(loop_cnt == 0, "iterator over empty map should yield zero entrys", &fail_cnt, tag++);
     test_map_integrity(&map, &fail_cnt, tag++, 0, hash_int_1, cmp_int_up, free, free);
@@ -1371,11 +1374,12 @@ void test_map_pop() {
     for (int i = 0; i < pop_cnt; i++) {
         hm_map_iter iter;
         hm_map_iter_init(&iter, &map);
-        while (hm_map_iter_has_next(&iter)) {
-            hm_map_entry e = hm_map_iter_next(&iter);
+        while (hm_map_iter_has_cur(&iter)) {
+            hm_map_entry e = hm_map_iter_cur(&iter);
             if (e.key == pop_k[i] || e.val == pop_v[i]) {
                 fail++;
             }
+            hm_map_iter_move_next(&iter);
         }
     }
     check_res(fail == 0, "the pop entry shouldn't be existed in map", &fail_cnt, tag++);

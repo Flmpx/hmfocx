@@ -69,7 +69,7 @@ extern bool hm_arr_is_empty(hm_arr* arr);
 
 extern hm_arr_ret hm_arr_insert_head(hm_arr* arr, void* val);
 extern hm_arr_ret hm_arr_insert_tail(hm_arr* arr, void* val);
-extern hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index);
+extern hm_arr_ret hm_arr_insert(hm_arr* arr, void* val, size_t index);
 
 /**
  * Delete
@@ -77,7 +77,7 @@ extern hm_arr_ret hm_arr_insert_index(hm_arr* arr, void* val, size_t index);
 
 extern hm_arr_ret hm_arr_del_head(hm_arr* arr);
 extern hm_arr_ret hm_arr_del_tail(hm_arr* arr);
-extern hm_arr_ret hm_arr_del_index(hm_arr* arr, size_t index);
+extern hm_arr_ret hm_arr_del(hm_arr* arr, size_t index);
 
 
 /**

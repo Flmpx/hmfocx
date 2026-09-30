@@ -136,12 +136,13 @@ extern void hm_set_free(hm_set* set);
 
 
 /**
- * Some funtion of iterator of set , like `next` and `has next`
+ * Some funtion of iterator of set , like `cur` and `has cur`
  */
 
 extern void hm_set_iter_init(hm_set_iter* iter, hm_set* set);
-extern bool hm_set_iter_has_next(hm_set_iter* iter);
-extern hm_set_entry hm_set_iter_next(hm_set_iter* iter);
+extern bool hm_set_iter_has_cur(hm_set_iter* iter);
+extern hm_set_entry hm_set_iter_cur(hm_set_iter* iter);
+extern void hm_set_iter_move_next(hm_set_iter* iter);
 
 
 
