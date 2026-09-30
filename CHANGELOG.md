@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-09-30
+
 ### Changed
 - **Refactor!:** Change the method of iterating all entry in map and set(see [Map Document](docs/hm_map.md#iter) and [Set Document](docs/hm_set.md#iter))
 - **Refacotr!:** Rename some function in arr and list
