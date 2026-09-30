@@ -50,7 +50,7 @@ FetchContent_MakeAvailable(hmfocx)
 
 # ...
 
-target_link_library(your_executable PRIVATE hmfocx)
+target_link_libraries(your_executable PRIVATE hmfocx)
 ```
 
 #### Run some common build commands of `cmake`  
