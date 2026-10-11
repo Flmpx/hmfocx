@@ -776,10 +776,12 @@ size_t hash(const void* key) {
 void print_set(hm_set* set) {
     hm_set_iter iter;
     hm_set_iter_init(&iter, set);
-    while (hm_set_iter_has_next(&iter)) {
-        hm_set_entry e = hm_set_iter_next(&iter);
+    while (hm_set_iter_has_cur(&iter)) {
+        hm_set_entry e = hm_set_iter_cur(&iter);
         int* k = e.key;
         printf("| k: %d\n", *k);
+
+        hm_set_iter_move_next(&iter);
     }
     printf("\n");
 }

@@ -949,11 +949,13 @@ int num = sizeof(val) / sizeof(char*);
 void print_map(hm_map* map) {
     hm_map_iter iter;
     hm_map_iter_init(&iter, map);
-    while (hm_map_iter_has_next(&iter)) {
-        hm_map_entry e = hm_map_iter_next(&iter);
+    while (hm_map_iter_has_cur(&iter)) {
+        hm_map_entry e = hm_map_iter_cur(&iter);
         int* k = e.key;
         char* v = e.val;
         printf("| k: %d, v: %s\n", *k, v);
+        
+        hm_map_iter_move_next(&iter);
     }
     printf("\n");
 }
